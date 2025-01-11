@@ -6,57 +6,20 @@
 %----------------------------------------------------------------------------------------
 %\tCHAPTER 1 - Lecture 1: Course Introduction
 %----------------------------------------------------------------------------------------
-\section{Getting Started: About the Project and How to Navigate It}
-
-\subsection{Why This Document?}
-I am a data scientist passionate about making deep learning and computer vision more accessible. In December 2023, I observed that many newcomers struggled to find a clear starting point, often getting lost in selecting topics and resources. To address this, I created this document, which consolidates key introductory concepts, curated resources, and practical insights. It is inspired by the University of Michigan’s EECS498 course, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture, I aimed to provide readers with the foundational knowledge and guidance necessary to dive into deep learning and computer vision.
-
-This summary is tailored for undergraduate and early graduate students in science and engineering disciplines, particularly those with foundational knowledge of Python, calculus, and linear algebra. These skills are essential for completing the course exercises and understanding the material effectively. If you’re unsure about your readiness, I recommend brushing up on Python programming (e.g., using \href{https://www.learnpython.org/}{Learn Python}), calculus (e.g., \href{https://www.khanacademy.org/math/calculus-1}{Khan Academy Calculus}), and linear algebra (e.g., \href{https://www.3blue1brown.com/topics/linear-algebra}{3Blue1Brown's Linear Algebra Series}).
-
-While not strictly required, taking an introductory course in machine learning can significantly enhance your understanding. For those seeking a beginner-friendly approach, I recommend \href{https://www.coursera.org/learn/machine-learning}{Andrew Ng's Machine Learning course on Coursera}, which provides an intuitive introduction to the field. If you're looking for a more mathematical perspective, consider Stanford's \href{https://cs229.stanford.edu/}{CS229: Machine Learning}, which delves deeper into the theoretical foundations.
-
-\subsection{Acknowledgments and Contributions}
-This document stands on the shoulders of giants, extensively referencing Justin Johnson’s lectures, publicly available resources, and insightful diagrams. Sources are cited at the beginning of each section or alongside relevant content. If you find missing or incorrect credits or would like content removed, please \href{mailto:eecs498summary@gmail.com}{email me}, and I will address your concerns promptly.
-
-\subsection{Your Feedback Matters}
-This is a personal project created in my free time and reviewed by only a few individuals. Your feedback is invaluable in improving this document. If you have suggestions, corrections, or feedback, please \href{mailto:eecs498summary@gmail.com}{email me}.
-
-\subsection{How to Navigate This Document}
-\begin{enumerate}
-	\item \textbf{New to the Field:} Start by watching the \href{https://www.youtube.com/watch?v=dJYGatp4SvA&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r&index=1&ab_channel=MichiganOnline}{EECS498 lectures on YouTube}. After each lecture, refer to the corresponding sections in this document for clarification and deeper insights. Ensure you have access to the course lecture slides, available \href{https://web.eecs.umich.edu/~justincj/slides/eecs498/WI2022/598_WI2022_lecture01.pdf}{here}, for a comprehensive learning experience.
-	\item \textbf{Practitioner or Advanced Learner:} Use the table of contents or the text search feature to navigate directly to topics of interest. This document is structured to facilitate targeted learning and enrichment, whether you’re revisiting fundamental concepts or exploring advanced ideas.
-\end{enumerate}
-
-\subsection{Staying Updated in the Field}
-Deep learning evolves rapidly. To stay current, explore new papers using tools like \href{https://www.connectedpapers.com/}{Connected Papers}. Resources like \href{https://www.paperswithcode.com/}{Papers with Code} provide trending research and implementations. For high-level insights, follow YouTube channels like \href{https://www.youtube.com/@yannickilcher?si=xybWvQBUwVkFLJK3}{Yannic Kilcher} and \href{https://www.youtube.com/@andrejkarpathy?si=7DpJQABbAVeANwUc}{Andrej Karpathy}. Major conferences such as CVPR, ICCV, and ECCV are excellent for discovering state-of-the-art developments. Curated repositories, like the \href{https://www.github.com/chicleee/Image-Matching-Paper-List}{Image Matching Papers List}, are also valuable resources.
-
-\subsection{The Importance of Practice}
-Practice is crucial to mastering computer vision. As Richard Feynman famously said, “What I cannot build, I do not understand.” Actively engaging with exercises and implementing concepts is one of the most effective ways to solidify your understanding.
-
-To maximize learning, I highly recommend completing the course assignments provided for the EECS498 course, available \href{https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/}{here}. These assignments are designed to complement the lectures and provide hands-on experience with key concepts in deep learning and computer vision.
-
-Platforms like \href{https://www.colab.research.google.com/}{Google Colab} are excellent for running experiments, while \href{https://www.kaggle.com/}{Kaggle} offers competitive challenges to apply your skills. Pairing your efforts with tools like \href{https://wandb.ai/}{WandB}, \href{https://clear.ml/}{ClearML}, or \href{https://www.tensorflow.org/tensorboard}{TensorBoard} can streamline your workflow and enhance your learning journey.
-
-By tackling exercises alongside the lectures, you deepen your theoretical understanding and gain practical insights that are invaluable for real-world applications.
-
-\newpage
-
-\section{Lecture Notes}
-
-This section presents my detailed lecture notes, designed to complement the material from the course. These notes build upon the lecture content, incorporating figures, examples, and concepts introduced by Justin Johnson in his lecture slides. 
+This chapter presents my detailed lecture notes, designed to complement the material from the course. These notes build upon the lecture content, incorporating figures, examples, and concepts introduced by Justin Johnson in his lecture slides. 
 
 You can follow along with the lecture slides available \href{https://web.eecs.umich.edu/~justincj/slides/eecs498/WI2022/598_WI2022_lecture01.pdf}{here} or watch the corresponding lecture video on \href{https://www.youtube.com/watch?v=dJYGatp4SvA&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r}{YouTube}. Together, these resources provide a comprehensive understanding of the topics covered.
 
-\subsection{Core Terms in the Field}
+\section{Core Terms in the Field}
 
 A solid understanding of the fundamental terminology in artificial intelligence (AI) and its subfields is crucial for following this course, engaging with the lecture materials, and navigating the broader field of deep learning and computer vision. Defining these terms provides a shared foundation for deeper exploration and application, ensuring clarity as we delve into more advanced topics.
 
-\subsubsection{Artificial Intelligence (AI)}
+\subsection{Artificial Intelligence (AI)}
 \begin{definition}[Artificial Intelligence (AI)]
 	The overarching field focused on creating systems capable of performing tasks that typically require human intelligence. These tasks include reasoning, decision-making, language understanding, and visual perception. AI encompasses a wide range of approaches, including symbolic logic, rule-based systems, and learning-based techniques, to address complex problems across diverse domains.
 \end{definition}
 
-\subsubsection{Machine Learning (ML)}
+\subsection{Machine Learning (ML)}
 \begin{definition}[Machine Learning (ML)]
 	A subset of AI that enables systems to learn from data and improve their performance on tasks without explicit programming. Machine learning relies on algorithms and statistical models to analyze data, identify patterns, and make predictions or decisions. 
 \end{definition}
@@ -68,19 +31,19 @@ Popular techniques include:
 \end{itemize}
 This course primarily focuses on supervised and unsupervised learning, which are widely applied in deep learning for computer vision.
 
-\subsubsection{Deep Learning (DL)}
+\subsection{Deep Learning (DL)}
 \begin{definition}[Deep Learning (DL)]
 	A specialized subset of machine learning characterized by hierarchical algorithms that process data through multiple layers. Each layer extracts increasingly abstract features, enabling systems to learn complex representations. For instance, in image analysis, early layers often identify edges and textures, while deeper layers detect objects and scenes. Deep learning has driven major advancements in fields like natural language processing, speech recognition, and computer vision.
 \end{definition}
 
 \newpage
 
-\subsubsection{Computer Vision (CV)}
+\subsection{Computer Vision (CV)}
 \begin{definition}[Computer Vision (CV)]
 	A domain within AI that focuses on enabling artificial systems to analyze, interpret, and process visual data, such as images and videos. CV intersects with, but is not a subset of, machine learning or deep learning. Instead, learning-based approaches like convolutional neural networks (CNNs) have become indispensable tools within CV, solving tasks such as image classification, object detection, and semantic segmentation. Applications are widespread, powering smartphone cameras, surveillance systems, autonomous vehicles, and robotics.
 \end{definition}
 
-\subsubsection{Connecting the Dots}
+\subsection{Connecting the Dots}
 The relationships between these terms highlight their interdependence:
 \begin{itemize}
 	\item AI is the parent discipline encompassing all methods of creating intelligent systems.
@@ -96,7 +59,7 @@ The relationships between these terms highlight their interdependence:
 	\label{fig:chapter1_slide13}
 \end{figure}
 
-\subsubsection{Why Study Deep Learning for Computer Vision?}
+\section{Why Study Deep Learning for Computer Vision?}
 Learning-based approaches have transformed computer vision by outperforming traditional algorithms in handling complex, real-world data. Unlike manual feature engineering, deep learning allows systems to automatically extract representations directly from data, making them more adaptable and effective. This shift has made \textbf{Deep Learning for Computer Vision} the dominant paradigm, enabling breakthroughs in areas like healthcare (e.g., disease detection through medical imaging), transportation (e.g., autonomous vehicles), and security (e.g., facial recognition). By leveraging the synergy of AI, ML, and DL, deep learning continues to drive innovation and solve increasingly sophisticated challenges across industries.
 
 \subsection{Motivation for Deep Learning in Computer Vision}
@@ -114,12 +77,12 @@ In healthcare, CV drives advancements in medical imaging, facilitating early dis
 Beyond industry, CV impacts daily life—enhancing security with facial
  recognition, enriching entertainment with augmented reality, and revolutionizing commerce with smart retail solutions. Its potential to create a safer, healthier, and more connected world makes CV a compelling and impactful field, offering countless opportunities to shape the future.
 
-\subsection{Historical Milestones}
+\section{Historical Milestones}
 
 This lecture offers a comprehensive journey through the evolution of computer vision, starting with its roots in neuroscience and progressing to its modern-day applications in artificial intelligence. The milestones covered are foundational to understanding the field, providing a historical perspective on the advancements that have shaped computer vision as we know it today. While many technical terms and concepts, such as convolutional neural networks (CNNs), vanishing gradients, recurrent neural networks (RNNs), long short-term memory (LSTM) networks, Transformers, and others, are briefly introduced, readers are encouraged not to feel deterred. Each of these topics will be explored in greater depth throughout the course and this summary, ensuring a thorough and accessible understanding of these pivotal ideas.
 
 
-\subsubsection{Hubel and Wiesel (1959)}
+\subsection{Hubel and Wiesel (1959): How Vision Works?}
 Hubel and Wiesel’s pioneering work in the late 1950s explored the visual cortex of cats using electrodes, uncovering two critical insights. First, they identified specialized neurons that respond to specific visual stimuli, such as edges with particular orientations. Second, they revealed a hierarchical structure in visual processing, where simple features combine to form complex patterns. These discoveries laid the foundation for artificial neural networks and convolutional architectures, which are integral to modern computer vision \cite{hubel1959_receptivefields}.
 
 \begin{figure}[H]
@@ -129,7 +92,7 @@ Hubel and Wiesel’s pioneering work in the late 1950s explored the visual corte
     \label{fig:chapter1_slide16}
 \end{figure}
 
-\subsubsection{Larry Roberts (1963)}
+\subsection{Larry Roberts (1963): From Edges to Keypoints}
 Larry Roberts’ groundbreaking PhD thesis in 1963 is often regarded as one of the earliest foundational works in computer vision. Inspired by the findings of Hubel and Wiesel on visual processing, Roberts focused on extracting edges from images, proposing methods to detect keypoints like corners. His work went beyond edge detection, leveraging these features to analyze the 3D geometry of objects in images, thus laying the groundwork for object recognition and scene understanding \cite{roberts1963_3dsolids}.
 
 \begin{figure}[H]
@@ -139,7 +102,7 @@ Larry Roberts’ groundbreaking PhD thesis in 1963 is often regarded as one of t
     \label{fig:chapter1_roberts}
 \end{figure}
 
-\subsubsection{David Marr (1970s)}
+\subsection{David Marr (1970s): From Features to a 3D Model}
 David Marr revolutionized computer vision in the 1970s by introducing a theoretical framework for understanding visual processing, which remains influential to this day. His theory, detailed in his book 'VISION', proposed that human and artificial vision involve hierarchical, multi-stage processing to extract meaningful information from visual data. Marr's framework consists of three key stages:
 
 \begin{itemize}
@@ -157,7 +120,7 @@ These concepts profoundly influenced computer vision by emphasizing structured, 
     \label{fig:chapter1_marr}
 \end{figure}
 
-\subsubsection{Recognition via Parts (1970s)}
+\subsection{Recognition via Parts (1970s)}
 
 In the 1970s, researchers shifted their focus to recognizing complex objects by building upon earlier advancements in feature extraction. A key breakthrough was the introduction of \textbf{Generalized Cylinders} by Brooks and Binford in 1979 \cite{brooks1979_modelbased}, which proposed a model for representing intricate objects using simple geometric shapes. This approach enabled the decomposition of complex structures into manageable components, facilitating object recognition.
 
@@ -172,7 +135,7 @@ Both Generalized Cylinders and Pictorial Structures laid the groundwork for part
     \label{fig:chapter1_parts_recognition}
 \end{figure}
 
-\subsubsection{Recognition via Edge Detection (1980s)}
+\subsection{Recognition via Edge Detection (1980s)}
 
 The 1980s marked a pivotal era in computer vision, as advancements in digital cameras and processing hardware enabled researchers to work with more realistic and complex images. A significant focus of this decade was object detection, with edge detection techniques taking center stage.
 
@@ -191,7 +154,7 @@ The innovations of the 1980s laid the groundwork for modern object detection, in
     \label{fig:chapter1_edge_detection}
 \end{figure}
 
-\subsubsection{Recognition via Grouping (1990s)}
+\subsection{Recognition via Grouping (1990s)}
 
 The 1990s saw significant progress in addressing the challenges of recognizing objects in increasingly complex images and scenes. Researchers shifted their focus towards grouping techniques to partition images into meaningful regions, enabling more effective object recognition and scene understanding.
 
@@ -212,7 +175,7 @@ Shi and Malik’s method was particularly impactful as it addressed the need for
     \label{fig:chapter1_grouping}
 \end{figure}
 
-\subsubsection{Recognition via Matching and Benchmarking (2000s)}
+\subsection{Recognition via Matching and Benchmarking (2000s)}
 
 The 2000s marked a transformative period in computer vision, characterized by advancements in feature matching and the establishment of benchmarks that fueled innovation.
 
@@ -248,7 +211,7 @@ The establishment of benchmarks during this period significantly advanced comput
 	\label{fig:chapter1_pascal}
 \end{figure}
 
-\subsubsection{The ImageNet Dataset and Classification Challenge}
+\subsection{The ImageNet Dataset and Classification Challenge}
 
 The introduction of the \textbf{ImageNet} dataset in 2009 marked a new era in computer vision \cite{imagenet2009_hierarchicaldatabase}. This large-scale dataset contains over 1.4 million labeled images across 1,000 object categories, providing a rich resource for training and evaluating visual recognition systems. The annual \textbf{ImageNet Large Scale Visual Recognition Challenge (ILSVRC)} became a benchmark competition, driving significant advances in image classification and object detection. Key milestones include:
 \begin{itemize}
@@ -265,7 +228,7 @@ The introduction of the \textbf{ImageNet} dataset in 2009 marked a new era in co
 \end{figure}
 
 
-\subsubsection{AlexNet: A Revolution in Computer Vision (2012)}
+\subsection{AlexNet: A Revolution in Computer Vision (2012)}
 
 The success of \textbf{AlexNet} in the 2012 ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was a turning point in computer vision. Developed by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton, AlexNet achieved a top-5 error rate of 16\%, significantly outperforming the runner-up at 26\% \cite{krizhevsky2012_alexnet}. This achievement demonstrated the practical power of deep learning, establishing convolutional neural networks (CNNs) as the dominant paradigm for computer vision.
 
@@ -287,7 +250,7 @@ Key innovations in AlexNet included:
 
 AlexNet’s success not only popularized GPUs for training but also showcased the potential of deep learning to outperform traditional methods on complex visual tasks. It set the stage for a wave of transformative innovations in the years that followed.
 
-\textbf{Building on AlexNet: Evolution of CNNs and Beyond}
+\subsubsection{Building on AlexNet: Evolution of CNNs and Beyond}
 
 The success of AlexNet in 2012 catalyzed a wave of advancements in convolutional neural networks (CNNs), setting the stage for deeper architectures, new paradigms, and transformative innovations in neural network design.
 
@@ -353,11 +316,11 @@ The progression from AlexNet has led to the rise of \textbf{foundation models}, 
 The legacy of AlexNet extends far beyond its initial success, shaping the evolution of neural network architectures and driving breakthroughs in computer vision. From CNNs to attention-based models like ViTs, and from vision-specific tasks to multimodal intelligence, this journey reflects the field's relentless pursuit of scalable, adaptable, and powerful algorithms.
 
 
-\subsection{Milestones in the Evolution of Learning in Computer Vision}
+\section{Milestones in the Evolution of Learning in Computer Vision}
 
 The evolution of learning-based approaches in computer vision has been marked by pivotal milestones, each building upon its predecessors to push the boundaries of what artificial systems can achieve. From the early perceptron to the transformative AlexNet, these developments highlight the progression of ideas and innovations that laid the groundwork for modern deep learning.
 
-\subsubsection{The Perceptron (1958)}
+\subsection{The Perceptron (1958)}
 The \textbf{Perceptron}, introduced by Frank Rosenblatt in 1958, was the first neural network capable of learning from data. Designed as a single-layer classifier, it demonstrated that machines could adjust their weights iteratively based on error corrections, enabling them to classify data using linear boundaries. Despite its early promise, the perceptron had significant limitations, particularly its inability to solve non-linear problems such as XOR. These shortcomings were later critiqued in the influential book \textbf{"Perceptrons"} by Marvin Minsky and Seymour Papert in 1969, which highlighted the theoretical constraints of single-layer networks \cite{rosenblatt1958_perceptron, minsky1969_perceptrons}.
 
 \begin{figure}[H]
@@ -367,7 +330,7 @@ The \textbf{Perceptron}, introduced by Frank Rosenblatt in 1958, was the first n
 	\label{fig:chapter1_perceptron}
 \end{figure}
 
-\subsubsection{The AI Winter and Multilayer Perceptrons (1969)}
+\subsection{The AI Winter and Multilayer Perceptrons (1969)}
 Minsky and Papert’s critique, while valid, inadvertently led to an "AI Winter," a period of reduced interest and funding in neural network research. However, their work also suggested that \textbf{multilayer perceptrons} could overcome the limitations of single-layer networks by introducing hidden layers. Unfortunately, at the time, efficient training methods for such architectures were unavailable, stalling progress \cite{minsky1969_perceptrons}.
 
 \begin{figure}[H]
@@ -377,7 +340,7 @@ Minsky and Papert’s critique, while valid, inadvertently led to an "AI Winter,
 	\label{fig:chapter1_perceptrons_book}
 \end{figure}
 
-\subsubsection{The Neocognitron (1980)}
+\subsection{The Neocognitron (1980)}
 In 1980, Kunihiko Fukushima introduced the \textbf{Neocognitron}, a hierarchical, multi-layered neural network inspired by the mammalian visual cortex. By combining convolution-like and pooling-like operations, the neocognitron could recognize complex patterns and invariances. While it conceptually resembled modern convolutional neural networks (CNNs), it lacked an efficient algorithm to train its multiple layers, limiting its practical utility. Nevertheless, the neocognitron laid the conceptual groundwork for future breakthroughs \cite{fukushima1980_neocognitron}.
 
 \begin{figure}[H]
@@ -387,7 +350,7 @@ In 1980, Kunihiko Fukushima introduced the \textbf{Neocognitron}, a hierarchical
 	\label{fig:chapter1_neocognitron}
 \end{figure}
 
-\subsubsection{Backpropagation and the Revival of Neural Networks (1986)}
+\subsection{Backpropagation and the Revival of Neural Networks (1986)}
 The development of \textbf{Backpropagation} in 1986 by Rumelhart, Hinton, and Williams addressed the key limitation of multilayer networks: the lack of an effective training algorithm. By using the chain rule of calculus to compute gradients of the loss function with respect to network weights, backpropagation enabled iterative weight updates via gradient descent. This innovation allowed for the training of deep networks, reigniting interest in neural networks and providing a framework for the architectures that followed \cite{rumelhart1986_backpropagation}.
 
 \begin{figure}[H]
@@ -397,7 +360,7 @@ The development of \textbf{Backpropagation} in 1986 by Rumelhart, Hinton, and Wi
 	\label{fig:chapter1_backprop}
 \end{figure}
 
-\subsubsection{LeNet and the Emergence of Convolutional Networks (1998)}
+\subsection{LeNet and the Emergence of Convolutional Networks (1998)}
 In 1998, Yann LeCun and colleagues introduced \textbf{LeNet-5}, a convolutional neural network (CNN) designed for handwritten digit recognition. By incorporating convolutional layers for feature extraction and pooling layers for dimensionality reduction, LeNet demonstrated the power of hierarchical architectures for pattern recognition. Leveraging backpropagation, it was trained end-to-end, achieving remarkable performance on the MNIST dataset (solving hand-written digits classification) and establishing CNNs as a practical tool for real-world applications \cite{lecun1998_lenet}.
 
 \begin{figure}[H]
@@ -407,7 +370,7 @@ In 1998, Yann LeCun and colleagues introduced \textbf{LeNet-5}, a convolutional 
 	\label{fig:chapter1_lenet}
 \end{figure}
 
-\subsubsection{The 2000s: The Era of Deep Learning}
+\subsection{The 2000s: The Era of Deep Learning}
 The 2000s marked the resurgence of neural networks as \textbf{Deep Learning} emerged as a dominant paradigm. Advances in GPU hardware, large-scale datasets, and improved algorithms made it possible to train deeper networks. Research in convolutional networks, recurrent networks, and self-supervised learning exploded, leading to breakthroughs across various domains.
 
 \begin{figure}[H]
@@ -417,7 +380,7 @@ The 2000s marked the resurgence of neural networks as \textbf{Deep Learning} eme
 	\label{fig:chapter1_dl_2000s}
 \end{figure}
 
-\subsubsection{Deep Learning Explosion (2007-2020)}
+\subsection{Deep Learning Explosion (2007-2020)}
 Starting from 2007, the number of deep learning publications grew exponentially, driven by challenges like ImageNet and CVPR competitions. By 2020, deep learning had become ubiquitous, transforming computer vision and establishing itself as a cornerstone of modern AI \cite{imagenet2009_hierarchicaldatabase, krizhevsky2012_alexnet}.
 
 \begin{figure}[H]
@@ -505,7 +468,7 @@ The exponential drop in computation costs has driven the deep learning revolutio
 \end{figure}
 
 
-\subsection{Key Challenges in CV and Future Directions}
+\section{Key Challenges in CV and Future Directions}
 
 Despite remarkable progress, computer vision systems still face significant challenges that underscore their limitations and the need for continued innovation:
 

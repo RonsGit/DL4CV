@@ -46,9 +46,6 @@
 \def\R{\mathbb{R}}
 \newcommand{\cvx}{convex}
 
-% Enable newpax metadata
-\includepdfset{pax=true}
-
 \begin{document}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -95,6 +92,42 @@
 %\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
 
 \pagestyle{fancy} % Print headers again
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+\section{Getting Started: About the Project and How to Navigate It}
+
+\subsection{Why This Document?}
+I am a data scientist passionate about making deep learning and computer vision more accessible. In December 2023, I observed that many newcomers struggled to find a clear starting point, often getting lost in selecting topics and resources. To address this, I created this document, which consolidates key introductory concepts, curated resources, and practical insights. It is inspired by the University of Michigan’s EECS498 course, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture, I aimed to provide readers with the foundational knowledge and guidance necessary to dive into deep learning and computer vision.
+
+This summary is tailored for undergraduate and early graduate students in science and engineering disciplines, particularly those with foundational knowledge of Python, calculus, and linear algebra. These skills are essential for completing the course exercises and understanding the material effectively. If you’re unsure about your readiness, I recommend brushing up on Python programming (e.g., using \href{https://www.learnpython.org/}{Learn Python}), calculus (e.g., \href{https://www.khanacademy.org/math/calculus-1}{Khan Academy Calculus}), and linear algebra (e.g., \href{https://www.3blue1brown.com/topics/linear-algebra}{3Blue1Brown's Linear Algebra Series}).
+
+While not strictly required, taking an introductory course in machine learning can significantly enhance your understanding. For those seeking a beginner-friendly approach, I recommend \href{https://www.coursera.org/learn/machine-learning}{Andrew Ng's Machine Learning course on Coursera}, which provides an intuitive introduction to the field. If you're looking for a more mathematical perspective, consider Stanford's \href{https://cs229.stanford.edu/}{CS229: Machine Learning}, which delves deeper into the theoretical foundations.
+
+\subsection{Acknowledgments and Contributions}
+This document stands on the shoulders of giants, extensively referencing Justin Johnson’s lectures, publicly available resources, and insightful diagrams. Sources are cited at the beginning of each section or alongside relevant content. If you find missing or incorrect credits or would like content removed, please \href{mailto:eecs498summary@gmail.com}{email me}, and I will address your concerns promptly.
+
+\subsection{Your Feedback Matters}
+This is a personal project created in my free time and reviewed by only a few individuals. Your feedback is invaluable in improving this document. If you have suggestions, corrections, or feedback, please \href{mailto:eecs498summary@gmail.com}{email me}.
+
+\subsection{How to Navigate This Document}
+\begin{enumerate}
+	\item \textbf{New to the Field:} Start by watching the \href{https://www.youtube.com/watch?v=dJYGatp4SvA&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r&index=1&ab_channel=MichiganOnline}{EECS498 lectures on YouTube}. After each lecture, refer to the corresponding sections in this document for clarification and deeper insights. Ensure you have access to the course lecture slides, available \href{https://web.eecs.umich.edu/~justincj/slides/eecs498/WI2022/598_WI2022_lecture01.pdf}{here}, for a comprehensive learning experience.
+	\item \textbf{Practitioner or Advanced Learner:} Use the table of contents or the text search feature to navigate directly to topics of interest. This document is structured to facilitate targeted learning and enrichment, whether you’re revisiting fundamental concepts or exploring advanced ideas.
+\end{enumerate}
+
+\subsection{Staying Updated in the Field}
+Deep learning evolves rapidly. To stay current, explore new papers using tools like \href{https://www.connectedpapers.com/}{Connected Papers}. Resources like \href{https://www.paperswithcode.com/}{Papers with Code} provide trending research and implementations. For high-level insights, follow YouTube channels like \href{https://www.youtube.com/@yannickilcher?si=xybWvQBUwVkFLJK3}{Yannic Kilcher} and \href{https://www.youtube.com/@andrejkarpathy?si=7DpJQABbAVeANwUc}{Andrej Karpathy}. Major conferences such as CVPR, ICCV, and ECCV are excellent for discovering state-of-the-art developments. Curated repositories, like the \href{https://www.github.com/chicleee/Image-Matching-Paper-List}{Image Matching Papers List}, are also valuable resources.
+
+\subsection{The Importance of Practice}
+Practice is crucial to mastering computer vision. As Richard Feynman famously said, “What I cannot build, I do not understand.” Actively engaging with exercises and implementing concepts is one of the most effective ways to solidify your understanding.
+
+To maximize learning, I highly recommend completing the course assignments provided for the EECS498 course, available \href{https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/}{here}. These assignments are designed to complement the lectures and provide hands-on experience with key concepts in deep learning and computer vision.
+
+Platforms like \href{https://www.colab.research.google.com/}{Google Colab} are excellent for running experiments, while \href{https://www.kaggle.com/}{Kaggle} offers competitive challenges to apply your skills. Pairing your efforts with tools like \href{https://wandb.ai/}{WandB}, \href{https://clear.ml/}{ClearML}, or \href{https://www.tensorflow.org/tensorboard}{TensorBoard} can streamline your workflow and enhance your learning journey.
+
+By tackling exercises alongside the lectures, you deepen your theoretical understanding and gain practical insights that are invaluable for real-world applications.
 
 % Include chapters
 \input{Chapters/Chapter_1_Lecture_1_Course_Introduction}
