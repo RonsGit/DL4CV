@@ -1,0 +1,186 @@
+\chapterimage{head2.png} % Chapter heading image
+
+\chapter{Lecture 2: Image Classification}
+
+%----------------------------------------------------------------------------------------
+%	CHAPTER 2 - Lecture 2: Image Classification
+%----------------------------------------------------------------------------------------
+
+\section{Introduction to Image Classification}
+
+Image classification is one of the most fundamental tasks in computer vision and serves as the cornerstone for a wide range of applications in artificial intelligence. The objective of image classification is straightforward: given an input image, the algorithm must assign a category label from a predefined set of classes. For instance, an algorithm might label an image as one of several categories, such as "cat," "dog," or "car".
+
+Despite its simplicity in concept, image classification presents a host of challenges when applied to real-world scenarios. Humans effortlessly recognize objects in images due to our ability to intuitively interpret visual information. However, computers face significant hurdles due to the \textit{semantic gap}, which refers to the difference between the raw pixel values of an image and the high-level semantic information we perceive.
+
+When processing an image, a computer sees only a grid of numbers representing pixel intensities. Even minor changes, such as variations in viewpoint, lighting, or background, can drastically alter these pixel values, making it difficult to map them to a consistent semantic label. Moreover, intra-class variations, such as differences in appearance among individual objects within the same category, add another layer of complexity.
+
+To address these challenges, image classification has evolved from early heuristic-based methods to modern data-driven approaches that leverage machine learning and deep learning. By analyzing large datasets of labeled images, these algorithms learn patterns and statistical dependencies that enable them to generalize across diverse examples.
+
+This chapter begins by exploring the foundational concepts of image classification, including its historical background and early techniques. It then delves into common datasets used for classification, providing insights into their importance and structure. Building on this foundation, we introduce the \textit{nearest neighbor} algorithm as our first learning-based method, followed by a discussion on hyperparameter tuning, data hygiene, and cross-validation. Finally, the chapter highlights the pivotal role of image classification in powering more advanced computer vision tasks, such as object detection and image captioning, and examines the transition from raw pixel-based methods to feature-based approaches driven by deep learning.
+
+By the end of this chapter, readers will gain a solid understanding of the principles and challenges of image classification and will be equipped with the knowledge to implement their first machine learning algorithm for visual recognition.
+
+\section{Image Classification Challenges}
+
+Image classification is a fundamental yet challenging task in computer vision. It requires algorithms to bridge the "semantic gap"—the disparity between human perception and raw pixel data processed by machines. This gap arises because machines interpret images as tensors of pixel values, devoid of inherent semantic meaning. This section explores the critical challenges in image classification, highlighting the complexities of achieving robust and accurate recognition.
+
+\subsection{The Semantic Gap}
+Humans perceive images intuitively, instantly recognizing objects and their context. Machines, however, see images as grids of numbers—pixel values in a tensor representation. For example, an image might be represented as a \(H \times W \times C\) tensor, where \(H\) and \(W\) denote the height and width of the image, and \(C\) represents color channels. These raw values lack semantic information, making it challenging for algorithms to deduce meaningful patterns.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_10.jpg}
+	\caption{Images are represented as grids of pixel values, lacking inherent semantic meaning.}
+	\label{fig:chapter2_semantic_gap}
+\end{figure}
+
+\subsection{Robustness to Camera Movement}
+Images captured from different camera angles or positions can vary significantly in their pixel values, even when depicting the same scene. For example, photographing a cat from different angles produces vastly different pixel grids, despite representing the same object.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_11.jpg}
+	\caption{Changes in camera position or angle result in varying pixel grids, complicating classification.}
+	\label{fig:chapter2_camera_movement}
+\end{figure}
+
+\subsection{Intra-Class Variation}
+Objects within the same category can exhibit substantial visual differences. For example, cats of different breeds or fur colors might look entirely distinct in terms of pixel patterns.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_12.jpg}
+	\caption{Cats of different breeds show significant visual differences, a phenomenon known as intra-class variation.}
+	\label{fig:chapter2_intra_class_variation}
+\end{figure}
+
+\subsection{Fine-Grained Classification}
+Distinguishing between visually similar categories, such as specific breeds of cats, requires a more granular understanding of features. Fine-grained classification demands algorithms that can differentiate subtle variations within a category, such as fur patterns or ear shapes.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_13.jpg}
+	\caption{Fine-grained classification requires distinguishing subtle differences within visually similar categories.}
+	\label{fig:chapter2_fine_grained}
+\end{figure}
+
+\subsection{Background Clutter}
+Objects in images often blend into complex or cluttered backgrounds, making it challenging to isolate the target object. For instance, a cat sitting amidst foliage may be difficult to distinguish due to natural camouflage or similar textures.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_14.jpg}
+	\caption{Background clutter can obscure target objects, complicating image classification.}
+	\label{fig:chapter2_background_clutter}
+\end{figure}
+
+\subsection{Illumination Changes}
+Lighting conditions significantly impact the appearance of objects in images. A cat photographed in daylight might look very different when captured under dim lighting, even though its semantic identity remains unchanged.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_15.jpg}
+	\caption{Variations in illumination conditions affect object appearance, requiring robust algorithms.}
+	\label{fig:chapter2_illumination}
+\end{figure}
+
+\subsection{Deformation and Object Scale}
+Objects are not rigid entities; they deform and appear at varying scales within images. For example, a cat lying stretched out versus curled up occupies different shapes and scales in an image.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_16.jpg}
+	\caption{Objects can deform and appear at varying scales, posing challenges for classification.}
+	\label{fig:chapter2_deformation_scale}
+\end{figure}
+
+\subsection{Occlusions}
+Partial visibility of objects adds another layer of complexity to image classification. For instance, a cat partially hidden under a pillow, with only its tail visible, might be easily recognized by humans based on contextual reasoning. However, such occlusions often hinder algorithmic performance, as they obscure critical features necessary for classification.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_17.jpg}
+	\caption{Occlusions, such as partial visibility of objects, obscure critical features and hinder classification.}
+	\label{fig:chapter2_occlusions}
+\end{figure}
+
+\subsection{Summary of Challenges}
+
+Image classification presents a range of challenges rooted in the complexities of visual data and the semantic gap between raw pixel values and meaningful categories. Developing effective algorithms requires bridging this gap while ensuring robustness to variations in viewpoint, illumination, occlusion, deformation, and other real-world conditions.
+
+Traditional approaches to image classification, such as edge detection and corner detection combined with feature descriptors and matching, offered foundational insights into the problem. However, these classical methods often struggled to adapt to the diversity and unpredictability of real-world scenarios, limiting their effectiveness in practical applications.
+
+The emergence of learning-based methods, particularly deep learning, has transformed the landscape by providing more robust and scalable solutions. These methods leverage techniques such as data augmentation and feature extraction to learn hierarchical representations directly from raw data. This ability to adapt and generalize across varying conditions has propelled significant advancements in classification performance, making these approaches the dominant paradigm in the field.
+
+In the following sections, we will delve into these challenges and explore how learning-based methodologies address them. 
+
+\section{Image Classification as a Building Block for Other Tasks}
+
+Image classification serves as a foundational task in computer vision, enabling advancements in a variety of related applications. Its ability to assign meaningful labels to visual data allows more complex tasks to be framed as extensions of classification. In this section, we explore how image classification supports tasks such as object detection, image captioning, and decision-making in board games.
+
+\subsection{Object Detection}
+
+Object detection extends image classification by identifying not only the types of objects present in an image but also their locations. A robust image classifier can be utilized as a core component of an object detection pipeline by classifying regions within an image. 
+
+One approach is to use a sliding window technique, where the image is divided into overlapping subregions. Each subregion is classified as either belonging to the background or containing an object. For regions identified as containing objects, the classifier further determines the type of object present. While this approach is computationally intensive and has limitations in handling scale and aspect ratio variations, it demonstrates how image classification can be repurposed to solve more advanced tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_20.jpg}
+	\caption{Using sliding windows for object detection: classifying regions as background or containing an object.}
+	\label{fig:chapter2_sliding_window_bg}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_21.jpg}
+	\caption{Using sliding windows for object detection: classifying regions containing objects (e.g., person).}
+	\label{fig:chapter2_sliding_window_person}
+\end{figure}
+
+\subsection{Image Captioning}
+
+Image captioning involves generating a natural language description of the content in an image, a task that can also be framed as a sequence of classification problems. Given a fixed vocabulary of words, the algorithm determines the most fitting word at each step, effectively performing classification repeatedly until a complete sentence is formed. 
+
+For example, starting with an input image, the first classification might yield the word "man," followed by "riding," then "horse," and eventually a "STOP" token to indicate the end of the caption. This process demonstrates how a robust image classifier can form the backbone of a more complex multimodal task that bridges vision and language.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_22.jpg}
+	\caption{Image captioning as sequential classification: determining the first word (e.g., "man").}
+	\label{fig:chapter2_caption_man}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_23.jpg}
+	\caption{Image captioning as sequential classification: determining the next word (e.g., "riding").}
+	\label{fig:chapter2_caption_riding}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_25.jpg}
+	\caption{Image captioning: determining the end of the sentence with a "STOP" token.}
+	\label{fig:chapter2_caption_stop}
+\end{figure}
+
+\subsection{Decision-Making in Board Games}
+
+Board games such as Go provide another example of framing a complex task as a classification problem. Each position on the board can be viewed as an input to the algorithm, with the goal of classifying which position is most optimal for the next move. This approach enables algorithms to make strategic decisions by treating each potential move as a classification instance, demonstrating the versatility of image classification as a problem-solving tool.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_26.jpg}
+	\caption{Board games like Go framed as classification problems: determining the optimal next move.}
+	\label{fig:chapter2_board_games}
+\end{figure}
+
+\subsection{Summary}
+
+Image classification is not just an isolated task but a fundamental building block for diverse applications in computer vision and artificial intelligence. By leveraging classification in tasks such as object detection, image captioning, and decision-making, researchers have been able to extend its utility and address increasingly complex problems. This underscores the importance of developing robust image classifiers, as they form the foundation for solving more sophisticated challenges.
+
+
+
+
+

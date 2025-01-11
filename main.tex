@@ -1,0 +1,129 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Important note:
+% Chapter heading images should have a 2:1 width:height ratio,
+% e.g. 920px width and 460px height.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\DocumentMetadata{}
+\documentclass[11pt,fleqn,openany]{book} % Default font size and left-justified equations. One can remove the 'openany' part to remove unwanted pages between sections. 
+\raggedbottom
+
+\usepackage[top=3cm,bottom=3cm,left=3.2cm,right=3.2cm,headsep=10pt,letterpaper]{geometry} % Page margins
+
+\usepackage{xcolor} % Required for specifying colors by name
+\definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
+
+% Font Settings
+\usepackage{avant} % Use the Avantgarde font for headings
+%\usepackage{times} % Use the Times font for headings
+\usepackage{mathptmx} % Use Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery, and Com­puter Modern fonts
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{amsthm}
+
+\usepackage{enumitem}
+\setlist[enumerate]{topsep=0.5cm}
+
+% Bibliography
+\usepackage[backend=biber,style=numeric,sortcites,sorting=nty,backref,natbib,hyperref]{biblatex}
+\usepackage{csquotes}
+\addbibresource{bibliography.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
+
+\input{structure} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+%----------------------------------------------------------------------------------------
+%	Definitions of new commands
+%----------------------------------------------------------------------------------------
+
+\def\R{\mathbb{R}}
+\newcommand{\cvx}{convex}
+
+% Enable newpax metadata
+\includepdfset{pax=true}
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begingroup
+\thispagestyle{empty}
+\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{esahubble}}} % Image background
+\centering
+\vspace*{5cm}
+\par\normalfont\fontsize{35}{35}\sffamily\selectfont
+\textbf{EECS498 - Deep Learning for Computer Vision}\\
+{\LARGE An essential guide to modern computer vision based on UMich's EECS498 (Instructor: Justin Johnson)}\par % Book title
+\vspace*{1cm}
+{\LARGE Ron Korine, 2025}\par % Author name
+\endgroup
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+~\vfill
+\thispagestyle{empty}
+
+%\noindent Copyright \copyright\ 2014 Andrea Hidalgo\\ % Copyright notice
+
+\noindent \textsc{github.com/RonsGit/}\\ % URL
+
+\noindent This document is based on content from different sources, including books, lecture notes, etc. Whenever a source was used, a corresponding citation was added for further details and credit to the authors. Nevertheless, if you found some content in this document you created and would want to be removed, you can always contact me \href{mailto:eecs498summary@gmail.com}{here}, and I will remove it.\\ % License information
+
+\noindent \textit{First release, February 2025} % Printing/edition date
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\chapterimage{head1.png} % Table of contents heading image
+
+\pagestyle{empty} % No headers
+
+\tableofcontents % Print the table of contents itself
+
+%\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
+
+\pagestyle{fancy} % Print headers again
+
+% Include chapters
+\input{Chapters/Chapter_1_Lecture_1_Course_Introduction}
+\input{Chapters/Chapter_2_Lecture_2_Image_Classification}
+\input{Chapters/Chapter_3_Lecture_3_Linear_Classifiers}
+\input{Chapters/Chapter_4_Lecture_4_Regularization__Optimization}
+\input{Chapters/Chapter_5_Lecture_5_Neural_Networks}
+\input{Chapters/Chapter_6_Lecture_6_Backpropagation}
+\input{Chapters/Chapter_7_Lecture_7_Convolutional_Networks}
+\input{Chapters/Chapter_8_Lecture_8_CNN_Architectures_I}
+\input{Chapters/Chapter_9_Lecture_9_Training_Neural_Networks_I}
+\input{Chapters/Chapter_10_Lecture_10_Training_Neural_Networks_II}
+\input{Chapters/Chapter_11_Lecture_11_CNN_Architectures_II}
+\input{Chapters/Chapter_12_Lecture_12_Deep_Learning_Software}
+\input{Chapters/Chapter_13_Lecture_13_Object_Detection}
+\input{Chapters/Chapter_14_Lecture_14_Object_Detectors}
+\input{Chapters/Chapter_15_Lecture_15_Image_Segmentation}
+\input{Chapters/Chapter_16_Lecture_16_Recurrent_Networks}
+\input{Chapters/Chapter_17_Lecture_17_Attention}
+\input{Chapters/Chapter_18_Lecture_18_Vision_Transformers}
+\input{Chapters/Chapter_19_Lecture_19_Generative_Models_I}
+\input{Chapters/Chapter_20_Lecture_20_Generative_Models_II}
+\input{Chapters/Chapter_21_Lecture_21_Visualizing_Models__Generating_Images}
+\input{Chapters/Chapter_22_Lecture_22_SelfSupervised_Learning}
+\input{Chapters/Chapter_23_Lecture_23_3D_vision}
+\input{Chapters/Chapter_24_Lecture_24_Videos}
+\input{Chapters/Chapter_25_Model_Compression_Quantization_and_Pruning}
+\input{Chapters/Chapter_26_Foundation_Models_in_Computer_Vision}
+\input{Chapters/Chapter_27_MAMBA_MultiAgent_MultiBody_Analysis}
+
+\printbibliography
+\end{document}
