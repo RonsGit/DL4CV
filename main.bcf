@@ -2455,12 +2455,21 @@
     <bcf:citekey order="74" intorder="1">mamba2022_dynamic</bcf:citekey>
     <bcf:citekey order="75" intorder="1">dalle2021_texttoimage</bcf:citekey>
     <bcf:citekey order="76" intorder="1">dalle2021_texttoimage</bcf:citekey>
-    <bcf:citekey order="77" intorder="1">buolamwini2018_gendershades</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">dalle2021_texttoimage</bcf:citekey>
     <bcf:citekey order="78" intorder="1">buolamwini2018_gendershades</bcf:citekey>
     <bcf:citekey order="79" intorder="1">buolamwini2018_gendershades</bcf:citekey>
-    <bcf:citekey order="80" intorder="1">goodfellow2014_adversarial</bcf:citekey>
+    <bcf:citekey order="80" intorder="1">buolamwini2018_gendershades</bcf:citekey>
     <bcf:citekey order="81" intorder="1">goodfellow2014_adversarial</bcf:citekey>
     <bcf:citekey order="82" intorder="1">goodfellow2014_adversarial</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">goodfellow2014_adversarial</bcf:citekey>
+    <bcf:citekey order="84" intorder="1">canny1986_edgedetection</bcf:citekey>
+    <bcf:citekey order="85" intorder="1">harris1988_combined</bcf:citekey>
+    <bcf:citekey order="86" intorder="1">lecun1998_lenet</bcf:citekey>
+    <bcf:citekey order="87" intorder="1">krizhevsky2009_learning</bcf:citekey>
+    <bcf:citekey order="88" intorder="1">imagenet2009_hierarchicaldatabase</bcf:citekey>
+    <bcf:citekey order="89" intorder="1">zhou2017_places</bcf:citekey>
+    <bcf:citekey order="90" intorder="1">lake2015_human</bcf:citekey>
+    <bcf:citekey order="91" intorder="1">devlin2015_imagetocaption</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

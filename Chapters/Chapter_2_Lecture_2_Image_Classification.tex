@@ -180,6 +180,487 @@ Board games such as Go provide another example of framing a complex task as a cl
 
 Image classification is not just an isolated task but a fundamental building block for diverse applications in computer vision and artificial intelligence. By leveraging classification in tasks such as object detection, image captioning, and decision-making, researchers have been able to extend its utility and address increasingly complex problems. This underscores the importance of developing robust image classifiers, as they form the foundation for solving more sophisticated challenges.
 
+\section{Constructing an Image Classifier}
+
+Designing an image classifier is a complex process that cannot be reduced to a simple function like \texttt{def classify\_img(...)}, which takes an image tensor and directly outputs a category label. This complexity arises from the inherent challenges of translating raw pixel values into meaningful categories. Over time, the field has transitioned from feature-based methods to data-driven approaches, reflecting the increasing complexity of real-world applications.
+
+\subsection{Feature-Based Image Classification: The Classical Approach}
+
+Traditional strategies for building an image classifier rely on explicit feature extraction and rule-based classification:
+
+\begin{itemize}
+	\item \textbf{Edge Detection:} Algorithms like the \textit{Canny Edge Detector} \cite{canny1986_edgedetection} are used to identify object boundaries by detecting abrupt changes in pixel intensity.
+	\item \textbf{Keypoint Detection:} Techniques such as the \textit{Harris Corner Detector} \cite{harris1988_combined} locate distinctive features like corners in the image.
+	\item \textbf{Rule-Based Classification:} Incorporating human knowledge, explicit rules are devised to classify objects based on extracted features. For example, cats might be identified by triangular ears and whiskers.
+\end{itemize}
+
+While this approach provides a structured framework, it faces critical challenges:
+\begin{itemize}
+	\item \textbf{Variability:} Real-world objects exhibit significant variations, such as cats with or without whiskers.
+	\item \textbf{Failure Points:} Feature detectors often fail under challenging conditions, such as poor lighting or occlusion.
+	\item \textbf{Scalability:} Adding new categories requires rewriting rules and redesigning algorithms, limiting adaptability.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_27.jpg}
+	\caption{Attempting to classify images using hard-coded features is highly challenging.}
+	\label{fig:chapter2_classification_attempt}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_28.jpg}
+	\caption{Edges and corners as features for classification: an incomplete solution.}
+	\label{fig:chapter2_edge_corners}
+\end{figure}
+
+\subsection{From Hand-Crafted Rules to Data-Driven Learning}
+
+Machine learning revolutionized image classification by replacing manual feature engineering with automated learning from data. This modern approach is defined by three key steps:
+
+\begin{enumerate}
+	\item \textbf{Dataset Collection:} Collect a large dataset of images and their corresponding human-annotated labels.
+	\item \textbf{Model Training:} Train a machine learning model to learn patterns and representations directly from the dataset.
+	\item \textbf{Prediction and Evaluation:} Use the trained model to predict labels for unseen images and evaluate performance using metrics like accuracy or log-likelihood.
+\end{enumerate}
+
+This pipeline, illustrated in Figure \ref{fig:chapter2_data_driven}, modularizes the process into two core functions: \texttt{train(images, labels)} and \texttt{predict(model, test\_images)}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_29.jpg}
+	\caption{A data-driven pipeline for training and evaluating machine learning-based image classifiers.}
+	\label{fig:chapter2_data_driven}
+\end{figure}
+
+\subsection{Programming with Data: The Modern Paradigm}
+
+Data-driven approaches redefine how we "program" computers. Instead of hard-coding rules, we train models by providing labeled datasets, allowing the algorithm to learn from examples. This shift offers significant advantages:
+
+\begin{itemize}
+	\item \textbf{Scalability:} Easily adapts to new categories by adding labeled data.
+	\item \textbf{Robustness:} Handles diverse conditions, such as lighting changes and occlusions, without manual adjustments.
+	\item \textbf{Automation:} Eliminates the need for explicit, domain-specific rules, making it suitable for complex, real-world tasks.
+\end{itemize}
+
+For example, a data-driven model trained on images of animals learns nuanced distinctions—like fur patterns and body shapes—directly from the data, avoiding the need for manually encoding such rules.
+
+\subsection{Data-Driven Machine Learning: The New Frontier}
+
+Datasets are the foundation of modern machine learning, enabling models to learn directly from examples. Unlike traditional algorithm-driven approaches, where progress relied on better feature engineering, data-driven methods depend on the quality, diversity, and scale of datasets.
+
+\textbf{Why Data Dominates:}
+\begin{itemize}
+	\item \textbf{Generalization:} Models trained on diverse datasets can generalize to unseen data better than those relying on hand-crafted features.
+	\item \textbf{Flexibility:} New tasks and domains require only new data, not redesigned algorithms.
+	\item \textbf{Empirical Strength:} Data-driven methods align closely with real-world variability, capturing patterns that are infeasible to encode manually.
+\end{itemize}
+
+The growing emphasis on datasets reflects a paradigm shift in machine learning research, where the quality of data often outweighs incremental algorithmic improvements. This approach empowers models to tackle the complexities of real-world visual data effectively.
+
+In the next section, we delve into the critical role of datasets in machine learning, exploring how they shape the development and performance of image classification models.
+
+\section{Datasets in Image Classification}
+
+Datasets form the backbone of modern machine learning and computer vision, defining the scope and quality of what algorithms can learn. Over the years, datasets in image classification have evolved in scale, complexity, and diversity, shaping the trajectory of the field. In this section, we explore some of the most prominent datasets used in image classification, their characteristics, and their role in advancing research.
+
+\subsection{MNIST: The Toy Dataset}
+
+The \textbf{MNIST} dataset \cite{lecun1998_lenet} is one of the earliest and most iconic datasets in machine learning. It consists of $28 \times 28$ grayscale images of handwritten digits (0--9), making it a 10-class classification problem. With 50,000 training images and 10,000 test images, MNIST has been pivotal in demonstrating the power of early machine learning algorithms.
+
+While MNIST is often referred to as the \textit{Drosophila of computer vision}, it is considered a toy dataset due to its simplicity and small size. Achieving high accuracy on MNIST does not necessarily translate to success on more complex datasets, limiting its utility in benchmarking modern algorithms.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_31.jpg}
+	\caption{MNIST: A dataset of handwritten digits, often used as a toy benchmark.}
+	\label{fig:chapter2_mnist}
+\end{figure}
+
+\subsection{CIFAR: Real-World Object Recognition}
+
+The \textbf{CIFAR-10} dataset \cite{krizhevsky2009_learning} represents a significant step forward in dataset complexity. It contains 10 classes of objects (e.g., airplane, automobile, bird, cat) with $32 \times 32 \times 3$ RGB images. The dataset includes 50,000 training images (5,000 per class) and 10,000 test images (1,000 per class). CIFAR-10 strikes a balance between complexity and computational feasibility, making it ideal for research and teaching purposes. In this course, CIFAR-10 is the primary dataset for homework assignments.
+
+CIFAR-10 has a \textit{cousin}, \textbf{CIFAR-100}, which has similar statistics but with 100 categories instead of 10. These 100 categories are grouped into 20 superclasses, each containing five finer-grained classes. For example, the \textit{Aquatic Animals} superclass includes classes like beaver, dolphin, otter, seal, and whale.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_32.jpg}
+	\caption{CIFAR-10: A dataset for object classification with 10 categories.}
+	\label{fig:chapter2_cifar10}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_33.jpg}
+	\caption{CIFAR-100: An extension of CIFAR-10 with 100 categories.}
+	\label{fig:chapter2_cifar100}
+\end{figure}
+
+\subsection{ImageNet: The Gold Standard}
+
+\textbf{ImageNet} \cite{imagenet2009_hierarchicaldatabase} is a cornerstone dataset in computer vision, widely used for benchmarking image classification algorithms. It comprises over 1.3 million training images across 1,000 categories, with approximately 1,300 images per category, alongside 50,000 validation images and 100,000 test images.
+
+Collected from the internet, ImageNet images vary in resolution but are typically resized to $256 \times 256 \times 3$ for training and evaluation. Its scale and diversity challenge algorithms to generalize effectively, making it ideal for assessing robustness.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_34.jpg}
+	\caption{ImageNet: A dataset of 1,000 categories pivotal to computer vision progress.}
+	\label{fig:chapter2_imagenet}
+\end{figure}
+
+ImageNet's \textbf{top-5 accuracy} metric allows the algorithm to succeed if the correct label appears among its top 5 predictions, accommodating label ambiguities and noise in the data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_35.jpg}
+	\caption{ImageNet top-5 accuracy: A widely adopted evaluation metric.}
+	\label{fig:chapter2_imagenet_top5}
+\end{figure}
+
+
+\subsection{MIT Places: Scene Recognition}
+
+While datasets like ImageNet focus on object recognition, the \textbf{MIT Places} dataset \cite{zhou2017_places} emphasizes scene classification, with categories like classrooms, fields, and buildings. This shift from object-centric to scene-centric data broadens the scope of image classification research, enabling algorithms to analyze broader contexts in visual data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_36.jpg}
+	\caption{MIT Places: A dataset for scene classification, focusing on diverse environmental contexts.}
+	\label{fig:chapter2_places}
+\end{figure}
+
+\subsection{Comparing Dataset Sizes}
+
+Figure \ref{fig:chapter2_dataset_sizes} compares the sizes of these datasets in terms of the total number of pixels in their training sets. The y-axis, plotted on a logarithmic scale, reveals a clear trend:
+
+\begin{itemize}
+	\item CIFAR is roughly an order of magnitude larger than MNIST.
+	\item ImageNet is approximately two orders of magnitude larger than CIFAR.
+	\item MIT Places is yet another order of magnitude larger than ImageNet.
+\end{itemize}
+
+This trend reflects the increasing scale of datasets over time, driven by the need for diverse and comprehensive training data. Larger datasets like ImageNet yield more convincing results but demand significant computational resources, which is why smaller datasets like CIFAR remain popular for teaching and prototyping.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_37.jpg}
+	\caption{Comparing dataset sizes: MNIST, CIFAR, ImageNet, and MIT Places.}
+	\label{fig:chapter2_dataset_sizes}
+\end{figure}
+
+\subsection{Omniglot: Few-Shot Learning}
+
+As datasets grow larger, an emerging research direction focuses on learning from limited data. The \textbf{Omniglot} dataset \cite{lake2015_human} exemplifies this shift by providing only 20 examples per category. Omniglot contains handwritten characters from over 50 different alphabets, emphasizing the challenge of \textit{few-shot learning}, where algorithms must generalize from minimal examples.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_38.jpg}
+	\caption{Omniglot: A dataset for few-shot learning, with minimal examples per category.}
+	\label{fig:chapter2_omniglot}
+\end{figure}
+
+\subsection{Conclusion: Datasets Driving Progress}
+
+Datasets set the limits of model capabilities, with larger and more diverse datasets enabling breakthroughs in image classification. Specialized datasets like Omniglot address challenges like few-shot learning, emphasizing the evolving needs of the field. In data-driven methodologies, the quality and diversity of datasets remain pivotal in advancing computer vision.
+
+\section{Nearest Neighbor Classifier: A Gateway to Understanding Classification}
+
+The \textbf{Nearest Neighbor} (NN) classifier is one of the simplest and most intuitive machine learning algorithms. While seemingly elementary, it introduces key concepts that are foundational to the field of classification. By starting with Nearest Neighbor, we gain a clear understanding of the principles of classification and the practical challenges that arise in real-world scenarios, particularly when working with high-dimensional data.
+
+\subsection{Why Begin with Nearest Neighbor?}
+
+The Nearest Neighbor algorithm serves as an excellent starting point for exploring machine learning for several reasons:
+
+\begin{itemize}
+	\item \textbf{Simplicity}: The algorithm's straightforward design—based on memorizing data and comparing distances—makes it easy to understand and implement.
+	\item \textbf{Foundational Concepts}: It introduces the idea of \textit{similarity metrics}, the importance of \textit{distance functions}, and the impact of \textit{training data quality}.
+	\item \textbf{Real-World Limitations}: Despite its theoretical appeal, Nearest Neighbor highlights practical challenges such as high inference time, sensitivity to noise, and the \textit{curse of dimensionality}, motivating the development of more sophisticated algorithms.
+\end{itemize}
+
+By dissecting the Nearest Neighbor classifier, we lay the groundwork for understanding modern approaches to robust classification.
+
+\subsection{Setting the Stage: From Pixels to Predictions}
+
+The fundamental task of a classifier is to assign a category label to an input image, bridging the gap between raw pixel data and semantic meaning. For example, given an image of a cat, the classifier should return the label "cat." Achieving this requires a method for comparing the input image to previously seen examples and determining the most appropriate label.
+
+Nearest Neighbor does this by comparing the test image to all training images and selecting the label of the most similar one. This approach, while naive, provides valuable insight into the role of similarity in classification and serves as a stepping stone toward more advanced machine learning models.
+
+The following sections detail the algorithm, its components, and the practical considerations for its use.
+
+
+\subsection{Algorithm Description}
+
+The Nearest Neighbor classifier operates using two primary methods:
+\begin{itemize}
+	\item \textbf{\texttt{train}:} Memorizes the training data and corresponding labels without any additional computation.
+	\item \textbf{\texttt{predict}:} For a test image, computes the distance to all training images using a similarity function or distance metric. The label of the most similar training image is returned as the prediction.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_39.jpg}
+	\caption{Nearest Neighbor classifier: memorize training data and predict based on the closest match.}
+	\label{fig:chapter2_nn_description}
+\end{figure}
+
+\subsection{Distance Metrics: The Core of Nearest Neighbor}
+
+The distance metric determines how "similar" two images are. The most common choices include:
+\begin{itemize}
+	\item \textbf{L1 Distance (Manhattan Distance):} Computes the sum of absolute differences between corresponding pixel values:
+	\[
+	\text{L1 Distance} = \sum_{i=1}^{n} |x_i - y_i|
+	\]
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_40.jpg}
+		\caption{L1 distance example: a simple and interpretable metric.}
+		\label{fig:chapter2_l1_distance}
+	\end{figure}
+	
+	\item \textbf{L2 Distance (Euclidean Distance):} Computes the root of the sum of squared differences:
+	\[
+	\text{L2 Distance} = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}
+	\]
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_63.jpg}
+		\caption{Comparison of L1 and L2 distance metrics.}
+		\label{fig:chapter2_l1_l2_comparison}
+	\end{figure}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_64.jpg}
+	\caption{Decision boundaries produced by different distance metrics (L1 vs. L2).}
+	\label{fig:chapter2_l1_l2_comparison}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_51.jpg}
+	\caption{Limitations of L1 distance: visually dissimilar objects with similar colors may be incorrectly classified.}
+	\label{fig:chapter2_l1_poor_performance}
+\end{figure}
+
+Each metric produces different decision boundaries, as shown in Slide \ref{fig:chapter2_l1_l2_comparison}. However, these pixel-based metrics often fail to capture semantic similarity. For instance, as demonstrated in Slide \ref{fig:chapter2_l1_poor_performance}, visually dissimilar objects with similar colors (e.g., a ginger cat and an orange frog) may appear "close" under L1 or L2 distance.
+
+\subsection{Extending Nearest Neighbor: Applications Beyond Images}
+
+While the Nearest Neighbor classifier is typically discussed in the context of image classification, its principles can be extended to other domains and data types, provided a suitable distance function is defined. 
+
+\subsubsection{Using Nearest Neighbor for Non-Image Data}
+
+One compelling example of Nearest Neighbor applied to non-image data involves the analysis of academic papers. In this context, similarity between documents is measured using \textbf{TF-IDF similarity} (Term Frequency–Inverse Document Frequency). This metric captures the importance of words in a document relative to a collection of documents, emphasizing unique and meaningful terms while downplaying common ones like "the" or "and."
+
+\begin{itemize}
+	\item \textbf{Term Frequency (TF):} Measures how often a term appears in a document, providing a sense of relevance within that document.
+	\item \textbf{Inverse Document Frequency (IDF):} Reduces the weight of terms that appear frequently across many documents, as these are less likely to be unique or significant.
+	\item \textbf{TF-IDF Score:} Combines TF and IDF to assign a weight to each term in a document, capturing its importance within a specific context.
+\end{itemize}
+
+\subsubsection{Academic Paper Recommendation Example}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_65.jpg}
+	\caption{Nearest Neighbor using TF-IDF similarity for academic paper recommendations.}
+	\label{fig:chapter2_nn_tfidf}
+\end{figure}
+
+Using TF-IDF scores, we can represent each academic paper as a feature vector. Nearest Neighbor can then be employed to find similar papers by comparing these feature vectors. As illustrated in Slide \ref{fig:chapter2_nn_tfidf}, querying for a specific paper returns its most similar counterparts based on their semantic content.
+
+This example highlights the flexibility of Nearest Neighbor and related algorithms, such as K-means clustering, in handling diverse data types. By tailoring the distance metric to the nature of the data, we can unlock meaningful insights across domains.
+
+\subsubsection{Key Insights}
+
+The versatility of Nearest Neighbor and K-means clustering stems from their reliance on distance metrics. This allows these algorithms to adapt to various applications, including:
+\begin{itemize}
+	\item Recommending academic papers based on content similarity.
+	\item Grouping documents into clusters for topic modeling.
+	\item Analyzing user behavior in recommendation systems.
+\end{itemize}
+
+This flexibility makes these methods powerful tools not only in computer vision but also in broader machine learning contexts.
+
+
+\subsection{Hyperparameters in Nearest Neighbor}
+
+The performance of the Nearest Neighbor classifier depends on two hyperparameters:
+\begin{itemize}
+	\item \textbf{k:} The number of nearest neighbors.
+	\item \textbf{Distance Metric:} Determines how similarity between images is computed.
+\end{itemize}
+
+Selecting the best hyperparameters is challenging because they cannot be directly learned from training data.
+\newpage
+Some strategies we can think of to select model hyperparameters include:
+\begin{enumerate}
+	\item \textbf{Using the Entire Dataset:} Selecting hyperparameters that optimize performance on the training set is misleading. For example, \(k=1\) will perform good in this case, and may lead to overfitting and poor generalization.
+	\item \textbf{Train-Test Split Without Validation:} While better than the previous method, this approach lacks a clear mechanism to evaluate model performance on unseen data.
+	\item \textbf{Train-Validation-Test Split:} The recommended practice is to split data into three sets:
+	\begin{itemize}
+		\item \textbf{Training Set:} Used for fitting the model.
+		\item \textbf{Validation Set:} Helps tune hyperparameters and assess overfitting.
+		\item \textbf{Test Set:} Evaluates the final model after all hyperparameters are fixed.
+	\end{itemize}
+	The test set is only evaluated once, at the very end, as emphasized in Slide \ref{fig:chapter2_train_val_test}. Although scary (as we tend to develop an algorithm spending a lot of time) as the resultant algorithm may prove to be ineffective on the test data, this is the correct data hygiene approach. The test set should only be used once, and near the end of the development. 
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_75.jpg}
+	\caption{Train-validation-test split for robust evaluation.}
+	\label{fig:chapter2_train_val_test}
+\end{figure}
+
+\subsection{Cross-Validation}
+
+For smaller datasets, \textbf{k-fold cross-validation} is often preferred. The dataset is split into \(k\) folds, and each fold is used as a validation set while the remaining \(k-1\) folds are used for training. The process repeats \(k\) times, and results are averaged to evaluate performance. This method offers a robust mechanism for hyperparameter selection, as demonstrated in Slide \ref{fig:chapter2_cross_validation}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_77.jpg}
+	\caption{Cross-validation accuracy for different values of \(k\). Each dot represents a trial, and the mean is represented by the line. Here we peek $k=7$ as the mean is highest in this case.}
+	\label{fig:chapter2_cross_validation}
+\end{figure}
+
+While cross-validation is computationally feasible for small datasets, it becomes impractical for large datasets and complex deep learning models, and thus is not common in evaluation of practical vision algorithms.
+
+\subsection{Implementation and Complexity}
+
+The simplicity of Nearest Neighbor allows for a straightforward implementation:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_42.jpg}
+	\caption{\texttt{train} method: Memorizing training data.}
+	\label{fig:chapter2_train}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_43.jpg}
+	\caption{\texttt{predict} method: Computing similarity and predicting the closest label.}
+	\label{fig:chapter2_predict}
+\end{figure}
+
+\textbf{Complexity:}
+\begin{itemize}
+	\item \textbf{Training:} \(O(1)\), as it simply stores the data.
+	\item \textbf{Inference:} \(O(n)\), as every test image is compared against all \(n\) training images. This makes inference computationally expensive, particularly for large datasets.
+\end{itemize}
+
+Faster or approximate versions of Nearest Neighbor exist, as highlighted in Slide \ref{fig:chapter2_nn_speedup}, which make use of spatial data structures like KD-trees to accelerate the search process.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_49.jpg}
+	\caption{Approximation methods for accelerating Nearest Neighbor search.}
+	\label{fig:chapter2_nn_speedup}
+\end{figure}
+
+\newpage
+
+\subsection{Visualization of Decision Boundaries}
+
+Decision boundaries illustrate the regions in the input space assigned to different classes. For a 2D toy dataset, the decision boundaries of Nearest Neighbor are highly irregular and sensitive to outliers.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_52.jpg}
+	\caption{Decision boundaries for Nearest Neighbor on a 2D dataset.}
+	\label{fig:chapter2_decision_boundaries_start}
+\end{figure}
+
+Outliers can create "islands" of incorrect predictions, as shown in Slide \ref{fig:chapter2_outlier_effect}. This sensitivity makes \(k=1\) particularly problematic.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_58.jpg}
+	\caption{Outliers disrupting decision boundaries in Nearest Neighbor classification.}
+	\label{fig:chapter2_outlier_effect}
+\end{figure}
+
+\subsection{Improvements: k-Nearest Neighbors}
+
+The \textbf{k-Nearest Neighbors} (k-NN) algorithm improves upon Nearest Neighbor by considering the \(k\) closest neighbors and using a majority vote to determine the predicted label. This smooths decision boundaries and reduces the impact of outliers.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_61.jpg}
+	\caption{k-Nearest Neighbors ($k=3$): Smoother decision boundaries and reduced outlier influence.}
+	\label{fig:chapter2_knn_smoothing}
+\end{figure}
+
+However, k-NN introduces challenges such as ties between classes when \(k>1\). These ties can be resolved using heuristics like selecting the label of the nearest neighbor or weighting votes by distance.
+
+\subsection{Limitations and Universal Approximation}
+
+The Nearest Neighbor classifier has an intriguing theoretical property: with infinite training samples, it can approximate any function. This property arises from the ability to memorize and interpolate the training data. As the number of training points increases, the decision boundaries become increasingly fine-grained, capturing more nuanced patterns in the data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_81.jpg}
+	\caption{A step towards a dense coverage with Nearest Neighbor.}
+	\label{fig:chapter2_dense_coverage}
+\end{figure}
+
+However, the practicality of this property is severely limited by the \textbf{curse of dimensionality}. For high-dimensional data, the number of required training samples grows exponentially. For example:
+\begin{itemize}
+	\item In \(2\) dimensions, uniform coverage requires \(4^2 = 16\) points.
+	\item In \(3\) dimensions, \(4^3 = 64\) points are necessary.
+	\item For even modestly sized images like \(32 \times 32\), the number of possible binary images is astronomical: \(2^{32 \times 32} \approx 10^{308}\), far exceeding the number of elementary particles in the visible universe (\(\approx 10^{97}\)).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_85.jpg}
+	\caption{The curse of dimensionality: limitations of Nearest Neighbor in high-dimensional spaces.}
+	\label{fig:chapter2_curse_dimensionality}
+\end{figure}
+
+This exponential growth renders dense coverage impossible for real-world datasets, as highlighted in Slide \ref{fig:chapter2_curse_dimensionality}. Furthermore, we are often dealing with real-valued RGB images of even higher resolutions, adding to the complexity.
+
+\subsection{Using CNN Features for Nearest Neighbor Classification}
+
+Pixel-based distance metrics, such as L1 and L2 distances, often fail to capture \textbf{semantic similarity}. As highlighted in Slide \ref{fig:chapter2_l1_poor_performance}, objects with similar pixel intensities, such as a ginger cat and an orange frog, may be incorrectly classified as similar despite their clear visual and categorical differences. This limitation underscores the need for more sophisticated representations that go beyond raw pixel comparisons.
+
+A promising solution is to replace raw pixel distances with feature distances derived from \textbf{convolutional neural networks (CNNs)}. CNNs are adept at capturing higher-level semantic information by learning hierarchical feature representations directly from data. These features can effectively bridge the gap between low-level pixel values and meaningful object categories, enabling Nearest Neighbor classifiers to make more informed predictions,  bridging the semantic gap L1 or L2 metrics applied to raw pixel values face.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_87.jpg}
+	\caption{Nearest Neighbor with CNN features: improved semantic similarity.}
+	\label{fig:chapter2_nn_cnn}
+\end{figure}
+
+Slide \ref{fig:chapter2_nn_cnn} demonstrates the effectiveness of this approach, showcasing improved classification performance when CNN-derived features are paired with Nearest Neighbor classifiers. By leveraging these features, the algorithm becomes more robust to variations in lighting, scale, and viewpoint, which are challenging for pixel-based metrics to handle.
+
+This method has proven particularly effective in various tasks, including \textbf{image captioning}. In their work \cite{devlin2015_imagetocaption}, Devlin et al. (2015) proposed an approach that combines Nearest Neighbor with CNN features to generate captions for images. The algorithm retrieves the most similar image from the training set (based on CNN feature similarity) and reuses its caption as the prediction. While simplistic, this method delivered coherent and contextually relevant captions. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_88.jpg}
+	\caption{Nearest Neighbor captioning: retrieving captions from the closest matching image.}
+	\label{fig:chapter2_nn_captioning}
+\end{figure}
+
+These are examples as to how Nearest Neighbor classifiers, when augmented with learned features, can tackle complex tasks beyond basic classification. 
+
+\subsection{Conclusion}
+
+The Nearest Neighbor classifier highlights the balance between simplicity and capability, offering theoretical guarantees such as universal function approximation. However, its reliance on raw pixel metrics limits its practical applications, particularly in high-dimensional spaces. By incorporating feature representations from CNNs, Nearest Neighbor classifiers can overcome many of these limitations, improving performance in tasks ranging from image classification to captioning. These advancements pave the way for exploring even more sophisticated machine learning algorithms and architectures in subsequent sections.
+
+
+
 
 
 

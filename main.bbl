@@ -116,6 +116,36 @@
       \verb https://www.appen.com/blog/computer-vision-vs-machine-vision-2
       \endverb
     \endentry
+    \entry{lake2015_human}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=997ba52a0aa2831707604878f0229c5e}{%
+           family={Brenden\bibnamedelimb M.\bibnamedelimi Lake},
+           familyi={B\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim L\bibinitperiod},
+           given={Joshua\bibnamedelimb B.\bibnamedelimi Tenenbaum},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim T\bibinitperiod},
+           suffix={Ruslan\bibnamedelima Salakhutdinov},
+           suffixi={R\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{fullhash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{fullhashraw}{997ba52a0aa2831707604878f0229c5e}
+      \strng{bibnamehash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{authorbibnamehash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{authornamehash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{authorfullhash}{997ba52a0aa2831707604878f0229c5e}
+      \strng{authorfullhashraw}{997ba52a0aa2831707604878f0229c5e}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{6266}
+      \field{title}{Human-Level Concept Learning Through Probabilistic Program Induction}
+      \field{volume}{350}
+      \field{year}{2015}
+      \field{pages}{1332\bibrangedash 1338}
+      \range{pages}{7}
+    \endentry
     \entry{brooks1979_modelbased}{article}{}{}
       \name{author}{2}{}{%
         {{hash=c5572a6f2e05a08f36cab3bae8fdb643}{%
@@ -372,6 +402,40 @@
       \verb{doi}
       \verb 10.1109/CVPR.2009.5206848
       \endverb
+    \endentry
+    \entry{devlin2015_imagetocaption}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=13202969e372bc82318f9629cbdd199b}{%
+           family={Devlin},
+           familyi={D\bibinitperiod},
+           given={Jacob},
+           giveni={J\bibinitperiod}}}%
+        {{hash=f79a255dd3b121ac2c20245d973b7598}{%
+           family={Gupta},
+           familyi={G\bibinitperiod},
+           given={Bharath},
+           giveni={B\bibinitperiod}}}%
+        {{hash=bd5dadbe57bedc5957c19a3154c4d424}{%
+           family={Girshick},
+           familyi={G\bibinitperiod},
+           given={Ross},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{fullhash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{fullhashraw}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{bibnamehash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{authorbibnamehash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{authornamehash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{authorfullhash}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \strng{authorfullhashraw}{728a1d92ac5f54991d4d7dde7cf951a1}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1505.02044}
+      \field{title}{Exploring Nearest Neighbor Approaches for Image Captioning}
+      \field{year}{2015}
     \endentry
     \entry{donahue2015_ltrcnn}{article}{}{}
       \name{author}{7}{}{%
@@ -684,6 +748,40 @@
       \field{title}{Explaining and harnessing adversarial examples}
       \field{year}{2014}
     \endentry
+    \entry{harris1988_combined}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=26c2e30a214100e1224d04b183a1e7da}{%
+           family={Harris},
+           familyi={H\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=040c37e81c1c52d09c40b01f4474a405}{%
+           family={Stephens},
+           familyi={S\bibinitperiod},
+           given={Mike},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Citeseer}%
+      }
+      \strng{namehash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{fullhash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{fullhashraw}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{bibnamehash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{authorbibnamehash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{authornamehash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{authorfullhash}{c2d71df4b626b292cccb05dc10223c20}
+      \strng{authorfullhashraw}{c2d71df4b626b292cccb05dc10223c20}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Alvey Vision Conference}
+      \field{title}{A combined corner and edge detector}
+      \field{year}{1988}
+      \field{pages}{147\bibrangedash 151}
+      \range{pages}{5}
+    \endentry
     \entry{he2016_resnet}{article}{}{}
       \name{author}{4}{}{%
         {{hash=6b4b60e909e78633945f3f9c9dc83e01}{%
@@ -956,6 +1054,35 @@
       \field{journaltitle}{arXiv preprint arXiv:2304.02643}
       \field{title}{Segment Anything}
       \field{year}{2023}
+    \endentry
+    \entry{krizhevsky2009_learning}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=c5e3a676e2ac1164b3afcd539c131fc9}{%
+           family={Krizhevsky},
+           familyi={K\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9a8750ccdb2a4cf14d2655face1ce016}{%
+           family={Hinton},
+           familyi={H\bibinitperiod},
+           given={Geoffrey},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{fullhash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{fullhashraw}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{bibnamehash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{authorbibnamehash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{authornamehash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{authorfullhash}{db1738a0374d10d152a785eb2a94ce8c}
+      \strng{authorfullhashraw}{db1738a0374d10d152a785eb2a94ce8c}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Technical Report, University of Toronto}
+      \field{title}{Learning Multiple Layers of Features from Tiny Images}
+      \field{year}{2009}
     \endentry
     \entry{krizhevsky2012_alexnet}{inproceedings}{}{}
       \name{author}{3}{}{%
@@ -1745,8 +1872,58 @@
       \field{title}{Deep Reinforcement Learning for Playing Atari Games}
       \field{year}{2014}
     \endentry
+    \entry{zhou2017_places}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=c7cb7aa044ac5597397cceabad3765a3}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Bolei},
+           giveni={B\bibinitperiod}}}%
+        {{hash=ff625fa4a3aa4372da089f7c768a77c0}{%
+           family={Lapedriza},
+           familyi={L\bibinitperiod},
+           given={Agata},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c8d6add84efe17681e0d4968ebf47fdc}{%
+           family={Khosla},
+           familyi={K\bibinitperiod},
+           given={Aditya},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b7446de83b2320d904225a0730e3389a}{%
+           family={Oliva},
+           familyi={O\bibinitperiod},
+           given={Aude},
+           giveni={A\bibinitperiod}}}%
+        {{hash=2a80dd1cae02059e95bfed2f2715fd0a}{%
+           family={Torralba},
+           familyi={T\bibinitperiod},
+           given={Antonio},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{85a01c7844076348ef51e88248410965}
+      \strng{fullhash}{44e1623245c9cd9851011405075d6d79}
+      \strng{fullhashraw}{44e1623245c9cd9851011405075d6d79}
+      \strng{bibnamehash}{85a01c7844076348ef51e88248410965}
+      \strng{authorbibnamehash}{85a01c7844076348ef51e88248410965}
+      \strng{authornamehash}{85a01c7844076348ef51e88248410965}
+      \strng{authorfullhash}{44e1623245c9cd9851011405075d6d79}
+      \strng{authorfullhashraw}{44e1623245c9cd9851011405075d6d79}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)}
+      \field{number}{6}
+      \field{title}{Places: A 10 Million Image Database for Scene Recognition}
+      \field{volume}{40}
+      \field{year}{2017}
+      \field{pages}{1452\bibrangedash 1464}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/TPAMI.2017.2723009
+      \endverb
+    \endentry
   \enddatalist
-  \missing{buolamwini2018gender}
 \endrefsection
 \endinput
 
