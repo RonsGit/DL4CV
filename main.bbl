@@ -1872,6 +1872,35 @@
       \field{title}{Deep Reinforcement Learning for Playing Atari Games}
       \field{year}{2014}
     \endentry
+    \entry{yenigun_overfitting}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=8fa2e21f290393879fc095b45d334b9e}{%
+           family={Yenigün},
+           familyi={Y\bibinitperiod},
+           given={Okan},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{fullhash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{fullhashraw}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{bibnamehash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{authorbibnamehash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{authornamehash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{authorfullhash}{8fa2e21f290393879fc095b45d334b9e}
+      \strng{authorfullhashraw}{8fa2e21f290393879fc095b45d334b9e}
+      \field{sortinit}{Y}
+      \field{sortinithash}{fd67ad5a9ef0f7456bdd9aab10fe1495}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{AI Mind}
+      \field{title}{Overfitting vs. Underfitting}
+      \verb{urlraw}
+      \verb https://miro.medium.com/v2/resize:fit:1400/1*T5FDrB9yAWNkO00DpuOEBQ.png
+      \endverb
+      \verb{url}
+      \verb https://miro.medium.com/v2/resize:fit:1400/1*T5FDrB9yAWNkO00DpuOEBQ.png
+      \endverb
+    \endentry
     \entry{zhou2017_places}{article}{}{}
       \name{author}{5}{}{%
         {{hash=c7cb7aa044ac5597397cceabad3765a3}{%

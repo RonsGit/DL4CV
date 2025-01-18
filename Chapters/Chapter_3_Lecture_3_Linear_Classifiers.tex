@@ -8,18 +8,33 @@
 
 \section{Linear Classifiers: A Foundation for Neural Networks}
 
-Linear classifiers are a cornerstone of machine learning and represent one of the most fundamental building blocks for modern neural networks. 
+Linear classifiers are a cornerstone of machine learning and form one of the most fundamental building blocks for modern neural networks.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_7.jpg}
-	\caption{Neural networks are constructed from stacked building blocks, much like Lego blocks. Linear classifiers form one of the basic building blocks.}
+	\caption{Neural networks are constructed from stacked building blocks, much like Lego blocks. Linear classifiers are one of these foundational components.}
 	\label{fig:chapter3_lego_blocks}
 \end{figure}
 
-As illustrated in Slide \ref{fig:chapter3_lego_blocks}, neural networks can be viewed as systems built by stacking basic components, much like Lego blocks. Linear classifiers serve as one of these foundational blocks, naturally extending into more complex architectures, such as neural networks and convolutional neural networks (CNNs). Their simplicity belies their importance, as they enable a structured approach to mapping raw input data to class scores through a parametric framework.
+As illustrated in Figure \ref{fig:chapter3_lego_blocks}, neural networks are constructed by stacking basic components, with linear classifiers serving as one of the foundational elements. Despite their simplicity, linear classifiers play a critical role in providing a structured, parametric framework that maps raw input data to class scores. They naturally extend to more sophisticated architectures, such as neural networks and convolutional neural networks (CNNs).
 
-In this chapter, we will explore linear classifiers in detail, beginning with their algebraic, geometric, and visual interpretations to fully understand their properties. The approach of linear classifiers consists of two key components: a \textbf{score function}, which maps raw input data to class scores, and a \textbf{loss function}, which quantifies the agreement between the predicted scores and the ground truth labels. These elements allow us to cast the problem of classification as an optimization task: minimizing the loss function with respect to the parameters of the score function.
+This chapter focuses on linear classifiers and their role in classification problems. To develop a comprehensive understanding of their behavior and limitations, we will examine linear classifiers from three perspectives:
+\begin{itemize}
+	\item \textbf{Algebraic Viewpoint:} Frames the classifier as a mathematical function, emphasizing the score computation as a weighted combination of input features and biases.
+	\item \textbf{Visual Viewpoint:} Reveals how the classifier learns templates for each class and compares them with input images, highlighting its behavior as a form of template matching.
+	\item \textbf{Geometric Viewpoint:} Interprets the classifier's decision-making process in high-dimensional spaces, with hyperplanes dividing the space into regions corresponding to different classes.
+\end{itemize}
+
+These viewpoints not only help us understand the mechanics of linear classifiers but also shed light on their inherent limitations, such as their inability to handle non-linearly separable data or account for multiple modes in class distributions.
+
+Finally, we introduce the key components of linear classifiers:
+\begin{itemize}
+	\item A \textbf{score function} that maps input data to class scores.
+	\item A \textbf{loss function} that quantifies the model's performance by comparing predictions to ground truth labels.
+\end{itemize}
+
+While this chapter will focus on understanding these perspectives and defining loss functions, we will leave the topics of optimization and regularization for the next lecture, where we will discuss how to effectively train and refine linear classifiers.
 
 \begin{figure}[H]
 	\centering

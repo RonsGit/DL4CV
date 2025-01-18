@@ -97,117 +97,136 @@
 \ttl@stoptoc {default@2}
 \ttl@starttoc {default@3}
 \contentsline {section}{\numberline {3.1}Linear Classifiers: A Foundation for Neural Networks}{65}{section.3.1}%
-\contentsline {subsection}{Enrichment 0.1: Understanding the Role of Bias in Linear Classifiers}{67}{figure.3.2}%
-\contentsline {subsection}{\numberline {3.1.1}A Toy Example: Grayscale Cat Image}{68}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}The Bias Trick}{69}{subsection.3.1.2}%
-\contentsline {section}{\numberline {3.2}Linear Classifiers: The Algebraic Viewpoint}{70}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Scaling Properties and Insights}{70}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}From Algebra to Visual Interpretability}{71}{subsection.3.2.2}%
-\contentsline {section}{\numberline {3.3}Linear Classifiers: The Visual Viewpoint}{72}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Template Matching Perspective}{72}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Interpreting Templates}{73}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Python Code Example: Visualizing Learned Templates}{73}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Template Limitations: Multiple Modes}{74}{subsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.3.5}Looking Ahead}{74}{subsection.3.3.5}%
-\contentsline {section}{\numberline {3.4}Linear Classifiers: The Geometric Viewpoint}{74}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Images as High-Dimensional Points}{74}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Limitations of Linear Classifiers}{75}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Historical Context: The Perceptron and XOR Limitation}{76}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Challenges of High-Dimensional Geometry}{76}{subsection.3.4.4}%
-\contentsline {section}{\numberline {3.5}Summary: Shortcomings of Linear Classifiers}{77}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Algebraic Viewpoint}{77}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Visual Viewpoint}{77}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Geometric Viewpoint}{77}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}Conclusion}{77}{subsection.3.5.4}%
-\contentsline {section}{\numberline {3.6}Choosing the Weights for Linear Classifiers}{78}{section.3.6}%
-\contentsline {section}{\numberline {3.7}Loss Functions}{78}{section.3.7}%
-\contentsline {subsection}{\numberline {3.7.1}Cross-Entropy Loss}{78}{subsection.3.7.1}%
-\contentsline {subsubsection}{Softmax Function}{78}{section*.14}%
-\contentsline {subsubsection}{Loss Computation}{78}{section*.15}%
-\contentsline {paragraph}{Example: CIFAR-10 Image Classification}{79}{section*.16}%
-\contentsline {paragraph}{Properties of Cross-Entropy Loss}{79}{section*.17}%
-\contentsline {subsubsection}{Why "Cross-Entropy"?}{79}{section*.18}%
-\contentsline {subsection}{\numberline {3.7.2}Multiclass SVM Loss}{80}{subsection.3.7.2}%
-\contentsline {subsubsection}{Loss Definition}{80}{section*.19}%
-\contentsline {subsubsection}{Example Computation}{80}{section*.20}%
-\contentsline {paragraph}{Loss for the Cat Image}{80}{section*.21}%
-\contentsline {paragraph}{Loss for the Car Image}{81}{section*.22}%
-\contentsline {paragraph}{Loss for the Frog Image}{82}{section*.23}%
-\contentsline {paragraph}{Total Loss}{82}{section*.24}%
-\contentsline {subsubsection}{Key Questions and Insights}{83}{section*.25}%
-\contentsline {subsection}{\numberline {3.7.3}Comparison of Cross-Entropy and Multiclass SVM Losses}{83}{subsection.3.7.3}%
-\contentsline {subsubsection}{Conclusion}{83}{section*.26}%
-\contentsline {chapter}{\numberline {4}Lecture 4: Regularization \& Optimization}{84}{chapter.4}%
+\contentsline {subsection}{Enrichment 0.1: Understanding the Role of Bias in Linear Classifiers}{68}{figure.3.2}%
+\contentsline {subsection}{\numberline {3.1.1}A Toy Example: Grayscale Cat Image}{69}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}The Bias Trick}{70}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Linear Classifiers: The Algebraic Viewpoint}{71}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Scaling Properties and Insights}{71}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}From Algebra to Visual Interpretability}{72}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Linear Classifiers: The Visual Viewpoint}{73}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Template Matching Perspective}{73}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Interpreting Templates}{74}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Python Code Example: Visualizing Learned Templates}{74}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Template Limitations: Multiple Modes}{75}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Looking Ahead}{75}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Linear Classifiers: The Geometric Viewpoint}{75}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Images as High-Dimensional Points}{75}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Limitations of Linear Classifiers}{76}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Historical Context: The Perceptron and XOR Limitation}{77}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Challenges of High-Dimensional Geometry}{77}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Summary: Shortcomings of Linear Classifiers}{78}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Algebraic Viewpoint}{78}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Visual Viewpoint}{78}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Geometric Viewpoint}{78}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Conclusion}{78}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Choosing the Weights for Linear Classifiers}{79}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Loss Functions}{79}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Cross-Entropy Loss}{79}{subsection.3.7.1}%
+\contentsline {subsubsection}{Softmax Function}{79}{section*.14}%
+\contentsline {subsubsection}{Loss Computation}{79}{section*.15}%
+\contentsline {paragraph}{Example: CIFAR-10 Image Classification}{80}{section*.16}%
+\contentsline {paragraph}{Properties of Cross-Entropy Loss}{80}{section*.17}%
+\contentsline {subsubsection}{Why "Cross-Entropy"?}{80}{section*.18}%
+\contentsline {subsection}{\numberline {3.7.2}Multiclass SVM Loss}{81}{subsection.3.7.2}%
+\contentsline {subsubsection}{Loss Definition}{81}{section*.19}%
+\contentsline {subsubsection}{Example Computation}{81}{section*.20}%
+\contentsline {paragraph}{Loss for the Cat Image}{81}{section*.21}%
+\contentsline {paragraph}{Loss for the Car Image}{82}{section*.22}%
+\contentsline {paragraph}{Loss for the Frog Image}{83}{section*.23}%
+\contentsline {paragraph}{Total Loss}{83}{section*.24}%
+\contentsline {subsubsection}{Key Questions and Insights}{84}{section*.25}%
+\contentsline {subsection}{\numberline {3.7.3}Comparison of Cross-Entropy and Multiclass SVM Losses}{84}{subsection.3.7.3}%
+\contentsline {subsubsection}{Conclusion}{84}{section*.26}%
+\contentsline {chapter}{\numberline {4}Lecture 4: Regularization \& Optimization}{85}{chapter.4}%
 \ttl@stoptoc {default@3}
 \ttl@starttoc {default@4}
-\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{85}{chapter.5}%
+\contentsline {section}{\numberline {4.1}Introduction to Regularization}{85}{section.4.1}%
+\contentsline {section}{\numberline {4.2}How Regularization is Used?}{86}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Regularization: Simpler Models Are Preferred}{86}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Types of Regularization: L1 and L2}{87}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}L1 Regularization (Lasso)}{87}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}L2 Regularization (Ridge)}{87}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Choosing Between L1 and L2 Regularization}{87}{subsection.4.4.3}%
+\contentsline {paragraph}{Can We Combine L1 and L2 Regularization?}{88}{section*.27}%
+\contentsline {paragraph}{When to Use Elastic Net?}{88}{section*.28}%
+\contentsline {paragraph}{Summary:}{88}{section*.29}%
+\contentsline {section}{\numberline {4.5}Impact of Feature Scaling on Regularization}{88}{section.4.5}%
+\contentsline {paragraph}{Practical Implication:}{88}{section*.30}%
+\contentsline {paragraph}{Example: Rescaling and Lasso Regression.}{88}{section*.31}%
+\contentsline {section}{\numberline {4.6}Expressing Preferences Through Regularization}{89}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Regularization Improves Optimization}{89}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Adding Curvature to the Loss Surface}{89}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Preventing Instability}{89}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Improving Conditioning}{89}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}Regularization as Part of Optimization}{89}{section.4.8}%
+\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{91}{chapter.5}%
 \ttl@stoptoc {default@4}
 \ttl@starttoc {default@5}
-\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{86}{chapter.6}%
+\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{92}{chapter.6}%
 \ttl@stoptoc {default@5}
 \ttl@starttoc {default@6}
-\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{87}{chapter.7}%
+\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{93}{chapter.7}%
 \ttl@stoptoc {default@6}
 \ttl@starttoc {default@7}
-\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{88}{chapter.8}%
+\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{94}{chapter.8}%
 \ttl@stoptoc {default@7}
 \ttl@starttoc {default@8}
-\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{89}{chapter.9}%
+\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{95}{chapter.9}%
 \ttl@stoptoc {default@8}
 \ttl@starttoc {default@9}
-\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{90}{chapter.10}%
+\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{96}{chapter.10}%
 \ttl@stoptoc {default@9}
 \ttl@starttoc {default@10}
-\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{91}{chapter.11}%
+\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{97}{chapter.11}%
 \ttl@stoptoc {default@10}
 \ttl@starttoc {default@11}
-\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{91}{section.11.1}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{92}{chapter.12}%
+\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{97}{section.11.1}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{98}{chapter.12}%
 \ttl@stoptoc {default@11}
 \ttl@starttoc {default@12}
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{93}{chapter.13}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{99}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{94}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{100}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{95}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{101}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{96}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{102}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{97}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{103}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{98}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{104}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{99}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{105}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{100}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{106}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{101}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{107}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{102}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{108}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{103}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{109}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{104}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{110}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{105}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{111}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{106}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{112}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{107}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{113}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

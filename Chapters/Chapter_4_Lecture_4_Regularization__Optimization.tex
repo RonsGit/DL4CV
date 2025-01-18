@@ -6,3 +6,200 @@
 %----------------------------------------------------------------------------------------
 %	CHAPTER 4 - Lecture 4: Regularization & Optimization
 %----------------------------------------------------------------------------------------
+\section{Introduction to Regularization}
+In the previous chapter, we explored loss functions as tools to evaluate the performance of machine learning models. However, machine learning is not just about minimizing the loss on the training data. In practice, this narrow focus can be counterproductive, leading to a phenomenon known as \textbf{overfitting}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/overfitting_underfitting.jpg}
+	\caption{Illustration of underfitting, good fitting, and overfitting in classification and regression tasks \cite{yenigun_overfitting}. Good regularization aims to strike the balance between underfitting and overfitting.}
+	\label{fig:chapter4_overfitting_underfitting}
+\end{figure}
+
+As shown in Figure \ref{fig:chapter4_overfitting_underfitting}, overfitting occurs when a model fits the training data too perfectly, capturing even noise and idiosyncrasies that do not generalize to unseen data. While this may result in excellent performance on the training set, it undermines the model’s ability to perform well on test data or real-world scenarios. Conversely, underfitting happens when the model is too simplistic to capture the underlying structure of the data, resulting in poor performance on both the training and test sets. Good regularization techniques aim to achieve a balance, ensuring the model fits the data "just right."
+
+\textbf{Why Regularization?}  
+The primary purpose of regularization is to improve the model’s \textbf{generalization}—its ability to perform well on unseen data—by discouraging it from overfitting to the training set. However, regularization serves other key roles:
+\begin{itemize}
+	\item \textbf{Improving Optimization:} Regularization can add curvature to the loss surface, making optimization easier and more stable.
+	\item \textbf{Expressing Model Preferences:} Beyond simply minimizing training error, regularization allows us to encode preferences for simpler or more interpretable models.
+\end{itemize}
+
+In this chapter, we will dive into various regularization techniques, explore their mathematical foundations, and discuss how they help achieve better generalization. We will also revisit optimization, introducing practical methods to efficiently minimize loss functions in the presence of regularization.
+
+\section{How Regularization is Used?}
+
+As discussed in the introduction, in optimization tasks, the goal is to minimize a loss function \( L_\text{loss}(W) \), which measures the model's performance on training data. However, focusing solely on minimizing \( L_\text{loss}(W) \) can lead to overfitting, where the model memorizes the training data instead of learning patterns that generalize to unseen data.
+
+Regularization addresses this by adding a penalty term \( R(W) \) to the optimization objective:
+\[
+\text{Objective} = \min_W \left[ L_\text{loss}(W) + \lambda R(W) \right],
+\]
+where:
+\begin{itemize}
+	\item \( \lambda \) is the regularization strength, a hyperparameter controlling the penalty's weight.
+	\item \( R(W) \) is the regularization term, typically a function of the model weights \( W \), independent of the training data.
+\end{itemize}
+
+\section{Regularization: Simpler Models Are Preferred}
+
+Regularization promotes simpler models by penalizing large weights, irrespective of their sign. Both L1 and L2 regularization measure the magnitude of weights (\(|W|\) or \(W^2\)), ensuring non-negative penalties. But why do weights increase when a model adjusts to changes in the data?
+
+When the input data contains small perturbations or noise, a model without regularization adjusts its parameters to minimize the training loss \(L_\text{loss}(W)\). Addressing these changes typically involves increasing specific weights to emphasize features that explain the perturbation. This increase amplifies the model's sensitivity to noise, leading to larger weights. Regularization imposes a penalty for large weights, forcing the model to balance reducing \(L_\text{loss}(W)\) against increasing the regularization term \(R(W)\). This trade-off discourages addressing changes that only marginally benefit the loss, resulting in smaller weights and simpler models.
+
+\section{Types of Regularization: L1 and L2}
+
+\subsection{L1 Regularization (Lasso)}
+
+\begin{itemize}
+	\item \textbf{Definition:} Adds a penalty proportional to the sum of the absolute values of the weights:
+	\[
+	R(W) = \sum_{i} |w_i|.
+	\]
+	\item \textbf{Effects:}
+	\begin{itemize}
+		\item Promotes sparsity by driving many weights to exact zeros, effectively performing feature selection.
+		\item Encourages interpretable models by retaining only a subset of the most relevant features.
+	\end{itemize}
+	\item \textbf{Why L1 Produces Sparse Weights:} The sharp gradient of the absolute value penalty around zero encourages optimization to push small weights to exactly zero.
+	\item \textbf{Pros:}
+	\begin{itemize}
+		\item Suitable for feature selection in high-dimensional datasets.
+		\item Produces interpretable models with fewer active features.
+	\end{itemize}
+	\item \textbf{Cons:}
+	\begin{itemize}
+		\item Struggles with correlated features, arbitrarily selecting one over others.
+		\item May exclude relevant features if sparsity is overly enforced.
+	\end{itemize}
+\end{itemize}
+
+\subsection{L2 Regularization (Ridge)}
+
+\begin{itemize}
+	\item \textbf{Definition:} Adds a penalty proportional to the sum of the squared weights:
+	\[
+	R(W) = \sum_{i} w_i^2.
+	\]
+	\item \textbf{Effects:}
+	\begin{itemize}
+		\item Reduces all weights uniformly, discouraging large weights without enforcing sparsity.
+		\item Promotes balanced use of all features, making the model less sensitive to individual feature noise.
+	\end{itemize}
+	\item \textbf{Why L2 Is Common in Practice:}
+	\begin{itemize}
+		\item Handles correlated features better by distributing weights across them.
+		\item Computationally efficient with gradient-based methods due to its smooth gradients.
+	\end{itemize}
+	\item \textbf{Pros:}
+	\begin{itemize}
+		\item Effective for datasets with correlated features.
+		\item Produces robust models by retaining all features.
+	\end{itemize}
+	\item \textbf{Cons:}
+	\begin{itemize}
+		\item Does not perform feature selection, retaining all features in the model.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Choosing Between L1 and L2 Regularization}
+
+The choice depends on the problem:
+\begin{itemize}
+	\item Use \textbf{L1 Regularization} when:
+	\begin{itemize}
+		\item Feature selection is essential.
+		\item A sparse model is required for interpretability.
+	\end{itemize}
+	\item Use \textbf{L2 Regularization} when:
+	\begin{itemize}
+		\item Features are correlated, and balance is important.
+		\item Smooth optimization is desired.
+	\end{itemize}
+	\paragraph{Can We Combine L1 and L2 Regularization?} Yes! Elastic Net is a regularization technique that combines both L1 (Lasso) and L2 (Ridge) regularization penalties. Its objective function includes a linear combination of the L1 and L2 penalties, defined as:
+	
+	\[
+	L(W) = L_\text{loss} + \lambda_1 \sum_{i} |w_i| + \lambda_2 \sum_{i} w_i^2,
+	\]
+	
+	where \(\lambda_1\) controls the L1 penalty, and \(\lambda_2\) controls the L2 penalty. This combination allows Elastic Net to enjoy the benefits of both regularization methods:
+	\begin{itemize}
+		\item The L1 penalty encourages sparsity, making Elastic Net useful for feature selection by reducing irrelevant feature weights to zero.
+		\item The L2 penalty helps distribute weights among correlated features, overcoming L1's tendency to select only one feature from a group of highly correlated features.
+	\end{itemize}
+	
+	\paragraph{When to Use Elastic Net?} Elastic Net is especially beneficial in situations where:
+	\begin{itemize}
+		\item The dataset contains many features, some of which are irrelevant (addressed by L1).
+		\item There are groups of highly correlated features that all contribute to the prediction (handled by L2).
+	\end{itemize}
+	
+	\paragraph{Summary:} Elastic Net strikes a balance between L1 and L2 regularization, offering a flexible approach for scenarios where sparsity and balanced weight distribution are both important.
+\end{itemize}
+
+\section{Impact of Feature Scaling on Regularization}
+
+Regularization penalties depend on the magnitude of weights, which is influenced by the scale of the input features. Without proper scaling, features with larger values dominate the penalty term, skewing the regularization effect. This is because:
+
+\begin{itemize}
+	\item Features with larger scales (e.g., kilometers) result in smaller coefficients, contributing less to the penalty.
+	\item Features with smaller scales (e.g., millimeters) result in larger coefficients, contributing more to the penalty.
+\end{itemize}
+
+For instance, if a feature \(x_j\) is multiplied by a constant \(c\), its corresponding weight \(w_j\) is divided by \(c\) to maintain the same effect on the model's predictions. This imbalance can unfairly penalize some features over others, especially in Ridge (L2) regularization, which imposes a squared penalty.
+
+\paragraph{Practical Implication:} To ensure fair regularization, input features should be normalized (centered to have mean 0 and scaled to have variance 1). Normalization ensures that all features contribute equally to the penalty, allowing the model to prioritize based on relevance rather than scale.
+
+\paragraph{Example: Rescaling and Lasso Regression.} 
+Suppose Lasso regression is applied to a dataset with 100 features. If one feature (\(F_1\)) is rescaled by multiplying it by 10, its corresponding coefficient decreases, reducing the absolute penalty. As a result, \(F_1\) is more likely to be retained in the model.
+
+\section{Expressing Preferences Through Regularization}
+
+Regularization helps express preferences beyond minimizing the training loss:
+\begin{itemize}
+	\item \textbf{L2 Regularization:} Prefers weight distributions that spread importance across features. For example:
+	\[
+	x = [1, 1, 1, 1], \quad w_1 = [1, 0, 0, 0], \quad w_2 = [0.25, 0.25, 0.25, 0.25].
+	\]
+	Both yield the same inner product (\(w_1^T x = w_2^T x = 1\)), but L2 regularization favors \(w_2\) because it minimizes \( \sum w_i^2 \), distributing importance across all features.
+	\item \textbf{L1 Regularization:} Favors sparse solutions, focusing on a subset of features. In the above example, \(w_1\) would be preferred by L1 regularization.
+\end{itemize}
+
+\section{Regularization Improves Optimization}
+
+Beyond preventing overfitting, regularization enhances optimization by shaping the loss surface. This added structure simplifies and stabilizes the optimization process in key ways:
+
+\subsection{Adding Curvature to the Loss Surface}
+Regularization, particularly \textbf{L2 regularization}, introduces a quadratic penalty term to the loss:
+\[
+L(W) = L_\text{loss}(W) + \lambda \sum_{i} w_i^2.
+\]
+This penalty increases curvature, especially in regions with large weight magnitudes, resulting in:
+\begin{itemize}
+	\item \textbf{Smoother Landscapes:} The loss surface becomes more convex, reducing flat regions and saddle points.
+	\item \textbf{Stable Gradients:} Gradient-based methods like gradient descent converge more reliably with less oscillation or vanishing gradients.
+\end{itemize}
+
+\subsection{Preventing Instability}
+By penalizing large weights, regularization limits excessive updates during optimization. This reduces instability, particularly in high-dimensional spaces, where large weights can lead to erratic model behavior.
+
+\subsection{Improving Conditioning}
+High-dimensional loss surfaces often exhibit anisotropy, where gradients vary sharply across dimensions. Regularization balances the curvature across directions, improving the condition number of the problem and facilitating efficient convergence.
+
+In essence, regularization smoothens and stabilizes the optimization landscape, making it easier for algorithms to find better solutions, particularly in complex models like deep neural networks.
+
+\section{Regularization as Part of Optimization}
+
+Regularization is seamlessly integrated into the optimization process as a penalty term in the loss function:
+\[
+L(W) = L_\text{loss}(W) + \lambda R(W).
+\]
+Here, the regularization term \(R(W)\) acts as a constraint, influencing the optimization goal. This dual role bridges the gap between regularization and optimization:
+\begin{itemize}
+	\item \textbf{Constraint and Balance:} Regularization balances minimizing training loss with enforcing model simplicity.
+	\item \textbf{Guiding Optimization:} By penalizing specific weight configurations, regularization steers optimization toward solutions that generalize better to unseen data.
+\end{itemize}
+
+The interplay between regularization and optimization ensures that models are not only accurate but also robust and efficient. In the next sections, we explore optimization techniques that leverage this synergy to train effective machine learning models.
+
+
