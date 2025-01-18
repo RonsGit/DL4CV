@@ -6,3 +6,622 @@
 %	CHAPTER 3 - Lecture 3: Linear Classifiers
 %----------------------------------------------------------------------------------------
 
+\section{Linear Classifiers: A Foundation for Neural Networks}
+
+Linear classifiers are a cornerstone of machine learning and represent one of the most fundamental building blocks for modern neural networks. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_7.jpg}
+	\caption{Neural networks are constructed from stacked building blocks, much like Lego blocks. Linear classifiers form one of the basic building blocks.}
+	\label{fig:chapter3_lego_blocks}
+\end{figure}
+
+As illustrated in Slide \ref{fig:chapter3_lego_blocks}, neural networks can be viewed as systems built by stacking basic components, much like Lego blocks. Linear classifiers serve as one of these foundational blocks, naturally extending into more complex architectures, such as neural networks and convolutional neural networks (CNNs). Their simplicity belies their importance, as they enable a structured approach to mapping raw input data to class scores through a parametric framework.
+
+In this chapter, we will explore linear classifiers in detail, beginning with their algebraic, geometric, and visual interpretations to fully understand their properties. The approach of linear classifiers consists of two key components: a \textbf{score function}, which maps raw input data to class scores, and a \textbf{loss function}, which quantifies the agreement between the predicted scores and the ground truth labels. These elements allow us to cast the problem of classification as an optimization task: minimizing the loss function with respect to the parameters of the score function.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_12.jpg}
+	\caption{Parametric linear classifier pipeline: The input image is flattened into a vector, multiplied with weights, and added to a bias vector to produce class scores.}
+	\label{fig:chapter3_parametric_classifier}
+\end{figure}
+
+As seen in Slide \ref{fig:chapter3_parametric_classifier}, linear classifiers adopt a parametric approach where the input image \(\mathbf{x}\) (e.g., a \(32 \times 32 \times 3\) RGB image of a cat) is flattened into a single vector of pixel values of length \(D = 3072\). This flattening is performed consistently across all input images to maintain structural uniformity. Given \(K = 10\) classes, the classifier outputs 10 scores, one for each class. This is achieved using the function:
+\[
+f(\mathbf{x}, W, \mathbf{b}) = W\mathbf{x} + \mathbf{b},
+\]
+where \(W\) is a learnable weight matrix of shape \(K \times D\), and \(\mathbf{b}\) is a learnable bias vector of shape \(K\). 
+
+The weight matrix \(W\) and the bias term \(\mathbf{b}\) work together to define the decision boundary in a linear classifier. To build intuition, consider the simple example of a linear equation \(y = mx + b\) in two dimensions. In this equation:
+\begin{itemize}
+	\item \(m\) determines the slope of the line, dictating how steeply it tilts.
+	\item \(b\) shifts the line vertically, allowing it to move up or down along the \(y\)-axis. This effectively changes where the line crosses the axis, without altering its slope.
+\end{itemize}
+
+Similarly, in a linear classifier, the decision boundary is represented as \(W \mathbf{x} + \mathbf{b} = 0\), where:
+\begin{itemize}
+	\item The weight matrix \(W\) determines the orientation and steepness of the decision boundary in the input space by defining how the features \(\mathbf{x}\) combine to produce class scores.
+	\item The bias term \(\mathbf{b}\), independent of the input features \(\mathbf{x}\), offsets the decision boundary. This shifts the hyperplane in the feature space, much like \(b\) in \(y = mx + b\) shifts the line vertically.
+\end{itemize}
+\newpage
+\begin{enrichment}[Understanding the Role of Bias in Linear Classifiers][subsection]
+
+The bias term \(\mathbf{b}\) in linear classifiers allows the decision boundary to shift, enabling the model to handle data distributions that are not centered at the origin. This flexibility is essential, as demonstrated in the following example:
+
+\begin{example}
+	Consider a classification task in 2D space with two data points:
+	\begin{itemize}
+		\item Red point (Class 1): \((1, 1)\).
+		\item Blue point (Class 2): \((2, 2)\).
+	\end{itemize}
+	
+	The decision boundary is defined as:
+	\[
+	W \mathbf{x} + b = 0 \implies -x - y + b = 0.
+	\]
+	
+	\textbf{Without Bias (\(b = 0\)):}
+	\begin{itemize}
+		\item The decision boundary becomes \(y = -x\), which passes through the origin.
+		\item Both the red point \((1, 1)\) and the blue point \((2, 2)\) lie on the same side of the line $y=-x$.
+		\item As a result, the two classes cannot be separated correctly.
+	\end{itemize}
+	
+	\textbf{With Bias (\(b = 3\)):}
+	\begin{itemize}
+		\item The decision boundary becomes \(y = -x + 3\), shifting the line upward.
+		\item The red point \((1, 1)\) satisfies \(-x - y + 3 > 0\) (classified as red).
+		\item The blue point \((2, 2)\) satisfies \(-x - y + 3 < 0\) (classified as blue).
+		\item The bias term enables correct separation of the two points.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/bias_importance.jpg}
+		\caption{Bias shifts the decision boundary (orange line), enabling correct classification of the two points. Without bias (e.g., green line for the chosen $W$), no line passing through the origin can separate the points.}
+		\label{fig:chapter3_bias_example}
+	\end{figure}
+\end{example}
+
+\textbf{Key Insight:} Without the bias term, the decision boundary is constrained to pass through the origin, making it impossible to correctly separate the two points. Adding a bias term shifts the boundary, enabling proper classification.
+
+This concept generalizes beyond toy 2D problems. In higher-dimensional spaces, the bias term provides the flexibility to shift hyperplanes, enabling the classifier to handle real-world data distributions that are not centered at the origin. Without this flexibility, the model would struggle to adapt to datasets where the mean of the input features is non-zero or misaligned with the origin.
+
+\end{enrichment} 
+
+\subsection{A Toy Example: Grayscale Cat Image}
+
+To build a strong foundation for understanding how linear classifiers work, let us consider a toy example of a grayscale \(2 \times 2\) image of a cat. Each pixel has a value ranging from 0 to 255, representing its intensity from black to white. Although real cat images are much larger, this simplified scenario helps illustrate the key principles with ease.
+
+\begin{itemize}
+	\item \textbf{Image Representation:} The \(2 \times 2\) image is stretched into a column vector with 4 entries, denoted as:
+	\[
+	\mathbf{x} = [x_1, x_2, x_3, x_4]^T.
+	\]
+	\item \textbf{Weight Matrix \(\mathbf{W}\):} The weight matrix \(\mathbf{W}\) has \(K\) rows (one for each class) and 4 columns (one for each pixel). Each row of \(\mathbf{W}\) corresponds to a specific class and determines the influence of each pixel on the classification score.
+	\item \textbf{Matrix Multiplication:} The input vector \(\mathbf{x}\) is multiplied with the weight matrix \(\mathbf{W}\) to produce a vector of scores:
+	\[
+	\mathbf{s} = \mathbf{W} \mathbf{x},
+	\]
+	where \(\mathbf{s} = [s_1, s_2, \dots, s_K]^T\) represents the scores for \(K\) classes.
+	\item \textbf{Bias Term:} A bias vector \(\mathbf{b}\) of size \(K\) is added to the score vector:$\mathbf{o} = \mathbf{s} + \mathbf{b},$ resulting in the final output vector \(\mathbf{o}\), where each element represents the adjusted score for a class.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_14.jpg}
+	\caption{A toy example of a grayscale \(2 \times 2\) cat image (Slide 14), stretched into a vector and passed through a linear classifier.}
+	\label{fig:chapter3_slide14_toy_example}
+\end{figure}
+
+This simple yet powerful operation demonstrates how linear classifiers map raw data (pixel values) to class scores using a combination of learned weights and bias terms.
+
+\subsection{The Bias Trick}
+
+In linear classifiers, the bias term \(\mathbf{b}\) plays a critical role in adjusting the decision boundary. An alternative way to incorporate the bias is through a technique called the \textbf{bias trick}, which eliminates the explicit bias vector by augmenting the input data and weight matrix. This approach is commonly used when the input data naturally has a vector form, such as in tabular datasets.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_15.jpg}
+	\caption{The bias trick applied to the toy cat example: augmenting the image vector with a constant 1 and extending the weight matrix to incorporate the bias.}
+	\label{fig:chapter3_bias_trick}
+\end{figure}
+
+\textbf{How the Trick Works:}
+\begin{itemize}
+	\item \textbf{Augmented Input Representation:} To absorb the bias term into the weight matrix, we append an additional constant value of \(1\) to the input feature vector. If the original feature vector is \(\mathbf{x} = [x_1, x_2, \dots, x_D]^T\), the augmented representation becomes:
+	\[
+	\mathbf{x}' = [x_1, x_2, \dots, x_D, 1]^T.
+	\]
+	\item \textbf{Augmented Weight Matrix:} The weight matrix \(\mathbf{W}\) is updated by adding a new column corresponding to the bias. If \(\mathbf{W}\) initially has dimensions \(K \times D\), the augmented matrix becomes \(K \times (D+1)\), where the last column holds the bias values for each class.
+	\item \textbf{Unified Matrix Multiplication:} The score computation becomes:
+	\[
+	\mathbf{s} = \mathbf{W} \mathbf{x}',
+	\]
+	effectively absorbing the bias into the augmented weight matrix.
+\end{itemize}
+
+\textbf{Example with Cat Image (Slide \ref{fig:chapter3_bias_trick})}
+
+To demonstrate the bias trick in action, consider the toy example of a \(2 \times 2\) grayscale image of a cat introduced earlier (Slide \ref{fig:chapter3_slide14_toy_example}). Initially, the image was flattened into a vector of 4 pixels, \([p_1, p_2, p_3, p_4]^T\). Using the bias trick, we augment this vector by appending a constant value of \(1\), resulting in:
+\[
+\mathbf{x}' = [p_1, p_2, p_3, p_4, 1]^T.
+\]
+
+Simultaneously, the weight matrix \(\mathbf{W}\), originally of shape \(K \times 4\), is augmented to \(K \times 5\) by adding a new column to account for the bias term. The computation of class scores becomes:
+\[
+\mathbf{s} = \mathbf{W} \mathbf{x}',
+\]
+where the augmented weight matrix seamlessly integrates the effect of the bias.
+
+\textbf{Advantages of the Bias Trick:}
+\begin{itemize}
+	\item \textbf{Simplified Notation:} The trick reduces the need for separate terms in the computation, allowing the bias and weights to be handled in a unified framework.
+	\item \textbf{Ease of Implementation:} In frameworks where data is inherently vectorized (e.g., certain numerical libraries), this method simplifies coding and matrix operations.
+	\item \textbf{Theoretical Insights:} This technique emphasizes that the bias term is simply an additional degree of freedom, equivalent to a constant input feature with fixed weight.
+\end{itemize}
+
+\textbf{Limitations in Computer Vision:}
+In computer vision, the bias trick is less frequently used. For example, in convolutional neural networks (CNNs), this approach does not translate well because the input is often represented as multi-dimensional tensors (e.g., images), and the convolution operation does not naturally accommodate the bias trick. Additionally:
+\begin{itemize}
+	\item \textbf{Separate Initialization:} Bias and weights are often initialized differently in practice. For instance, weights may be initialized randomly, while biases might start at zero to avoid influencing initial predictions.
+	\item \textbf{Flexibility in Training:} Treating bias and weights separately allows more nuanced adjustments during regularization or optimization.
+\end{itemize}
+
+\textbf{When to Use the Bias Trick:}
+The bias trick is particularly useful for datasets where the input data is naturally represented as a vector (e.g., tabular data or flattened image data). It simplifies the mathematical formulation and is computationally efficient in these scenarios. However, when working with more complex data structures, such as images in their raw tensor form, separating the bias term often provides more flexibility and practical utility.
+
+This technique highlights the elegance and adaptability of linear classifiers, demonstrating how small changes in representation can simplify computations while maintaining mathematical equivalence.
+
+\section{Linear Classifiers: The Algebraic Viewpoint}
+
+The algebraic viewpoint provides an elegant mathematical framework to understand linear classifiers. It emphasizes the role of the weight matrix \(\mathbf{W}\) and the bias vector \(\mathbf{b}\) in transforming input features into scores for each class. This perspective also highlights certain intrinsic properties and limitations of linear classifiers.
+
+\subsection{Scaling Properties and Insights}
+
+Linear classifiers exhibit a key property: their output scores scale linearly with the input. Consider a scaled input \(\mathbf{x}' = c\mathbf{x}\) (where \(c > 0\) is a constant). When passed through a classifier without a bias term, the output becomes:
+\[
+f(\mathbf{x}', \mathbf{W}) = \mathbf{W}(c\mathbf{x}) = c \cdot f(\mathbf{x}, \mathbf{W}).
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_18.jpg}
+	\caption{Scaling effect in linear classifiers: uniform scaling of inputs leads to proportional scaling of output scores, as shown in this cat image example.}
+	\label{fig:chapter3_scaling_bias_trick}
+\end{figure}
+
+This means that scaling the input by a constant \(c\) directly scales the output scores by \(c\). Slide \ref{fig:chapter3_scaling_bias_trick} illustrates this with a practical example. A grayscale image of a cat, when uniformly brightened or darkened (scaling all pixel values by \(c\)), results in scaled class scores. Humans can still easily recognize the cat, but the classifier’s output scores are proportionally reduced. For instance:
+\[
+f(\mathbf{x}, \mathbf{W}) = [2.0, -1.0, 0.5], \quad f(c\mathbf{x}, \mathbf{W}) = [1.0, -0.5, 0.25] \quad \text{(for \(c = 0.5\))}.
+\]
+
+This feature of linear classifiers may or may not be desirable, depending on the choice of loss function:
+\begin{itemize}
+	\item If the loss function focuses on relative scores, such as cross-entropy, the scaling has no effect because the final predictions depend only on the relative differences between scores.
+	\item However, in other contexts, absolute score magnitudes might be important, and scaling could introduce issues.
+\end{itemize}
+
+\subsection{From Algebra to Visual Interpretability}
+
+While the algebraic viewpoint is powerful for mathematical formulation, it can sometimes obscure the intuition behind the classifier’s behavior. A useful trick to bridge this gap involves reshaping the rows of the weight matrix \(\mathbf{W}\) into image-like blocks.
+
+Each row of \(\mathbf{W}\) corresponds to one class, and reshaping it into the dimensions of the input image allows us to visualize what the classifier "sees" for each class. These visualizations can provide insight into:
+\begin{itemize}
+	\item What features the classifier considers important for each class.
+	\item How the classifier might misinterpret or confuse one class with another.
+	\item Biases or artifacts present in the dataset, as reflected in the learned weights.
+\end{itemize}
+
+This interpretation naturally leads into the \textbf{Visual Viewpoint}, which we will explore in detail in subsequent sections. By combining algebraic rigor with visual insights, we can better understand the strengths and limitations of linear classifiers.
+
+\section{Linear Classifiers: The Visual Viewpoint}
+
+The visual viewpoint provides an intuitive way to interpret the behavior of linear classifiers by visualizing the rows of the weight matrix \(\mathbf{W}\) reshaped into the input image’s dimensions. This visualization helps us understand what the classifier "learns" during training and highlights its strengths and limitations.
+
+\subsection{Template Matching Perspective}
+
+In a linear classifier, each row of the weight matrix \(\mathbf{W}\) corresponds to a specific output class. By reshaping these rows into the shape of the input image, we can view them as class-specific templates. The score for a given class is computed by taking the inner product (dot product) between the input image and the corresponding template. This process effectively performs template matching, where the templates are learned from data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_22.jpg}
+	\caption{Visualizing the rows of the weight matrix \(\mathbf{W}\) as learned templates for each class.}
+	\label{fig:chapter3_template_matching}
+\end{figure}
+
+Figure \ref{fig:chapter3_template_matching} illustrates how the rows of \(\mathbf{W}\) can be visualized as templates. The inner product measures how well each template "fits" the input image, assigning a score to each class. 
+
+This method can be compared to Nearest Neighbor classification:
+\begin{itemize}
+	\item Instead of storing thousands of training images, a single learned template per class is used.
+	\item The similarity is measured using the (negative) inner product rather than L1 or L2 distance.
+\end{itemize}
+
+\newpage
+
+\subsection{Interpreting Templates}
+
+Visualizing the templates reveals the learned features for each class:
+\begin{itemize}
+	\item \textbf{Plane and Ship Classes:} The templates for these classes are predominantly blue, reflecting the sky and ocean backgrounds common in the training set. A strong inner product with these templates may incorrectly classify other blue-background objects (e.g., a blue shirt) as planes or ships. Conversely, planes or ships on non-blue backgrounds might be misclassified.
+	\item \textbf{Horse Class:} The horse class template appears to depict a two-headed horse, as it merges training images of horses facing left and right into a single representation. 
+	\item \textbf{Car Class:} The car class template is red, indicating a dataset bias toward red cars. This can lead to incorrect classifications for cars of other colors.
+\end{itemize}
+
+These observations highlight limitations of \textbf{background sensitivity}, a \textbf{single template per class}.
+
+\subsection{Python Code Example: Visualizing Learned Templates}
+
+Here’s an example using an SVM classifier (a type of linear classifier) to visualize learned templates:
+
+\begin{mintedbox}{python}
+	# Visualize the learned weights for each class
+	w = svm.W[:-1, :]  # Strip out the bias term
+	w = w.reshape(32, 32, 3, 10)  # Reshape rows into image format
+	w_min, w_max = np.min(w), np.max(w)
+	
+	classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+	
+	for i in range(10):
+	plt.subplot(2, 5, i + 1)
+	# Rescale weights to 0-255 range for visualization
+	wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
+	plt.imshow(wimg.astype('uint8'))
+	plt.axis('off')
+	plt.title(classes[i])
+	plt.show()
+\end{mintedbox}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/class_templates.jpg}
+	\caption{The output of the code (building upon NumPy and Matplotlib) visualizes the rows of the weight matrix reshaped into the input image format, enabling inspection of the learned templates.}
+	\label{fig:chapter3_visualize_class_templates}
+\end{figure}
+
+\subsection{Template Limitations: Multiple Modes}
+
+Linear classifiers are limited by their single-template-per-class constraint:
+\begin{itemize}
+	\item Categories with distinct modes (e.g., horses facing left vs. right) cannot be disentangled, as the classifier learns only one merged template.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_23.jpg}
+	\caption{The horse class template demonstrates the limitation of learning a single template for a category with multiple modes.}
+	\label{fig:chapter3_multiple_modes}
+\end{figure}
+
+\subsection{Looking Ahead}
+
+While linear classifiers provide valuable insights, their limitations become apparent in real-world tasks. Neural networks, which will be introduced later, address these shortcomings by developing intermediate neurons in hidden layers. These neurons can specialize in features like "red car" or "blue car" and combine them into more accurate class scores, overcoming the single-template limitation of linear classifiers.
+
+\section{Linear Classifiers: The Geometric Viewpoint}
+
+The geometric viewpoint provides a spatial interpretation of how linear classifiers operate in high-dimensional input spaces. By treating each stretched input image as a point in a high-dimensional space, this perspective helps us understand both the capabilities and limitations of linear classifiers.
+
+\subsection{Images as High-Dimensional Points}
+
+Each input image corresponds to a single point in the feature space. For instance, in CIFAR-10, each \(32 \times 32 \times 3\) image represents a point in a 3072-dimensional space. The entire dataset is thus a labeled set of points, with each label corresponding to a class.
+
+Linear classifiers define the score for each class as a linear function of the input. This corresponds to carving the high-dimensional space into regions using hyperplanes, where each region is assigned to a class.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_30.jpg}
+	\caption{Left: Dimensionality-reduced visualization of a dataset. Right: Hyperplanes partitioning a higher-dimensional space into regions for classification.}
+	\label{fig:chapter3_geometric_hyperplanes}
+\end{figure}
+
+In Figure \ref{fig:chapter3_geometric_hyperplanes}, the left side provides a simplified view after dimensionality reduction, while the right shows hyperplanes in the full space. These hyperplanes represent the boundaries where the classifier transitions between classes.
+
+\subsection{Limitations of Linear Classifiers}
+
+The geometric viewpoint highlights scenarios where linear classifiers fail.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_31.jpg}
+	\caption{Examples of classification problems that linear classifiers cannot solve.}
+	\label{fig:chapter3_geometric_failures}
+\end{figure}
+
+\textbf{Left: Non-Linearly Separable Classes}  
+In this example, two classes occupy alternating quadrants. A single hyperplane cannot separate these regions, making the data not linearly separable.
+
+\textbf{Center: Nested Classes}  
+Here, one class forms a circular region inside another. The boundary between the two classes is inherently non-linear, so no hyperplane can effectively separate them.
+
+\textbf{Right: Multi-Modal Classes}  
+A single class consists of disjoint regions in the space, corresponding to multiple modes (e.g., variations in pose or orientation). Linear classifiers cannot handle such complexities because they only define a single hyperplane per class.
+
+\subsection{Historical Context: The Perceptron and XOR Limitation}
+
+Linear classifiers were among the first machine learning models introduced. The perceptron, developed in the late 1950s, was a milestone in artificial intelligence. However, its inability to handle the XOR function demonstrated the limitations of linear classifiers. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_32.jpg}
+	\caption{XOR Function: The perceptron can't separate blue \& green regions with a single line.}
+	\label{fig:chapter3_xor_limitations}
+\end{figure}
+
+As shown in Figure \ref{fig:chapter3_xor_limitations}, the XOR function has two regions (blue and green) that cannot be separated by a single linear boundary. This limitation highlighted the need for more powerful tools, eventually leading to the development of neural networks. Unlike linear classifiers, neural networks can represent non-linear decision boundaries, generalize well to unseen data, and perform efficient inference.
+
+\subsection{Challenges of High-Dimensional Geometry}
+
+Although this viewpoint provides valuable insights, it has limitations:
+\begin{itemize}
+	\item \textbf{Human Intuition Fails:} Geometry behaves differently in high-dimensional spaces, often defying our intuition based on 2D/3D experiences.
+	\item \textbf{Linear Limitations:} Linear classifiers rely on single hyperplanes, which are inadequate for handling non-linear or complex data distributions.
+\end{itemize}
+
+Despite these challenges, the geometric viewpoint lays the foundation for understanding why more advanced models, such as neural networks, are necessary. Neural networks overcome these issues by learning non-linear decision boundaries, a topic we will explore later.
+
+\section{Summary: Shortcomings of Linear Classifiers}
+
+Linear classifiers, while foundational, exhibit several limitations that are evident through different viewpoints (Figure \ref{fig:chapter3_summary_viewpoints}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_31.jpg}
+	\caption{Shortcomings of linear classifiers from algebraic, visual, and geometric perspectives.}
+	\label{fig:chapter3_summary_viewpoints}
+\end{figure}
+
+\subsection{Algebraic Viewpoint}
+Linear classifiers rely on the weighted sum of input features. Without non-linear transformations, they:
+\begin{itemize}
+	\item Cannot model non-linear decision boundaries.
+	\item Are limited in their expressiveness when classes are not linearly separable.
+\end{itemize}
+
+\subsection{Visual Viewpoint}
+Visualizing the rows of the weight matrix as templates reveals:
+\begin{itemize}
+	\item Templates depend heavily on backgrounds, leading to misclassifications (e.g., ships in non-ocean scenes).
+	\item Multiple modes within a class (e.g., cars of different colors or orientations) cannot be represented by a single template.
+\end{itemize}
+
+\subsection{Geometric Viewpoint}
+Interpreting data as points in high-dimensional space highlights:
+\begin{itemize}
+	\item Linear classifiers fail when class distributions are not linearly separable (e.g., XOR configuration).
+	\item Disjoint or nested regions within a class cannot be handled by a single hyperplane.
+\end{itemize}
+
+\subsection{Conclusion}
+These limitations necessitate more advanced models capable of non-linear decision boundaries and hierarchical feature learning, which we explore in subsequent chapters.
+
+\section{Choosing the Weights for Linear Classifiers}
+
+To effectively use linear classifiers, we must find a weight matrix \(W\) and bias vector \(\mathbf{b}\) that minimize misclassification. This involves two core tasks:
+\begin{itemize}
+	\item Defining a \textbf{loss function} to quantify how good a choice of \(W\) is.
+	\item Optimizing \(W\) to minimize the loss function.
+\end{itemize}
+
+In the rest of this chapter, we focus on the first task—choosing an appropriate loss function—while optimization will be addressed in the next chapter.
+
+\section{Loss Functions}
+
+Loss functions are core to machine learning, providing a quantitative way to evaluate a model's performance given training data. The goal is to minimize the loss over the entire dataset, defined as the average of per-example losses:
+\[
+L = \frac{1}{N} \sum_{i=1}^{N} L_i(f(x_i, W), y_i),
+\]
+where \(L_i\) is the loss for a single training example.
+
+\subsection{Cross-Entropy Loss}
+
+The \textbf{cross-entropy loss}, often used with the \textbf{softmax function}, provides a probabilistic interpretation of the classifier's raw scores. For a single input \(x_i\) and weight matrix \(W\), the raw scores for each class are given by:
+\[
+s_j = f(x_i, W)_j,
+\]
+where \(s_j\) represents the score for class \(j\). These scores are unnormalized, and their magnitude or sign has no direct probabilistic interpretation.
+
+\subsubsection{Softmax Function}
+
+The \textbf{softmax function} transforms the raw scores \(s_j\) into normalized probabilities \(p_j\), ensuring that they are non-negative and sum to 1:
+\[
+p_j = \frac{e^{s_j}}{\sum_{k} e^{s_k}},
+\]
+where:
+\begin{itemize}
+	\item \(e^{s_j}\) is the exponentiated score for class \(j\).
+	\item \(\sum_{k} e^{s_k}\) is the sum of exponentiated scores over all classes, acting as the normalization factor.
+\end{itemize}
+
+This normalization allows \(p_j\) to represent the probability of the input belonging to class \(j\). For example, if \(s_j = 5.1\), \(e^{s_j}\) is much larger than \(e^{s_k}\) for lower-scoring classes \(k\), resulting in a higher probability \(p_j\).
+
+\subsubsection{Loss Computation}
+
+The cross-entropy loss for a single example compares the predicted probability \(p_{y_i}\) of the correct class \(y_i\) with the true label:
+\[
+L_i = -\log(p_{y_i}),
+\]
+where \(p_{y_i}\) is the softmax probability for the correct class. This loss penalizes the model heavily if the predicted probability for the correct class is small.
+
+\paragraph{Example: CIFAR-10 Image Classification}
+
+Consider a CIFAR-10 image (e.g., a cat) with three possible classes: cat (\(s_\text{cat} = 3.2\)), car (\(s_\text{car} = 5.1\)), and frog (\(s_\text{frog} = -1.7\)). Using the softmax function:
+\begin{enumerate}
+	\item Compute \(e^{s_\text{cat}}, e^{s_\text{car}}, e^{s_\text{frog}}\).
+	\item Normalize by summing over all exponentiated scores.
+	\item Calculate the probability for the cat class, \(p_\text{cat}\), and compute the loss:
+	\[
+	L_i = -\log(p_\text{cat}).
+	\]
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_50.jpg}
+	\caption{Cross-entropy loss computation for a cat image. Softmax normalizes raw scores into probabilities, and the loss is computed by comparing with the ground truth.}
+	\label{fig:chapter3_ce_loss_example}
+\end{figure}
+
+\paragraph{Properties of Cross-Entropy Loss}
+\begin{itemize}
+	\item \textbf{Minimum Loss:} The loss is \(0\) when \(p_{y_i} = 1\), meaning the model predicts the correct class with absolute confidence.
+	\item \textbf{Maximum Loss:} The loss approaches \(+\infty\) as \(p_{y_i} \to 0\), heavily penalizing incorrect predictions.
+	\item \textbf{Initialization Insight:} At random initialization, the raw scores \(s_j\) are small random values. Probabilities become uniform over \(C\) classes:
+	\[
+	p_j = \frac{1}{C}.
+	\]
+	The loss becomes:
+	\[
+	L_i \approx -\log\left(\frac{1}{C}\right).
+	\]
+	This insight is useful for debugging model implementations.
+\end{itemize}
+
+\subsubsection{Why "Cross-Entropy"?}
+
+The name arises from information theory, where cross-entropy measures the difference between two probability distributions: the true distribution (one-hot vector of ground truth labels) and the predicted distribution (softmax probabilities).
+
+The softmax function is named for its differentiable approximation to the max function, making it suitable for gradient-based optimization.
+
+\subsection{Multiclass SVM Loss}
+
+The \textbf{multiclass SVM loss}, also known as the \textbf{hinge loss} (so named because its graphical shape resembles a door hinge), is a straightforward yet powerful loss function. Its goal is to ensure that the score of the correct class is higher than all other class scores by at least a predefined margin \(\Delta\). If this condition is satisfied, the loss is 0; otherwise, the loss increases linearly with the violation.
+
+\subsubsection{Loss Definition}
+
+For a single training example \((x_i, y_i)\), the multiclass SVM loss is defined as:
+\[
+L_i = \sum_{j \neq y_i} \max(0, s_j - s_{y_i} + \Delta),
+\]
+where:
+\begin{itemize}
+	\item \(s_j = f(x_i, W)_j\): the score for class \(j\),
+	\item \(s_{y_i}\): the score for the correct class,
+	\item \(\Delta\): the margin, typically set to \(1\).
+\end{itemize}
+
+The total loss across the dataset is the average of individual losses:
+\[
+L = \frac{1}{N} \sum_{i=1}^{N} L_i.
+\]
+
+\subsubsection{Example Computation}
+
+Let us compute the multiclass SVM loss for a small dataset containing three images (a cat, a car, and a frog) from CIFAR-10. The model outputs the following scores for these images across three classes (cat, car, frog):
+
+\[
+\begin{aligned}
+	\text{Cat Image Scores:} & \quad (s_\text{cat}, s_\text{car}, s_\text{frog}) = (3.2, 5.1, -1.7), \\
+	\text{Car Image Scores:} & \quad (s_\text{cat}, s_\text{car}, s_\text{frog}) = (1.3, 4.9, 2.0), \\
+	\text{Frog Image Scores:} & \quad (s_\text{cat}, s_\text{car}, s_\text{frog}) = (2.2, 2.5, -3.1).
+\end{aligned}
+\]
+
+\paragraph{Loss for the Cat Image}
+The true class is "cat." The loss is computed as:
+\[
+L_\text{cat} = \max(0, s_\text{car} - s_\text{cat} + 1) + \max(0, s_\text{frog} - s_\text{cat} + 1),
+\]
+\[
+L_\text{cat} = \max(0, 5.1 - 3.2 + 1) + \max(0, -1.7 - 3.2 + 1),
+\]
+\[
+L_\text{cat} = 2.9.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_61.jpg}
+	\caption{SVM loss computation for the cat image. Each term corresponds to a margin violation for an incorrect class.}
+	\label{fig:chapter3_svm_loss_cat}
+\end{figure}
+
+\paragraph{Loss for the Car Image}
+The true class is "car." The loss is:
+\[
+L_\text{car} = \max(0, s_\text{cat} - s_\text{car} + 1) + \max(0, s_\text{frog} - s_\text{car} + 1),
+\]
+\[
+L_\text{car} = \max(0, 1.3 - 4.9 + 1) + \max(0, 2.0 - 4.9 + 1),
+\]
+\[
+L_\text{car} = 0.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_62.jpg}
+	\caption{SVM loss computation for the car image. As the car score exceeds the rest by more than the margin, the loss is 0.}
+	\label{fig:chapter3_svm_loss_car}
+\end{figure}
+
+\paragraph{Loss for the Frog Image}
+The true class is "frog." The loss is:
+\[
+L_\text{frog} = \max(0, s_\text{cat} - s_\text{frog} + 1) + \max(0, s_\text{car} - s_\text{frog} + 1),
+\]
+\[
+L_\text{frog} = \max(0, 2.2 - (-3.1) + 1) + \max(0, 2.5 - (-3.1) + 1),
+\]
+\[
+L_\text{frog} = 12.9.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_63.jpg}
+	\caption{SVM loss computation for the frog image. With the correct class score being the lowest, the loss is the largest.}
+	\label{fig:chapter3_svm_loss_frog}
+\end{figure}
+
+\paragraph{Total Loss}
+The total loss across the dataset is the average of individual losses: $L = \frac{1}{3} (L_\text{cat} + L_\text{car} + L_\text{frog}) = \frac{1}{3} (2.9 + 0 + 12.9) = 5.27.$
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_64.jpg}
+	\caption{Total loss computed as the average of losses over the three images.}
+	\label{fig:chapter3_svm_total_loss}
+\end{figure}
+
+\subsubsection{Key Questions and Insights}
+\begin{itemize}
+	\item \textbf{What happens if the loss sums over all classes, including the correct class?} In this case, all scores would inflate uniformly, adding an extra constant (approx. the predetermined margin) to the loss. This does not change the model’s preferences over the weight matrix \(W\).
+	\item \textbf{What if we use a mean instead of a sum for the loss?} The loss values are scaled by a factor of \((1 / C-1)\), where \(C\) is the number of classes. The model’s behavior remains unaffected.
+	\item \textbf{What if we square the loss terms?} Squaring would alter the loss function’s sensitivity to large deviations, changing the behavior and preferences over \(W\).
+	\item \textbf{Is the weight matrix \(W\) unique when the loss is zero?} No, scaling \(W\) (e.g., multiplying it by 2) maintains zero loss because the margin condition is still satisfied. \textbf{Regularization}, which we'll later discuss thoroughly, helps select a preferred \(W\).
+\end{itemize}
+
+
+\subsection{Comparison of Cross-Entropy and Multiclass SVM Losses}
+
+Both losses aim to guide the model toward correct predictions, but their behavior differs significantly:
+\begin{itemize}
+	\item \textbf{Score Sensitivity:} The SVM loss becomes invariant once the margin condition is satisfied, while the cross-entropy loss continues to decrease as the correct class score increases.
+	\item \textbf{Probabilistic Interpretation:} The cross-entropy loss provides a natural probabilistic interpretation of predictions, whereas the SVM loss focuses on maintaining a margin.
+	\item \textbf{Scaling Effects:} Scaling scores affects the cross-entropy loss but not the SVM loss, highlighting the need for regularization in SVM-based models.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_76.jpg}
+	\caption{Impact of scaling on SVM and cross-entropy loss. The CE loss decreases, while the SVM loss remains unchanged.}
+	\label{fig:chapter3_loss_comparison_scaling}
+\end{figure}
+
+\subsubsection{Conclusion}
+
+\begin{itemize}
+	\item \textbf{SVM Loss:} Suitable for margin-based classification but requires regularization to handle multiple solutions with zero loss.
+	\item \textbf{Cross-Entropy Loss:} Ideal for probabilistic interpretation and gradient-based optimization, often preferred in deep learning models.
+\end{itemize}
+
+Both losses have unique advantages, and the choice depends on the application and desired behavior during training.
+
+
+
+
+
+
