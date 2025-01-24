@@ -27,7 +27,7 @@ The primary purpose of regularization is to improve the model’s \textbf{genera
 
 In this chapter, we will dive into various regularization techniques, explore their mathematical foundations, and discuss how they help achieve better generalization. We will also revisit optimization, introducing practical methods to efficiently minimize loss functions in the presence of regularization.
 
-\section{How Regularization is Used?}
+\subsection{How Regularization is Used?}
 
 As discussed in the introduction, in optimization tasks, the goal is to minimize a loss function \( L_\text{loss}(W) \), which measures the model's performance on training data. However, focusing solely on minimizing \( L_\text{loss}(W) \) can lead to overfitting, where the model memorizes the training data instead of learning patterns that generalize to unseen data.
 
@@ -41,12 +41,12 @@ where:
 	\item \( R(W) \) is the regularization term, typically a function of the model weights \( W \), independent of the training data.
 \end{itemize}
 
-\section{Regularization: Simpler Models Are Preferred}
+\subsection{Regularization: Simpler Models Are Preferred}
 
 Regularization promotes simpler models by penalizing large weights, irrespective of their sign. Both L1 and L2 regularization measure the magnitude of weights (\(|W|\) or \(W^2\)), ensuring non-negative penalties. But why do weights increase when a model adjusts to changes in the data?
 
 When the input data contains small perturbations or noise, a model without regularization adjusts its parameters to minimize the training loss \(L_\text{loss}(W)\). Addressing these changes typically involves increasing specific weights to emphasize features that explain the perturbation. This increase amplifies the model's sensitivity to noise, leading to larger weights. Regularization imposes a penalty for large weights, forcing the model to balance reducing \(L_\text{loss}(W)\) against increasing the regularization term \(R(W)\). This trade-off discourages addressing changes that only marginally benefit the loss, resulting in smaller weights and simpler models.
-
+\newpage
 \section{Types of Regularization: L1 and L2}
 
 \subsection{L1 Regularization (Lasso)}
@@ -116,25 +116,41 @@ The choice depends on the problem:
 		\item Features are correlated, and balance is important.
 		\item Smooth optimization is desired.
 	\end{itemize}
-	\paragraph{Can We Combine L1 and L2 Regularization?} Yes! Elastic Net is a regularization technique that combines both L1 (Lasso) and L2 (Ridge) regularization penalties. Its objective function includes a linear combination of the L1 and L2 penalties, defined as:
+\end{itemize}
 	
+	\begin{enrichment}[Can We Combine L1 and L2 Regularization?][subsection]
+		
+		\paragraph{Can We Combine L1 and L2 Regularization?} Yes! Elastic Net is a regularization technique that combines both L1 (Lasso) and L2 (Ridge) regularization penalties. Its objective function includes a linear combination of the L1 and L2 penalties, defined as:
+		
+		\[
+		L(W) = L_\text{loss} + \lambda_1 \sum_{i} |w_i| + \lambda_2 \sum_{i} w_i^2,
+		\]
+		
+		where \(\lambda_1\) controls the L1 penalty, and \(\lambda_2\) controls the L2 penalty. This combination allows Elastic Net to enjoy the benefits of both regularization methods:
+		\begin{itemize}
+			\item The L1 penalty encourages sparsity, making Elastic Net useful for feature selection by reducing irrelevant feature weights to zero.
+			\item The L2 penalty helps distribute weights among correlated features, overcoming L1's tendency to select only one feature from a group of highly correlated features.
+		\end{itemize}
+		
+		\paragraph{When to Use Elastic Net?} Elastic Net is especially beneficial in situations where:
+		\begin{itemize}
+			\item The dataset contains many features, some of which are irrelevant (addressed by L1).
+			\item There are groups of highly correlated features that all contribute to the prediction (handled by L2).
+		\end{itemize}
+		
+		\paragraph{Summary:} Elastic Net strikes a balance between L1 and L2 regularization, offering a flexible approach for scenarios where sparsity and balanced weight distribution are both important.
+	\end{enrichment} 
+	
+\subsection{Expressing Preferences Through Regularization}
+
+Regularization helps express preferences beyond minimizing the training loss:
+\begin{itemize}
+	\item \textbf{L2 Regularization:} Prefers weight distributions that spread importance across features. For example:
 	\[
-	L(W) = L_\text{loss} + \lambda_1 \sum_{i} |w_i| + \lambda_2 \sum_{i} w_i^2,
+	x = [1, 1, 1, 1], \quad w_1 = [1, 0, 0, 0], \quad w_2 = [0.25, 0.25, 0.25, 0.25].
 	\]
-	
-	where \(\lambda_1\) controls the L1 penalty, and \(\lambda_2\) controls the L2 penalty. This combination allows Elastic Net to enjoy the benefits of both regularization methods:
-	\begin{itemize}
-		\item The L1 penalty encourages sparsity, making Elastic Net useful for feature selection by reducing irrelevant feature weights to zero.
-		\item The L2 penalty helps distribute weights among correlated features, overcoming L1's tendency to select only one feature from a group of highly correlated features.
-	\end{itemize}
-	
-	\paragraph{When to Use Elastic Net?} Elastic Net is especially beneficial in situations where:
-	\begin{itemize}
-		\item The dataset contains many features, some of which are irrelevant (addressed by L1).
-		\item There are groups of highly correlated features that all contribute to the prediction (handled by L2).
-	\end{itemize}
-	
-	\paragraph{Summary:} Elastic Net strikes a balance between L1 and L2 regularization, offering a flexible approach for scenarios where sparsity and balanced weight distribution are both important.
+	Both yield the same inner product (\(w_1^T x = w_2^T x = 1\)), but L2 regularization favors \(w_2\) because it minimizes \( \sum w_i^2 \), distributing importance across all features.
+	\item \textbf{L1 Regularization:} Favors sparse solutions, focusing on a subset of features. In the above example, \(w_1\) would be preferred by L1 regularization.
 \end{itemize}
 
 \section{Impact of Feature Scaling on Regularization}
@@ -148,47 +164,17 @@ Regularization penalties depend on the magnitude of weights, which is influenced
 
 For instance, if a feature \(x_j\) is multiplied by a constant \(c\), its corresponding weight \(w_j\) is divided by \(c\) to maintain the same effect on the model's predictions. This imbalance can unfairly penalize some features over others, especially in Ridge (L2) regularization, which imposes a squared penalty.
 
-\paragraph{Practical Implication:} To ensure fair regularization, input features should be normalized (centered to have mean 0 and scaled to have variance 1). Normalization ensures that all features contribute equally to the penalty, allowing the model to prioritize based on relevance rather than scale.
+\subsection{Practical Implication} 
+To ensure fair regularization, input features should be normalized (centered to have mean 0 and scaled to have variance 1). Normalization ensures that all features contribute equally to the penalty, allowing the model to prioritize based on relevance rather than scale.
 
-\paragraph{Example: Rescaling and Lasso Regression.} 
+\subsection{Example: Rescaling and Lasso Regression.} 
 Suppose Lasso regression is applied to a dataset with 100 features. If one feature (\(F_1\)) is rescaled by multiplying it by 10, its corresponding coefficient decreases, reducing the absolute penalty. As a result, \(F_1\) is more likely to be retained in the model.
 
-\section{Expressing Preferences Through Regularization}
-
-Regularization helps express preferences beyond minimizing the training loss:
-\begin{itemize}
-	\item \textbf{L2 Regularization:} Prefers weight distributions that spread importance across features. For example:
-	\[
-	x = [1, 1, 1, 1], \quad w_1 = [1, 0, 0, 0], \quad w_2 = [0.25, 0.25, 0.25, 0.25].
-	\]
-	Both yield the same inner product (\(w_1^T x = w_2^T x = 1\)), but L2 regularization favors \(w_2\) because it minimizes \( \sum w_i^2 \), distributing importance across all features.
-	\item \textbf{L1 Regularization:} Favors sparse solutions, focusing on a subset of features. In the above example, \(w_1\) would be preferred by L1 regularization.
-\end{itemize}
-
-\section{Regularization Improves Optimization}
+\section{Regularization as a Catalyst for Better Optimization}
 
 Beyond preventing overfitting, regularization enhances optimization by shaping the loss surface. This added structure simplifies and stabilizes the optimization process in key ways:
 
-\subsection{Adding Curvature to the Loss Surface}
-Regularization, particularly \textbf{L2 regularization}, introduces a quadratic penalty term to the loss:
-\[
-L(W) = L_\text{loss}(W) + \lambda \sum_{i} w_i^2.
-\]
-This penalty increases curvature, especially in regions with large weight magnitudes, resulting in:
-\begin{itemize}
-	\item \textbf{Smoother Landscapes:} The loss surface becomes more convex, reducing flat regions and saddle points.
-	\item \textbf{Stable Gradients:} Gradient-based methods like gradient descent converge more reliably with less oscillation or vanishing gradients.
-\end{itemize}
-
-\subsection{Preventing Instability}
-By penalizing large weights, regularization limits excessive updates during optimization. This reduces instability, particularly in high-dimensional spaces, where large weights can lead to erratic model behavior.
-
-\subsection{Improving Conditioning}
-High-dimensional loss surfaces often exhibit anisotropy, where gradients vary sharply across dimensions. Regularization balances the curvature across directions, improving the condition number of the problem and facilitating efficient convergence.
-
-In essence, regularization smoothens and stabilizes the optimization landscape, making it easier for algorithms to find better solutions, particularly in complex models like deep neural networks.
-
-\section{Regularization as Part of Optimization}
+\subsection{Regularization as Part of Optimization}
 
 Regularization is seamlessly integrated into the optimization process as a penalty term in the loss function:
 \[
@@ -200,6 +186,999 @@ Here, the regularization term \(R(W)\) acts as a constraint, influencing the opt
 	\item \textbf{Guiding Optimization:} By penalizing specific weight configurations, regularization steers optimization toward solutions that generalize better to unseen data.
 \end{itemize}
 
-The interplay between regularization and optimization ensures that models are not only accurate but also robust and efficient. In the next sections, we explore optimization techniques that leverage this synergy to train effective machine learning models.
+The interplay between regularization and optimization ensures that models are not only accurate but also robust and efficient.
+
+\subsection{Augmenting the Loss Surface with Curvature}
+Regularization, particularly \textbf{L2 regularization}, introduces a quadratic penalty term to the loss:
+\[
+L(W) = L_\text{loss}(W) + \lambda \sum_{i} w_i^2.
+\]
+This penalty increases curvature, especially in regions with large weight magnitudes, resulting in:
+\begin{itemize}
+	\item \textbf{Smoother Landscapes:} The loss surface becomes more convex, reducing flat regions and saddle points.
+	\item \textbf{Stable Gradients:} Gradient-based methods like gradient descent converge more reliably with less oscillation or vanishing gradients.
+\end{itemize}
+
+\subsection{Mitigating Instability in High Dimensions}
+By penalizing large weights, regularization limits excessive updates during optimization. This reduces instability, particularly in high-dimensional spaces, where large weights can lead to erratic model behavior.
+
+\subsection{Improving Conditioning for Faster Convergence}
+High-dimensional loss surfaces often exhibit anisotropy, where gradients vary sharply across dimensions. Regularization balances the curvature across directions, improving the condition number of the problem and facilitating efficient convergence.
+
+In essence, regularization smoothens and stabilizes the optimization landscape, making it easier for algorithms to find better solutions, particularly in complex models like deep neural networks.
+
+In the next sections, we explore optimization techniques that leverage this synergy to train effective machine learning models.
+
+\section{Optimization: Traversing the Loss Landscape}
+
+The optimization process can be thought of as finding the value of the weight matrix \( W^* \) that minimizes a given loss function \( L(W) \). Mathematically, this is formulated as:
+\[
+W^* = \arg\min_W L(W).
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_21.jpg}
+	\caption{The loss landscape. Each point corresponds to a weight matrix, and the height represents its corresponding loss value.}
+	\label{fig:landscape}
+\end{figure}
+
+\newpage
+
+\subsection{The Loss Landscape Intuition}
+Imagine the optimization process as traversing a high-dimensional landscape, where:
+\begin{itemize}
+	\item Each point on the ground represents a potential weight matrix \( W \).
+	\item The height of the landscape at any point corresponds to the value of the loss function \( L(W) \) for that weight matrix.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_22.jpg}
+	\caption{Traversing the loss landscape toward the minimum. The person starts at a random point and follows a path downwards.}
+	\label{fig:traversal}
+\end{figure}
+
+In optimization, we aim to find the lowest point (the global minimum). However, the "traveler" does not know where the bottom is, and the problem is further complicated by the sheer size and complexity of the landscape. Writing down an explicit formula for the minimum is often impractical for most machine learning problems.
+
+\begin{enrichment}[Why Explicit Analytical Solutions Are Often Impractical][subsection]
+	\label{enrichment:why_analytical_impractical}
+	While it may seem desirable to compute the minimum of the loss function \( L(W) \) directly by writing down an explicit formula, this approach is rarely practical in machine learning for several reasons:
+	
+	\begin{enrichment}[High Dimensionality][subsubsection]
+		Modern machine learning models operate in extremely high-dimensional parameter spaces, where the weight matrix \( W \) can contain millions or billions of parameters. Computing a closed-form solution in such spaces requires solving large systems of equations, making the computational and memory demands intractable. This limitation persists even in simpler cases like linear regression when the dataset size is massive.
+	\end{enrichment}
+	
+	\begin{enrichment}[Non-Convexity of the Loss Landscape][subsubsection]
+		The loss landscapes of complex models, such as neural networks, are highly non-convex, featuring multiple local minima, saddle points, and flat regions. Analytical solutions rely on convexity assumptions that do not hold in these scenarios, making it impossible to derive a closed-form solution that guarantees a global minimum.
+	\end{enrichment}
+	
+	\begin{enrichment}[Complexity of Regularization Terms][subsubsection]
+		Regularization terms, such as \( \lambda \sum w_i^2 \) (L2 regularization) or \( \lambda \sum |w_i| \) (L1 regularization), introduce additional constraints to the optimization problem. These terms make the loss function non-quadratic or non-differentiable in certain regions, further complicating or eliminating the feasibility of finding explicit solutions.
+	\end{enrichment}
+	
+	\begin{enrichment}[Lack of Generalizability and Flexibility][subsubsection]
+		Finding an analytical solution is tailored to a specific loss function and model. If the model structure or loss function changes (e.g., switching from mean squared error to cross-entropy), a new solution must be derived from scratch, wasting time for the algorithmist. 
+	\end{enrichment}
+	
+	\begin{enrichment}[Memory and Computational Cost][subsubsection]
+		Closed-form solutions often require inverting large matrices, which is memory-intensive and computationally expensive. For instance, in linear regression, the closed-form solution involves inverting an \( n \times n \) matrix, where \( n \) is the number of features. For high-dimensional data, this operation quickly becomes impractical in terms of both time and memory requirements.
+	\end{enrichment}
+\end{enrichment}
+
+As we've shown in the enrichment section, finding an explicit analytical solution to the optimization problem—determining the weight matrix \( W^* \) that minimizes the loss function \( L(W) \)—is often impractical due to the high dimensionality and complexity of modern machine learning models. While such a solution would be ideal, it is computationally infeasible or outright impossible in most real-world scenarios.
+
+To overcome this, we begin by exploring simpler, more naive approaches before gradually building towards smarter and more practical solutions for this optimization problem. This progression will allow us to develop an intuitive understanding of the problem while introducing increasingly effective methods to address it.
+
+\subsection{Optimization Idea \#1: Random Search}
+One naive strategy for optimization is \textbf{random search}. This involves generating many random weight matrices, evaluating the loss for each, and keeping track of the best solution encountered. Although this method can improve the model's performance given sufficient time (compared to random initialization), it is highly inefficient due to the vastness of the parameter space. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_23.jpg}
+	\caption{Random search: A naive optimization approach.}
+	\label{fig:random_search}
+\end{figure}
+
+For example, as shown in Figure \ref{fig:random_search}, random search achieves an accuracy of only \( 15.5\%\) on CIFAR-10, far from the \( 95\%\) state-of-the-art performance. The impracticality of densely sampling the parameter space motivates us to explore more intelligent strategies.  
+
+\subsection{Optimization Idea \#2: Following the Slope}
+A more practical approach is to \textbf{follow the slope} of the loss landscape. Imagine our traveler cannot see the bottom of the valley but can feel the ground beneath his feet. By sensing the slope at his current location, he can identify the steepest downward direction and take a step in that direction.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_26.jpg}
+	\caption{Following the slope to descend the landscape.}
+	\label{fig:following_slope}
+\end{figure}
+
+ This strategy leverages local information about how the loss changes in the immediate vicinity of the current point. By iteratively stepping in the direction of steepest descent, the traveler progressively moves closer to the minimum. Despite relying solely on local information, this method is remarkably effective and forms the foundation of many optimization techniques used in machine learning.
+ 
+ In the following sections, we will establish the mathematical foundations for a simple yet effective method that builds upon the idea of following the slope of the loss landscape. By leveraging local information at each step in an iterative process, we aim to develop a robust approach known as \textbf{gradient descent}. This method will serve as a cornerstone for optimization in machine learning, guiding us toward minimizing the loss function efficiently.
+
+\subsection{Gradients: The Mathematical Basis}
+
+The method of steepest descent relies on the concept of \textbf{gradients}, a fundamental mathematical tool for analyzing changes in functions. Recall the following:
+\begin{itemize}
+	\item For a scalar function \( f(x) \), the derivative \( f'(x) \) tells us how \( f(x) \) changes with a small change in \( x \). It is the slope of \( f(x) \) at any given point.
+	\item In higher dimensions, the \textbf{gradient} \( \nabla f(x) \) generalizes this concept. It is a vector of partial derivatives:
+	\[
+	\nabla f(x) = \begin{bmatrix}
+		\frac{\partial f}{\partial x_1} \\
+		\frac{\partial f}{\partial x_2} \\
+		\vdots \\
+		\frac{\partial f}{\partial x_n}
+	\end{bmatrix}.
+	\]
+	This vector points in the direction of the \textbf{steepest ascent}, i.e., where the function increases the fastest, and its magnitude represents the rate of this increase.
+\end{itemize}
+
+To minimize a function, we step in the opposite direction of the gradient, \( -\nabla f(x) \). This ensures the most rapid decrease in the function's value.
+
+\subsubsection{Why Does the Gradient Point to the Steepest Ascent?}
+
+The gradient \( \nabla L(w) \) is the direction of the steepest ascent in the loss landscape. This can be understood as follows:
+
+\begin{itemize}
+	\item The gradient \( \nabla L(w) \) is defined as the vector of partial derivatives of the loss \( L(w) \) with respect to each parameter in \( w \). It indicates how \( L(w) \) changes in response to small changes in \( w \).
+	\item For any small step \( \mathbf{u} \), the change in loss can be approximated using the Taylor expansion:
+	\[
+	L(w + \eta \mathbf{u}) - L(w) \approx \eta (\nabla L(w) \cdot \mathbf{u}),
+	\]
+	where \( \eta \) is the step size and \( \nabla L(w) \cdot \mathbf{u} \) is the dot product between the gradient and the step direction.
+	\item The dot product is mathematically defined as:
+	\[
+	\nabla L(w) \cdot \mathbf{u} = \|\nabla L(w)\| \|\mathbf{u}\| \cos(\beta),
+	\]
+	where \( \beta \) is the angle between \( \nabla L(w) \) and \( \mathbf{u} \).
+	\item The dot product \( \nabla L(w) \cdot \mathbf{u} \) is maximized when \( \cos(\beta) = 1 \), which occurs when \( \beta = 0^\circ \) (i.e., \( \mathbf{u} \) is aligned with \( \nabla L(w) \)). This means the rate of increase in \( L(w) \) is greatest in the direction of \( \nabla L(w) \).
+\end{itemize}
+
+Thus, the gradient naturally points to the steepest ascent, where the loss increases most rapidly.
+\newpage
+\subsubsection{Why Does the Negative Gradient Indicate the Steepest Descent?}
+
+The steepest descent occurs in the direction opposite to the gradient, \( -\nabla L(w) \). Here's why:
+
+\begin{itemize}
+	\item As before, the change in loss for a small step \( \mathbf{u} \) can be approximated using the Taylor expansion:
+	\[
+	L(w + \eta \mathbf{u}) - L(w) \approx \eta (\nabla L(w) \cdot \mathbf{u}),
+	\]
+	where \( \eta \) is the step size.
+	\item To minimize \( L(w) \), we require:
+	\[
+	\nabla L(w) \cdot \mathbf{u} < 0.
+	\]
+	This ensures that the new loss is smaller than the old loss.
+	\item The dot product \( \nabla L(w) \cdot \mathbf{u} \) depends on the angle \( \beta \) between \( \nabla L(w) \) and \( \mathbf{u} \):
+	\[
+	\nabla L(w) \cdot \mathbf{u} = \|\nabla L(w)\| \|\mathbf{u}\| \cos(\beta).
+	\]
+	To make \( \nabla L(w) \cdot \mathbf{u} \) as negative as possible, \( \cos(\beta) \) must equal \( -1 \), which occurs when \( \beta = 180^\circ \) (i.e., \( \mathbf{u} \) points exactly opposite to \( \nabla L(w) \)).
+	\item Choosing \( \mathbf{u} = -\nabla L(w) \) ensures:
+	\[
+	\nabla L(w) \cdot \mathbf{u} = -\|\nabla L(w)\| \|\mathbf{u}\|,
+	\]
+	which achieves the steepest decrease in \( L(w) \).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_28.jpg}
+	\caption{The gradient \( \nabla L(w) \) points to the steepest ascent, while \( -\nabla L(w) \) leads to the steepest descent.}
+	\label{fig:gradient_steepest_directions}
+\end{figure}
+
+This property of gradients makes them indispensable for optimization. By iteratively stepping in the direction of \( -\nabla f(x) \), we can traverse high-dimensional loss landscapes efficiently and move closer to a minimum.
+
+In the following sections, we will explore how to efficiently compute and implement gradient-based optimization methods. These techniques form the foundation of training modern machine learning models, enabling us to navigate the vast parameter spaces effectively.
+
+\section{From Gradient Computation to Gradient Descent}
+
+Training machine learning models involves minimizing a loss function \( L(W) \) by finding the optimal weight matrix \( W^* \). Gradient computation plays a crucial role in this process, providing the direction to adjust \( W \) to reduce the loss. This section explores two approaches to compute gradients, their limitations, and the role of \textbf{gradient descent} in optimization.
+
+\subsection{Gradient Computation Methods}
+
+\subsubsection{Numerical Gradient: Approximating Gradients via Finite Differences}
+
+The \textbf{numerical gradient} approximates the gradient by perturbing each element of the weight matrix \( W \) and observing the effect on the loss. For a given element \( w_{ij} \) in \( W \), the numerical gradient is computed using the finite difference formula:
+
+\[
+\frac{\partial L}{\partial w_{ij}} \approx \frac{L(W + \Delta_{ij}) - L(W)}{ \Delta_{ij}},
+\]
+
+where \( \Delta_{ij} \) perturbs only \( w_{ij} \) by a small value \(  \Delta_{ij} \) (e.g., \(  \Delta_{ij} = 0.00001 \)) while leaving other elements unchanged.
+
+\paragraph{Process:}
+\begin{itemize}
+	\item Start with an initialized weight matrix \( W \).
+	\item For some element \( w_{ij} \), compute the perturbed loss \( L(W + \Delta_{ij}) \).
+	\item Use the finite difference formula to calculate \( \frac{\partial L}{\partial w_{ij}} \).
+	\item Repeat for all elements of \( W \) to approximate \( \nabla L(W) \).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_29.jpg}
+	\caption{Numerical Gradient: Computing the slope of \( L(W) \) with respect to a perturbed element of \( W \).}
+	\label{fig:numeric_gradient}
+\end{figure}
+
+\newpage 
+\paragraph{Advantages:}
+\begin{itemize}
+	\item Easy to implement.
+	\item Useful as a \textbf{debugging tool}, verifying the correctness of analytically computed gradients. For instance, PyTorch provides a built-in function (\texttt{torch.autograd.gradcheck}) to compare numerical and analytical gradients.
+\end{itemize}
+
+\paragraph{Disadvantages:}
+\begin{itemize}
+	\item \textbf{Computational cost:} Requires \( O(\text{\#dimensions}) \) evaluations of \( L(W) \), which becomes infeasible for large models.
+	\item \textbf{Inaccuracy:} Due to the finite value of \( \Delta \), the numerical gradient is an approximation, and the perturbation \( \Delta \) cannot be infinitely small as required by the gradient's limit definition.
+\end{itemize}
+
+\subsubsection{Analytical Gradient: Exact Gradients via Calculus}
+
+The \textbf{analytical gradient} computes \( \nabla L(W) \) using calculus, deriving an exact formula for the gradient based on the mathematical properties of the loss function. Unlike the numerical approach, this method is efficient and precise.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_38.jpg}
+	\caption{Analytical Gradient: Exact computation of gradients via calculus.}
+	\label{fig:analytical_gradient}
+\end{figure}
+
+\paragraph{Advantages:}
+\begin{itemize}
+	\item \textbf{Exact results:} Provides precise gradient values, free from numerical approximation errors.
+	\item \textbf{Computational efficiency:} Scales well to high-dimensional weight matrices.
+\end{itemize}
+
+\paragraph{Relation to Gradient Descent:}
+Both numerical and analytical gradients are methods to compute \( \nabla L(W) \). However, these gradients are not solutions to the optimization problem—they only provide the direction and rate of change. Gradient descent leverages these computed gradients to iteratively adjust \( W \), bridging the gap between gradient computation and optimization. This necessity arises because solving for \( W^* \) in closed form is often impractical, as explained in Section~\ref{enrichment:why_analytical_impractical}.
+
+\subsection{Gradient Descent: The Iterative Optimization Algorithm}
+
+\subsubsection{Motivation and Concept}
+
+Gradient descent is an iterative algorithm that updates \( W \) by moving in the direction of the steepest descent, guided by \( -\nabla L(W) \). The update rule is:
+
+\[
+W \gets W - \eta \nabla L(W),
+\]
+
+where \( \eta \) is the \textbf{learning rate}, controlling the step size.
+
+\paragraph{Steps of Gradient Descent:}
+\begin{enumerate}
+	\item \textbf{Initialization:} Choose a starting point \( W_0 \), often initialized randomly.
+	\item \textbf{Gradient Computation:} Calculate \( \nabla L(W) \) analytically or numerically.
+	\item \textbf{Update Rule:} Adjust \( W \) using the update equation.
+	\item \textbf{Stopping Criterion:} Repeat until convergence or until a maximum number of iterations is reached.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_47.jpg}
+	\caption{Gradient Descent: Iterative optimization using gradient updates.}
+	\label{fig:gradient_descent}
+\end{figure}
+
+\subsubsection{Hyperparameters of Gradient Descent}
+
+\paragraph{1. Learning Rate (\( \eta \)):}
+\begin{itemize}
+	\item Controls the step size in the direction of \( -\nabla L(W) \).
+	\item \textbf{Small \( \eta \):} Converges slowly.
+	\item \textbf{Large \( \eta \):} Risks overshooting the minimum or diverging.
+\end{itemize}
+
+\paragraph{2. Weight Initialization:}
+\begin{itemize}
+	\item The starting point \( W_0 \) significantly affects convergence.
+	\item Random initialization is common but must ensure weights are appropriately scaled to prevent vanishing or exploding gradients.
+\end{itemize}
+
+\paragraph{3. Stopping Criterion:}
+\begin{itemize}
+	\item Define when to terminate the algorithm, e.g., maximum iterations, small gradient magnitude, or minimal change in loss.
+\end{itemize}
+
+\section{Visualizing Gradient Descent}
+
+\subsection{Understanding Gradient Descent Through Visualization}
+Gradient descent can be difficult to conceptualize due to the high-dimensional nature of modern optimization problems. Since humans are limited to perceiving in three dimensions, two common visualization approaches are used to make the process more intuitive:
+
+\begin{itemize}
+	\item \textbf{3D Surface Plot:} This approach visualizes the loss landscape as a surface, where the \( x \)- and \( y \)-axes correspond to two parameters (e.g., \( \theta_0 \) and \( \theta_1 \)), and the \( z \)-axis represents the loss value. The objective is to find the combination of \( \theta_0 \) and \( \theta_1 \) that minimizes the loss, represented by the lowest point on the surface.
+	\item \textbf{2D Contour Plot:} An alternative is a 2D contour plot of the loss function, where the lines represent level sets (i.e., combinations of parameters where \( L(\theta_0, \theta_1) \) remains constant). The gradient descent process is visualized as a path that moves across these contours toward the minimum.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_48.jpg}
+	\caption{Visualization of Gradient Descent Using a Contour Plot. The path starts at a high-loss region (blue) and iteratively moves toward a lower-loss region (red).}
+	\label{fig:gradient_descent_contour}
+\end{figure}
+
+\subsection{Properties of Gradient Descent}
+Visualization of gradient descent reveals several interesting properties of the algorithm:
+
+\subsubsection{Curved Paths Toward the Minimum}
+The path taken by gradient descent does not follow a straight line toward the bottom of the loss landscape. Instead, it arcs and curves around the surface. This behavior occurs because the gradient descent algorithm relies on local information to iteratively update the parameters, causing it to adjust its direction based on the curvature of the loss landscape.
+
+\subsubsection{Slowing Down Near the Minimum}
+Gradient descent starts with larger steps when the gradient magnitude is high and naturally slows down as the gradient magnitude decreases. This behavior is due to the relationship between the gradient and the steepness of the loss surface:
+
+\begin{itemize}
+	\item The gradient is a measure of how quickly the loss function changes with respect to the parameters. 
+	\item Near the minimum of the loss surface, the loss function becomes flatter. Mathematically, this means the rate of change (i.e., the gradient) becomes smaller as we approach the minimum.
+\end{itemize}
+
+As a result:
+\begin{itemize}
+	\item The magnitude of the gradient decreases in flatter regions of the loss surface, leading to smaller parameter updates during each step.
+	\item This natural reduction in step size ensures a more refined and precise search for the optimal solution as gradient descent approaches the minimum.
+\end{itemize}
+
+By adapting to the geometry of the loss surface, gradient descent inherently balances exploration and precision, enabling effective convergence toward the minimum.
+
+\subsection{Batch Gradient Descent}
+The version of gradient descent shown in Figure \ref{fig:gradient_descent_contour} is known as \textbf{Batch Gradient Descent} or \textbf{Full Batch Gradient Descent}.
+
+In this approach:
+\begin{itemize}
+	\item The loss function is computed as the average loss over the entire training set.
+	\item The gradient at each step is computed as the sum of gradients across all training examples.
+\end{itemize}
+
+While batch gradient descent provides stable and precise updates, it becomes computationally expensive for large datasets, as each iteration requires processing the entire training set. This limitation makes it impractical for many real-world applications, where faster alternatives are needed.
+
+\section{Stochastic Gradient Descent (SGD)}
+
+\subsection{Introduction to Stochastic Gradient Descent}
+Batch Gradient Descent, though conceptually simple, is often impractical due to its computational and memory inefficiency, especially with large datasets. A more efficient alternative is \textbf{Stochastic Gradient Descent (SGD)}, which approximates the sum over the entire dataset (used to compute the loss and gradients) by using a \textbf{minibatch} of examples.
+
+\subsubsection{Minibatch Gradient Computation}
+Instead of computing gradients over the entire dataset, \textbf{SGD} uses minibatches:
+\begin{itemize}
+	\item A \textbf{minibatch} is a small subset of the dataset, with common batch sizes being \(32\), \(64\), \(128\), or even larger values like \(512\) or \(1024\), depending on the available computational resources.
+	\item The general heuristic is to maximize the batch size to fully utilize available GPU memory. For distributed training setups, minibatches can be spread across multiple GPUs or machines, allowing for very large effective batch sizes.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_50.jpg}
+	\caption{Stochastic Gradient Descent: Leveraging minibatches to approximate loss and gradients.}
+	\label{fig:sgd_intro}
+\end{figure}
+
+\subsubsection{Data Sampling and Epochs}
+SGD introduces randomness in data selection, which affects how it iterates through the dataset:
+\begin{itemize}
+	\item At the beginning of each \textbf{epoch} (a single pass through the entire dataset), the data is shuffled randomly to ensure varied sampling.
+	\item During each iteration, a minibatch is selected in sequence from the shuffled data until all samples are processed, completing the epoch.
+	\item This process is repeated for multiple epochs, with the dataset being reshuffled at the start of each one to avoid overfitting to a specific order of examples.
+\end{itemize}
+
+\subsubsection{Why "Stochastic"?}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_52.jpg}
+	\caption{SGD approximates the expectation over all possible samples via minibatch sampling.}
+	\label{fig:sgd_sampling}
+\end{figure}
+SGD is stochastic because the loss and gradient computations are based on sampled subsets of data. From a probabilistic perspective:
+\begin{itemize}
+	\item The loss function can be viewed as an expectation over all possible data samples from the true underlying distribution.
+	\item Averaging the sample loss over a minibatch approximates this expectation, and the same applies to the gradients.
+\end{itemize}
+
+\subsection{Advantages and Challenges of SGD}
+
+\subsubsection{Advantages}
+SGD provides significant computational advantages:
+\begin{itemize}
+	\item \textbf{Efficiency:} Reduces memory requirements and computational cost per iteration.
+	\item \textbf{Scalability:} Enables training on datasets too large to fit entirely into memory.
+\end{itemize}
+
+\subsubsection{Challenges of SGD}
+Despite its utility, SGD comes with inherent challenges:
+
+\paragraph{High Condition Numbers}
+When the loss landscape changes rapidly in one direction but slowly in another, it is said to have a \textbf{high condition number}, which can be numerically estimated as the ratio of the largest to smallest singular values of the Hessian matrix (more about it in section 3.1. of \cite{alger2019_data}). This results in:
+\begin{itemize}
+	\item \textbf{Oscillations:} Gradients in steep directions may overshoot the minimum, causing zig-zagging behavior.
+	\item \textbf{Slow Convergence:} Reducing the step size to mitigate oscillations slows progress in shallow directions, leading to undesirable convergence times.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_55.jpg}
+	\caption{Visualization of oscillations in SGD caused by high condition numbers.}
+	\label{fig:high_condition_number}
+\end{figure}
+
+\paragraph{Saddle Points and Local Minima}
+SGD may encounter:
+\begin{itemize}
+	\item \textbf{Saddle Points:} Points where the gradient is zero, but the function increases in one direction and decreases in another. At the tip of the saddle, the gradient provides no useful direction, potentially stalling optimization.
+	\item \textbf{Local Minima:} Points where the gradient is zero but are not the global minimum. The algorithm can become trapped, unable to escape without additional techniques.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_57.jpg}
+	\caption{Examples of saddle points and local minima in loss landscapes.}
+	\label{fig:saddle_point}
+\end{figure}
+
+\paragraph{Noisy Gradients}
+Due to the stochastic nature of SGD, gradient updates can be noisy:
+\begin{itemize}
+	\item \textbf{Definition of Noise:} Gradients are computed from minibatches rather than the entire dataset, making them approximate and introducing randomness.
+	\item \textbf{Impact of Noise:} Noisy gradients can cause the algorithm to wander around the loss surface instead of taking a direct path to the minimum, leading to slower convergence.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_58.jpg}
+	\caption{Noisy gradient updates in SGD resulting in slower convergence.}
+	\label{fig:noisy_gradients}
+\end{figure}
+
+\subsection{Looking Ahead: Improving SGD}
+While vanilla SGD is simple and effective, its limitations motivate the development of advanced variants that address its challenges. In the following sections, we will explore these modifications, starting with simpler adjustments and progressing to state-of-the-art optimizers like \textbf{Adam}.
+
+\section{SGD with Momentum}
+\subsection{Motivation}
+While \textbf{SGD} is effective, it suffers from several challenges such as oscillations in ravines, difficulties escaping local minima or saddle points, and noise in gradient computations. \textbf{SGD with Momentum} addresses these issues by incorporating a velocity term that smooths updates and accelerates convergence in the right direction.
+
+\subsection{How SGD with Momentum Works}
+The concept can be visualized as a ball rolling down a high-dimensional loss surface. Instead of directly using the gradient direction for updates, we maintain a \textbf{velocity vector} \( \mathbf{v}_t \) that combines the current gradient and past gradients through an \textbf{Exponential Moving Average (EMA)}.
+
+\subsubsection{Update Equations}
+At each step \( t \), we update the velocity and position as follows:
+\begin{align*}
+	\mathbf{v}_t &= \rho \mathbf{v}_{t-1} + \eta \nabla L(\mathbf{x}_t), \\
+	\mathbf{x}_{t+1} &= \mathbf{x}_t - \mathbf{v}_t,
+\end{align*}
+where:
+\begin{itemize}
+	\item \( \rho \): \textbf{Momentum coefficient}, typically \( 0.9 \) or \( 0.99 \), representing the friction or decay rate. 0.9 is often the default choice, as it strikes a balance between immediate gradient and history. 
+	\item \( \eta \): \textbf{Learning rate}, controlling the step size.
+	\item \( \mathbf{v}_t \): Velocity at step \( t \), an EMA of past gradients.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_60.jpg}
+	\caption{SGD with Momentum: Implementation in PyTorch.}
+	\label{fig:sgd_momentum}
+\end{figure}
+
+\subsection{Intuition Behind Momentum}
+\begin{itemize}
+	\item The velocity term integrates gradients over time, effectively smoothing out noisy updates.
+	\item The rolling-ball analogy illustrates how momentum helps maintain speed in valleys and escape saddle points or local minima.
+	\item By decaying the velocity vector with \( \rho \), we emphasize recent gradients while retaining historical trends, allowing for smoother optimization trajectories. 
+\end{itemize}
+
+Note that overall, higher momentum (e.g., 0.9 or 0.99) usually aids faster convergence and smoother updates, but can lead to overshooting or oscillations if paired with a learning rate that is too large. The larger \( \rho \), the more past gradient information is retained. Although rates like 0.99 are useful when you need to move quickly along a consistent direction, they often require careful tuning of the learning rate. Hence, 0.9 fits most tasks where consistent gradient directions exist. Larger values will be used only for deep models with large datasets, in which gradients are relatively stable.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_62.jpg}
+	\caption{Alternative formulation of SGD with Momentum.}
+	\label{fig:momentum_alternative}
+\end{figure}
+
+\subsection{Benefits of Momentum}
+Momentum addresses the three key problems of SGD:
+\begin{itemize}
+	\item \textbf{Local Minima and Saddle Points:} The velocity term allows the optimizer to pass through these points due to accumulated momentum.
+	\item \textbf{Poor Conditioning:} Oscillations in ravines are smoothed, and updates are more stable as momentum averages out noisy gradients.
+	\item \textbf{Noisy Gradients:} Momentum helps filter out random fluctuations in gradient directions, resulting in a more direct path to the minimum.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_63.jpg}
+	\caption{Momentum accelerates convergence by smoothing oscillations and reducing noise.}
+	\label{fig:momentum_benefits}
+\end{figure}
+
+\subsection{Downsides of Momentum}
+Despite its advantages, SGD with Momentum has several limitations:
+\begin{itemize}
+	\item \textbf{Hyperparameter Sensitivity:} The choice of \( \rho \) (momentum coefficient) and \( \eta \) (learning rate) significantly affects performance.
+	\item \textbf{Memory Requirements:} Additional storage is needed to maintain velocity vectors for all parameters.
+	\item \textbf{Lack of Adaptivity:} Momentum does not adapt the learning rate for individual weights, limiting its effectiveness for sparse gradients or features with varying importance.
+	\item \textbf{Robustness:} Momentum can amplify noise under certain conditions, leading to erratic updates.
+	\item \textbf{Slower Convergence:} Advanced optimizers like Adam often achieve faster convergence rates.
+\end{itemize}
+
+\subsection{Nesterov Momentum: A Look-Ahead Strategy}
+\subsubsection{Overview}
+\textbf{Nesterov Momentum} builds upon SGD with Momentum by introducing a "look-ahead" mechanism. Instead of calculating the gradient at the current position, Nesterov computes it at the projected future position, determined by the current velocity vector. This adjustment allows for more precise updates and improved convergence behavior.
+
+\subsubsection{Mathematical Formulation}
+The Nesterov update rules are given as:
+\begin{align*}
+	\mathbf{v}_{t+1} &= \rho \mathbf{v}_t - \eta \nabla f\big(\mathbf{x}_t + \rho \mathbf{v}_t\big), \\
+	\mathbf{x}_{t+1} &= \mathbf{x}_t + \mathbf{v}_{t+1},
+\end{align*}
+where:
+\begin{itemize}
+	\item \( \rho \): Momentum coefficient, controlling the influence of past velocities.
+	\item \( \eta \): Learning rate.
+	\item \( \nabla f\big(\mathbf{x}_t + \rho \mathbf{v}_t\big) \): Gradient computed at the "look-ahead" position.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_65.jpg}
+	\caption{Nesterov Momentum: Look-ahead Gradient Update.}
+	\label{fig:nesterov_momentum}
+\end{figure}
+
+\subsubsection{Motivation and Advantages}
+Nesterov Momentum improves upon traditional momentum methods by providing a more precise update mechanism, leading to faster convergence and reduced oscillations. The key motivations and advantages include:
+
+\begin{itemize}
+	\item \textbf{Reduced Oscillations:}
+	\begin{itemize}
+		\item In traditional momentum methods, the gradient is computed at the current position, and the accumulated velocity can overshoot the minimum due to excessive momentum, especially in steep directions.
+		\item Nesterov Momentum addresses this by computing the gradient at a "look-ahead" position (\( \mathbf{x}_t + \rho \mathbf{v}_t \)), effectively anticipating the overshoot and applying a correction before the step is taken.
+		\item By integrating this "look-ahead gradient," Nesterov smoothens the update trajectory, particularly in ravines (areas with steep gradients in one direction and shallow gradients in another), thereby reducing zig-zagging behavior.
+	\end{itemize}
+	
+	\item \textbf{Faster Convergence:}
+	\begin{itemize}
+		\item The look-ahead mechanism allows Nesterov Momentum to make more informed updates, as the gradient incorporates information about where the optimizer is heading, not just where it currently is.
+		\item This results in more efficient use of gradient information, leading to quicker progress along flat regions and better handling of curved loss landscapes.
+		\item Faster convergence also stems from the smaller step adjustments needed to compensate for overshooting, ensuring that the optimizer focuses on approaching the minimum directly.
+	\end{itemize}
+	
+	\item \textbf{Improved Stability in High-Condition-Number Landscapes:}
+	\begin{itemize}
+		\item In poorly conditioned loss surfaces, where gradients change drastically along different directions, the look-ahead gradient reduces oscillations in the steep direction while maintaining steady progress in the shallow direction.
+		\item This makes Nesterov particularly effective in minimizing the effect of uneven gradient magnitudes across dimensions, stabilizing the optimization process.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Reformulation for Practical Implementation}
+Although the original Nesterov formulation depends on the gradient at a projected point, it can be rewritten for practical implementation:
+\begin{align*}
+	\mathbf{x}_{t+1} &= \mathbf{x}_t + \rho \mathbf{v}_t - \eta \nabla f(\mathbf{x}_t), \\
+	\mathbf{v}_{t+1} &= \rho \mathbf{v}_t - \eta \nabla f(\mathbf{x}_t).
+\end{align*}
+
+This reformulation ensures compatibility with modern optimization frameworks by relying only on the gradient at the current position.
+
+\subsubsection{Comparison with SGD and SGD+Momentum}
+Momentum-based methods, including Nesterov, tend to overshoot near minima due to accumulated velocity. Nesterov's look-ahead mechanism mitigates this overshooting, producing a more efficient path to the minimum. 
+
+\subsubsection{Limitations of Nesterov Momentum and the Need for Adaptivity}
+
+While Nesterov Momentum addresses several shortcomings of traditional momentum methods, it still has limitations that motivate further advancements in optimization techniques:
+
+\begin{itemize}
+	\item \textbf{Uniform Learning Rate:}
+	\begin{itemize}
+		\item Nesterov Momentum uses a single global learning rate for all weight components, regardless of their individual gradient behavior.
+		\item In scenarios where gradients vary significantly across dimensions (e.g., high-condition-number landscapes or sparse features), this uniform learning rate can lead to inefficient updates:
+		\begin{itemize}
+			\item Large gradients may result in overly cautious updates, slowing down convergence.
+			\item Small gradients may cause under-updated weights, making progress in flat regions painfully slow.
+		\end{itemize}
+	\end{itemize}
+	
+	\item \textbf{Sensitivity to Hyperparameters:}
+	\begin{itemize}
+		\item Nesterov Momentum requires careful tuning of both the learning rate (\( \eta \)) and the momentum parameter (\( \rho \)).
+		\item Suboptimal hyperparameter settings can lead to erratic behavior, such as oscillations, overshooting, or excessively slow convergence.
+	\end{itemize}
+	
+	\item \textbf{No Adaptivity to Gradient Magnitudes:}
+	\begin{itemize}
+		\item Nesterov Momentum does not adapt the learning rate based on the magnitude of the gradients. This is particularly problematic for sparse data or infrequent features, where gradients may carry highly informative yet small signals.
+		\item The lack of adaptivity can hinder optimization in modern machine learning applications, such as natural language processing or deep learning for image recognition, where gradient magnitudes can vary significantly.
+	\end{itemize}
+	
+	\item \textbf{Stochastic Noise Amplification:}
+	\begin{itemize}
+		\item While Nesterov reduces oscillations, its velocity updates can amplify noise in stochastic gradients, leading to suboptimal parameter updates and slower convergence.
+		\item This issue becomes particularly evident in noisy or sparse datasets, where gradient signals are less stable.
+	\end{itemize}
+\end{itemize}
+
+\newpage
+
+\paragraph{Motivation for a Better Optimizer: AdaGrad}
+To overcome these limitations, we seek optimizers that:
+\begin{itemize}
+	\item Adjust learning rates adaptively for each parameter based on the historical behavior of its gradients.
+	\item Mitigate the impact of high-condition-number landscapes by dampening updates in steep directions while accelerating progress in flat regions.
+	\item Improve handling of sparse data and infrequent features by increasing learning rates for weights with smaller gradients.
+\end{itemize}
+
+AdaGrad introduces an adaptive learning rate mechanism that addresses these issues by scaling updates inversely proportional to the square root of the accumulated squared gradients. This adaptivity enables AdaGrad to make more efficient and stable progress across diverse optimization landscapes, as we will explore in the next section.
+
+\section{AdaGrad: Adaptive Gradient Algorithm}
+
+AdaGrad, short for \textbf{Adaptive Gradient Algorithm}, adjusts the learning rate for each parameter based on the historical squared gradients. This adaptivity allows the optimizer to handle scenarios where different parameters require significantly different learning rates.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_73.jpg}
+	\caption{AdaGrad Implementation in PyTorch. Each parameter is updated individually, with learning rates adjusted based on the historical squared gradients.}
+	\label{fig:adagrad_impl}
+\end{figure}
+
+\subsection{How AdaGrad Works}
+Rather than using a fixed global learning rate \( \eta \), AdaGrad adjusts the learning rate for each parameter \( w_i \) dynamically. We denote the parameters (weight components) as: $w=\left(w_0, w_1 \cdots w_i, \cdots, w_n\right)$, and at step t as: $w_t=\left(w_{t_0}, w_{t_1} \cdots w_{t_i}, \cdots, w_{t_n}\right)$
+We denote the gradient of the loss with respect to each weight component at step t as $g_{t_i}=\nabla_w J\left(w_{t_i}\right)$. 
+\newpage
+
+\paragraph{Updating the Weight Matrix Components} 
+Unlike SGD in which the update for each parameter (weight component) at step $t$ is:
+\[
+w_{t_{i+1}}=w_{t_i}-\eta \cdot g_{t_i}
+\]
+In \textbf{Adagrad} the update rule for each parameter (weight component) at step $t$ is
+\[
+w_{t_{i+1}}=w_{t_i}-\frac{\eta}{\sqrt{G_{t_{(i, i)}}+\epsilon}} \cdot g_{t_i}
+\]
+$G_t \in \mathbb{R}^{n \times n}$ is a diagonal matrix, where each diagonal element $(i, i)$ is the sum of squares of the gradients with respect to $w_i$ at the step, meaning, $G_{t_{(i, i)}}=\sum_{j=0}^t\left(g_{j_{i},}\right)^2$. Also note that $\epsilon$ serves as a smoothing term, that helps to avoid division by 0 (usually in the form of $1 e-8$ ).
+
+As $G_t \in \mathbb{R}^{n \times n}$ has the sum of squares of all past gradients with respect to all parameters $w$ along its diagonal, We can vectorize our implementation by performing a matrix-vector product $\odot$ between $G_t$ and $g_t$:
+\[
+w_{t}=w_{t-1}-\frac{\eta}{\sqrt{G_{t}+\epsilon}} \cdot g_{t}
+\] 
+
+\paragraph{Why Does This Work?}
+The division by \( \sqrt{G_t + \epsilon} \) achieves two things:
+\begin{itemize}
+	\item \textbf{Damping Large Gradients:} Parameters with consistently large gradients will accumulate larger \( G_t[i] \) values, reducing their effective learning rate. This dampens oscillations in steep regions of the loss surface.
+	\item \textbf{Accelerating Small Gradients:} Parameters with small or infrequent gradients will have smaller \( G_t[i] \) values, increasing their effective learning rate. This ensures progress in flatter regions or for parameters with sparse updates.
+\end{itemize}
+
+\subsection{Advantages of AdaGrad}
+\begin{itemize}
+	\item \textbf{Adaptive Learning Rates:}
+	\begin{itemize}
+		\item No need for manual tuning of \( \eta \), as the learning rate is adjusted dynamically for each parameter.
+	\end{itemize}
+	\item \textbf{Effective for Sparse Gradients:}
+	\begin{itemize}
+		\item Particularly useful in scenarios like natural language processing or recommendation systems, where certain features or gradients are updated infrequently.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Disadvantages of AdaGrad}
+Despite its strengths, AdaGrad has notable limitations:
+\begin{itemize}
+	\item \textbf{Aggressive Learning Rate Decay:}
+	\begin{itemize}
+		\item The cumulative sum of squared gradients \( G_t[i] \) grows over time, causing the learning rate to shrink excessively. This often leads to slow convergence or stagnation, particularly in non-convex optimization problems.
+	\end{itemize}
+	\item \textbf{No Momentum:}
+	\begin{itemize}
+		\item AdaGrad does not include a momentum term to smooth out oscillations or accelerate convergence along shallower dimensions.
+	\end{itemize}
+	\newpage
+	\item \textbf{Inability to Forget Past Gradients:}
+	\begin{itemize}
+		\item All past gradients are treated equally, which can be problematic in non-convex problems with varying loss landscape dynamics. An example to emphasize how big of an issue this is: we might be going down a steep slope, then reaching a plateau, and then a steep portion again, and the fact that our $G_t$ got really big and our updates,	in turn, get really small, will make our optimization efforts ineffective.
+	\end{itemize}
+\end{itemize}
+
+\section{RMSProp: Root Mean Square Propagation}
+
+\subsection{Motivation for RMSProp}
+While \textbf{AdaGrad} effectively adapts learning rates for individual parameters by accumulating squared gradients, it suffers from a major limitation: the accumulation grows indefinitely. Over time, this causes the effective learning rate to shrink excessively, slowing down optimization or halting it entirely.
+
+\textbf{RMSProp} addresses this issue by introducing a decay factor, which transforms AdaGrad into a \textit{leaky version} of itself. By ensuring that only recent gradients significantly influence the updates, RMSProp prevents the learning rate from diminishing too aggressively, allowing optimization to maintain steady progress over time.
+
+\subsection{How RMSProp Works}
+RMSProp modifies the sum of squared gradients \( G_t \) in AdaGrad to an \textbf{exponentially weighted moving average (EWMA)} of squared gradients:
+\[
+G_t = \rho G_{t-1} + (1 - \rho) g_t^2,
+\]
+where:
+\begin{itemize}
+	\item \( G_t \): The EWMA of squared gradients at step \( t \),
+	\item \( \rho \): The decay rate (forgetting factor, typically set to 0.9),
+	\item \( g_t^2 \): The element-wise square of the gradient at step \( t \).
+\end{itemize}
+
+Using this updated \( G_t \), the parameter update rule becomes:
+\[
+w_{t+1} = w_t - \frac{\eta}{\sqrt{G_t + \epsilon}} \cdot g_t,
+\]
+where:
+\begin{itemize}
+	\item \( \eta \): The learning rate,
+	\item \( \epsilon \): A small constant (e.g., \( 10^{-8} \)) to prevent division by zero.
+\end{itemize}
+
+\subsection{Updating the Weight Matrix Components}
+We denote:
+\begin{itemize}
+	\item Parameters (weight components): \( w = [w_1, w_2, \ldots, w_n] \),
+	\item Gradient of the loss with respect to each parameter at step \( t \): \( g_{t_i} = \nabla_w J(w_{t_i}) \).
+\end{itemize}
+
+The update for each parameter \( w_i \) is:
+\[
+G_t[i] = \rho G_{t-1}[i] + (1 - \rho) g_t[i]^2,
+\]
+\[
+w_{t+1}[i] = w_t[i] - \frac{\eta}{\sqrt{G_t[i] + \epsilon}} \cdot g_t[i].
+\]
+
+This ensures parameters with consistently large gradients have reduced learning rates, while parameters with smaller gradients have relatively larger learning rates.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_74.jpg}
+\caption{The transformation from AdaGrad to RMSProp using a decay rate (\( \rho \)). RMSProp ensures better progress over the course of training by forgetting older squared gradients.}
+\label{fig:rmsprop_conversion}
+\end{figure}
+
+\subsection{Advantages of RMSProp}
+\begin{itemize}
+\item \textbf{Prevents Learning Rate Decay:}
+\begin{itemize}
+	\item By introducing a forgetting factor, RMSProp avoids the excessive shrinking of learning rates observed in AdaGrad.
+\end{itemize}
+\item \textbf{Adaptability:}
+\begin{itemize}
+	\item RMSProp adjusts learning rates dynamically based on the history of squared gradients, making it suitable for non-convex problems.
+\end{itemize}
+\item \textbf{Stability:}
+\begin{itemize}
+	\item By dampening progress along steep directions, RMSProp reduces oscillations while accelerating motion in flatter regions.
+\end{itemize}
+\end{itemize}
+
+\subsection{Downsides of RMSProp}
+\label{sec:downsides-rmsprop}
+
+\subsubsection{No Momentum Carry-Over}
+\label{subsubsec:no-momentum-carry-over}
+While RMSProp adapts its learning rate per parameter, it does not explicitly maintain a ``velocity'' term that accumulates gradients over time.
+\begin{itemize}
+	\item \textbf{Reduced Acceleration:} 
+	In standard momentum-based methods (e.g., SGD with momentum), a portion of the previous update carries over to the next, helping the optimizer power through saddle points and shallow minima. RMSProp does not have this explicit accumulation, but despite that, it (and other adaptive optimizers like Adagrad) is not powerless against saddle points or local minima. By adjusting step sizes dimension-wise, RMSProp can still navigate tricky landscapes—sometimes more effectively than vanilla SGD. However, without an explicit momentum mechanism, it may need more careful tuning (sensitivity to hyperparameters) or additional iterations to escape challenging regions.
+\end{itemize}
+
+\subsubsection{Bias in Early Updates}
+\label{subsubsec:bias-early-updates}
+RMSProp maintains exponentially decaying running averages of squared gradients:
+\[
+G_t = \rho G_{t-1} + (1 - \rho)\,g_t^2,
+\]
+where \(\rho\) (\(0 < \rho < 1\)) is the \emph{decay factor}, and the model parameters \(w\) are updated as:
+\[
+w_{t+1} \;\leftarrow\; w_{t} \;-\; \eta \,\frac{g_t}{\sqrt{G_t + \epsilon}},
+\]
+with \(\eta\) being the \emph{learning rate} and \(\epsilon\) a small constant for numerical stability.
+
+\begin{itemize}
+	\item \textbf{Underestimated Variances Lead to Larger Steps:}
+	Early in training, \(G_t\) can be underestimated due to insufficient historical data. This makes the denominator, \(\sqrt{G_t + \epsilon}\), smaller than it should be, which can produce updates larger than intended and potentially lead to instability or overshooting.
+	\item \textbf{No Built-In Bias Correction:}
+	Unlike Adam, RMSProp does not include a bias-correction mechanism to compensate for these underestimated running averages in the initial training phase.
+\end{itemize}
+
+\subsubsection{Sensitivity to Hyperparameters}
+\label{subsubsec:sensitivity-hparams}
+RMSProp requires two main hyperparameters:
+\begin{itemize}
+	\item \textbf{Decay Factor (\(\rho\)):}
+	Determines how quickly the running average of the squared gradients decays. 
+	\begin{itemize}
+		\item A \emph{large} \(\rho\) (close to 1) makes the exponential average change more slowly, placing \emph{greater emphasis on older} gradient information.
+		\item A \emph{smaller} \(\rho\) places \emph{more weight on recent} gradients, allowing faster adaptation to new changes in the loss landscape.
+	\end{itemize}
+	\item \textbf{Learning Rate (\(\eta\)):}
+	Controls the scale of each update. Poor choices can cause exploding or vanishing updates, depending on the curvature of the loss landscape.
+\end{itemize}
+Because both \(\rho\) and \(\eta\) must be tuned, RMSProp can be quite sensitive to hyperparameter selection.
+
+\subsection{Motivation for Adam, a SOTA Optimizer}
+\label{subsec:motivation-adam}
+\emph{Adam} (\emph{Adaptive Moment Estimation}) extends RMSProp in several key ways:
+\begin{itemize}
+	\item \textbf{Incorporates Momentum:}
+	Adam adds an explicit exponential moving average of the gradients, giving it a ``velocity''-like term that smooths updates and helps traverse saddle points more effectively.
+	\item \textbf{Bias Correction:}
+	Adam corrects for the initially underestimated moving averages, preventing steps from becoming excessively large at the start of training.
+	\item \textbf{Robust Defaults:}
+	Adam’s standard hyperparameters (\(\beta_1 = 0.9\), \(\beta_2 = 0.999\), \(\eta = 1e-3 \text{ or } 1e-4 \) for the learning rate) are often effective across many tasks, easing the tuning burden compared to vanilla RMSProp.
+\end{itemize}
+
+By blending momentum, adaptive learning rates, and bias correction, Adam often converges more smoothly and quickly than pure RMSProp, while retaining many of RMSProp’s advantages in complex, high-dimensional optimization landscapes.
+
+\section{Adam: Adaptive Moment Estimation}
+
+\subsection{Motivation for Adam}
+Adam combines the strengths of momentum-based methods (like SGD+Momentum) and adaptive learning rate methods (like RMSProp). By integrating these two techniques, Adam effectively handles optimization challenges such as:
+\begin{itemize}
+	\item Escaping saddle points and overcoming noisy gradients.
+	\item Reducing sensitivity to hyperparameter tuning.
+	\item Achieving faster and more stable convergence, even on complex, non-convex loss landscapes.
+\end{itemize}
+
+The name Adam stands for \textbf{Adaptive Moment Estimation}, referring to its use of \textbf{first} and \textbf{second moments} of gradients:
+\begin{itemize}
+	\item The \textbf{first moment} represents the mean of gradients, which estimates the rate of change of the model parameters.
+	\item The \textbf{second moment} represents the variance of gradients, reflecting how spread out the gradients are around the mean value.
+\end{itemize}
+
+By utilizing these moments, Adam provides better control over optimization, leveraging the gradient's direction and its historical updates for efficient learning.
+
+\subsection{How Adam Works}
+Adam maintains two moving averages during training:
+\begin{itemize}
+	\item \textbf{First moment (mean)}: An exponentially weighted average of the gradients, capturing their direction and magnitude over time.
+	\item \textbf{Second moment (variance)}: An exponentially weighted average of squared gradients, scaling updates based on their historical magnitudes.
+\end{itemize}
+
+The update equations are:
+\[
+m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t
+\]
+\[
+v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2
+\]
+Here:
+\begin{itemize}
+	\item \( m_t \): First moment estimate (gradient mean).
+	\item \( v_t \): Second moment estimate (gradient variance).
+	\item \( g_t \): Gradient of the loss at step \( t \).
+	\item \( \beta_1 \): Decay rate for the first moment (default \( 0.9 \)).
+	\item \( \beta_2 \): Decay rate for the second moment (default \( 0.999 \)).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_78.jpg}
+	\caption{Adam implementation without bias correction, as shown in PyTorch.}
+	\label{fig:adam_basic}
+\end{figure}
+
+\subsection{Bias Correction}
+Adam applies \textbf{bias correction} to address the issue of initialization bias for \( m_0 = 0 \) and \( v_0 = 0 \). Without correction, the estimates for \( m_t \) and \( v_t \) would be biased toward zero, especially in the early stages of training. This is a huge issue, as the steps in the beginning of the optimization process will thus be undesirably large, and can even lead to overshooting or instability. Hence, for optimal performance bias correction is undoubtedly needed. Bias correction is computed as follows:
+\[
+\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1 - \beta_2^t}.
+\]
+The corrected moments are used to compute the parameter updates:
+\[
+w_{t+1} = w_t - \frac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t.
+\]
+Here:
+\begin{itemize}
+	\item \( \eta \): Learning rate.
+	\item \( \epsilon \): Smoothing term (default \( 10^{-8} \)) to avoid division by zero.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_81.jpg}
+	\caption{Complete Adam implementation with bias correction as shown in PyTorch.}
+	\label{fig:adam_bias_correction}
+\end{figure}
+
+\subsection{Why Adam Works Well in Practice}
+Adam's robustness lies in its ability to adaptively scale updates for each parameter while incorporating momentum. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_82.jpg}
+	\caption{Examples of Adam's hyperparameter usage in various deep learning papers.}
+	\label{fig:adam_hyperparams}
+\end{figure}
+
+Slide \ref{fig:adam_hyperparams} highlights the widespread adoption of Adam with default hyperparameters (\( \beta_1 = 0.9, \beta_2 = 0.999, \eta = 10^{-3} \text{ or } \eta = 10^{-4}\)) in numerous deep learning papers. These settings work well across a variety of tasks with minimal tuning. 
+
+
+\subsection{Comparison with Other Optimizers}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_83.jpg}
+	\caption{Comparison of optimizers: SGD, SGD+Momentum, RMSProp, and Adam. Adam converges faster with fewer oscillations.}
+	\label{fig:adam_comparison}
+\end{figure}
+
+Slide \ref{fig:adam_comparison} compares Adam with other optimizers like SGD, SGD+Momentum, and RMSProp. While all methods eventually converge, Adam typically converges faster, taking a more direct path to the minimum. It also handles noisy gradients better than momentum-based methods, resulting in fewer oscillations and faster recovery from overshooting. Regardless, it is \textbf{crucial} to remember that all the figures shown in this chapter are of 2 parameters only as we humans are limited to 3d. In very high dimensional landscapes, the behavior might greatly differ. As these are the common cases in deep learning, take this comparison with a grain of salt. It still is useful to gain some intuition regarding these optimization methods and their differences, but it's important to not have too much fate in it. 
+
+\subsection{Advantages of Adam}
+\begin{itemize}
+	\item Combines momentum and adaptive learning rates for robust optimization.
+	\item Handles noisy gradients effectively, reducing oscillations.
+	\item Requires minimal hyperparameter tuning, making it user-friendly for practitioners.
+	\item Achieves faster and more stable convergence than earlier methods.
+\end{itemize}
+
+\subsection{Limitations of Adam}
+Despite its strengths, Adam has some limitations:
+\begin{itemize}
+	\item \textbf{Overshooting:} While less troublesome than in SGD+Momentum, Adam can still overshoot the minimum and take a while to recover.
+	\item \textbf{Memory Usage:} Requires additional storage for \( m_t \) and \( v_t \), increasing memory overhead.
+\end{itemize}
+
+\paragraph{Looking Ahead}
+While Adam is effective on its own, advanced variants like Nadam (Nesterov-accelerated Adam) and AdamW (Adam with weight decay) address specific issues, such as overshooting or generalization. However, for most applications, Adam remains a reliable and widely used optimizer in deep learning.
+
+\section{AdamW: Decoupling Weight Decay from L2 Regularization}
+
+\subsection{Motivation for AdamW}
+While Adam is a widely used optimizer in deep learning, its integration with L2 regularization has been found problematic. Traditional Adam combines L2 regularization with weight updates during optimization. However, this approach can lead to unintended interactions:
+\begin{itemize}
+	\item \textbf{Magnitude Dependent Regularization:} L2 regularization affects the moment estimates, leading to an implicit adjustment of the learning rate for parameters with larger magnitudes.
+	\item \textbf{Inconsistent Penalization:} The coupling of weight decay and optimization can distort the intended regularization effect.
+\end{itemize}
+
+To address these issues, \textbf{AdamW} decouples weight decay from L2 regularization, treating weight decay as a distinct step in the optimization process. This separation ensures that weight decay consistently penalizes parameter magnitudes without interfering with moment estimates.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_89.jpg}
+	\caption{Integration of L2 regularization and weight decay in AdamW. Decoupling these ensures consistent penalization of parameter magnitudes.}
+	\label{fig:adamw_weight_decay}
+\end{figure}
+
+\subsection{How AdamW Works}
+AdamW modifies the weight update rule by explicitly decoupling the weight decay term. The key steps are:
+\begin{itemize}
+	\item Compute the gradient \( g_t \) of the loss with respect to the weights.
+	\item Apply bias-corrected first and second moments, as in Adam:
+	\[
+	\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1 - \beta_2^t}.
+	\]
+	\item Update the weights using the Adam update rule, but subtract a scaled weight decay term:
+	\[
+	w_{t+1} = w_t - \eta \left( \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} + \lambda w_t \right),
+	\]
+	where \( \lambda \) is the weight decay coefficient.
+\end{itemize}
+
+This decoupling ensures that the weight decay term acts as a pure penalization of large weights, independent of the adaptive learning rate mechanism.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_90.jpg}
+	\caption{Pseudo-code for AdamW, illustrating the decoupling of weight decay from L2 regularization.}
+	\label{fig:adamw_pseudocode}
+\end{figure}
+
+\subsection{Advantages of AdamW}
+AdamW addresses several issues inherent in traditional Adam with L2 regularization:
+\begin{itemize}
+	\item \textbf{Consistent Regularization:} Decoupling weight decay ensures that regularization consistently penalizes parameter magnitudes.
+	\item \textbf{Improved Generalization:} By treating weight decay as an independent process, AdamW achieves better generalization across diverse tasks.
+	\item \textbf{Minimal Overhead:} AdamW retains the computational efficiency of Adam while enhancing its robustness and applicability.
+\end{itemize}
+
+\subsection{Why AdamW is the Default Optimizer}
+AdamW combines the adaptive learning rates of Adam with the benefits of properly implemented weight decay, making it a powerful default optimizer for many deep learning tasks:
+\begin{itemize}
+	\item Works well out-of-the-box with minimal hyperparameter tuning.
+	\item Handles large-scale, non-convex problems effectively.
+	\item Avoids pitfalls of traditional L2 regularization in Adam, such as learning rate distortion.
+\end{itemize}
+
+\subsection{Limitations of AdamW}
+Despite its advantages, AdamW is not without challenges:
+\begin{itemize}
+	\item Requires careful tuning of the weight decay coefficient \( \lambda \) for optimal performance.
+	\item Sensitive to learning rate schedules, particularly for complex architectures.
+\end{itemize}
+
+
 
 

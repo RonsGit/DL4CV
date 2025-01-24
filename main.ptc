@@ -1,232 +1,326 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{Preface}{8}{chapter*.2}%
-\contentsline {section}{\numberline {0.1}Getting Started: About the Project and How to Navigate It}{8}{section.0.1}%
-\contentsline {subsection}{\numberline {0.1.1}Why This Document?}{8}{subsection.0.1.1}%
-\contentsline {subsection}{\numberline {0.1.2}Acknowledgments and Contributions}{8}{subsection.0.1.2}%
-\contentsline {subsection}{\numberline {0.1.3}Your Feedback Matters}{9}{subsection.0.1.3}%
-\contentsline {subsection}{\numberline {0.1.4}How to Navigate This Document}{9}{subsection.0.1.4}%
-\contentsline {subsection}{\numberline {0.1.5}Staying Updated in the Field}{9}{subsection.0.1.5}%
-\contentsline {subsection}{\numberline {0.1.6}The Importance of Practice}{9}{subsection.0.1.6}%
-\contentsline {chapter}{\numberline {1}Lecture 1: Course Introduction}{10}{chapter.1}%
+\contentsline {chapter}{Preface}{9}{chapter*.2}%
+\contentsline {section}{\numberline {0.1}Getting Started: About the Project and How to Navigate It}{9}{section.0.1}%
+\contentsline {subsection}{\numberline {0.1.1}Why This Document?}{9}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {0.1.2}Acknowledgments and Contributions}{9}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {0.1.3}Your Feedback Matters}{10}{subsection.0.1.3}%
+\contentsline {subsection}{\numberline {0.1.4}How to Navigate This Document}{10}{subsection.0.1.4}%
+\contentsline {subsection}{\numberline {0.1.5}Staying Updated in the Field}{10}{subsection.0.1.5}%
+\contentsline {subsection}{\numberline {0.1.6}The Importance of Practice}{10}{subsection.0.1.6}%
+\contentsline {chapter}{\numberline {1}Lecture 1: Course Introduction}{11}{chapter.1}%
 \ttl@starttoc {default@1}
-\contentsline {section}{\numberline {1.1}Core Terms in the Field}{10}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}Artificial Intelligence (AI)}{10}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2}Machine Learning (ML)}{10}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3}Deep Learning (DL)}{11}{subsection.1.1.3}%
-\contentsline {subsection}{\numberline {1.1.4}Computer Vision (CV)}{12}{subsection.1.1.4}%
-\contentsline {subsection}{\numberline {1.1.5}Connecting the Dots}{12}{subsection.1.1.5}%
-\contentsline {section}{\numberline {1.2}Why Study Deep Learning for Computer Vision?}{12}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}Motivation for Deep Learning in Computer Vision}{13}{subsection.1.2.1}%
-\contentsline {section}{\numberline {1.3}Historical Milestones}{13}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Hubel and Wiesel (1959): How Vision Works?}{14}{subsection.1.3.1}%
-\contentsline {subsection}{\numberline {1.3.2}Larry Roberts (1963): From Edges to Keypoints}{14}{subsection.1.3.2}%
-\contentsline {subsection}{\numberline {1.3.3}David Marr (1970s): From Features to a 3D Model}{15}{subsection.1.3.3}%
-\contentsline {subsection}{\numberline {1.3.4}Recognition via Parts (1970s)}{16}{subsection.1.3.4}%
-\contentsline {subsection}{\numberline {1.3.5}Recognition via Edge Detection (1980s)}{17}{subsection.1.3.5}%
-\contentsline {subsection}{\numberline {1.3.6}Recognition via Grouping (1990s)}{18}{subsection.1.3.6}%
-\contentsline {subsection}{\numberline {1.3.7}Recognition via Matching and Benchmarking (2000s)}{19}{subsection.1.3.7}%
-\contentsline {subsection}{\numberline {1.3.8}The ImageNet Dataset and Classification Challenge}{21}{subsection.1.3.8}%
-\contentsline {subsection}{\numberline {1.3.9}AlexNet: A Revolution in Computer Vision (2012)}{22}{subsection.1.3.9}%
-\contentsline {subsubsection}{Building on AlexNet: Evolution of CNNs and Beyond}{23}{section*.3}%
-\contentsline {section}{\numberline {1.4}Milestones in the Evolution of Learning in Computer Vision}{25}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1}The Perceptron (1958)}{25}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2}The AI Winter and Multilayer Perceptrons (1969)}{26}{subsection.1.4.2}%
-\contentsline {subsection}{\numberline {1.4.3}The Neocognitron (1980)}{26}{subsection.1.4.3}%
-\contentsline {subsection}{\numberline {1.4.4}Backpropagation and the Revival of Neural Networks (1986)}{27}{subsection.1.4.4}%
-\contentsline {subsection}{\numberline {1.4.5}LeNet and the Emergence of Convolutional Networks (1998)}{27}{subsection.1.4.5}%
-\contentsline {subsection}{\numberline {1.4.6}The 2000s: The Era of Deep Learning}{28}{subsection.1.4.6}%
-\contentsline {subsection}{\numberline {1.4.7}Deep Learning Explosion (2007-2020)}{29}{subsection.1.4.7}%
-\contentsline {subsection}{\numberline {1.4.8}2012 to Present: Deep Learning is Everywhere}{29}{subsection.1.4.8}%
-\contentsline {subsubsection}{Core Vision Tasks}{29}{section*.4}%
-\contentsline {subsubsection}{Video and Temporal Analysis}{29}{section*.5}%
-\contentsline {subsubsection}{Generative and Multimodal Models}{30}{section*.6}%
-\contentsline {subsubsection}{Specialized Domains}{30}{section*.7}%
-\contentsline {subsubsection}{State-of-the-Art Foundation Models}{30}{section*.8}%
-\contentsline {subsubsection}{Computation is Cheaper: More GFLOPs per Dollar}{31}{section*.9}%
-\contentsline {section}{\numberline {1.5}Key Challenges in CV and Future Directions}{32}{section.1.5}%
-\contentsline {chapter}{\numberline {2}Lecture 2: Image Classification}{35}{chapter.2}%
+\contentsline {section}{\numberline {1.1}Core Terms in the Field}{11}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Artificial Intelligence (AI)}{11}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Machine Learning (ML)}{11}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Deep Learning (DL)}{12}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}Computer Vision (CV)}{13}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}Connecting the Dots}{13}{subsection.1.1.5}%
+\contentsline {section}{\numberline {1.2}Why Study Deep Learning for Computer Vision?}{13}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Motivation for Deep Learning in Computer Vision}{14}{subsection.1.2.1}%
+\contentsline {section}{\numberline {1.3}Historical Milestones}{14}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Hubel and Wiesel (1959): How Vision Works?}{15}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Larry Roberts (1963): From Edges to Keypoints}{15}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}David Marr (1970s): From Features to a 3D Model}{16}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Recognition via Parts (1970s)}{17}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}Recognition via Edge Detection (1980s)}{18}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}Recognition via Grouping (1990s)}{19}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.7}Recognition via Matching and Benchmarking (2000s)}{20}{subsection.1.3.7}%
+\contentsline {subsection}{\numberline {1.3.8}The ImageNet Dataset and Classification Challenge}{22}{subsection.1.3.8}%
+\contentsline {subsection}{\numberline {1.3.9}AlexNet: A Revolution in Computer Vision (2012)}{23}{subsection.1.3.9}%
+\contentsline {subsubsection}{Building on AlexNet: Evolution of CNNs and Beyond}{24}{section*.3}%
+\contentsline {section}{\numberline {1.4}Milestones in the Evolution of Learning in Computer Vision}{26}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}The Perceptron (1958)}{26}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}The AI Winter and Multilayer Perceptrons (1969)}{27}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}The Neocognitron (1980)}{27}{subsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.4.4}Backpropagation and the Revival of Neural Networks (1986)}{28}{subsection.1.4.4}%
+\contentsline {subsection}{\numberline {1.4.5}LeNet and the Emergence of Convolutional Networks (1998)}{28}{subsection.1.4.5}%
+\contentsline {subsection}{\numberline {1.4.6}The 2000s: The Era of Deep Learning}{29}{subsection.1.4.6}%
+\contentsline {subsection}{\numberline {1.4.7}Deep Learning Explosion (2007-2020)}{30}{subsection.1.4.7}%
+\contentsline {subsection}{\numberline {1.4.8}2012 to Present: Deep Learning is Everywhere}{30}{subsection.1.4.8}%
+\contentsline {subsubsection}{Core Vision Tasks}{30}{section*.4}%
+\contentsline {subsubsection}{Video and Temporal Analysis}{30}{section*.5}%
+\contentsline {subsubsection}{Generative and Multimodal Models}{31}{section*.6}%
+\contentsline {subsubsection}{Specialized Domains}{31}{section*.7}%
+\contentsline {subsubsection}{State-of-the-Art Foundation Models}{31}{section*.8}%
+\contentsline {subsubsection}{Computation is Cheaper: More GFLOPs per Dollar}{32}{section*.9}%
+\contentsline {section}{\numberline {1.5}Key Challenges in CV and Future Directions}{33}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Lecture 2: Image Classification}{36}{chapter.2}%
 \ttl@stoptoc {default@1}
 \ttl@starttoc {default@2}
-\contentsline {section}{\numberline {2.1}Introduction to Image Classification}{35}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Image Classification Challenges}{36}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}The Semantic Gap}{36}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Robustness to Camera Movement}{36}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Intra-Class Variation}{37}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}Fine-Grained Classification}{37}{subsection.2.2.4}%
-\contentsline {subsection}{\numberline {2.2.5}Background Clutter}{38}{subsection.2.2.5}%
-\contentsline {subsection}{\numberline {2.2.6}Illumination Changes}{38}{subsection.2.2.6}%
-\contentsline {subsection}{\numberline {2.2.7}Deformation and Object Scale}{39}{subsection.2.2.7}%
-\contentsline {subsection}{\numberline {2.2.8}Occlusions}{39}{subsection.2.2.8}%
-\contentsline {subsection}{\numberline {2.2.9}Summary of Challenges}{40}{subsection.2.2.9}%
-\contentsline {section}{\numberline {2.3}Image Classification as a Building Block for Other Tasks}{40}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Object Detection}{41}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Image Captioning}{42}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Decision-Making in Board Games}{43}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Summary}{44}{subsection.2.3.4}%
-\contentsline {section}{\numberline {2.4}Constructing an Image Classifier}{44}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Feature-Based Image Classification: The Classical Approach}{44}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}From Hand-Crafted Rules to Data-Driven Learning}{45}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Programming with Data: The Modern Paradigm}{46}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Data-Driven Machine Learning: The New Frontier}{46}{subsection.2.4.4}%
-\contentsline {section}{\numberline {2.5}Datasets in Image Classification}{47}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}MNIST: The Toy Dataset}{47}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}CIFAR: Real-World Object Recognition}{48}{subsection.2.5.2}%
-\contentsline {subsection}{\numberline {2.5.3}ImageNet: The Gold Standard}{49}{subsection.2.5.3}%
-\contentsline {subsection}{\numberline {2.5.4}MIT Places: Scene Recognition}{50}{subsection.2.5.4}%
-\contentsline {subsection}{\numberline {2.5.5}Comparing Dataset Sizes}{50}{subsection.2.5.5}%
-\contentsline {subsection}{\numberline {2.5.6}Omniglot: Few-Shot Learning}{51}{subsection.2.5.6}%
-\contentsline {subsection}{\numberline {2.5.7}Conclusion: Datasets Driving Progress}{51}{subsection.2.5.7}%
-\contentsline {section}{\numberline {2.6}Nearest Neighbor Classifier: A Gateway to Understanding Classification}{52}{section.2.6}%
-\contentsline {subsection}{\numberline {2.6.1}Why Begin with Nearest Neighbor?}{52}{subsection.2.6.1}%
-\contentsline {subsection}{\numberline {2.6.2}Setting the Stage: From Pixels to Predictions}{52}{subsection.2.6.2}%
-\contentsline {subsection}{\numberline {2.6.3}Algorithm Description}{52}{subsection.2.6.3}%
-\contentsline {subsection}{\numberline {2.6.4}Distance Metrics: The Core of Nearest Neighbor}{53}{subsection.2.6.4}%
-\contentsline {subsection}{\numberline {2.6.5}Extending Nearest Neighbor: Applications Beyond Images}{55}{subsection.2.6.5}%
-\contentsline {subsubsection}{Using Nearest Neighbor for Non-Image Data}{55}{section*.10}%
-\contentsline {subsubsection}{Academic Paper Recommendation Example}{56}{section*.11}%
-\contentsline {subsubsection}{Key Insights}{56}{section*.12}%
-\contentsline {subsection}{\numberline {2.6.6}Hyperparameters in Nearest Neighbor}{56}{subsection.2.6.6}%
-\contentsline {subsection}{\numberline {2.6.7}Cross-Validation}{57}{subsection.2.6.7}%
-\contentsline {subsection}{\numberline {2.6.8}Implementation and Complexity}{58}{subsection.2.6.8}%
-\contentsline {subsection}{\numberline {2.6.9}Visualization of Decision Boundaries}{60}{subsection.2.6.9}%
-\contentsline {subsection}{\numberline {2.6.10}Improvements: k-Nearest Neighbors}{60}{subsection.2.6.10}%
-\contentsline {subsection}{\numberline {2.6.11}Limitations and Universal Approximation}{61}{subsection.2.6.11}%
-\contentsline {subsection}{\numberline {2.6.12}Using CNN Features for Nearest Neighbor Classification}{62}{subsection.2.6.12}%
-\contentsline {subsection}{\numberline {2.6.13}Conclusion}{64}{subsection.2.6.13}%
-\contentsline {chapter}{\numberline {3}Lecture 3: Linear Classifiers}{65}{chapter.3}%
+\contentsline {section}{\numberline {2.1}Introduction to Image Classification}{36}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Image Classification Challenges}{37}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The Semantic Gap}{37}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Robustness to Camera Movement}{37}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Intra-Class Variation}{38}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Fine-Grained Classification}{38}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Background Clutter}{39}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Illumination Changes}{39}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}Deformation and Object Scale}{40}{subsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.2.8}Occlusions}{40}{subsection.2.2.8}%
+\contentsline {subsection}{\numberline {2.2.9}Summary of Challenges}{41}{subsection.2.2.9}%
+\contentsline {section}{\numberline {2.3}Image Classification as a Building Block for Other Tasks}{41}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Object Detection}{42}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Image Captioning}{43}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Decision-Making in Board Games}{44}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Summary: Leveraging Image Classification}{45}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Constructing an Image Classifier}{45}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Feature-Based Image Classification: The Classical Approach}{45}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}From Hand-Crafted Rules to Data-Driven Learning}{46}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Programming with Data: The Modern Paradigm}{47}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Data-Driven Machine Learning: The New Frontier}{47}{subsection.2.4.4}%
+\contentsline {section}{\numberline {2.5}Datasets in Image Classification}{48}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}MNIST: The Toy Dataset}{48}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}CIFAR: Real-World Object Recognition}{49}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}ImageNet: The Gold Standard}{50}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}MIT Places: Scene Recognition}{51}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Comparing Dataset Sizes}{51}{subsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.5.6}Omniglot: Few-Shot Learning}{52}{subsection.2.5.6}%
+\contentsline {subsection}{\numberline {2.5.7}Conclusion: Datasets Driving Progress}{52}{subsection.2.5.7}%
+\contentsline {section}{\numberline {2.6}Nearest Neighbor Classifier: A Gateway to Understanding Classification}{53}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Why Begin with Nearest Neighbor?}{53}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Setting the Stage: From Pixels to Predictions}{53}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Algorithm Description}{53}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}Distance Metrics: The Core of Nearest Neighbor}{54}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}Extending Nearest Neighbor: Applications Beyond Images}{56}{subsection.2.6.5}%
+\contentsline {subsubsection}{Using Nearest Neighbor for Non-Image Data}{56}{section*.10}%
+\contentsline {subsubsection}{Academic Paper Recommendation Example}{57}{section*.11}%
+\contentsline {subsubsection}{Key Insights}{57}{section*.12}%
+\contentsline {subsection}{\numberline {2.6.6}Hyperparameters in Nearest Neighbor}{57}{subsection.2.6.6}%
+\contentsline {subsection}{\numberline {2.6.7}Cross-Validation}{58}{subsection.2.6.7}%
+\contentsline {subsection}{\numberline {2.6.8}Implementation and Complexity}{59}{subsection.2.6.8}%
+\contentsline {subsection}{\numberline {2.6.9}Visualization of Decision Boundaries}{61}{subsection.2.6.9}%
+\contentsline {subsection}{\numberline {2.6.10}Improvements: k-Nearest Neighbors}{61}{subsection.2.6.10}%
+\contentsline {subsection}{\numberline {2.6.11}Limitations and Universal Approximation}{62}{subsection.2.6.11}%
+\contentsline {subsection}{\numberline {2.6.12}Using CNN Features for Nearest Neighbor Classification}{63}{subsection.2.6.12}%
+\contentsline {subsection}{\numberline {2.6.13}Conclusion: From Nearest Neighbor to Advanced ML Frontiers}{65}{subsection.2.6.13}%
+\contentsline {chapter}{\numberline {3}Lecture 3: Linear Classifiers}{66}{chapter.3}%
 \ttl@stoptoc {default@2}
 \ttl@starttoc {default@3}
-\contentsline {section}{\numberline {3.1}Linear Classifiers: A Foundation for Neural Networks}{65}{section.3.1}%
-\contentsline {subsection}{Enrichment 0.1: Understanding the Role of Bias in Linear Classifiers}{68}{figure.3.2}%
-\contentsline {subsection}{\numberline {3.1.1}A Toy Example: Grayscale Cat Image}{69}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}The Bias Trick}{70}{subsection.3.1.2}%
-\contentsline {section}{\numberline {3.2}Linear Classifiers: The Algebraic Viewpoint}{71}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Scaling Properties and Insights}{71}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}From Algebra to Visual Interpretability}{72}{subsection.3.2.2}%
-\contentsline {section}{\numberline {3.3}Linear Classifiers: The Visual Viewpoint}{73}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Template Matching Perspective}{73}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Interpreting Templates}{74}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Python Code Example: Visualizing Learned Templates}{74}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Template Limitations: Multiple Modes}{75}{subsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.3.5}Looking Ahead}{75}{subsection.3.3.5}%
-\contentsline {section}{\numberline {3.4}Linear Classifiers: The Geometric Viewpoint}{75}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Images as High-Dimensional Points}{75}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Limitations of Linear Classifiers}{76}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Historical Context: The Perceptron and XOR Limitation}{77}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Challenges of High-Dimensional Geometry}{77}{subsection.3.4.4}%
-\contentsline {section}{\numberline {3.5}Summary: Shortcomings of Linear Classifiers}{78}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Algebraic Viewpoint}{78}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Visual Viewpoint}{78}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Geometric Viewpoint}{78}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}Conclusion}{78}{subsection.3.5.4}%
-\contentsline {section}{\numberline {3.6}Choosing the Weights for Linear Classifiers}{79}{section.3.6}%
-\contentsline {section}{\numberline {3.7}Loss Functions}{79}{section.3.7}%
-\contentsline {subsection}{\numberline {3.7.1}Cross-Entropy Loss}{79}{subsection.3.7.1}%
-\contentsline {subsubsection}{Softmax Function}{79}{section*.14}%
-\contentsline {subsubsection}{Loss Computation}{79}{section*.15}%
-\contentsline {paragraph}{Example: CIFAR-10 Image Classification}{80}{section*.16}%
-\contentsline {paragraph}{Properties of Cross-Entropy Loss}{80}{section*.17}%
-\contentsline {subsubsection}{Why "Cross-Entropy"?}{80}{section*.18}%
-\contentsline {subsection}{\numberline {3.7.2}Multiclass SVM Loss}{81}{subsection.3.7.2}%
-\contentsline {subsubsection}{Loss Definition}{81}{section*.19}%
-\contentsline {subsubsection}{Example Computation}{81}{section*.20}%
-\contentsline {paragraph}{Loss for the Cat Image}{81}{section*.21}%
-\contentsline {paragraph}{Loss for the Car Image}{82}{section*.22}%
-\contentsline {paragraph}{Loss for the Frog Image}{83}{section*.23}%
-\contentsline {paragraph}{Total Loss}{83}{section*.24}%
-\contentsline {subsubsection}{Key Questions and Insights}{84}{section*.25}%
-\contentsline {subsection}{\numberline {3.7.3}Comparison of Cross-Entropy and Multiclass SVM Losses}{84}{subsection.3.7.3}%
-\contentsline {subsubsection}{Conclusion}{84}{section*.26}%
-\contentsline {chapter}{\numberline {4}Lecture 4: Regularization \& Optimization}{85}{chapter.4}%
+\contentsline {section}{\numberline {3.1}Linear Classifiers: A Foundation for Neural Networks}{66}{section.3.1}%
+\contentsline {subsection}{Enrichment 0.1: Understanding the Role of Bias in Linear Classifiers}{69}{figure.3.2}%
+\contentsline {subsection}{\numberline {3.1.1}A Toy Example: Grayscale Cat Image}{70}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}The Bias Trick}{71}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Linear Classifiers: The Algebraic Viewpoint}{72}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Scaling Properties and Insights}{72}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}From Algebra to Visual Interpretability}{73}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Linear Classifiers: The Visual Viewpoint}{74}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Template Matching Perspective}{74}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Interpreting Templates}{75}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Python Code Example: Visualizing Learned Templates}{75}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Template Limitations: Multiple Modes}{76}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Looking Ahead}{76}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Linear Classifiers: The Geometric Viewpoint}{76}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Images as High-Dimensional Points}{76}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Limitations of Linear Classifiers}{77}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Historical Context: The Perceptron and XOR Limitation}{78}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Challenges of High-Dimensional Geometry}{78}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Summary: Shortcomings of Linear Classifiers}{79}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Algebraic Viewpoint}{79}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Visual Viewpoint}{79}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Geometric Viewpoint}{79}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Conclusion: Linear Classifiers Aren't Enough}{79}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Choosing the Weights for Linear Classifiers}{80}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Loss Functions}{80}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Cross-Entropy Loss}{80}{subsection.3.7.1}%
+\contentsline {subsubsection}{Softmax Function}{80}{section*.14}%
+\contentsline {subsubsection}{Loss Computation}{80}{section*.15}%
+\contentsline {paragraph}{Example: CIFAR-10 Image Classification}{81}{section*.16}%
+\contentsline {paragraph}{Properties of Cross-Entropy Loss}{81}{section*.17}%
+\contentsline {subsubsection}{Why "Cross-Entropy"?}{81}{section*.18}%
+\contentsline {subsection}{\numberline {3.7.2}Multiclass SVM Loss}{82}{subsection.3.7.2}%
+\contentsline {subsubsection}{Loss Definition}{82}{section*.19}%
+\contentsline {subsubsection}{Example Computation}{82}{section*.20}%
+\contentsline {paragraph}{Loss for the Cat Image}{82}{section*.21}%
+\contentsline {paragraph}{Loss for the Car Image}{83}{section*.22}%
+\contentsline {paragraph}{Loss for the Frog Image}{84}{section*.23}%
+\contentsline {paragraph}{Total Loss}{84}{section*.24}%
+\contentsline {subsubsection}{Key Questions and Insights}{85}{section*.25}%
+\contentsline {subsection}{\numberline {3.7.3}Comparison of Cross-Entropy and Multiclass SVM Losses}{85}{subsection.3.7.3}%
+\contentsline {subsubsection}{Conclusion: SVM, Cross Entropy, and the Evolving Landscape of Loss Functions}{85}{section*.26}%
+\contentsline {chapter}{\numberline {4}Lecture 4: Regularization \& Optimization}{86}{chapter.4}%
 \ttl@stoptoc {default@3}
 \ttl@starttoc {default@4}
-\contentsline {section}{\numberline {4.1}Introduction to Regularization}{85}{section.4.1}%
-\contentsline {section}{\numberline {4.2}How Regularization is Used?}{86}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Regularization: Simpler Models Are Preferred}{86}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Types of Regularization: L1 and L2}{87}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}L1 Regularization (Lasso)}{87}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}L2 Regularization (Ridge)}{87}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Choosing Between L1 and L2 Regularization}{87}{subsection.4.4.3}%
-\contentsline {paragraph}{Can We Combine L1 and L2 Regularization?}{88}{section*.27}%
-\contentsline {paragraph}{When to Use Elastic Net?}{88}{section*.28}%
-\contentsline {paragraph}{Summary:}{88}{section*.29}%
-\contentsline {section}{\numberline {4.5}Impact of Feature Scaling on Regularization}{88}{section.4.5}%
-\contentsline {paragraph}{Practical Implication:}{88}{section*.30}%
-\contentsline {paragraph}{Example: Rescaling and Lasso Regression.}{88}{section*.31}%
-\contentsline {section}{\numberline {4.6}Expressing Preferences Through Regularization}{89}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Regularization Improves Optimization}{89}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Adding Curvature to the Loss Surface}{89}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Preventing Instability}{89}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Improving Conditioning}{89}{subsection.4.7.3}%
-\contentsline {section}{\numberline {4.8}Regularization as Part of Optimization}{89}{section.4.8}%
-\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{91}{chapter.5}%
+\contentsline {section}{\numberline {4.1}Introduction to Regularization}{86}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}How Regularization is Used?}{87}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Regularization: Simpler Models Are Preferred}{87}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Types of Regularization: L1 and L2}{88}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}L1 Regularization (Lasso)}{88}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}L2 Regularization (Ridge)}{88}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Choosing Between L1 and L2 Regularization}{88}{subsection.4.2.3}%
+\contentsline {subsection}{Enrichment 0.2: Can We Combine L1 and L2 Regularization?}{88}{subsection.4.2.3}%
+\contentsline {paragraph}{Can We Combine L1 and L2 Regularization?}{89}{section*.28}%
+\contentsline {paragraph}{When to Use Elastic Net?}{89}{section*.29}%
+\contentsline {paragraph}{Summary:}{89}{section*.30}%
+\contentsline {subsection}{\numberline {4.2.4}Expressing Preferences Through Regularization}{89}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Impact of Feature Scaling on Regularization}{89}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Practical Implication}{90}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Example: Rescaling and Lasso Regression.}{90}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Regularization as a Catalyst for Better Optimization}{90}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Regularization as Part of Optimization}{90}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Augmenting the Loss Surface with Curvature}{90}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Mitigating Instability in High Dimensions}{91}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Improving Conditioning for Faster Convergence}{91}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}Optimization: Traversing the Loss Landscape}{91}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}The Loss Landscape Intuition}{92}{subsection.4.5.1}%
+\contentsline {subsection}{Enrichment 0.3: Why Explicit Analytical Solutions Are Often Impractical}{92}{figure.4.3}%
+\contentsline {subsubsection}{Enrichment 0.3.1: High Dimensionality}{92}{section*.31}%
+\contentsline {subsubsection}{Enrichment 0.3.2: Non-Convexity of the Loss Landscape}{92}{section*.32}%
+\contentsline {subsubsection}{Enrichment 0.3.3: Complexity of Regularization Terms}{93}{section*.33}%
+\contentsline {subsubsection}{Enrichment 0.3.4: Lack of Generalizability and Flexibility}{93}{section*.34}%
+\contentsline {subsubsection}{Enrichment 0.3.5: Memory and Computational Cost}{93}{section*.35}%
+\contentsline {subsection}{\numberline {4.5.2}Optimization Idea \#1: Random Search}{93}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Optimization Idea \#2: Following the Slope}{94}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Gradients: The Mathematical Basis}{95}{subsection.4.5.4}%
+\contentsline {subsubsection}{Why Does the Gradient Point to the Steepest Ascent?}{95}{section*.37}%
+\contentsline {subsubsection}{Why Does the Negative Gradient Indicate the Steepest Descent?}{96}{section*.38}%
+\contentsline {section}{\numberline {4.6}From Gradient Computation to Gradient Descent}{97}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Gradient Computation Methods}{97}{subsection.4.6.1}%
+\contentsline {subsubsection}{Numerical Gradient: Approximating Gradients via Finite Differences}{97}{section*.39}%
+\contentsline {paragraph}{Process:}{97}{section*.40}%
+\contentsline {paragraph}{Advantages:}{98}{section*.41}%
+\contentsline {paragraph}{Disadvantages:}{98}{section*.42}%
+\contentsline {subsubsection}{Analytical Gradient: Exact Gradients via Calculus}{98}{section*.43}%
+\contentsline {paragraph}{Advantages:}{98}{section*.44}%
+\contentsline {paragraph}{Relation to Gradient Descent:}{98}{section*.45}%
+\contentsline {subsection}{\numberline {4.6.2}Gradient Descent: The Iterative Optimization Algorithm}{99}{subsection.4.6.2}%
+\contentsline {subsubsection}{Motivation and Concept}{99}{section*.46}%
+\contentsline {paragraph}{Steps of Gradient Descent:}{99}{section*.47}%
+\contentsline {subsubsection}{Hyperparameters of Gradient Descent}{99}{section*.48}%
+\contentsline {paragraph}{1. Learning Rate (\( \eta \)):}{99}{section*.49}%
+\contentsline {paragraph}{2. Weight Initialization:}{99}{section*.50}%
+\contentsline {paragraph}{3. Stopping Criterion:}{100}{section*.51}%
+\contentsline {section}{\numberline {4.7}Visualizing Gradient Descent}{100}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Understanding Gradient Descent Through Visualization}{100}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Properties of Gradient Descent}{100}{subsection.4.7.2}%
+\contentsline {subsubsection}{Curved Paths Toward the Minimum}{100}{section*.52}%
+\contentsline {subsubsection}{Slowing Down Near the Minimum}{101}{section*.53}%
+\contentsline {subsection}{\numberline {4.7.3}Batch Gradient Descent}{101}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}Stochastic Gradient Descent (SGD)}{101}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}Introduction to Stochastic Gradient Descent}{101}{subsection.4.8.1}%
+\contentsline {subsubsection}{Minibatch Gradient Computation}{101}{section*.54}%
+\contentsline {subsubsection}{Data Sampling and Epochs}{102}{section*.55}%
+\contentsline {subsubsection}{Why "Stochastic"?}{102}{section*.56}%
+\contentsline {subsection}{\numberline {4.8.2}Advantages and Challenges of SGD}{103}{subsection.4.8.2}%
+\contentsline {subsubsection}{Advantages}{103}{section*.57}%
+\contentsline {subsubsection}{Challenges of SGD}{103}{section*.58}%
+\contentsline {paragraph}{High Condition Numbers}{103}{section*.59}%
+\contentsline {paragraph}{Saddle Points and Local Minima}{103}{section*.60}%
+\contentsline {paragraph}{Noisy Gradients}{104}{section*.61}%
+\contentsline {subsection}{\numberline {4.8.3}Looking Ahead: Improving SGD}{105}{subsection.4.8.3}%
+\contentsline {section}{\numberline {4.9}SGD with Momentum}{105}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Motivation}{105}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}How SGD with Momentum Works}{105}{subsection.4.9.2}%
+\contentsline {subsubsection}{Update Equations}{105}{section*.62}%
+\contentsline {subsection}{\numberline {4.9.3}Intuition Behind Momentum}{106}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}Benefits of Momentum}{106}{subsection.4.9.4}%
+\contentsline {subsection}{\numberline {4.9.5}Downsides of Momentum}{107}{subsection.4.9.5}%
+\contentsline {subsection}{\numberline {4.9.6}Nesterov Momentum: A Look-Ahead Strategy}{107}{subsection.4.9.6}%
+\contentsline {subsubsection}{Overview}{107}{section*.63}%
+\contentsline {subsubsection}{Mathematical Formulation}{107}{section*.64}%
+\contentsline {subsubsection}{Motivation and Advantages}{108}{section*.65}%
+\contentsline {subsubsection}{Reformulation for Practical Implementation}{109}{section*.66}%
+\contentsline {subsubsection}{Comparison with SGD and SGD+Momentum}{109}{section*.67}%
+\contentsline {subsubsection}{Limitations of Nesterov Momentum and the Need for Adaptivity}{109}{section*.68}%
+\contentsline {paragraph}{Motivation for a Better Optimizer: AdaGrad}{110}{section*.69}%
+\contentsline {section}{\numberline {4.10}AdaGrad: Adaptive Gradient Algorithm}{110}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}How AdaGrad Works}{110}{subsection.4.10.1}%
+\contentsline {paragraph}{Updating the Weight Matrix Components}{111}{section*.70}%
+\contentsline {paragraph}{Why Does This Work?}{111}{section*.71}%
+\contentsline {subsection}{\numberline {4.10.2}Advantages of AdaGrad}{111}{subsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.10.3}Disadvantages of AdaGrad}{111}{subsection.4.10.3}%
+\contentsline {section}{\numberline {4.11}RMSProp: Root Mean Square Propagation}{112}{section.4.11}%
+\contentsline {subsection}{\numberline {4.11.1}Motivation for RMSProp}{112}{subsection.4.11.1}%
+\contentsline {subsection}{\numberline {4.11.2}How RMSProp Works}{112}{subsection.4.11.2}%
+\contentsline {subsection}{\numberline {4.11.3}Updating the Weight Matrix Components}{112}{subsection.4.11.3}%
+\contentsline {subsection}{\numberline {4.11.4}Advantages of RMSProp}{113}{subsection.4.11.4}%
+\contentsline {subsection}{\numberline {4.11.5}Downsides of RMSProp}{113}{subsection.4.11.5}%
+\contentsline {subsubsection}{No Momentum Carry-Over}{113}{section*.72}%
+\contentsline {subsubsection}{Bias in Early Updates}{114}{section*.73}%
+\contentsline {subsubsection}{Sensitivity to Hyperparameters}{114}{section*.74}%
+\contentsline {subsection}{\numberline {4.11.6}Motivation for Adam, a SOTA Optimizer}{114}{subsection.4.11.6}%
+\contentsline {section}{\numberline {4.12}Adam: Adaptive Moment Estimation}{115}{section.4.12}%
+\contentsline {subsection}{\numberline {4.12.1}Motivation for Adam}{115}{subsection.4.12.1}%
+\contentsline {subsection}{\numberline {4.12.2}How Adam Works}{115}{subsection.4.12.2}%
+\contentsline {subsection}{\numberline {4.12.3}Bias Correction}{116}{subsection.4.12.3}%
+\contentsline {subsection}{\numberline {4.12.4}Why Adam Works Well in Practice}{117}{subsection.4.12.4}%
+\contentsline {subsection}{\numberline {4.12.5}Comparison with Other Optimizers}{118}{subsection.4.12.5}%
+\contentsline {subsection}{\numberline {4.12.6}Advantages of Adam}{118}{subsection.4.12.6}%
+\contentsline {subsection}{\numberline {4.12.7}Limitations of Adam}{118}{subsection.4.12.7}%
+\contentsline {paragraph}{Looking Ahead}{118}{section*.75}%
+\contentsline {section}{\numberline {4.13}AdamW: Decoupling Weight Decay from L2 Regularization}{119}{section.4.13}%
+\contentsline {subsection}{\numberline {4.13.1}Motivation for AdamW}{119}{subsection.4.13.1}%
+\contentsline {subsection}{\numberline {4.13.2}How AdamW Works}{119}{subsection.4.13.2}%
+\contentsline {subsection}{\numberline {4.13.3}Advantages of AdamW}{120}{subsection.4.13.3}%
+\contentsline {subsection}{\numberline {4.13.4}Why AdamW is the Default Optimizer}{120}{subsection.4.13.4}%
+\contentsline {subsection}{\numberline {4.13.5}Limitations of AdamW}{120}{subsection.4.13.5}%
+\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{121}{chapter.5}%
 \ttl@stoptoc {default@4}
 \ttl@starttoc {default@5}
-\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{92}{chapter.6}%
+\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{122}{chapter.6}%
 \ttl@stoptoc {default@5}
 \ttl@starttoc {default@6}
-\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{93}{chapter.7}%
+\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{123}{chapter.7}%
 \ttl@stoptoc {default@6}
 \ttl@starttoc {default@7}
-\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{94}{chapter.8}%
+\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{124}{chapter.8}%
 \ttl@stoptoc {default@7}
 \ttl@starttoc {default@8}
-\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{95}{chapter.9}%
+\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{125}{chapter.9}%
 \ttl@stoptoc {default@8}
 \ttl@starttoc {default@9}
-\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{96}{chapter.10}%
+\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{126}{chapter.10}%
 \ttl@stoptoc {default@9}
 \ttl@starttoc {default@10}
-\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{97}{chapter.11}%
+\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{127}{chapter.11}%
 \ttl@stoptoc {default@10}
 \ttl@starttoc {default@11}
-\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{97}{section.11.1}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{98}{chapter.12}%
+\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{127}{section.11.1}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{128}{chapter.12}%
 \ttl@stoptoc {default@11}
 \ttl@starttoc {default@12}
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{99}{chapter.13}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{129}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{100}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{130}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{101}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{131}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{102}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{132}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{103}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{133}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{104}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{134}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{105}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{135}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{106}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{136}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{107}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{137}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{108}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{138}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{109}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{139}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{110}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{140}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{111}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{141}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{112}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{142}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{113}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{143}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

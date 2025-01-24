@@ -90,6 +90,32 @@
       \field{title}{Flamingo: A Visual Language Model for Few-Shot Learning}
       \field{year}{2022}
     \endentry
+    \entry{alger2019_data}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=15afd173c7b54b7240bf102df13e22dc}{%
+           family={Alger},
+           familyi={A\bibinitperiod},
+           given={Nicholas\bibnamedelima Vieau},
+           giveni={N\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {The University of Texas at Austin}%
+      }
+      \strng{namehash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{fullhash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{fullhashraw}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{bibnamehash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{authorbibnamehash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{authornamehash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{authorfullhash}{15afd173c7b54b7240bf102df13e22dc}
+      \strng{authorfullhashraw}{15afd173c7b54b7240bf102df13e22dc}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Data-scalable Hessian preconditioning for distributed parameter PDE-constrained inverse problems}
+      \field{year}{2019}
+    \endentry
     \entry{appen_road_annotation}{online}{}{}
       \name{author}{1}{}{%
         {{hash=3abd71f80f2049f65dc4444a9df0ccee}{%
