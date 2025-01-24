@@ -1179,6 +1179,126 @@ Despite its advantages, AdamW is not without challenges:
 	\item Sensitive to learning rate schedules, particularly for complex architectures.
 \end{itemize}
 
+\section{Second-Order Optimization}
+
+\subsection{Overview of Second-Order Optimization}
+So far, we have covered first-order optimization methods, which rely only on the gradient (the first derivative) to iteratively minimize the loss function. Second-order optimization extends this approach by incorporating information from the Hessian matrix (the second derivative), which captures the curvature of the loss landscape. 
+
+The key idea behind second-order optimization is to approximate the objective function \( L(W) \) using a quadratic surface at the current point and then step towards minimizing this approximation. This allows the algorithm to be more adaptive, as it can:
+\begin{itemize}
+	\item Take larger steps in regions of low curvature.
+	\item Take smaller steps in regions of high curvature.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_95.jpg}
+	\caption{Second-order optimization forms a quadratic surface to approximate the objective function and adaptively determines step size.}
+	\label{fig:second_order_quadratic}
+\end{figure}
+
+When the Hessian is well-conditioned, second-order methods often converge in fewer iterations compared to first-order methods (e.g., standard gradient descent). They can also “jump” more directly toward a local minimum rather than zigzagging or making incremental adjustments.
+
+In addition, because the Hessian reflects how sensitive each parameter is to changes in the loss function, second-order methods effectively adapt step sizes across different directions or dimensions. This automatic per-parameter scaling can reduce the need for manual learning-rate tuning and can help handle strongly anisotropic or ill-conditioned problems.
+
+\subsection{Quadratic Approximation Using the Hessian}
+In second-order optimization, the objective function \( L(W) \) is approximated using a Taylor series expansion around the current point \( W_t \):
+\[
+L(W) \approx L(W_t) + \nabla L(W_t)^T (W - W_t) + \frac{1}{2} (W - W_t)^T H(W_t) (W - W_t),
+\]
+\newpage
+where:
+\begin{itemize}
+	\item \( \nabla L(W_t) \) is the gradient at \( W_t \),
+	\item \( H(W_t) \) is the Hessian matrix at \( W_t \), representing the second derivative of \( L(W) \) with respect to \( W \).
+\end{itemize}
+
+To minimize this quadratic approximation, the weight update rule is:
+\[
+W_{t+1} = W_t - H(W_t)^{-1} \nabla L(W_t).
+\]
+
+\subsection{Practical Challenges of Second-Order Methods}
+While the concept of second-order optimization is theoretically appealing, it is rarely used in practice due to significant computational challenges:
+\begin{itemize}
+	\item \textbf{High Dimensionality:} The Hessian matrix has \( O(N^2) \) elements, where \( N \) is the number of parameters in the model. For modern deep learning models with millions or billions of parameters, storing the Hessian becomes infeasible.
+	\item \textbf{Matrix Inversion:} To compute the update step, we must invert the Hessian matrix, which requires \( O(N^3) \) operations. This computational cost is prohibitive for high-dimensional problems.
+	\item \textbf{Ill-Conditioned Hessians:} The Hessian matrix can be ill-conditioned, leading to numerical instability during inversion.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_98.jpg}
+	\caption{Challenges of second-order optimization in high-dimensional spaces, including storage and computational costs.}
+	\label{fig:second_order_limitations}
+\end{figure}
+
+Despite their challenges, second-order methods can be useful for low-dimensional problems, where the parameter space is small, and computational costs are manageable.
+
+\subsection{First-Order Methods Approximating Second-Order Behavior}
+While second-order methods are computationally impractical for large-scale problems, some first-order methods attempt to approximate their behavior:
+\begin{itemize}
+	\item \textbf{Adagrad:} Adjusts the learning rate for each parameter based on the magnitude of past gradients, mimicking curvature information.
+	\item \textbf{SGD+Momentum:} Incorporates a moving average of gradients, smoothing updates and approximating curvature.
+	\item \textbf{Adam:} Combines the adaptive learning rates of Adagrad with momentum, effectively capturing some second-order properties without requiring explicit computation of the Hessian.
+\end{itemize}
+
+\subsection{Improving Second-Order Optimization: BFGS and L-BFGS}
+Methods like \textbf{Broyden–Fletcher–Goldfarb–Shanno (BFGS)} and its limited-memory variant \textbf{L-BFGS} have been developed to address the challenge of expensive computations and high memory consumption. These methods approximate the Hessian matrix to reduce memory and computation costs, making second-order techniques more feasible in certain scenarios.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_99.jpg}
+	\caption{BFGS and L-BFGS use approximations to reduce the computational and memory demands of second-order optimization.}
+	\label{fig:bfgs_lbfgs}
+\end{figure}
+
+Although getting into the bits and bytes of BFGS and L-BFGS is outside the scope of the lecture and this summary, it's still interesting to provide a high-level overview of the two algorithms and what they improve in second-order optimization methods. 
+
+\subsubsection{BFGS: An Approximation of the Hessian Matrix}
+BFGS is an iterative optimization algorithm that avoids the explicit computation of the Hessian matrix. Instead:
+\begin{itemize}
+	\item It uses gradient information to iteratively build an approximation of the inverse Hessian.
+	\item Updates are performed using a rank-two update rule, ensuring that the approximation remains symmetric and positive definite.
+	\item The update rule is efficient, allowing the algorithm to adaptively refine its estimates of the curvature.
+\end{itemize}
+
+While BFGS reduces the computational burden compared to exact second-order methods, it still requires \( O(N^2) \) storage for the approximate Hessian, making it unsuitable for high-dimensional problems.
+\newpage
+
+\subsubsection{L-BFGS: Reducing Memory Requirements}
+To address the memory limitations of BFGS, the \textbf{Limited-Memory BFGS (L-BFGS)} algorithm was introduced. Instead of storing the entire approximate Hessian, L-BFGS:
+\begin{itemize}
+	\item Maintains only a few vectors from the most recent iterations, significantly reducing memory requirements.
+	\item Requires \( O(kN) \) storage, where \( k \) is the number of vectors retained and is much smaller than \( N \) (typically \( k \approx 10 \)).
+	\item Iteratively updates the approximation using gradient differences and weight updates from recent steps.
+\end{itemize}
+
+This makes L-BFGS particularly useful for optimization problems with moderate dimensionality, such as natural language processing or small-scale machine learning tasks.
+
+\subsubsection{Advantages and Limitations of BFGS and L-BFGS}
+\paragraph{Advantages:}
+\begin{itemize}
+	\item \textbf{Adaptive Step Sizes:} BFGS and L-BFGS use curvature information to adjust step sizes, improving convergence rates compared to first-order methods.
+	\item \textbf{Efficiency in Moderate Dimensions:} L-BFGS reduces memory usage, enabling the use of second-order ideas in medium-scale problems.
+\end{itemize}
+
+\paragraph{Limitations:}
+\begin{itemize}
+	\item \textbf{Still Computationally Expensive:} Even L-BFGS requires \( O(kN) \) storage and computations, making it impractical for very high-dimensional problems such as deep learning.
+	\item \textbf{Not Robust for Non-Convex Problems:} Second-order methods, including BFGS and L-BFGS, can still struggle with saddle points and highly non-convex landscapes commonly encountered in deep learning.
+\end{itemize}
+
+\subsubsection{Applications of L-BFGS}
+L-BFGS remains a valuable tool for optimization problems where:
+\begin{itemize}
+	\item The parameter space is not excessively high-dimensional.
+	\item Precise curvature information is advantageous, such as in logistic regression or support vector machines.
+	\item Fine-tuning is required near convergence to achieve high precision.
+\end{itemize}
+
+\subsection{Summary of Second-Order Optimization Approaches}
+Second-order optimization methods, such as BFGS and L-BFGS, provide valuable insights into the curvature of the loss landscape, enabling adaptive step sizes and improved convergence rates. However, their computational and memory requirements make them impractical for large-scale machine learning problems. For such tasks, first-order methods like Adam remain the standard due to their scalability and effectiveness.
 
 
 
