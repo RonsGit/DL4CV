@@ -250,90 +250,92 @@
 \contentsline {section}{\numberline {4.13}AdamW: Decoupling Weight Decay from L2 Regularization}{119}{section.4.13}%
 \contentsline {subsection}{\numberline {4.13.1}Motivation for AdamW}{119}{subsection.4.13.1}%
 \contentsline {subsection}{\numberline {4.13.2}How AdamW Works}{119}{subsection.4.13.2}%
-\contentsline {subsection}{\numberline {4.13.3}Advantages of AdamW}{120}{subsection.4.13.3}%
-\contentsline {subsection}{\numberline {4.13.4}Why AdamW is the Default Optimizer}{120}{subsection.4.13.4}%
-\contentsline {subsection}{\numberline {4.13.5}Limitations of AdamW}{120}{subsection.4.13.5}%
+\contentsline {subsection}{\numberline {4.13.3}Note on Weight Decay in AdamW}{120}{subsection.4.13.3}%
+\contentsline {subsection}{\numberline {4.13.4}The AdamW Improvement}{120}{subsection.4.13.4}%
+\contentsline {subsection}{\numberline {4.13.5}Advantages of AdamW}{121}{subsection.4.13.5}%
+\contentsline {subsection}{\numberline {4.13.6}Why AdamW is the Default Optimizer}{121}{subsection.4.13.6}%
+\contentsline {subsection}{\numberline {4.13.7}Limitations of AdamW}{121}{subsection.4.13.7}%
 \contentsline {section}{\numberline {4.14}Second-Order Optimization}{121}{section.4.14}%
 \contentsline {subsection}{\numberline {4.14.1}Overview of Second-Order Optimization}{121}{subsection.4.14.1}%
-\contentsline {subsection}{\numberline {4.14.2}Quadratic Approximation Using the Hessian}{121}{subsection.4.14.2}%
+\contentsline {subsection}{\numberline {4.14.2}Quadratic Approximation Using the Hessian}{122}{subsection.4.14.2}%
 \contentsline {subsection}{\numberline {4.14.3}Practical Challenges of Second-Order Methods}{122}{subsection.4.14.3}%
-\contentsline {subsection}{\numberline {4.14.4}First-Order Methods Approximating Second-Order Behavior}{122}{subsection.4.14.4}%
+\contentsline {subsection}{\numberline {4.14.4}First-Order Methods Approximating Second-Order Behavior}{123}{subsection.4.14.4}%
 \contentsline {subsection}{\numberline {4.14.5}Improving Second-Order Optimization: BFGS and L-BFGS}{123}{subsection.4.14.5}%
-\contentsline {subsubsection}{BFGS: An Approximation of the Hessian Matrix}{123}{section*.76}%
+\contentsline {subsubsection}{BFGS: An Approximation of the Hessian Matrix}{124}{section*.76}%
 \contentsline {subsubsection}{L-BFGS: Reducing Memory Requirements}{124}{section*.77}%
-\contentsline {subsubsection}{Advantages and Limitations of BFGS and L-BFGS}{124}{section*.78}%
-\contentsline {paragraph}{Advantages:}{124}{section*.79}%
-\contentsline {paragraph}{Limitations:}{124}{section*.80}%
-\contentsline {subsubsection}{Applications of L-BFGS}{124}{section*.81}%
-\contentsline {subsection}{\numberline {4.14.6}Summary of Second-Order Optimization Approaches}{124}{subsection.4.14.6}%
-\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{125}{chapter.5}%
+\contentsline {subsubsection}{Advantages and Limitations of BFGS and L-BFGS}{125}{section*.78}%
+\contentsline {paragraph}{Advantages:}{125}{section*.79}%
+\contentsline {paragraph}{Limitations:}{125}{section*.80}%
+\contentsline {subsubsection}{Applications of L-BFGS}{125}{section*.81}%
+\contentsline {subsection}{\numberline {4.14.6}Summary of Second-Order Optimization Approaches}{125}{subsection.4.14.6}%
+\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{126}{chapter.5}%
 \ttl@stoptoc {default@4}
 \ttl@starttoc {default@5}
-\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{126}{chapter.6}%
+\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{127}{chapter.6}%
 \ttl@stoptoc {default@5}
 \ttl@starttoc {default@6}
-\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{127}{chapter.7}%
+\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{128}{chapter.7}%
 \ttl@stoptoc {default@6}
 \ttl@starttoc {default@7}
-\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{128}{chapter.8}%
+\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{129}{chapter.8}%
 \ttl@stoptoc {default@7}
 \ttl@starttoc {default@8}
-\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{129}{chapter.9}%
+\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{130}{chapter.9}%
 \ttl@stoptoc {default@8}
 \ttl@starttoc {default@9}
-\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{130}{chapter.10}%
+\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{131}{chapter.10}%
 \ttl@stoptoc {default@9}
 \ttl@starttoc {default@10}
-\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{131}{chapter.11}%
+\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{132}{chapter.11}%
 \ttl@stoptoc {default@10}
 \ttl@starttoc {default@11}
-\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{131}{section.11.1}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{132}{chapter.12}%
+\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{132}{section.11.1}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{133}{chapter.12}%
 \ttl@stoptoc {default@11}
 \ttl@starttoc {default@12}
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{133}{chapter.13}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{134}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{134}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{135}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{135}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{136}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{136}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{137}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{137}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{138}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{138}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{139}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{139}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{140}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{140}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{141}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{141}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{142}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{142}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{143}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{143}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{144}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{144}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{145}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{145}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{146}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{146}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{147}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{147}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{148}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

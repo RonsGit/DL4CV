@@ -1156,13 +1156,44 @@ This decoupling ensures that the weight decay term acts as a pure penalization o
 	\label{fig:adamw_pseudocode}
 \end{figure}
 
-\subsection{Advantages of AdamW}
-AdamW addresses several issues inherent in traditional Adam with L2 regularization:
+\subsection{Note on Weight Decay in AdamW}
+
+In the pseudo-code, the \textbf{violet term} in line 6 represents L2 regularization as it is typically implemented in Adam (not AdamW) in many deep learning frameworks. This term adds the weight decay directly to the loss function, and its gradient is incorporated into the computation of the total gradients \( g \). However, this approach introduces unintended consequences:
+
 \begin{itemize}
-	\item \textbf{Consistent Regularization:} Decoupling weight decay ensures that regularization consistently penalizes parameter magnitudes.
-	\item \textbf{Improved Generalization:} By treating weight decay as an independent process, AdamW achieves better generalization across diverse tasks.
-	\item \textbf{Minimal Overhead:} AdamW retains the computational efficiency of Adam while enhancing its robustness and applicability.
+	\item \textbf{Entanglement with Moving Averages:} When the regularization term is included in the loss, the moving averages \( m \) and \( v \) (used for the first and second moments of gradients) track not only the gradients of the loss function but also the contributions from the weight decay term.
+	\item \textbf{Normalization Effect:} This interaction impacts the update step. Specifically, in Adam, line 12 of the pseudo-code includes \( \lambda \theta_{t-1} \) in the numerator, and this term gets normalized by \( \sqrt{\hat{v}_t} \) in the denominator. Consequently:
+	\begin{itemize}
+		\item Weights with large or highly variable gradients (corresponding to a larger \( \hat{v}_t \)) experience less regularization.
+		\item Weights with small or slowly changing gradients are penalized more heavily, even though this may not align with the intended regularization behavior.
+	\end{itemize}
 \end{itemize}
+
+This phenomenon undermines the effectiveness of L2 regularization in Adam, deviating from the intended proportionality of weight decay to the weight magnitude. It explains why models trained with Adam sometimes generalize less effectively than those trained with SGD, which handles L2 regularization as intended.
+
+\subsection{The AdamW Improvement}
+
+To address this issue, the authors of AdamW propose a critical modification: \textbf{decoupling the weight decay from the gradient computation}. Specifically:
+\begin{itemize}
+	\item The \textbf{violet term} in line 6 is removed from the gradient computation.
+	\item The \textbf{green term} in line 12 applies weight decay as a direct adjustment to the parameter update after controlling for parameter-wise step sizes.
+\end{itemize}
+This decoupling ensures that:
+\begin{enumerate}
+	\item Weight decay acts only as a direct proportional penalty to the parameter values, independent of the gradient dynamics.
+	\item The moving averages \( m \) and \( v \) track only the gradients of the loss function, preserving their intended role.
+\end{enumerate}
+
+\subsection{Advantages of AdamW}
+
+Experimental results demonstrate that AdamW:
+\begin{itemize}
+	\item Improves training loss compared to standard Adam.
+	\item Yields models that generalize significantly better, comparable to those trained with SGD+Momentum.
+	\item Retains Adam's adaptability and efficiency for large-scale optimization tasks.
+\end{itemize}
+
+By resolving the shortcomings of L2 regularization in Adam, AdamW has become the recommended default optimizer for many deep learning problems.
 
 \subsection{Why AdamW is the Default Optimizer}
 AdamW combines the adaptive learning rates of Adam with the benefits of properly implemented weight decay, making it a powerful default optimizer for many deep learning tasks:
@@ -1206,7 +1237,6 @@ In second-order optimization, the objective function \( L(W) \) is approximated 
 \[
 L(W) \approx L(W_t) + \nabla L(W_t)^T (W - W_t) + \frac{1}{2} (W - W_t)^T H(W_t) (W - W_t),
 \]
-\newpage
 where:
 \begin{itemize}
 	\item \( \nabla L(W_t) \) is the gradient at \( W_t \),
@@ -1264,7 +1294,6 @@ BFGS is an iterative optimization algorithm that avoids the explicit computation
 \end{itemize}
 
 While BFGS reduces the computational burden compared to exact second-order methods, it still requires \( O(N^2) \) storage for the approximate Hessian, making it unsuitable for high-dimensional problems.
-\newpage
 
 \subsubsection{L-BFGS: Reducing Memory Requirements}
 To address the memory limitations of BFGS, the \textbf{Limited-Memory BFGS (L-BFGS)} algorithm was introduced. Instead of storing the entire approximate Hessian, L-BFGS:
