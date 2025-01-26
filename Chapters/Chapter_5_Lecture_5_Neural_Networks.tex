@@ -6,3 +6,455 @@
 %----------------------------------------------------------------------------------------
 %	CHAPTER 5 - Lecture 5: Neural Networks
 %----------------------------------------------------------------------------------------
+
+\section{Introduction to Neural Networks}
+Neural networks represent a significant leap beyond the linear classifiers and gradient-based optimization methods discussed in earlier chapters. While linear models are simple and interpretable, they are limited in their ability to represent complex functions and decision boundaries. This chapter introduces neural networks, starting with their motivation and building blocks, and explores their potential for feature representation and universal approximation.
+
+\subsection{Limitations of Linear Classifiers}
+A quick reminder: linear classifiers, while effective for certain tasks, struggle to separate data with complex or nonlinear structures. For instance:
+\begin{itemize}
+	\item \textbf{Geometric Viewpoint:} Linear classifiers create hyperplanes in the input space, dividing it into regions. This approach fails when the data is not linearly separable.
+	\item \textbf{Visual Viewpoint:} Linear classifiers learn a single template per class, leading to challenges in recognizing multiple modes of the same category, such as objects appearing in different orientations.
+\end{itemize}
+
+Hence, we need to find a solution for these challenges we face in real-world computer vision tasks. 
+
+\subsection{Feature Transforms as a Solution}
+Feature transforms attempt to overcome the limitations of linear classifiers by mapping input data into a new feature space that simplifies classification, allowing to linearly separate the feature space and provide a linear-classifier based solution. We'll now provide a high-level overview of some common feature transforms in the field of computer vision. 
+
+\subsubsection{Feature Transforms in Action}
+Feature transforms aim to re-represent the data in a space where it becomes easier to classify using simple models. For instance:
+\begin{itemize}
+	\item \textbf{Cartesian to Polar Transformation:} 
+	Data can be transformed from Cartesian to polar coordinates. This new feature space is defined by the mathematical transformation applied. In polar coordinates, the dataset can sometimes become linearly separable, allowing a linear classifier to perform effectively. When the decision boundary is mapped back to the original Cartesian space, it results in a nonlinear elliptical boundary. This illustrates how feature transforms can overcome the limitations of linear classifiers.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_8.jpg}
+		\caption{Cartesian to polar transformation enabling linear separability in the feature space.}
+	\end{figure}
+	
+	\item \textbf{Color Histogram:} 
+	This transformation is useful in computer vision. The RGB spectrum is divided into discrete bins, and each pixel is assigned to a corresponding bin, creating a histogram that captures the overall color distribution in the image. This approach removes spatial information, which can be helpful when objects consistently exhibit certain colors but may appear in different parts of the image.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_9.jpg}
+		\caption{Color histogram as a feature representation for images.}
+		\label{fig:chapter5_color_histogram}
+	\end{figure}
+	
+	In such cases, this approach works well. A good example provided in the lecture (\ref{fig:chapter5_color_histogram}) is the one of a class of red frogs that are always seen on a green background. However, the color histogram transformation fails in terms of classification when spatial structure is critical for the task, or when there are great color similarities across different categories.
+	
+	\item \textbf{Histogram of Oriented Gradients (HoG):}
+	The HoG transformation removes color information and retains edge orientation and strength. This approach complements the color histogram by focusing on local structure instead of overall color. It has been widely used in computer vision tasks, particularly for object detection, up to the mid-to-late 2000s.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_13.jpg}
+		\caption{Histogram of Oriented Gradients (HoG) as a feature representation for images.}
+		\label{fig:chapter5_hog}
+	\end{figure}
+	\end{itemize}
+	
+	\subsection{Challenges in Manual Feature Transformations}
+	While feature transforms like color histograms and HoG are effective, they have significant limitations:
+	\begin{itemize}
+	\item They require practitioners to define specific rules for feature extraction, which can be time-consuming and error-prone.
+	\item These hand-crafted features may not generalize well to real-world datasets, especially for out-of-distribution examples or uncommon instances (e.g., a frog of an unusual color or a cat without whiskers).
+	\end{itemize}
+	
+	\subsection{Data-Driven Feature Transformations}
+	Unlike manual transformations, data-driven methods automatically derive features from the dataset, reducing the reliance on domain expertise. One such example is the \textbf{Bag of Words} approach.
+	
+	The approach works as follows:
+	\begin{itemize}
+		\item Random patches are extracted from training images and clustered to form a codebook of "visual words."
+		\item For each input image, a histogram is created to count how often each visual word appears.
+		\item This method captures common structures and patterns in the dataset without requiring manual feature specification.
+	\end{itemize}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_15.jpg}
+	\caption{Bag of Words approach for feature transformation.}
+	\label{fig:chapter5_bag_of_words}
+	\end{figure}
+
+	
+	\subsection{Combining Multiple Representations}
+	Features derived from different transformations can be concatenated into a single high-dimensional feature vector. This combination allows capturing complementary aspects of the data (e.g., color, texture, and edges) for more robust classification. In the lecture Justin demonstrated this approach by combining color histogram, HoG and 'Bag of Visual Words' we've covered earlier into a single concatenated representation vector. 
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_16.jpg}
+	\caption{Combining multiple feature representations into a single feature vector.}
+	\label{fig:chapter5_combined_features}
+	\end{figure}
+	
+	\subsection{Real-World Example: 2011 ImageNet Winner}
+	Before the advent of deep learning, this approach of combining feature representations was considered state-of-the-art. The winner of the 2011 ImageNet Classification Challenge employed a sophisticated pipeline:
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_5/slide_17.jpg}
+	\caption{Feature extraction pipeline of the 2011 ImageNet winner.}
+	\label{fig:chapter5_imagenet_pipeline}
+	\end{figure}
+	
+	\underline{The pipeline included:}
+	\begin{enumerate}
+	\item Extracting approximately 10,000 image patches per image, covering various scales, sizes, and locations.
+	\item Features like SIFT and color histograms were extracted, and dimensionality reduction was performed using PCA.
+	\item Fisher Vector feature encoding was applied to further compress and encode these features.
+	\item A one-vs-all Support Vector Machine (SVM) was trained on the resulting features for classification.
+	\end{enumerate}
+	
+	This approach highlights the complexity and manual effort involved in feature engineering before the rise of deep learning.
+	
+	\section{Motivation for Neural Networks}
+	Despite their effectiveness in specific scenarios, feature transforms face inherent limitations due to their reliance on manual design or pre-specified transformations. Neural networks overcome these limitations by jointly learning feature representations and classification models in an end-to-end framework, as we will explore in the next sections.
+	
+	When building a linear classifier on top of the features extracted through the methods discussed earlier, we are only tuning the parameters of the classifier (the final component in the pipeline) to maximize classification performance. This approach is limited because it fixes the feature extraction stage and optimizes only the classifier. Instead, we want an end-to-end pipeline where every component, from feature extraction to classification, is fully tunable during training based on the data. This is one of the primary motivations for switching to neural networks.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_19.jpg}
+		\caption{Comparison between the classic feature extraction pipeline and the neural network-based pipeline. The neural network pipeline is fully tunable end-to-end based on training data.}
+		\label{fig:chapter5_classic_vs_nn_pipeline}
+	\end{figure}
+	
+	\section{Neural Networks: The Basics}
+	A small neural network, in its functional form, is quite similar to a linear classifier. The key difference is the introduction of a non-linear function applied to the result of the vector-matrix multiplication (between the input vector and the weight matrix). This 2-layer neural network can be generalized to any desired number of layers. Layers other than the input and output layers are called \textbf{hidden layers}, and deep neural networks can have an arbitrary number of them.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_23.jpg}
+		\caption{Mathematical/functional notation of linear classifiers compared to small neural networks.}
+		\label{fig:chapter5_nn_functional_notation}
+	\end{figure}
+	
+\subsection{Fully Connected Networks}
+A \textbf{fully connected} neural network, also known as a \textbf{multi-layer perceptron (MLP)}, is structured so that every neuron in one layer is connected to every neuron in the next layer. In practical terms, this means each neuron in the next layer receives inputs from \emph{all} neurons in the current layer, each with its own learnable weight. This dense connectivity can capture complex relationships but often requires a large number of parameters.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_27.jpg}
+	\caption{A visual representation of a fully connected neural network with a single hidden layer, an input layer, and an output layer.}
+	\label{fig:chapter5_fc_network}
+\end{figure}
+	
+\section{Interpreting Neural Networks}
+Neural networks can be analyzed in a way similar to linear classifiers. For instance, the weight matrix \(\mathbf{W}_1\) in the first layer can be reshaped and visualized as \emph{templates}, each indicating how strongly it responds to particular spatial patterns in the input image. While many of these templates are not immediately interpretable, some do reveal recognizable structures.
+
+A notable example discussed in the lecture involves two ``horse'' templates: one for a left-facing horse and another for a right-facing horse. This arrangement avoids the ``double-headed horse'' phenomenon seen in some linear classifiers, where a single template tries to capture multiple orientations or modes of an object class.
+
+In the second layer of the network, these template responses are recombined (via another set of weights) to perform classification. Because distinct templates can be linearly combined to form more complex features, the network is said to learn a \textbf{distributed representation}. In other words, while individual templates may be non-intuitive or partially interpretable, their collective combination yields rich, discriminative features for tasks like object recognition.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_30.jpg}
+	\caption{Visualization of learned templates in the first layer of a neural network, including a left-facing and a right-facing horse.}
+	\label{fig:chapter5_learned_templates}
+\end{figure}
+	
+\paragraph{Network Pruning: Pruning Redundant Representations}
+One challenge in neural networks is redundancy, where multiple filters or features learn the same thing. A technique called \textbf{network pruning} addresses this issue. In this approach, a large neural network is trained, and as a post-processing step, redundant representations are pruned to simplify the network without significantly affecting its performance. This concept will be revisited in more detail later in the course.
+
+\section{Building Deep Neural Networks}
+Deep neural networks are formed by stacking multiple layers. The \emph{depth} of a network refers to the number of these layers, while the \emph{width} describes the number of neurons (hidden units) per layer.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_32.jpg}
+	\caption{A visual representation of a deep neural network.}
+	\label{fig:chapter5_deep_nn}
+\end{figure}
+
+\subsection{Activation Functions: Non-Linear Bridges Between Layers}
+A crucial component that distinguishes neural networks from linear classifiers is the \textbf{activation function}. After computing
+\[
+h = \mathbf{W} \mathbf{x} + \mathbf{b},
+\]
+the network applies a non-linear function \( f(h) \). This combination of a linear transformation followed by a non-linear activation enables the network to model complex, non-linear decision boundaries.
+
+Without non-linearities (e.g., if you simply had \(\mathbf{W}_2 (\mathbf{W}_1 \mathbf{x})\)), the combined transformation would still be linear, reducing the model’s expressiveness to that of a single matrix multiplication. This is illustrated in the figure below, where collapsing multiple linear layers into one (\(\mathbf{W}_3 = \mathbf{W}_2 \mathbf{W}_1\)) reduces the network to a linear classifier.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_35.jpg}
+	\caption{Collapsing multiple linear layers reduces the network to a linear classifier.}
+	\label{fig:chapter5_linear_collapse}
+\end{figure}
+
+\paragraph{Why Non-Linearity Matters.}
+Non-linear activation functions grant neural networks the \emph{universal approximation} property, enabling them to represent virtually any function given sufficient capacity (enough parameters and layers). Common activation functions include:
+\begin{itemize}
+	\item \textbf{ReLU} (\(\max(0, x)\)): A popular choice due to its simplicity and ability to mitigate vanishing gradients. Works effectively in most modern architectures.
+	\item \textbf{Sigmoid} (\(\sigma(x)\)): Historically significant but less common now due to issues such as vanishing gradients for large positive or negative inputs.
+	\item \textbf{Tanh}, \textbf{Leaky ReLU}, and other variants: Offer different trade-offs regarding smoothness, gradient flow, and negative-domain behavior.
+\end{itemize}
+
+The figure below highlights these activation functions. Historically, \textbf{Sigmoid} was widely used but has largely been replaced by \textbf{ReLU}, which has become the \emph{de facto} standard, similar to how \textbf{Adam} dominates optimizers.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_37.jpg}
+	\caption{Examples of common activation functions.}
+	\label{fig:chapter5_activation_functions}
+\end{figure}
+
+\section{A Simple Neural Network in 20 Lines}
+Despite their conceptual depth, neural networks can be implemented succinctly. Below is an example of a minimal NumPy implementation of a neural network with:
+\begin{itemize}
+	\item An input layer,
+	\item One hidden layer with an activation function (e.g., ReLU),
+	\item An output layer for classification or regression.
+\end{itemize}
+
+The following figure demonstrates this simplicity, showcasing the essential ingredients of a feedforward neural network.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_42.jpg}
+	\caption{Minimal implementation of a neural network in under 20 lines of code.}
+	\label{fig:chapter5_simple_nn}
+\end{figure}
+
+\section{Biological Inspiration}
+The term \emph{neural network} draws loose inspiration from the structure of the human brain. Biological neurons consist of:
+\begin{itemize}
+	\item \textbf{Dendrites:} Collect incoming signals.
+	\item \textbf{Cell Body:} Sums and processes the signals.
+	\item \textbf{Axon:} Transmits signals away from the cell body.
+	\item \textbf{Synapses:} Modulate signal strength at neuron junctions.
+\end{itemize}
+
+The flow of impulses is illustrated below, where the cell body processes inputs and sends output signals through the axon.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_47.jpg}
+	\caption{Biological inspiration: flow of impulses in neurons.}
+	\label{fig:chapter5_biological_inspiration}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_48.jpg}
+	\caption{Comparison of biological neurons and artificial neurons.}
+	\label{fig:chapter5_artificial_neurons}
+\end{figure}
+
+\paragraph{A Loose Analogy.}
+While neural networks borrow terminology and broad conceptual inspiration from neuroscience, the actual mechanisms differ significantly:
+\begin{itemize}
+	\item \textbf{Connectivity Patterns:} Biological neurons form complex, recurrent, and varied circuits, while artificial networks often use structured, layer-based designs.
+	\item \textbf{Weights vs. Synapses:} Artificial weights are scalar values updated via gradient descent, unlike the chemical and electrical processes in biological synapses.
+	\item \textbf{Dendritic Computation:} Biological dendrites can perform non-linear operations before signals reach the cell body, while artificial neurons rely on simpler computations.
+\end{itemize}
+
+\section{Space Warping: Another Motivation for Artificial Neural Networks}
+Neural networks provide a powerful approach to \emph{warp} the input space into separable regions, enabling complex tasks like classification and regression. In the following parts, we will explore this concept of \textbf{space warping} and demonstrate how multi-layer architectures reshape the feature space to disentangle data distributions effectively.
+
+Linear classifiers can be understood geometrically as operating in a high-dimensional input space, where each row of the weight matrix corresponds to a hyperplane dividing the space. These hyperplanes act as decision boundaries, and the dot product between the input and the weight matrix determines classification scores. Each hyperplane has a score of 0 along the boundary, increasing linearly as we move perpendicularly away from it.
+
+Another perspective is to view the classifier as \textbf{warping the input space}. This involves transforming the input features \( x_1, x_2 \) into new coordinates \( h_1, h_2 \), based on the learned transformation \( h = \mathbf{W} \mathbf{x} \).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_53.jpg}
+	\caption{Transforming input features \( x_1, x_2 \) into a new feature space \( h \) via \( h = \mathbf{W} \mathbf{x} \).}
+	\label{fig:chapter5_linear_transformation}
+\end{figure}
+
+\subsection{Linear Transformations and Their Limitations}
+With a linear transformation, the input space is linearly deformed. In the example below, two lines in the input space (representing decision boundaries) divide the space into four regions: A, B, C, and D.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_54.jpg}
+	\caption{Regions in the input space divided by linear decision boundaries.}
+	\label{fig:chapter5_input_regions}
+\end{figure}
+
+Each of these regions is transformed linearly into the new feature space. However, a critical limitation emerges: \textbf{Data that is not linearly separable in the input space will remain non-linearly separable after a linear transformation}. Training a classifier in this transformed space fails to resolve the separability issue.
+
+\subsection{Introducing Non-Linearity with ReLU}
+What happens if the transformation applied to the data is \textbf{non-linear}? Consider a neural network with a hidden layer applying the ReLU activation function: 
+\[
+h = \text{ReLU}(\mathbf{W} \mathbf{x}) = \max(0, \mathbf{W} \mathbf{x}),
+\]
+where \( x \) and \( h \) are 2-dimensional vectors, and biases are ignored for simplicity. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_61.jpg}
+	\caption{Transformation of quadrants using ReLU, collapsing regions onto specific axes.}
+	\label{fig:chapter5_relu_quadrants}
+\end{figure}
+
+\underline{In this case:}
+\begin{itemize}
+	\item Quadrant A is transformed linearly.
+	\item Quadrant B corresponds to a positive value for one feature (red) and a negative value for the other (green). ReLU collapses it onto the \( +h_2 \)-axis, setting the negative feature to 0.
+	\item Quadrant D is similarly collapsed onto the \( +h_1 \)-axis.
+	\item Quadrant C is entirely collapsed onto the origin, as both features are negative.
+\end{itemize}
+
+\subsection{Making Data Linearly Separable}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_65.jpg}
+	\caption{Non-linearity (e.g., ReLU) enables linear separability in the transformed feature space.}
+	\label{fig:chapter5_relu_separability}
+\end{figure}
+
+\subsection{Scaling Up: Increasing Representation Power}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_66.jpg}
+	\caption{Adding hidden units increases the complexity of decision boundaries in the input space.}
+	\label{fig:chapter5_complex_boundaries}
+\end{figure}
+
+In this example, the neural network hidden layer had two dimensions, allowing it to fold the input space twice. By increasing the number of hidden units, the network gains the capacity to represent increasingly complex transformations. This results in more intricate decision boundaries in the original input space.
+
+\subsection{Regularizing Neural Networks}
+While increasing hidden units enhances the network’s representational capacity, care must be taken to avoid overfitting. Instead of limiting the number of neurons of hidden layers, stronger \textbf{L2 regularization} can be applied to smooth decision boundaries without altering the architecture.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_67.jpg}
+	\caption{Using stronger L2 regularization to simplify decision boundaries and reduce overfitting.}
+	\label{fig:chapter5_regularization}
+\end{figure}
+
+\section{Universal Approximation Theorem}
+The concept of neural networks as feature space transformers demonstrates their potential to learn very complex decision boundaries, vastly surpassing the capabilities of linear classifiers. Now we'll formalize this power by introducing the concept of 'Universal Approximation', which explores the types of functions neural networks can learn and their theoretical limitations.
+
+The \textbf{Universal Approximation Theorem} states that a neural network with just one hidden layer can approximate any function \( f: \mathbb{R}^N \to \mathbb{R}^M \) to arbitrary precision, given certain conditions. These conditions include:
+\begin{itemize}
+	\item The input space must be a compact subset of \( \mathbb{R}^N \).
+	\item The function must be continuous.
+	\item The term “arbitrary precision” requires formal definition.
+\end{itemize}
+While this result is mathematically profound, we will not delve into all these mathematical conditions behind it, as it is beyond the scope of this course. What we'll try to do is focus on the practical side, building a method that can be used to construct any given function based on neural networks. 
+
+\subsection{Practical Context: The Bump Function}
+An illustrative example of universal approximation is constructing a “bump function” using four hidden units. This function, built as a combination of four ReLU activations, allows us to control:
+\begin{itemize}
+	\item The location of the bump,
+	\item The slopes of the lines,
+	\item The height of the bump.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_79.jpg}
+	\caption{A bump function constructed using four hidden units, demonstrating the capacity of neural networks to approximate complex functions.}
+	\label{fig:chapter5_bump_function}
+\end{figure}
+
+Using \( 4K \) units, we can construct a sum of \( K \) bumps, enabling the approximation of arbitrary functions with increasing accuracy as the number of bumps grows. This interpretation highlights that \textbf{the more hidden units, the greater the expressive power of the model}.
+
+\subsection{Questions for Further Exploration}
+This proof of capacity raises several interesting questions:
+\begin{itemize}
+	\item What about the gaps between the bumps?
+	\item Can similar results be achieved with other activation functions?
+	\item How does this extend to higher-dimensional inputs and outputs?
+\end{itemize}
+For those interested in a deeper dive, \textbf{Michael Nielsen's book, Chapter 4} explores these concepts in detail\footnote{Nielsen, Michael A. \textit{Neural Networks and Deep Learning}, Determination Press, 2015. Available online at \url{http://neuralnetworksanddeeplearning.com/}.}.
+
+\subsection{Reality Check: Universal Approximation is Not Enough}
+While the Universal Approximation Theorem demonstrates the capacity of neural networks to represent any function, practical training dynamics differ significantly. When training with stochastic gradient descent (SGD), neural networks do not learn these bump functions explicitly.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_84.jpg}
+	\caption{Reality check: Neural networks can approximate complex functions, but universal approximation does not guarantee practical learnability.}
+	\label{fig:chapter5_reality_check}
+\end{figure}
+
+\underline{The theorem does not address:}
+\begin{itemize}
+	\item How effectively functions can be learned using gradient-based methods,
+	\item How much data is required for effective learning,
+	\item Practical considerations like optimization challenges and generalization.
+\end{itemize}
+
+As a comparison, \( k \)-Nearest Neighbors (kNN) is also a universal approximator, but this property alone does not make it the best model for most tasks. Universal approximation, while a nice property, is insufficient to declare neural networks superior.
+
+\section{Convex Functions: A Special Case}
+Convex functions exhibit desirable properties for optimization. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_89.jpg}
+	\caption{The parabola \( f(x) = x^2 \) is an example of a convex function.}
+	\label{fig:chapter5_convex_function}
+\end{figure}
+
+Intuitively, convex functions resemble multidimensional bowls. They are defined as functions \( f \) such that:
+\[
+f(\alpha x_1 + (1 - \alpha) x_2) \leq \alpha f(x_1) + (1 - \alpha) f(x_2), \quad \forall \alpha \in [0, 1].
+\]
+
+\underline{This property ensures:}
+\begin{itemize}
+	\item The local minimum of a convex function is also its global minimum.
+	\item Theoretical guarantees exist for convergence to the global minimum.
+\end{itemize}
+
+\subsection{Non-Convex Functions}
+In contrast, functions like \( f(x) = \cos(x) \) are non-convex, as there exist secant lines between two points that lie below the function itself.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_90.jpg}
+	\caption{\( f(x) = \cos(x) \) is an example of a non-convex function.}
+	\label{fig:chapter5_nonconvex_function}
+\end{figure}
+
+\subsection{Convex Optimization in Linear Classifiers}
+The optimization problems arising from linear classifiers, such as those using the softmax or SVM loss functions, are \textbf{convex} due to their mathematical formulation. Convexity arises from the following properties:
+
+\begin{itemize}
+	\item \textbf{Convex Loss Functions:} The softmax and SVM losses are convex functions of their input scores. For example, the negative log-likelihood loss used in softmax is convex because the log-sum-exp function (involved in the computation) is convex.
+	\item \textbf{Linear Transformations of Input Features:} Linear classifiers involve a dot product between the input feature vector \( \mathbf{x} \) and the weight vector \( \mathbf{w} \). As linear transformations preserve convexity, the overall objective function remains convex.
+	\item \textbf{No Hidden Layers:} Linear classifiers lack non-linear components or hidden layers, which are typical sources of non-convexity in neural networks.
+\end{itemize}
+
+This convex nature ensures:
+\begin{itemize}
+	\item The optimization process is \textbf{robust} and less sensitive to initialization since the loss surface does not contain local minima or saddle points.
+	\item Convergence to the \textbf{global minimum} is guaranteed under appropriate conditions, such as when using gradient descent with a suitable learning rate.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_93.jpg}
+	\caption{Optimization problems for linear classifiers are convex.}
+	\label{fig:chapter5_linear_convex_optimization}
+\end{figure}
+
+\subsection{Challenges with Neural Networks}
+In contrast, optimization problems for neural networks are inherently \textbf{non-convex}. This means:
+\begin{itemize}
+	\item There are no guarantees of convergence to a global minimum.
+	\item Empirical success often relies on heuristics, such as good initialization, proper learning rates, and regularization techniques.
+\end{itemize}
+
+Despite this theoretical limitation, neural networks perform well empirically, which remains a topic of active research.
+
+\subsection{Bridging to Backpropagation: Efficient Gradient Computation}
+In this chapter, we explored the immense power of neural networks, from their ability to approximate complex functions to their optimization challenges. While gradient-based optimization techniques like SGD and its variants are essential for training deep neural networks, a critical question remains: \textbf{how can we compute gradients efficiently for such complex architectures?}
+
+Deep neural networks often consist of millions or billions of parameters across multiple layers, making direct gradient computation infeasible using naive methods like numeric differentiation. For these models to be trainable at scale, we require a systematic and efficient way to compute the gradients of the loss function with respect to every parameter in the network.
+
+This is where the \textbf{backpropagation algorithm} comes into play. Backpropagation leverages the chain rule from calculus to propagate gradient information layer by layer, drastically reducing the computational cost of gradient evaluation. It ensures that the gradient of the loss with respect to each parameter is computed in a time-efficient manner, even for networks with a deep and complex structure.
+
+In the next chapter, we will delve into the mathematical foundations and mechanics of backpropagation, illustrating how it enables the training of neural networks at the scale required for modern applications.
+
+

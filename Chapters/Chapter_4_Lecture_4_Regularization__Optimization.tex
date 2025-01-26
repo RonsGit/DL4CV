@@ -220,7 +220,7 @@ W^* = \arg\min_W L(W).
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_21.jpg}
 	\caption{The loss landscape. Each point corresponds to a weight matrix, and the height represents its corresponding loss value.}
-	\label{fig:landscape}
+	\label{fig:chapter4_landscape}
 \end{figure}
 
 \newpage
@@ -236,7 +236,7 @@ Imagine the optimization process as traversing a high-dimensional landscape, whe
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_22.jpg}
 	\caption{Traversing the loss landscape toward the minimum. The person starts at a random point and follows a path downwards.}
-	\label{fig:traversal}
+	\label{fig:chapter4_traversal}
 \end{figure}
 
 In optimization, we aim to find the lowest point (the global minimum). However, the "traveler" does not know where the bottom is, and the problem is further complicated by the sheer size and complexity of the landscape. Writing down an explicit formula for the minimum is often impractical for most machine learning problems.
@@ -277,7 +277,7 @@ One naive strategy for optimization is \textbf{random search}. This involves gen
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_23.jpg}
 	\caption{Random search: A naive optimization approach.}
-	\label{fig:random_search}
+	\label{fig:chapter4_random_search}
 \end{figure}
 
 For example, as shown in Figure \ref{fig:random_search}, random search achieves an accuracy of only \( 15.5\%\) on CIFAR-10, far from the \( 95\%\) state-of-the-art performance. The impracticality of densely sampling the parameter space motivates us to explore more intelligent strategies.  
@@ -289,7 +289,7 @@ A more practical approach is to \textbf{follow the slope} of the loss landscape.
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_26.jpg}
 	\caption{Following the slope to descend the landscape.}
-	\label{fig:following_slope}
+	\label{fig:chapter4_following_slope}
 \end{figure}
 
  This strategy leverages local information about how the loss changes in the immediate vicinity of the current point. By iteratively stepping in the direction of steepest descent, the traveler progressively moves closer to the minimum. Despite relying solely on local information, this method is remarkably effective and forms the foundation of many optimization techniques used in machine learning.
@@ -367,7 +367,7 @@ The steepest descent occurs in the direction opposite to the gradient, \( -\nabl
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_28.jpg}
 	\caption{The gradient \( \nabla L(w) \) points to the steepest ascent, while \( -\nabla L(w) \) leads to the steepest descent.}
-	\label{fig:gradient_steepest_directions}
+	\label{fig:chapter4_gradient_steepest_directions}
 \end{figure}
 
 This property of gradients makes them indispensable for optimization. By iteratively stepping in the direction of \( -\nabla f(x) \), we can traverse high-dimensional loss landscapes efficiently and move closer to a minimum.
@@ -402,7 +402,7 @@ where \( \Delta_{ij} \) perturbs only \( w_{ij} \) by a small value \(  \Delta_{
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_29.jpg}
 	\caption{Numerical Gradient: Computing the slope of \( L(W) \) with respect to a perturbed element of \( W \).}
-	\label{fig:numeric_gradient}
+	\label{fig:chapter4_numeric_gradient}
 \end{figure}
 
 \newpage 
@@ -426,7 +426,7 @@ The \textbf{analytical gradient} computes \( \nabla L(W) \) using calculus, deri
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_38.jpg}
 	\caption{Analytical Gradient: Exact computation of gradients via calculus.}
-	\label{fig:analytical_gradient}
+	\label{fig:chapter4_analytical_gradient}
 \end{figure}
 
 \paragraph{Advantages:}
@@ -462,7 +462,7 @@ where \( \eta \) is the \textbf{learning rate}, controlling the step size.
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_47.jpg}
 	\caption{Gradient Descent: Iterative optimization using gradient updates.}
-	\label{fig:gradient_descent}
+	\label{fig:chapter4_gradient_descent}
 \end{figure}
 
 \subsubsection{Hyperparameters of Gradient Descent}
@@ -499,7 +499,7 @@ Gradient descent can be difficult to conceptualize due to the high-dimensional n
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_48.jpg}
 	\caption{Visualization of Gradient Descent Using a Contour Plot. The path starts at a high-loss region (blue) and iteratively moves toward a lower-loss region (red).}
-	\label{fig:gradient_descent_contour}
+	\label{fig:chapter4_gradient_descent_contour}
 \end{figure}
 
 \subsection{Properties of Gradient Descent}
@@ -551,7 +551,7 @@ Instead of computing gradients over the entire dataset, \textbf{SGD} uses miniba
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_50.jpg}
 	\caption{Stochastic Gradient Descent: Leveraging minibatches to approximate loss and gradients.}
-	\label{fig:sgd_intro}
+	\label{fig:chapter4_sgd_intro}
 \end{figure}
 
 \subsubsection{Data Sampling and Epochs}
@@ -567,7 +567,7 @@ SGD introduces randomness in data selection, which affects how it iterates throu
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_52.jpg}
 	\caption{SGD approximates the expectation over all possible samples via minibatch sampling.}
-	\label{fig:sgd_sampling}
+	\label{fig:chapter4_sgd_sampling}
 \end{figure}
 SGD is stochastic because the loss and gradient computations are based on sampled subsets of data. From a probabilistic perspective:
 \begin{itemize}
@@ -598,7 +598,7 @@ When the loss landscape changes rapidly in one direction but slowly in another, 
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_55.jpg}
 	\caption{Visualization of oscillations in SGD caused by high condition numbers.}
-	\label{fig:high_condition_number}
+	\label{fig:chapter4_high_condition_number}
 \end{figure}
 
 \paragraph{Saddle Points and Local Minima}
@@ -612,7 +612,7 @@ SGD may encounter:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_57.jpg}
 	\caption{Examples of saddle points and local minima in loss landscapes.}
-	\label{fig:saddle_point}
+	\label{fig:chapter4_saddle_point}
 \end{figure}
 
 \paragraph{Noisy Gradients}
@@ -626,7 +626,7 @@ Due to the stochastic nature of SGD, gradient updates can be noisy:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_58.jpg}
 	\caption{Noisy gradient updates in SGD resulting in slower convergence.}
-	\label{fig:noisy_gradients}
+	\label{fig:chapter4_noisy_gradients}
 \end{figure}
 
 \subsection{Looking Ahead: Improving SGD}
@@ -656,7 +656,7 @@ where:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_60.jpg}
 	\caption{SGD with Momentum: Implementation in PyTorch.}
-	\label{fig:sgd_momentum}
+	\label{fig:chapter4_sgd_momentum}
 \end{figure}
 
 \subsection{Intuition Behind Momentum}
@@ -672,7 +672,7 @@ Note that overall, higher momentum (e.g., 0.9 or 0.99) usually aids faster conve
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_62.jpg}
 	\caption{Alternative formulation of SGD with Momentum.}
-	\label{fig:momentum_alternative}
+	\label{fig:chapter4_momentum_alternative}
 \end{figure}
 
 \subsection{Benefits of Momentum}
@@ -687,7 +687,7 @@ Momentum addresses the three key problems of SGD:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_63.jpg}
 	\caption{Momentum accelerates convergence by smoothing oscillations and reducing noise.}
-	\label{fig:momentum_benefits}
+	\label{fig:chapter4_momentum_benefits}
 \end{figure}
 
 \subsection{Downsides of Momentum}
@@ -721,7 +721,7 @@ where:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_65.jpg}
 	\caption{Nesterov Momentum: Look-ahead Gradient Update.}
-	\label{fig:nesterov_momentum}
+	\label{fig:chapter4_nesterov_momentum}
 \end{figure}
 
 \subsubsection{Motivation and Advantages}
@@ -815,7 +815,7 @@ AdaGrad, short for \textbf{Adaptive Gradient Algorithm}, adjusts the learning ra
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_73.jpg}
 	\caption{AdaGrad Implementation in PyTorch. Each parameter is updated individually, with learning rates adjusted based on the historical squared gradients.}
-	\label{fig:adagrad_impl}
+	\label{fig:chapter4_adagrad_impl}
 \end{figure}
 
 \subsection{How AdaGrad Works}
@@ -926,7 +926,7 @@ This ensures parameters with consistently large gradients have reduced learning 
 \centering
 \includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_74.jpg}
 \caption{The transformation from AdaGrad to RMSProp using a decay rate (\( \rho \)). RMSProp ensures better progress over the course of training by forgetting older squared gradients.}
-\label{fig:rmsprop_conversion}
+\label{fig:chapter4_rmsprop_conversion}
 \end{figure}
 
 \subsection{Advantages of RMSProp}
@@ -1049,7 +1049,7 @@ Here:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_78.jpg}
 	\caption{Adam implementation without bias correction, as shown in PyTorch.}
-	\label{fig:adam_basic}
+	\label{fig:chapter4_adam_basic}
 \end{figure}
 
 \subsection{Bias Correction}
@@ -1071,7 +1071,7 @@ Here:
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_81.jpg}
 	\caption{Complete Adam implementation with bias correction as shown in PyTorch.}
-	\label{fig:adam_bias_correction}
+	\label{fig:chapter4_adam_bias_correction}
 \end{figure}
 
 \subsection{Why Adam Works Well in Practice}
@@ -1080,10 +1080,10 @@ Adam's robustness lies in its ability to adaptively scale updates for each param
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_82.jpg}
 	\caption{Examples of Adam's hyperparameter usage in various deep learning papers.}
-	\label{fig:adam_hyperparams}
+	\label{fig:chapter4_adam_hyperparams}
 \end{figure}
 
-Slide \ref{fig:adam_hyperparams} highlights the widespread adoption of Adam with default hyperparameters (\( \beta_1 = 0.9, \beta_2 = 0.999, \eta = 10^{-3} \text{ or } \eta = 10^{-4}\)) in numerous deep learning papers. These settings work well across a variety of tasks with minimal tuning. 
+Figure \ref{fig:adam_hyperparams} highlights the widespread adoption of Adam with default hyperparameters (\( \beta_1 = 0.9, \beta_2 = 0.999, \eta = 10^{-3} \text{ or } \eta = 10^{-4}\)) in numerous deep learning papers. These settings work well across a variety of tasks with minimal tuning. 
 
 
 \subsection{Comparison with Other Optimizers}
@@ -1091,10 +1091,10 @@ Slide \ref{fig:adam_hyperparams} highlights the widespread adoption of Adam with
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_83.jpg}
 	\caption{Comparison of optimizers: SGD, SGD+Momentum, RMSProp, and Adam. Adam converges faster with fewer oscillations.}
-	\label{fig:adam_comparison}
+	\label{fig:chapter4_adam_comparison}
 \end{figure}
 
-Slide \ref{fig:adam_comparison} compares Adam with other optimizers like SGD, SGD+Momentum, and RMSProp. While all methods eventually converge, Adam typically converges faster, taking a more direct path to the minimum. It also handles noisy gradients better than momentum-based methods, resulting in fewer oscillations and faster recovery from overshooting. Regardless, it is \textbf{crucial} to remember that all the figures shown in this chapter are of 2 parameters only as we humans are limited to 3d. In very high dimensional landscapes, the behavior might greatly differ. As these are the common cases in deep learning, take this comparison with a grain of salt. It still is useful to gain some intuition regarding these optimization methods and their differences, but it's important to not have too much fate in it. 
+Figure \ref{fig:adam_comparison} compares Adam with other optimizers like SGD, SGD+Momentum, and RMSProp. While all methods eventually converge, Adam typically converges faster, taking a more direct path to the minimum. It also handles noisy gradients better than momentum-based methods, resulting in fewer oscillations and faster recovery from overshooting. Regardless, it is \textbf{crucial} to remember that all the figures shown in this chapter are of 2 parameters only as we humans are limited to 3d. In very high dimensional landscapes, the behavior might greatly differ. As these are the common cases in deep learning, take this comparison with a grain of salt. It still is useful to gain some intuition regarding these optimization methods and their differences, but it's important to not have too much fate in it. 
 
 \subsection{Advantages of Adam}
 \begin{itemize}
@@ -1129,7 +1129,7 @@ To address these issues, \textbf{AdamW} decouples weight decay from L2 regulariz
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_89.jpg}
 	\caption{Integration of L2 regularization and weight decay in AdamW. Decoupling these ensures consistent penalization of parameter magnitudes.}
-	\label{fig:adamw_weight_decay}
+	\label{fig:chapter4_adamw_weight_decay}
 \end{figure}
 
 \subsection{How AdamW Works}
@@ -1153,7 +1153,7 @@ This decoupling ensures that the weight decay term acts as a pure penalization o
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_90.jpg}
 	\caption{Pseudo-code for AdamW, illustrating the decoupling of weight decay from L2 regularization.}
-	\label{fig:adamw_pseudocode}
+	\label{fig:chapter4_adamw_pseudocode}
 \end{figure}
 
 \subsection{Note on Weight Decay in AdamW}
@@ -1225,7 +1225,7 @@ The key idea behind second-order optimization is to approximate the objective fu
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_95.jpg}
 	\caption{Second-order optimization forms a quadratic surface to approximate the objective function and adaptively determines step size.}
-	\label{fig:second_order_quadratic}
+	\label{fig:chapter4_second_order_quadratic}
 \end{figure}
 
 When the Hessian is well-conditioned, second-order methods often converge in fewer iterations compared to first-order methods (e.g., standard gradient descent). They can also “jump” more directly toward a local minimum rather than zigzagging or making incremental adjustments.
@@ -1260,7 +1260,7 @@ While the concept of second-order optimization is theoretically appealing, it is
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_98.jpg}
 	\caption{Challenges of second-order optimization in high-dimensional spaces, including storage and computational costs.}
-	\label{fig:second_order_limitations}
+	\label{fig:chapter4_second_order_limitations}
 \end{figure}
 
 Despite their challenges, second-order methods can be useful for low-dimensional problems, where the parameter space is small, and computational costs are manageable.
@@ -1280,7 +1280,7 @@ Methods like \textbf{Broyden–Fletcher–Goldfarb–Shanno (BFGS)} and its limi
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_99.jpg}
 	\caption{BFGS and L-BFGS use approximations to reduce the computational and memory demands of second-order optimization.}
-	\label{fig:bfgs_lbfgs}
+	\label{fig:chapter4_bfgs_lbfgs}
 \end{figure}
 
 Although getting into the bits and bytes of BFGS and L-BFGS is outside the scope of the lecture and this summary, it's still interesting to provide a high-level overview of the two algorithms and what they improve in second-order optimization methods. 
