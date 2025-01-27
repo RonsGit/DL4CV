@@ -430,7 +430,7 @@ The distance metric determines how "similar" two images are. The most common cho
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_63.jpg}
-		\caption{Comparison of L1 and L2 distance metrics.}
+		\caption{Comparison of L1 and L2 distance metrics: points with the same distance from the origin $(0,0)$ according to each metric (left:L1, right: L2).}
 		\label{fig:chapter2_l1_l2_comparison}
 	\end{figure}
 \end{itemize}
@@ -438,7 +438,14 @@ The distance metric determines how "similar" two images are. The most common cho
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_64.jpg}
-	\caption{Decision boundaries produced by different distance metrics (L1 vs. L2).}
+	\captionsetup{singlelinecheck=off}
+	\caption[]{
+		Decision Boundaries for L1 vs. L2 Metrics. In distance-based methods (e.g., nearest neighbors), the choice of distance metric shapes the decision regions:
+		\begin{itemize}
+			\item \textbf{L1 (Manhattan)}: Diamond-shaped boundaries (as points at the same L1 distance form axis-aligned corners).
+			\item \textbf{L2 (Euclidean)}: Circular (or spherical) boundaries, since points equidistant in Euclidean space lie on circles (or spheres).
+		\end{itemize}
+	}
 	\label{fig:chapter2_l1_l2_comparison}
 \end{figure}
 
@@ -470,7 +477,7 @@ One compelling example of Nearest Neighbor applied to non-image data involves th
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_65.jpg}
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_67.jpg}
 	\caption{Nearest Neighbor using TF-IDF similarity for academic paper recommendations.}
 	\label{fig:chapter2_nn_tfidf}
 \end{figure}
@@ -523,12 +530,12 @@ Some strategies we can think of to select model hyperparameters include:
 
 \subsection{Cross-Validation}
 
-For smaller datasets, \textbf{k-fold cross-validation} is often preferred. The dataset is split into \(k\) folds, and each fold is used as a validation set while the remaining \(k-1\) folds are used for training. The process repeats \(k\) times, and results are averaged to evaluate performance. This method offers a robust mechanism for hyperparameter selection, as demonstrated in Slide \ref{fig:chapter2_cross_validation}.
+For smaller datasets, \textbf{k-fold cross-validation} (\underline{note}: this is not k-nearest neighbors, but a model's performance evaluation method) is often preferred. The dataset is split into \(k\) folds, and each fold is used as a validation set while the remaining \(k-1\) folds are used for training. The process repeats \(k\) times, and results are averaged to evaluate performance. This method offers a robust mechanism for hyperparameter selection, as demonstrated in Slide \ref{fig:chapter2_cross_validation}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_77.jpg}
-	\caption{Cross-validation accuracy for different values of \(k\). Each dot represents a trial, and the mean is represented by the line. Here we peek $k=7$ as the mean is highest in this case.}
+	\caption{Cross-validation accuracy for different values of \(k\). Each dot represents a trial, and the mean is represented by the line. Here we pick $k=7$ as the mean is the highest in this case.}
 	\label{fig:chapter2_cross_validation}
 \end{figure}
 
@@ -558,16 +565,7 @@ The simplicity of Nearest Neighbor allows for a straightforward implementation:
 	\item \textbf{Inference:} \(O(n)\), as every test image is compared against all \(n\) training images. This makes inference computationally expensive, particularly for large datasets.
 \end{itemize}
 
-Faster or approximate versions of Nearest Neighbor exist, as highlighted in Slide \ref{fig:chapter2_nn_speedup}, which make use of spatial data structures like KD-trees to accelerate the search process.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_49.jpg}
-	\caption{Approximation methods for accelerating Nearest Neighbor search.}
-	\label{fig:chapter2_nn_speedup}
-\end{figure}
-
-\newpage
+Faster or approximate versions of Nearest Neighbor exist, taking advantage of spatial data structures like KD-trees to accelerate the search process.
 
 \subsection{Visualization of Decision Boundaries}
 
@@ -604,7 +602,7 @@ However, k-NN introduces challenges such as ties between classes when \(k>1\). T
 
 \subsection{Limitations and Universal Approximation}
 
-The Nearest Neighbor classifier has an intriguing theoretical property: with infinite training samples, it can approximate any function. This property arises from the ability to memorize and interpolate the training data. As the number of training points increases, the decision boundaries become increasingly fine-grained, capturing more nuanced patterns in the data.
+With infinite training data, Nearest Neighbor can theoretically approximate any function. This is due to its capacity to memorize and interpolate training examples. As more points are added, the decision boundaries become increasingly fine-grained, capturing ever subtler data patterns.
 
 \begin{figure}[H]
 	\centering
@@ -623,7 +621,7 @@ However, the practicality of this property is severely limited by the \textbf{cu
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_85.jpg}
-	\caption{The curse of dimensionality: limitations of Nearest Neighbor in high-dimensional spaces.}
+	\caption{The curse of dimensionality: limitations of KNN in high-dimensional spaces.}
 	\label{fig:chapter2_curse_dimensionality}
 \end{figure}
 

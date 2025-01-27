@@ -112,7 +112,9 @@ Feature transforms aim to re-represent the data in a space where it becomes easi
 	
 	This approach highlights the complexity and manual effort involved in feature engineering before the rise of deep learning.
 	
-	\section{Motivation for Neural Networks}
+	\section{Neural Networks: The Basics}
+	
+	\subsection{Motivation for Neural Networks}
 	Despite their effectiveness in specific scenarios, feature transforms face inherent limitations due to their reliance on manual design or pre-specified transformations. Neural networks overcome these limitations by jointly learning feature representations and classification models in an end-to-end framework, as we will explore in the next sections.
 	
 	When building a linear classifier on top of the features extracted through the methods discussed earlier, we are only tuning the parameters of the classifier (the final component in the pipeline) to maximize classification performance. This approach is limited because it fixes the feature extraction stage and optimizes only the classifier. Instead, we want an end-to-end pipeline where every component, from feature extraction to classification, is fully tunable during training based on the data. This is one of the primary motivations for switching to neural networks.
@@ -123,8 +125,6 @@ Feature transforms aim to re-represent the data in a space where it becomes easi
 		\caption{Comparison between the classic feature extraction pipeline and the neural network-based pipeline. The neural network pipeline is fully tunable end-to-end based on training data.}
 		\label{fig:chapter5_classic_vs_nn_pipeline}
 	\end{figure}
-	
-	\section{Neural Networks: The Basics}
 	A small neural network, in its functional form, is quite similar to a linear classifier. The key difference is the introduction of a non-linear function applied to the result of the vector-matrix multiplication (between the input vector and the weight matrix). This 2-layer neural network can be generalized to any desired number of layers. Layers other than the input and output layers are called \textbf{hidden layers}, and deep neural networks can have an arbitrary number of them.
 	
 	\begin{figure}[H]
@@ -144,7 +144,7 @@ A \textbf{fully connected} neural network, also known as a \textbf{multi-layer p
 	\label{fig:chapter5_fc_network}
 \end{figure}
 	
-\section{Interpreting Neural Networks}
+\subsection{Interpreting Neural Networks}
 Neural networks can be analyzed in a way similar to linear classifiers. For instance, the weight matrix \(\mathbf{W}_1\) in the first layer can be reshaped and visualized as \emph{templates}, each indicating how strongly it responds to particular spatial patterns in the input image. While many of these templates are not immediately interpretable, some do reveal recognizable structures.
 
 A notable example discussed in the lecture involves two ``horse'' templates: one for a left-facing horse and another for a right-facing horse. This arrangement avoids the ``double-headed horse'' phenomenon seen in some linear classifiers, where a single template tries to capture multiple orientations or modes of an object class.
@@ -161,8 +161,8 @@ In the second layer of the network, these template responses are recombined (via
 \paragraph{Network Pruning: Pruning Redundant Representations}
 One challenge in neural networks is redundancy, where multiple filters or features learn the same thing. A technique called \textbf{network pruning} addresses this issue. In this approach, a large neural network is trained, and as a post-processing step, redundant representations are pruned to simplify the network without significantly affecting its performance. This concept will be revisited in more detail later in the course.
 
-\section{Building Deep Neural Networks}
-Deep neural networks are formed by stacking multiple layers. The \emph{depth} of a network refers to the number of these layers, while the \emph{width} describes the number of neurons (hidden units) per layer.
+\section{Building Neural Networks}
+Neural networks are formed by stacking multiple layers. The \emph{depth} of a network refers to the number of these layers, while the \emph{width} describes the number of neurons (hidden units) per layer.
 
 \begin{figure}[H]
 	\centering
@@ -204,7 +204,7 @@ The figure below highlights these activation functions. Historically, \textbf{Si
 	\label{fig:chapter5_activation_functions}
 \end{figure}
 
-\section{A Simple Neural Network in 20 Lines}
+\subsection{A Simple Neural Network in 20 Lines}
 Despite their conceptual depth, neural networks can be implemented succinctly. Below is an example of a minimal NumPy implementation of a neural network with:
 \begin{itemize}
 	\item An input layer,
@@ -246,7 +246,7 @@ The flow of impulses is illustrated below, where the cell body processes inputs 
 	\label{fig:chapter5_artificial_neurons}
 \end{figure}
 
-\paragraph{A Loose Analogy.}
+\subsection{Biological Analogy: a Loose Analogy}
 While neural networks borrow terminology and broad conceptual inspiration from neuroscience, the actual mechanisms differ significantly:
 \begin{itemize}
 	\item \textbf{Connectivity Patterns:} Biological neurons form complex, recurrent, and varied circuits, while artificial networks often use structured, layer-based designs.
