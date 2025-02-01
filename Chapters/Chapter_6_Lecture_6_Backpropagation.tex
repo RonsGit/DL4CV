@@ -7,3 +7,747 @@
 %	CHAPTER 6 - Lecture 6: Backpropagation
 %----------------------------------------------------------------------------------------
 
+\section{Introduction: The Challenge of Computing Gradients}
+\label{sec:introduction}
+In the previous lecture, we explored how \textbf{neural networks} exploit \emph{non-linear space warping} to form complex decision boundaries—far surpassing the capabilities of linear classifiers. While activation functions like \textbf{ReLU} make this possible, they introduce a key question:
+
+\begin{quote}
+	\emph{How do we efficiently compute gradients for neural networks with millions or billions of parameters?}
+\end{quote}
+
+Traditional numerical or purely symbolic differentiation methods quickly become:
+\begin{itemize}
+	\item \textbf{Scalability Bottlenecks:} Deriving gradients manually does not scale to deep networks.
+	\item \textbf{High Computational Complexity:} Efficient gradient computation is non-trivial at large scales.
+	\item \textbf{Limited Modularity:} Any architectural modification (e.g., adding layers, changing the loss) requires recalculating derivatives from scratch.
+\end{itemize}
+
+\subsection{A Bad Idea: Manually Deriving Gradients}
+\label{sec:manual-gradients}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_5.jpg}
+	\caption{Manually deriving gradients for a simple linear classifier using the SVM loss. This process becomes infeasible for deep networks.}
+	\label{fig:chapter6_manual_gradients}
+\end{figure}
+
+One naive approach is to \textbf{derive all gradients by hand}. As shown in Figure~\ref{fig:chapter6_manual_gradients}, it might be doable for basic linear models. Nevertheless, it also clearly demonstrates some of the problems described in the introduction (very tedious and error-prone), and mostly, it gives us a hint to how complex  this process will be for more complex models like neural networks, with many layers and millions up to billions of parameters. Hence, this approach is impractical, and we need to think of a better idea to compute gradients for the neural network optimization task.  
+
+\subsection{A Better Idea: Utilizing Computational Graphs (Backpropagation)}
+\label{sec:comp-graphs}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_6.jpg}
+	\caption{Computational graphs provide a structured, automatic approach to computing gradients.}
+	\label{fig:chapter6_comp_graphs}
+\end{figure}
+
+\newpage
+
+A more robust solution is to represent computations as a \textbf{computational graph}:
+\begin{itemize}
+	\item Each node in the graph performs a specific operation (e.g., addition, matrix multiplication, or more complex operations like ReLU based on more basic primitives).
+	\item Edges represent the flow of intermediate values (outputs of one operation become inputs to the next).
+	\item \textbf{Backpropagation} can be used to automatically compute the gradient at each node by systematically applying the chain rule in reverse. Hence, each node in the graph only does simple local computations (derives the downstream gradients using a multiplication of the local gradient and the upstream gradient received from a following node). We'll see several examples of backpropagation later to understand what do we mean by that and what makes it important.
+\end{itemize}
+
+\paragraph{Why Use Computational Graphs?}
+\begin{itemize}
+	\item \textbf{Modularity:} Swap loss functions, activation layers, or architectures without manually re-deriving gradients.
+	\item \textbf{Scalability:} Supports deep networks with millions of parameters, keeping computations local to each node.
+	\item \textbf{Automation:} Greatly reduces human error and development time.
+\end{itemize}
+
+\section{Toy Example of Backpropagation: \texorpdfstring{$f(x,y,z) = (x + y)\,z$}{f(x,y,z)=(x+y)z}}
+\label{sec:toy-example}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_26.jpg}
+	\caption{Computational graph representation of \(f(x,y,z) = (x + y)z\), showing forward and backward passes. Intermediate values of the forward pass are presented in green on-top of the graph edges, while the corresponding backpropagation values are presented in red below the edges.}
+	\label{fig:chapter6_example_fxyz}
+\end{figure}
+
+Consider a simple function:
+\[
+f(x,y,z) = (x + y)\,z,
+\]
+with \(x = -2\), \(y = 5\), and \(z = -4\). 
+
+\newpage
+
+\subsection{Forward Pass}
+We traverse the graph from left to right:
+\begin{itemize}
+	\item \(\displaystyle q = x + y = -2 + 5 = 3.\)
+	\item \(\displaystyle f = q \cdot z = 3 \times (-4) = -12.\)
+\end{itemize}
+
+\subsection{Backward Pass: Computing Gradients}
+To find \(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial f}{\partial z}\), we apply the chain rule:
+\begin{itemize}
+	\item \(\displaystyle \frac{\partial f}{\partial z} = q = 3.\)
+	\item \(\displaystyle \frac{\partial f}{\partial q} = z = -4.\)
+	\item \(\displaystyle \frac{\partial f}{\partial y} = \frac{\partial f}{\partial q} \times \frac{\partial q}{\partial y} = (-4) \times 1 = -4.\)
+	\item \(\displaystyle \frac{\partial f}{\partial x} = \frac{\partial f}{\partial q} \times \frac{\partial q}{\partial x} = (-4) \times 1 = -4.\)
+\end{itemize}
+
+\section{Why Backpropagation?}
+\subsection{Local \& Scalable Gradients Computation}
+\label{subsec:local-upstream}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_35.jpg}
+	\caption{During backpropagation, each node in the computational graph computes its downstream gradients using the local gradient (computed based on the local operation over the input. For instance, if we denote the input to the node as x and the node computes $\frac{1}{x}$, then the local gradient is $\frac{\partial}{\partial x}{[\frac{1}{x}]}=-\frac{1}{x^2}$) and the upstream gradient that is simply given as input from subsequent nodes.}
+	\label{fig:chapter6_local_upstream}
+\end{figure}
+
+As we've seen in the above examples, within the computational graph, each node performs \textbf{only \emph{local}} gradient calculations. This is the core principal behind backpropagation, making it scalable and practical. Therefore, in order to make sure we clearly understand why, we'll zoom out and provide a high-level overview looking only at an abstract node in a computational graph independently. Suppose a node \(f\) outputs \(z\) from inputs \(x\) and \(y\). 
+
+\newpage 
+Given an \emph{upstream gradient} \(\frac{\partial L}{\partial z}\) (the partial derivative of the loss \(L\) w.r.t.\ \(z\)), the node only needs:
+\begin{itemize}
+	\item \(\displaystyle \frac{\partial z}{\partial x}\), 
+	\item \(\displaystyle \frac{\partial z}{\partial y}\),
+\end{itemize}
+to compute:
+\[
+\frac{\partial L}{\partial x} \;=\; \frac{\partial z}{\partial x} \;\times\; \frac{\partial L}{\partial z}, 
+\quad
+\frac{\partial L}{\partial y} \;=\; \frac{\partial z}{\partial y} \;\times\; \frac{\partial L}{\partial z}.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_31.jpg}
+	\caption{Visualizing the backpropagation process for a node f that is given as inputs x, y and outputs z. As can be seen, the backpropagation gives us the upstream gradient from subsequent node in the graph, and we are only left with the local gradients computation: $\frac{\partial z}{\partial x}, \frac{\partial z}{\partial y}$ in order to compute the downstream gradients: $\frac{\partial L}{\partial x}, \frac{\partial L}{\partial y}$ allowing us to continue the graph traversal in the backpropagation process.}
+	\label{fig:chapter6_indpendent_node}
+\end{figure}
+
+The \emph{local} multiplication by \(\frac{\partial L}{\partial z}\) (the upstream gradient) ensures each node can be implemented and debugged independently, enabling large-scale networks to remain tractable. This demonstrates the power and essence behind backpropagation for complex models, making it the go-to approach for gradients computation in neural networks optimization. 
+
+\subsection{Pairing Backpropagation Gradients \& Optimizers is Easy}
+While backpropagation efficiently provides the necessary gradients for each parameter, we still need \textbf{gradient-based optimizers} to use those gradients in \emph{gradient descent} updates. In practice, we pair backprop with methods like \textbf{Stochastic Gradient Descent (SGD)} or \textbf{AdamW}, which adjust parameters based on the gradients to minimize the loss. This synergy—automatic gradient computation via backprop, combined with iterative updates via gradient descent—enables neural networks to learn effectively from large and complex datasets.
+
+\subsection{Modularity and Custom Nodes}
+Because the computation graph decomposes into local operations, we can define \textbf{specialized nodes} for common functions. For example, a ``sigmoid node'' encapsulates the sigmoid function:
+\[
+\sigma(x) = \frac{1}{1 + e^{-x}},
+\]
+and uses the known derivative \(\sigma'(x) = \sigma(x)\bigl(1 - \sigma(x)\bigr)\) to backpropagate efficiently. This approach:
+\begin{itemize}
+	\item Simplifies the computational graph, reducing intermediate steps.
+	\item Improves memory efficiency (fewer nodes, less storage for intermediate values).
+	\item Allows us to treat the sigmoid as a single, optimized building block in our network, making the graph more semantically meaningful.
+\end{itemize}
+\label{sec:modularity-custom-nodes}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_45.jpg}
+	\caption{A ``sigmoid node'' (in the blue rectangle) can replace multiple low-level operations (the intermediate nodes encapsulated within). Its known derivative simplifies backpropagation.}
+	\label{fig:chapter6_sigmoid_node}
+\end{figure}
+
+\subsection{Utilizing Patterns in Gradient Flow}
+\label{sec:gradient-flow-patterns}
+
+Backpropagation is not just a mechanical process of computing derivatives; it follows structured \textbf{gradient flow patterns} that help us analyze and design computational graphs more effectively. By understanding these patterns, we can quickly construct computational graphs, debug gradient propagation issues, and optimize network structures. 
+
+\subsection{Addition Gate: The Gradient Distributor}
+The \textbf{add gate} acts as a \emph{gradient distributor} during the backward pass. When a function locally computes the output as the sum of its inputs, the local gradients for each input are simply 1. Thus, the \textbf{downstream gradient} for each input is equal to the \textbf{upstream gradient}, making it straightforward to propagate gradients backward. 
+
+This pattern also provides an intuition about how gradient flow behaves in models that use addition operations, such as residual connections in deep networks which we'll extensively cover later.
+
+\subsection{Copy Gate: The Gradient Adder}
+The \textbf{copy gate} (or \emph{copy node}) is a trivial operation in the forward pass—it simply duplicates its input. However, it is useful when the same term appears in multiple parts of a computational graph. 
+
+For instance, weight matrices are shared across different parts of a loss function:
+\begin{itemize}
+	\item In one path, they compute intermediate values such as \( h = Wx + b \).
+	\item In another path, they contribute to the \textbf{regularization term} (e.g., L1/L2 regularization).
+\end{itemize}
+Since the weight matrix is reused, the backward pass must account for all gradient contributions. The copy gate \textbf{accumulates gradients} by summing all upstream gradients and passing the combined result as its downstream gradient.
+
+Interestingly, the add and copy gates are \emph{dual} operations:
+\begin{itemize}
+	\item The forward operation of the \textbf{add gate} behaves like the backward operation of the \textbf{copy gate}.
+	\item The forward operation of the \textbf{copy gate} behaves like the backward operation of the \textbf{add gate}.
+\end{itemize}
+
+\subsection{Multiplication Gate: The Gradient Swapper}
+The \textbf{multiplication gate} (or \emph{mul gate}) swaps the roles of its inputs in the backward pass. For the function
+\[
+f(x,y) = x \cdot y,
+\]
+the local gradients are
+\[
+\frac{\partial f}{\partial x} = y, \quad \frac{\partial f}{\partial y} = x.
+\]
+Hence:
+\begin{itemize}
+	\item The downstream gradient for \(y\) is \(x\) times the upstream gradient,
+	\item The downstream gradient for \(x\) is \(y\) times the upstream gradient.
+\end{itemize}
+\noindent
+This \emph{mixing} of gradients can lead to:
+\begin{itemize}
+	\item \textbf{Exploding gradients}: Large products magnify updates, destabilizing training,
+	\item \textbf{Vanishing gradients}: Small products reduce gradient magnitudes, slowing convergence.
+\end{itemize}
+
+\subsection{Max Gate: The Gradient Router}
+The \textbf{max gate} selects the largest input value in the forward pass and routes the \textbf{entire} upstream gradient to that winning input in the backward pass. All other inputs receive zero gradient. While intuitive, this creates \textbf{gradient starvation}: only one path in the computational graph receives a nonzero gradient, potentially slowing learning.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_49.jpg}
+	\caption{Visualization of gradient flow patterns: (1) Add gate—gradient distributor, (2) Copy gate—gradient adder, (3) Multiplication gate—gradient swapper, and (4) Max gate—gradient router.}
+	\label{fig:chapter6_gradient_patterns}
+\end{figure}
+
+
+\section{Implementing Backpropagation in Code}
+\label{sec:implementing-backprop}
+
+Now that we understand gradient flow patterns, how can we \emph{implement} backpropagation in practice? One approach is to compute the \textbf{flat gradient code}. This method directly computes gradients step by step without leveraging modular APIs such as PyTorch's \texttt{autograd}. While simple, it lacks flexibility.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_52.jpg}
+	\caption{A pseudo-implementation of forward and backward passes in a flat gradient backpropagation implementation.}
+	\label{fig:chapter6_flat_backprop}
+\end{figure}
+
+\subsection{Flat Backpropagation: A Direct Approach}
+The forward pass follows naturally from the computational graph, while the backward pass appears as a reversed version of it. The process begins with the \textbf{base case}: 
+\[
+\texttt{grad\_L} = 1.0
+\]
+(i.e., the gradient of the loss with respect to itself is 1), and then we propagate gradients in reverse order.
+
+A step-by-step breakdown:
+\begin{itemize}
+	\item The loss is computed after applying a \textbf{sigmoid activation}, so we begin by computing the \emph{local gradient} of the sigmoid function:
+	\[
+	\frac{d}{dx} \sigma(x) = \sigma(x) \cdot (1 - \sigma(x)).
+	\]
+	Since \(\sigma(x)\) is the output of the sigmoid function (denoted as \(L\)), we get:
+	\[
+	\texttt{grad\_s3} = \texttt{grad\_L} \cdot (1 - L) \cdot L.
+	\]
+	
+	\item The \textbf{add gate} distributes \texttt{grad\_s3} equally to its inputs, propagating gradients further back in the graph.
+	
+	\item The final two \textbf{mul gates} act as \emph{swapped multipliers}, computing gradients for each input based on the values of the other.
+\end{itemize}
+
+\paragraph{Why Flat Backpropagation Works Well.}
+Despite its simplicity, this approach correctly computes gradients without manually deriving them. However, it has major limitations:
+\begin{itemize}
+	\item \textbf{Non-Modular:} Any change in the model or loss function requires rewriting the gradient code from scratch.
+	\item \textbf{Hard to Scale:} Flat implementations do not easily extend to deep architectures with many layers.
+\end{itemize}
+
+\section{A More Modular Approach: Computational Graphs in Practice}
+\label{sec:modular-backprop}
+
+A more structured way to implement backpropagation is to use a \textbf{computational graph API}. Instead of manually coding backward passes, we represent the entire model as a graph structure that:
+\begin{itemize}
+	\item Stores \textbf{nodes} corresponding to computations.
+	\item Automatically computes gradients by traversing the graph in reverse order.
+	\item Allows modifications to loss functions and architectures without rewriting gradient code.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_60.jpg}
+	\caption{API for a computational graph, requiring an implementation of both the forward and backward methods.}
+	\label{fig:chapter6_computational_graph_api}
+\end{figure}
+
+\subsection{Topological Ordering in Computational Graphs}
+A computational graph provides an efficient way to manage computations, enabling automatic differentiation and modularity. The graph structure follows a topological ordering, meaning:
+\begin{itemize}
+	\item Each node appears \textbf{before} all nodes dependent on it in the forward pass.
+	\item In the backward pass, the nodes are traversed in the \textbf{reverse order}.
+\end{itemize}
+This ensures that gradients are properly propagated through the network, following the dependencies established in the forward pass.
+
+\subsection{The API: Forward and Backward Methods}
+A computational graph framework defines an API with two essential functions:
+\begin{enumerate}
+	\item \texttt{forward()}: Computes and stores intermediate values for later use in backpropagation.
+	\item \texttt{backward()}: Applies the chain rule to compute gradients by traversing the graph in reverse.
+\end{enumerate}
+
+Many deep learning frameworks, such as PyTorch, TensorFlow, and JAX, implement automatic differentiation engines based on this principle. These frameworks eliminate the need for manually coding derivatives, making it easier to train deep models.
+
+\subsection{Advantages of a Modular Computational Graph}
+Using a computational graph for backpropagation offers several advantages over flat backpropagation:
+\begin{itemize}
+	\item \textbf{Modularity}: Changing the model architecture or loss function only requires modifying the forward function, and the backward function is computed automatically.
+	\item \textbf{Scalability}: Works efficiently for deep networks with millions or billions of parameters.
+	\item \textbf{Automatic Differentiation}: Frameworks can compute gradients dynamically, reducing the need for manual derivative calculations.
+\end{itemize}
+
+This modular approach enables modern deep learning frameworks to handle complex architectures efficiently while abstracting away the tedious details of gradient computation.
+
+\section{Implementing Backpropagation with PyTorch Autograd}
+\label{sec:pytorch-autograd}
+
+A practical example of a modular approach to implementing backpropagation is PyTorch's \textbf{Autograd} engine. In PyTorch, functions that support automatic differentiation inherit from \texttt{torch.autograd.Function}. These functions must implement two key static methods:
+\begin{itemize}
+	\item \textbf{Forward:} Computes the node’s output and stashes values required for the backward pass.
+	\item \textbf{Backward:} Receives the upstream gradient and propagates it back using local derivatives.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_61.jpg}
+	\caption{Example of PyTorch Autograd implementation for a multiplication gate (\( z = x \cdot y \)).}
+	\label{fig:chapter6_autograd_multiplication}
+\end{figure}
+
+\subsection{Example: Multiplication Gate in Autograd}
+Consider a simple multiplication operation \( z = x \cdot y \), implemented in PyTorch Autograd:
+\begin{enumerate}
+	\item The \texttt{forward} method computes \( z \) and saves \( x \) and \( y \) for the backward pass in a dedicated context variable \emph{ctx}.
+	\item The \texttt{backward} method retrieves \( x \) and \( y \) as it receives the context from the forward pass, and the upstream gradient. It then applies the chain rule, and returns the downstream gradients:
+	\[
+	\frac{\partial L}{\partial x} = \frac{\partial L}{\partial z} \cdot y, \quad 
+	\frac{\partial L}{\partial y} = \frac{\partial L}{\partial z} \cdot x.
+	\]
+\end{enumerate}
+This pattern generalizes to all operations in a computational graph, allowing PyTorch to handle backpropagation automatically.
+
+\subsection{Extending Autograd for Custom Functions}
+Developers can extend PyTorch's Autograd by defining their own \texttt{Function} classes, implementing custom \texttt{forward} and \texttt{backward} methods. By doing so, new differentiable operations can be seamlessly integrated into neural network models.
+
+\newpage 
+
+An interesting example is PyTorch’s implementation of the \textbf{sigmoid activation function}, which follows this modular API:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_66.jpg}
+	\caption{Example of PyTorch's \texttt{sigmoid} layer implementation with automatic differentiation.}
+	\label{fig:chapter6_autograd_sigmoid}
+\end{figure}
+
+By chaining multiple such autograd functions, we construct computational graphs, enabling both \textbf{inference} (forward pass) and \textbf{training} (backward pass). This is the core essence of PyTorch.
+
+\section{Beyond Scalars: Backpropagation for Vectors and Tensors}
+\label{sec:vector-backprop}
+
+So far, we have discussed backpropagation in the context of \textbf{scalar-valued functions}. However, real-world neural networks involve \textbf{vector-valued functions}, requiring us to extend backpropagation to \emph{gradients and Jacobians}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_70.jpg}
+	\caption{Recap of scalar derivatives, gradients, and Jacobians.}
+	\label{fig:chapter6_jacobians}
+\end{figure}
+
+\subsection{Gradients vs.\ Jacobians}
+\begin{itemize}
+	\item \textbf{Gradient (Scalar-Valued Function):} 
+	For a function \(f: \mathbb{R}^N \to \mathbb{R}\), the gradient is the vector of partial derivatives:
+	\[
+	\nabla f(\mathbf{x}) \;=\; \left[
+	\frac{\partial f}{\partial x_1},\;
+	\frac{\partial f}{\partial x_2},\;
+	\dots,\;
+	\frac{\partial f}{\partial x_N}
+	\right].
+	\]
+	In a typical neural network setting, \(f\) might be a loss function \(\mathcal{L}(\theta)\) of the model parameters \(\theta\), and \(\nabla \mathcal{L}\) tells us how to update the parameters to minimize the loss.
+	
+	\item \textbf{Jacobian (Vector-Valued Function):}
+	For a function \(F: \mathbb{R}^N \to \mathbb{R}^M\), the Jacobian is an \(M \times N\) matrix where each entry 
+	\[
+	J_{ij} \;=\; \frac{\partial F_i}{\partial x_j}
+	\]
+	represents how each input dimension \(x_j\) affects each output dimension \(F_i\). Rows of this matrix can be seen as gradients of individual output components. In neural networks, this arises very often when we compute local derivatives for a node in the graph, as if the inputs to the node are vectors x, y and the output is a vector z, and each vector has its own number of elements ($D_x, D_y, D_z$) then the local 'gradients' (derivatives) in this case are Jacobian matrices: dz/dx is of dim $[D_x \times D_z]$ and dz/dy is of dim $[D_y \times D_z]$. 
+\end{itemize}
+
+By understanding both gradients and Jacobians, we see why \textbf{backpropagation} must handle vector-valued outputs (e.g., a network’s logits or output features) rather than only scalar-valued loss functions. Modern frameworks automatically compute these matrix derivatives, enabling efficient training in multi-output scenarios. We'll now explore how the backpropagation process we've seen earlier generalizes to support such functions. 
+
+\subsection{Extending Backpropagation to Vectors}
+\label{sec:vector_backprop}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_74.jpg}
+	\caption{A node \( f \) receiving two vectors
+		\(\mathbf{x}\in\mathbb{R}^{D_x}\) and \(\mathbf{y}\in\mathbb{R}^{D_y}\) and producing
+		\(\mathbf{z}\in\mathbb{R}^{D_z}\). We extend backpropagation to handle vector inputs and outputs.}
+	\label{fig:chapter6_vector_backprop}
+\end{figure}
+
+In earlier sections, we focused on backpropagation when both inputs and outputs to a node were scalars. Real-world neural networks, however, typically process and produce \emph{vectors} or even higher-dimensional \emph{tensors}. This section provides a detailed look at how backpropagation extends to these more general scenarios.
+
+We now move from a node that received scalars \(x, y\) and returned a scalar \(z\), to a node that handles:
+\begin{itemize}
+	\item \(\mathbf{x}\in\mathbb{R}^{D_x}\) and \(\mathbf{y}\in\mathbb{R}^{D_y}\) (input vectors),
+	\item \(\mathbf{z}\in\mathbb{R}^{D_z}\) (output vector).
+\end{itemize}
+
+Although the output is now a vector, the overall \emph{loss function} \(L\) (e.g., a training objective) remains a scalar. Therefore:
+\[
+\underbrace{\frac{\partial L}{\partial \mathbf{z}}}_{\text{upstream gradient}}
+\in \mathbb{R}^{D_z},
+\]
+tells us how sensitive \(L\) is to each component \(z_i\). The local gradients \(\tfrac{\partial \mathbf{z}}{\partial \mathbf{x}}\) and \(\tfrac{\partial \mathbf{z}}{\partial \mathbf{y}}\) become
+\emph{Jacobian matrices}:
+\[
+\frac{\partial \mathbf{z}}{\partial \mathbf{x}} \;\in\; \mathbb{R}^{D_z \times D_x},
+\quad
+\frac{\partial \mathbf{z}}{\partial \mathbf{y}} \;\in\; \mathbb{R}^{D_z \times D_y}.
+\]
+By applying the chain rule, the \textbf{downstream gradients} \(\tfrac{\partial L}{\partial \mathbf{x}}\) and \(\tfrac{\partial L}{\partial \mathbf{y}}\) each become:
+\[
+\frac{\partial L}{\partial \mathbf{x}} 
+= \left(\frac{\partial \mathbf{z}}{\partial \mathbf{x}}\right)^\mathsf{T}
+\frac{\partial L}{\partial \mathbf{z}},
+\qquad
+\frac{\partial L}{\partial \mathbf{y}} 
+= \left(\frac{\partial \mathbf{z}}{\partial \mathbf{y}}\right)^\mathsf{T}
+\frac{\partial L}{\partial \mathbf{z}},
+\]
+where each result has the same dimension as the corresponding input vector (\(D_x\) or \(D_y\)).
+
+\subsection{Example: Backpropagation for Elementwise ReLU}
+\label{sec:relu_vector_backprop}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_80.jpg}
+	\caption{Backprop through an elementwise ReLU node. Negative inputs
+		produce zeros in the output (and zero gradients), while positive inputs pass gradients through.}
+	\label{fig:chapter6_relu_backprop}
+\end{figure}
+
+Consider an elementwise \textbf{ReLU} applied to a vector \(\mathbf{x}\in \mathbb{R}^{4}\). For example:
+\[
+\mathbf{x} 
+= \begin{bmatrix}1 \\ -2 \\ 3 \\ -1\end{bmatrix}
+\quad\longrightarrow\quad
+\mathbf{y} 
+= \max\!\bigl(\mathbf{0},\mathbf{x}\bigr) 
+= \begin{bmatrix}1 \\ 0 \\ 3 \\ 0\end{bmatrix}.
+\]
+If the upstream gradient (the sensitivity of the loss \(L\) w.r.t.\ each element of \(\mathbf{y}\)) is
+\[
+\frac{\partial L}{\partial \mathbf{y}}
+= \begin{bmatrix}4 \\ -1 \\ 5 \\ 9\end{bmatrix},
+\]
+we must compute
+\(\tfrac{\partial L}{\partial \mathbf{x}}\). Conceptually, the local Jacobian 
+\(\tfrac{\partial \mathbf{y}}{\partial \mathbf{x}}\) is a \(4\times 4\) diagonal matrix:
+\[
+\begin{bmatrix}
+	1 & 0 & 0 & 0\\
+	0 & 0 & 0 & 0\\
+	0 & 0 & 1 & 0\\
+	0 & 0 & 0 & 0
+\end{bmatrix},
+\]
+where the diagonal element is \(1\) if \(x_i>0\) and \(0\) otherwise. This multiplication yields:
+\[
+\frac{\partial L}{\partial \mathbf{x}}
+= \begin{bmatrix}4 \\ 0 \\ 5 \\ 0\end{bmatrix}.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_81.jpg}
+	\caption{A more memory-efficient approach: do not form
+		\(\tfrac{\partial \mathbf{y}}{\partial \mathbf{x}}\) explicitly. Instead, reuse the
+		input mask (i.e., which elements of \(\mathbf{x}\) are positive).}
+	\label{fig:chapter6_relu_implicit}
+\end{figure}
+
+\subsection{Efficient Computation via Local Gradient Slices}
+\label{sec:implicit_jacobian}
+
+High-dimensional neural network operations, such as matrix multiplications or convolutions, often have \emph{massive} Jacobians when viewed formally. Storing or iterating over all partial derivatives explicitly is impractical. Instead, we exploit \textbf{local gradient slices} to determine how each input component affects the output, then combine these slices via standard matrix multiplications.
+
+\subsection{Backpropagation with Matrices: A Concrete Example}
+\label{sec:gradient_slices}
+
+Consider a matrix multiplication:
+\[
+\mathbf{Y} = \mathbf{X}\,\mathbf{W},
+\]
+where \(\mathbf{X}\in\mathbb{R}^{N\times D}\), \(\mathbf{W}\in \mathbb{R}^{D\times M}\), and \(\mathbf{Y}\in\mathbb{R}^{N\times M}\). We have a scalar loss \(L\), and the \emph{upstream gradient} \(\tfrac{\partial L}{\partial \mathbf{Y}}\) is also an \((N\times M)\)-shaped matrix.
+
+\paragraph{Numerical Setup.}
+Let \(N=2\), \(D=3\), and \(M=4\). Suppose:
+\[
+\mathbf{X} = 
+\begin{bmatrix}
+	2 & 1 & -3 \\
+	-3 & 4 & 2
+\end{bmatrix},
+\quad
+\mathbf{W} =
+\begin{bmatrix}
+	3 & 2 & 1 & -1 \\
+	2 & 1 & 3 & 2  \\
+	3 & 2 & 1 & -2 
+\end{bmatrix}.
+\]
+Multiplying gives \(\mathbf{Y}\in \mathbb{R}^{2\times 4}\). Concretely,
+\[
+\mathbf{Y} = \mathbf{X}\,\mathbf{W}
+=
+\begin{bmatrix}
+	-1 & -1 & 2 & 6 \\
+	5  &  2 & 11 & 7
+\end{bmatrix}.
+\]
+In the backward pass, we receive:
+\[
+\frac{\partial L}{\partial \mathbf{Y}}
+=
+\begin{bmatrix}
+	2 & 3 & -3 & 9 \\
+	-8 & 1 & 4 & 6
+\end{bmatrix}.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_98.jpg}
+	\caption{%
+		Computing a ``gradient slice'' for a single element \(\mathbf{X}_{i,j}\).
+		Rather than storing the entire local Jacobian, we only determine how
+		\(\mathbf{X}_{i,j}\) influences each output element of \(\mathbf{Y}\),
+		then combine that slice with the relevant elements of
+		\(\tfrac{\partial L}{\partial \mathbf{Y}}\).
+	}
+	\label{fig:chapter6_gradient_slice}
+\end{figure}
+
+\paragraph{Slice Logic for One Input Element.}
+Focusing on a single entry, e.g.\ \(\mathbf{X}_{1,1}=2\):
+\begin{itemize}
+	\item Only row \(1\) of \(\mathbf{Y}\) depends on \(\mathbf{X}_{1,1}\).
+	\item Each element \(y_{1,m}\) is updated by \(x_{1,1}\cdot w_{1,m}\).
+	\item The second row \(y_{2,\cdot}\) is unaffected, so its local gradient is zero.
+\end{itemize}
+Hence, for \(\mathbf{X}_{1,1}\), the \emph{local gradient slice} 
+\(\tfrac{\partial \mathbf{Y}}{\partial x_{1,1}}\) has the form:
+\[
+\begin{bmatrix}
+	w_{1,1} & w_{1,2} & w_{1,3} & w_{1,4}\\
+	0 & 0 & 0 & 0
+\end{bmatrix}.
+\]
+Next, we take the elementwise product with \(\tfrac{\partial L}{\partial \mathbf{Y}}\) over the same region to compute
+\(\tfrac{\partial L}{\partial x_{1,1}}\). Numerically:
+\[
+w_{1,\cdot} = [\,3,\;2,\;1,\;-1\,],
+\quad
+\frac{\partial L}{\partial y_{1,\cdot}}
+= [\,2,\;3,\;-3,\;9\,].
+\]
+So
+\[
+\tfrac{\partial L}{\partial x_{1,1}}
+= 3\times2 + 2\times3 + 1\times(-3) + (-1)\times9
+= 0.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_102.jpg}
+	\caption{%
+		Another view of the slice approach for \(\mathbf{X}_{1,1}\). 
+		Only the first row of \(\mathbf{Y}\) receives a nonzero local gradient
+		from this input element.
+	}
+	\label{fig:chapter6_gradient_first}
+\end{figure}
+
+\paragraph{Another Example: \(\mathbf{X}_{2,3}\).}
+For \(\mathbf{X}_{2,3}=2\):
+\begin{itemize}
+	\item Only row \(2\) of \(\mathbf{Y}\) depends on it.
+	\item Each element \(y_{2,m}\) is updated by \((x_{2,3}\cdot w_{3,m})\).
+	\item The first row is unaffected (local gradient is zero).
+\end{itemize}
+If \(w_{3,\cdot} = [\,3,\;2,\;1,\;-2\,]\), then
+\[
+\tfrac{\partial L}{\partial x_{2,3}}
+= 3\times(-8)
++ 2\times1
++ 1\times4
++ (-2)\times6
+= -24 + 2 + 4 - 12
+= -30.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_104.jpg}
+	\caption{%
+		Similarly, \(\mathbf{X}_{2,3}\) affects only the second row of \(\mathbf{Y}\).
+		By repeating this logic for all elements, we derive the standard
+		matrix-multiplication backprop formulas.
+	}
+	\label{fig:chapter6_gradient_last}
+\end{figure}
+
+\subsection{Implicit Multiplication for the Entire Gradient}
+\label{sec:implicit_mult}
+
+While the slice-by-slice perspective shows how each input entry influences each output entry, in practice we \emph{combine all slices at once} with matrix multiplication. Concretely:
+\[
+\frac{\partial L}{\partial \mathbf{X}}
+=
+\left(\frac{\partial L}{\partial \mathbf{Y}}\right)
+\,\mathbf{W}^\mathsf{T},
+\quad
+\frac{\partial L}{\partial \mathbf{W}}
+=
+\mathbf{X}^\mathsf{T}
+\,\left(\frac{\partial L}{\partial \mathbf{Y}}\right).
+\]
+These expressions produce the exact same result as summing the contributions from each local slice individually—\textbf{without} constructing the full \(((N\times D)\times(N\times M))\) Jacobian.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_107.jpg}
+	\caption{%
+		By using vector/matrix multiplications and slicing logic,
+		we avoid forming massive Jacobians in memory.
+	}
+	\label{fig:chapter6_matrix_implicit}
+\end{figure}
+
+\paragraph{Why Slices Are the Solution.}
+\begin{itemize}
+	\item \textbf{Memory Savings:} Instead of building a giant Jacobian, we focus on local slices (each shaped like \(\mathbf{Y}\), and effectively, a row of \(\mathbf{Y}\) that is not 0s) and multiply them with the matching row of \(\tfrac{\partial L}{\partial \mathbf{Y}}\) to get the corresponding element of the downstream gradient. The local slices can be discarded each time after we finish the computation of the corresponding element of the downstream gradient.  
+	\item \textbf{Efficiency:} In practice, we skip per-element slicing entirely and jump to 
+	\(\bigl(\tfrac{\partial L}{\partial \mathbf{Y}}\bigr)\,\mathbf{W}^\mathsf{T}\) and 
+	\(\mathbf{X}^\mathsf{T}\,\bigl(\tfrac{\partial L}{\partial \mathbf{Y}}\bigr)\)
+	using fast BLAS/GPU kernels.
+	\item \textbf{Scalability to High Dimensional Tensors:} For high-rank tensors (e.g., images), the same principle applies. We typically flatten or reshape dimensions to perform the relevant multiplications in a similarly efficient manner.
+\end{itemize}
+
+This \emph{implicit} backprop approach avoids the exponential growth of explicit Jacobian storage, making gradient-based learning feasible even for large-scale neural networks.
+
+\subsection{A Chain View of Backpropagation}
+\label{sec:chain_view_backprop}
+
+Another way to understand backpropagation is to see the computational graph as a chain of functions operating on intermediate variables. Suppose we have:
+\[
+x_1 = f_1(x_0), 
+\quad 
+x_2 = f_2(x_1), 
+\quad 
+\dots, 
+\quad 
+L = f_4(x_3),
+\]
+where \( f_4 \) outputs the scalar loss \( L \). This chain perspective is especially useful when exploring different modes of automatic differentiation.
+
+\subsubsection{Reverse-Mode Automatic Differentiation}
+\label{sec:reverse_mode_ad}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_111.jpg}
+	\caption{%
+		Reverse-mode automatic differentiation can exploit the associativity of matrix multiplication to replace potentially expensive matrix-matrix products with matrix-vector products, moving from right to left.
+	}
+	\label{fig:chapter6_reverse_mode}
+\end{figure}
+
+When a scalar loss \(L\) appears at the end of the computational graph, \emph{reverse-mode} automatic differentiation efficiently calculates gradients with respect to a large number of parameters. By traversing the chain from \(L\) backward, matrix-vector products replace matrix-matrix products, which is much more efficient for high-dimensional problems.
+
+\subsubsection{Forward-Mode Automatic Differentiation}
+\label{sec:forward_mode_ad}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_114.jpg}
+	\caption{%
+		Forward-mode automatic differentiation is useful for computing the derivatives of scalar inputs with respect to multiple outputs. While not commonly used in deep learning, it is widely applied in physics simulations and sensitivity analysis.
+	}
+	\label{fig:chapter6_forward_mode}
+\end{figure}
+
+In contrast to reverse-mode automatic differentiation, which is optimized for computing derivatives of a scalar loss with respect to many parameters, forward-mode automatic differentiation is more suitable when:
+\begin{itemize}
+	\item A single scalar input (or a few inputs) affects many outputs, and we need derivatives of all outputs with respect to this input.
+	\item The computational graph is narrow but deep (e.g., computing derivatives with respect to time-dependent variables in simulations).
+\end{itemize}
+
+\paragraph{When Is Forward-Mode Automatic Differentiation is Useful?}
+While forward-mode differentiation is rarely used in deep learning, it plays a crucial role in other scientific and engineering domains, including:
+\begin{itemize}
+	\item Physics Simulations: Understanding how changes in fundamental constants (e.g., gravity, friction) affect entire system dynamics.
+	\item Sensitivity Analysis: Evaluating how small variations in input parameters propagate through a model, which is essential for robust system design.
+	\item Computational Finance and Engineering: Where derivative calculations are needed for risk modeling and structural analysis.
+\end{itemize}
+
+Unlike reverse-mode differentiation, which propagates gradients backward, forward-mode propagates derivatives forward through the computation graph, making it efficient for computing derivatives with respect to a few key inputs.
+
+\subsection{Computing Higher-Order Derivatives with Backpropagation}
+\label{sec:higher_order_backprop}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_120.jpg}
+	\caption{%
+		Using backpropagation to compute Hessian-vector products as an efficient way to obtain second-order derivatives.
+	}
+	\label{fig:chapter6_hessian_backprop}
+\end{figure}
+
+So far, we have focused on first-order derivatives, which capture how small changes in parameters affect the loss function. However, higher-order derivatives, such as Hessians (matrices of second-order partial derivatives), provide additional insights.
+
+\paragraph{Why Compute Hessians?}
+The Hessian matrix \( \mathbf{H} = \nabla^2 L \) captures second-order effects, helping in:
+\begin{itemize}
+	\item Second-Order Optimization: Methods like Newton’s method and quasi-Newton methods (e.g., L-BFGS) use Hessian information for faster convergence.
+	\item Understanding Model Sensitivity: Hessians quantify how different parameters interact and influence optimization.
+	\item Regularization and Pruning: Hessian-based techniques help in feature selection and gradient-based network pruning.
+\end{itemize}
+
+\paragraph{Efficient Hessian Computation: Hessian-Vector Products}
+A naive approach to computing the Hessian matrix explicitly is infeasible in large-scale models (as it requires storing an \( \mathbb{R}^{N \times N} \) matrix). Instead, we use Hessian-vector multiplication:
+\[
+\mathbf{H} \mathbf{v} = \nabla \left( \nabla L \cdot \mathbf{v} \right),
+\]
+which allows us to obtain second-order information efficiently without forming the full Hessian matrix.
+
+\subsection{Application: Gradient-Norm Regularization}
+\label{sec:higher_order_regularization}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_6/slide_121.jpg}
+	\caption{%
+		An example of using second-order derivatives: Regularizing the gradient norm to improve optimization stability.
+	}
+	\label{fig:chapter6_gradient_norm_reg}
+\end{figure}
+
+One practical application of higher-order derivatives in deep learning is penalizing the gradient norm:
+\[
+R(W) = \|\nabla_W L\|_2^2.
+\]
+Computing \( \tfrac{d}{d W}R(W) \) involves second derivatives of \( L \). With backpropagation for higher-order terms, we can approximate or compute this regularization effectively, potentially improving model training by smoothing out rugged loss landscapes.
+
+\subsection{Automatic Differentiation: Summary of Key Insights}
+\begin{itemize}
+	\item Reverse-mode automatic differentiation is preferred for scalar outputs and many parameters, as in deep learning.
+	\item Forward-mode automatic differentiation is better when a single (or few) scalar inputs affect many outputs.
+	\item Backpropagation can extend to compute higher-order derivatives (e.g., Hessians or Hessian-vector products).
+	\item Hessian-based methods enable second-order optimization techniques and advanced regularization schemes.
+\end{itemize}
+
+These techniques, taken together, demonstrate how backpropagation’s fundamental ideas apply to a wide range of differentiation tasks, from standard neural network training to advanced scientific computations.
+
