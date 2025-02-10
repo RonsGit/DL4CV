@@ -2,7 +2,1216 @@
 
 % Chapter-specific content starts here
 \chapter{Lecture 7: Convolutional Networks}
+\label{chap:cnn}
 
 %----------------------------------------------------------------------------------------
 %	CHAPTER 7 - Lecture 7: Convolutional Networks
 %----------------------------------------------------------------------------------------
+\section{Introduction: The Limitations of Fully-Connected Networks}
+\label{sec:cnn_intro}
+
+So far, we have explored linear classifiers and fully-connected neural networks. While fully-connected networks are significantly more expressive than simple linear classifiers, they still suffer from a major limitation: they do not preserve the 2D spatial structure of image data.
+
+These models require us to flatten an image into a one-dimensional vector, losing all spatial relationships between pixels. This is problematic for tasks like image classification, where local patterns such as edges and textures are crucial for understanding an image.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_8.jpg}
+	\caption{Fully-connected networks and linear classifiers do not respect the 2D spatial structure of images, requiring us to flatten image pixels into a single vector.}
+	\label{fig:chapter7_flattening_problem}
+\end{figure}
+
+To address this issue, Convolutional Neural Networks (CNNs) introduce new types of layers designed to process images while maintaining their spatial properties.
+
+\section{Components of Convolutional Neural Networks}
+\label{sec:cnn_components}
+
+CNNs extend fully-connected networks by introducing the following specialized layers:
+\begin{enumerate}
+	\item Convolutional Layers: Preserve spatial structure and detect patterns using filters (kernels) that slide across the image.
+	\item Pooling Layers: Reduce spatial dimensions while retaining essential features.
+	\item Normalization Layers (e.g., Batch Normalization): Stabilize training and improve performance.
+\end{enumerate}
+
+These layers allow CNNs to effectively capture hierarchical features from images, making them highly effective for computer vision tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_10.jpg}
+	\caption{Key components of Convolutional Neural Networks (CNNs). In addition to fully-connected layers and activation functions, CNNs introduce convolutional layers, pooling layers, and normalization layers.}
+	\label{fig:chapter7_cnn_components}
+\end{figure}
+
+\section{Convolutional Layers: Preserving Spatial Structure}
+\label{sec:conv_layers_intro}
+
+A convolutional layer is designed to process images while maintaining their 2D structure. Instead of flattening the image into a single vector, convolutional layers operate on small local patches of the input, capturing spatially localized patterns such as edges, corners, and textures.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_17.jpg}
+	\caption{A filter is applied to a local region of the input tensor, producing a single number at each spatial position.}
+	\label{fig:chapter7_filter_application}
+\end{figure}
+
+\subsection{Input and Output Dimensions}
+\label{subsec:conv_input_output}
+
+A convolutional layer processes an input tensor while preserving its spatial structure. Unlike fully connected layers, which flatten the input into a vector, convolutional layers operate directly on structured data, maintaining spatial relationships between pixels.
+
+The input to a convolutional layer typically has the shape:
+\[
+C_{\text{in}} \times H \times W
+\]
+where:
+\begin{itemize}
+	\item \(C_{\text{in}}\) is the number of input channels (e.g., 3 for an RGB image, where each channel corresponds to red, green, or blue intensity),
+	\item \(H\) and \(W\) represent the height and width of the input image or feature map (a 2D representation of extracted features).
+\end{itemize}
+
+The layer applies a set of filters (also called kernels), where each filter has the shape:
+\[
+C_{\text{in}} \times K_h \times K_w.
+\]
+Here:
+\begin{itemize}
+	\item \(K_h\) and \(K_w\) define the spatial size (height and width) of the filter,
+	\item Each filter always spans all \(C_{\text{in}}\) input channels, meaning it processes all color or feature layers together.
+\end{itemize}
+
+\paragraph{Common Filter Sizes}
+Typically, \(K_h\) and \(K_w\) are small, such as 3, 5, or 7, to detect fine-grained patterns while maintaining computational efficiency. Most convolutional layers use \emph{square} filters (\(K_h = K_w\)), though some architectures employ non-square kernels for specialized feature extraction. For example, Google's \emph{Inception} architecture, which we will explore later, uses asymmetric convolutions such as \(1 \times 3\) and \(3 \times 1\) to improve computational efficiency while maintaining expressive power.
+
+\paragraph{Why Are Kernel Sizes Typically Odd?}
+While convolution kernels can have even or odd dimensions, odd-sized kernels (\(3 \times 3\), \(5 \times 5\)) are commonly used due to their advantages in preserving spatial structure and ensuring consistent feature extraction.
+
+\begin{itemize}
+	\item \textbf{Preserving Spatial Alignment:} Odd-sized kernels naturally align with a central pixel, ensuring that the output remains centered relative to the input. This prevents unintended shifts in feature maps, which could cause misalignment across layers and disrupt learning.
+	\item \textbf{Consistent Neighboring Context:} When stacking multiple convolutional layers, each output pixel is influenced symmetrically by its surrounding pixels. This balanced context stabilizes feature learning and helps capture hierarchical patterns effectively.
+\end{itemize}
+
+Even-sized kernels (e.g., \(2 \times 2\), \(4 \times 4\)) do not have a single center pixel, requiring additional adjustments when aligning the filter to the input, and are hence not common. 
+
+
+\subsection{Filter Application and Output Calculation}
+\label{subsec:conv_filter_output}
+
+Each filter slides (convolves) over the spatial dimensions of the image, computing a dot product between its weights and the corresponding patch of the input at each position. The sum of these dot products, plus a bias term, produces the activation for that position.
+
+Mathematically, for a given position \((i, j)\), the convolution operation computes:
+\[
+y_{i,j} = \sum_{c=1}^{C_{\text{in}}} \sum_{m=1}^{K_h} \sum_{n=1}^{K_w} W_{c,m,n} \cdot X_{c, i+m, j+n} + b
+\]
+where:
+\begin{itemize}
+	\item \( W_{c,m,n} \) represents the filter weights,
+	\item \( X_{c, i+m, j+n} \) represents the corresponding region of the input image,
+	\item \( b \) is the bias term.
+\end{itemize}
+
+Each filter produces a single activation map, and stacking multiple filters results in a 3D output tensor.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_19.jpg}
+	\caption{Applying two convolutional filters to a \(3 \times 32 \times 32\) input image produces two activation maps of shape \(1 \times 28 \times 28\) (no padding applied).}
+	\label{fig:chapter7_two_filters}
+\end{figure}
+
+\begin{enrichment}[Understanding Convolution Through the Sobel Operator][subsection]
+	\label{enr:conv_sobel}
+	
+	To build intuition for convolutional operations, we start with a simple example: applying a \(3 \times 3\) 2D filter to a single-channel (\(C_{\text{in}} = 1\)) grayscale image. Later we'll dive into more practical examples, to better understand how convolutional layers work. More specifically, we'll cover how such layers work with several multi-channel filters applied to the input image, integrated along with their corresponding biases, along with other mechanisms like strides/padding (larger than 1), that are often seen in conv-nets.  
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/grayscale_zoom.jpg}
+		\caption{A zoomed-in section of a grayscale image, used for demonstrating convolution.}
+		\label{fig:chapter7_grayscale_zoom}
+	\end{figure}
+	
+	\begin{enrichment}[Using the Sobel Kernel for Edge Detection][subsubsection]
+		\label{subsubsec:sobel_kernel}
+		
+		A widely used filter for detecting edges in images is the \textbf{Sobel operator}, which approximates the image gradient along the horizontal and vertical directions. This filter is based on the concept of \emph{central differences}, a discrete method for estimating gradients in a sampled function—such as an image.
+	\end{enrichment}
+	
+	\paragraph{Approximating Image Gradients with the Sobel Operator}
+	To estimate the gradient at each pixel, we can use a basic finite difference approach. The simplest method is the \textbf{forward difference}, which approximates the derivative at a given pixel by computing the difference between its right neighbor and itself. However, this method introduces a shift in the computed gradient locations. A more accurate approach is the \textbf{central difference}, which averages the difference between the left and right neighbors:
+	
+	\[
+	\frac{\partial I}{\partial x} \approx \frac{I(x+1, y) - I(x-1, y)}{2}.
+	\]
+	
+	Similarly, for the vertical gradient:
+	
+	\[
+	\frac{\partial I}{\partial y} \approx \frac{I(x, y+1) - I(x, y-1)}{2}.
+	\]
+	
+	These central difference approximations form the basis of the \emph{gradient operators} used in edge detection.
+	
+	\newpage
+	\paragraph{Basic Difference Operators}
+	A simple discrete implementation of the central difference method would use the following filters:
+	
+	\[
+	\text{Diff}_x =
+	\begin{bmatrix} 
+		-1 & 0 & 1 \\ 
+		-1 & 0 & 1 \\ 
+		-1 & 0 & 1
+	\end{bmatrix},
+	\quad
+	\text{Diff}_y =
+	\begin{bmatrix} 
+		-1 & -1 & -1 \\ 
+		0 & 0 & 0 \\ 
+		1 & 1 & 1
+	\end{bmatrix}.
+	\]
+	
+	These filters compute intensity differences between neighboring pixels along the horizontal and vertical axes, highlighting abrupt changes. However, they treat all pixels equally, making them highly sensitive to noise. A small random fluctuation in intensity could result in large, unstable gradient estimates.
+	
+	\paragraph{The Sobel Filters: Adding Robustness}
+	The \textbf{Sobel filters} improve upon these simple difference operators by incorporating a \emph{Gaussian-like weighting} to give more importance to the central pixels:
+	
+	\[
+	\text{Sobel}_x =
+	\begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}
+	\begin{bmatrix} 1 & 0 & -1 \end{bmatrix}
+	=
+	\begin{bmatrix} 
+		1 & 0 & -1 \\ 
+		2 & 0 & -2 \\ 
+		1 & 0 & -1
+	\end{bmatrix}
+	\]
+	
+	\[
+	\text{Sobel}_y =
+	\begin{bmatrix} 1 \\ 0 \\ -1 \end{bmatrix}
+	\begin{bmatrix} 1 & 2 & 1 \end{bmatrix}
+	=
+	\begin{bmatrix} 
+		1 & 2 & 1 \\ 
+		0 & 0 & 0 \\ 
+		-1 & -2 & -1
+	\end{bmatrix}
+	\]
+	
+	\begin{enrichment}[Why Does the Sobel Filter Use These Weights?][subsubsection]
+		\begin{itemize}
+			\item \textbf{Improving Gradient Accuracy:} The \([-1, 0, 1]\) pattern in \(\text{Sobel}_x\) is a discrete approximation of the central difference derivative, meaning it captures intensity changes along the horizontal axis, responding to vertical edges. Similarly, \(\text{Sobel}_y\) captures intensity changes along the vertical axis, detecting horizontal edges.
+			\item \textbf{Smoothing High-Frequency Noise:} The \([1, 2, 1]\) weighting acts as a mild low-pass filter, averaging nearby pixels to reduce noise sensitivity while maintaining edge sharpness.
+			\item \textbf{Preserving Image Structure:} The use of a larger weight at the center (\(2\)) ensures that local gradient computations are less affected by isolated pixel noise and instead capture broader edge structures.
+		\end{itemize}
+	\end{enrichment}
+	
+	\begin{enrichment}[Computing the Gradient Magnitude][subsubsection]
+		At each spatial location in the image, the kernel is positioned over a \(3 \times 3\) region of pixel intensities. The convolution operation computes the dot product between the kernel and the underlying pixel values, yielding a new intensity that reflects the local gradient in the selected direction.
+		
+		Applying \(\text{Sobel}_x\) results in an \emph{edge map} \(G_x=I * \text{Sobel}_x\), where larger absolute values indicate strong vertical edges (intensity changes along the horizontal direction). Similarly, applying \(\text{Sobel}_y\) results in an edge map \(G_y=I * \text{Sobel}_y\), where larger absolute values indicate strong horizontal edges (intensity changes along the vertical direction). To combine both, we compute the \emph{gradient magnitude}:
+		
+		\[
+		G = \sqrt{G_x ^2 + G_y ^2}.
+		\]
+	\end{enrichment}
+	
+	To better understand the effect of convolution with the Sobel filter, consider an example grayscale image where distinct edges are present. As the kernel slides over the image:
+	\begin{itemize}
+		\item Areas with \emph{constant intensity} produce near-zero outputs (low gradient).
+		\item Regions with \emph{sudden changes in intensity} (edges) produce large values, indicating strong gradients.
+	\end{itemize}
+	
+	\noindent
+	We will proceed to visualize this process, taking the cropped zoom-in part of the original image as seen in Figure \ref{fig:chapter7_grayscale_zoom}. We'll first examine the computation using a single filter channel \(\text{Sobel}_x\), convolved with the cropped patch. 
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/convolve_gx_1.jpg}
+		\caption{Computation of the first two cells of the image patch convolved with \(\text{Sobel}_x\).}
+		\label{fig:chapter7_convolve_x_1}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/convolve_gx_2.jpg}
+		\caption{Computation of the third and fourth cells of the image patch convolved with \(\text{Sobel}_x\). As we can see, after sliding the 2D kernel over the first row, we move to the beginning of the second row and continue from there.}
+		\label{fig:chapter7_convolve_x_2}
+	\end{figure}
+	
+	\noindent
+	At the end of this process, we obtain an output in the form of a 2D edge map, \(G_x\), where larger absolute values correspond to pixels that are likely part of a vertical edge (corresponding to large gradients along the horizontal axis of the image). The same process can be done with the other single-filter channel \(\text{Sobel}_y\), resulting in \(G_y\), where larger absolute values correspond to horizontal edges.
+	
+	We can apply this process to the entire image, obtaining the full edge maps \(G_x\) and \(G_y\). By combining them, we get a single edge image:
+	
+	\[
+	G = \sqrt{G_x ^2 + G_y ^2}.
+	\]
+	
+	Convolutional layers in neural networks use this operation to extract meaningful features, such as edges and textures, which serve as the foundation for deeper representations. While neural networks learn their own filters during training, edge-detecting filters like Sobel demonstrate how convolution naturally captures important structural information.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/sobel_eg.jpg}
+		\caption{The Sobel example resulting in $G_x, G_y$ after applying the 2D sobel kernels.}
+		\label{fig:chapter7_gx_gy}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/sobel_end.jpg}
+		\caption{The Sobel edge image $G$ resultant from combining $G_x, G_y$.}
+		\label{fig:chapter7_sobel_end}
+	\end{figure}
+	
+	\paragraph{Hands-On Exploration}
+	To build deeper intuition around convolutions, it can be enlightening to \emph{interactively} apply various kernels to images. One accessible resource is \href{https://setosa.io/ev/image-kernels/}{Setosa’s Image Kernels Demo}, where you can hover over a grayscale image and experiment with different filters like the Sobel filter on the fly. Tinkering in this way helps illustrate how individual convolutional kernels isolate specific visual features and produce characteristic activation patterns.
+	
+	
+\end{enrichment}
+
+\begin{enrichment}[Convolutional Layers with Multi-Channel Filters][subsection]
+	Previously, in \ref{enr:conv_sobel}, we explored how convolution operates using a single \(3 \times 3\) 2D filter. Now, we extend this concept to multi-channel inputs, such as RGB images, which contain multiple color channels. Convolutional layers typically consist of multiple multi-dimensional filters, each spanning all input channels. Additionally, each filter has an associated bias term in the bias vector \(\mathbf{b}\), which is added to the convolution result to introduce additional flexibility.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/multi_dim_conv/lotus_channels.jpg}
+		\caption{The separate color channels (R, G, B) of the Lotus image. Each filter in a convolutional layer operates across all these channels simultaneously.}
+		\label{fig:chapter7_lotus_ch}
+	\end{figure}
+	
+	To illustrate this extension, we consider an RGB image of a Lotus flower. 
+	Unlike grayscale images, which contain a single intensity channel, RGB images have three channels—red, green, and blue—each containing spatial information about the corresponding color component.
+	
+	\subsection*{Extending Convolution to Multi-Channel Inputs}
+	To demonstrate multi-channel convolution, consider a randomly selected \(5 \times 5\) patch from the image along with a single randomly initialized \(3\)-channel filter. 
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg}
+		\caption{A \(5 \times 5\) patch of the Lotus image (visualized with a bold yellow box on one of the left leafs), displayed across three color channels (R, G, B).}
+		\label{fig:chapter7_lotus_patch}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/multi_dim_conv/channel_bias_patch.jpg}
+		\caption{The sample image patch over the different channels (R, G, B), along with a corresponding filter. Each filter channel operates on exactly one input channel.}
+		\label{fig:chapter7_filter_and_patch}
+	\end{figure}
+	
+	\paragraph{Multi-Channel Convolution Process}
+	When performing convolution on multi-channel images, each filter is applied separately to each channel, and the results are summed to produce a single output value for each spatial position. This is equivalent to computing multiple 2D convolutions (one per input channel) and then aggregating the results.
+	
+	\begin{itemize}
+		\item Each channel of the filter is convolved with its corresponding channel in the input patch.
+		\item The outputs from all channels are summed together at each spatial location.
+		\item A bias term associated with the filter is added to the summed result.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg}
+		\caption{Each filter channel performs a separate 2D convolution on its corresponding input channel. The results are then summed along with the bias to produce a single output pixel value.}
+		\label{fig:chapter7_multi_dim_filter1}
+	\end{figure}
+	
+	\paragraph{Sliding the Filter Across the Image}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/multi_dim_conv/multi_dim_filter_2.jpg}
+		\caption{The filter shifts spatially by one step, computing the next output pixel. This process continues across the entire image.}
+		\label{fig:chapter7_multi_dim_filter2}
+	\end{figure}
+	
+	After computing the first output pixel, the filter slides spatially to the next position, repeating the same process across the entire image.
+	
+\paragraph{From Single Filters to Complete Convolutional Layers}
+A full convolutional layer consists of multiple filters, each producing a separate activation map. The number of filters, \( C_{\text{out}} \), determines the number of output channels in the resulting feature map:
+\[
+C_{\text{out}} \times H' \times W'.
+\]
+Each filter detects different spatial patterns, allowing the network to capture diverse features such as edges, textures, or object parts. By stacking multiple layers, we progressively build hierarchical representations of the input.
+
+\paragraph{What Our Example Missed: Padding and Stride}
+Our example demonstrated how a convolutional filter processes an image patch, but real-world applications introduce additional complexities:
+\begin{itemize}
+	\item \textbf{Incomplete Coverage of the Image:} We only applied convolution to a limited region. In practice, the filter moves across the entire image, computing feature responses at each location.
+	\item \textbf{Handling Image Borders – Padding:} Convolution reduces spatial dimensions unless padding is added around the image. Padding ensures that feature extraction extends to edge pixels and helps control output size.
+	\item \textbf{Stride – Controlling Spatial Resolution:} We assumed a step size of 1 when sliding the filter. Using a larger step size (stride) allows for downsampling, reducing spatial dimensions while preserving depth, helping in mitigation of computational cost.
+\end{itemize}
+
+\paragraph{Are Kernel Values Restricted?}
+Unlike fixed edge detection filters (e.g., Sobel), the values in convolutional kernels are not predefined—they are learned during training. Filters evolve to capture useful features depending on the task. While no strict range constraints exist, regularization techniques such as weight decay help prevent extreme values, improving stability and generalization.
+
+\paragraph{Negative and Large Output Values}
+Standard image pixels range from \(0\) to \(255\), but convolution outputs can have negative values or exceed this range. This is not an issue because convolutional layers produce \emph{feature maps}, not direct images. Although this isn't an issue, neural networks sometimes keep these values in check through usage of techniques such as 'Batch Normalization' that stabilize activations, greatly improving training efficiency.
+
+In the rest of this lecture, we will explore these topics in depth, ensuring a complete understanding of how convolutional layers operate in modern neural networks.
+
+\end{enrichment}
+
+\subsection{Multiple Filters and Output Channels}
+\label{subsec:conv_multiple_filters}
+
+A convolutional layer can apply multiple filters, where each filter extracts a different feature from the input. The number of filters determines the number of output channels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_22.jpg}
+	\caption{A convolutional layer with 6 filters, each of size \(3 \times 5 \times 5\), applied to an input image of shape \(3 \times 32 \times 32\), producing 6 activation maps of shape \(1 \times 28 \times 28\). Each filter has an associated bias term.}
+	\label{fig:chapter7_multiple_filters}
+\end{figure}
+
+\noindent
+For example, if we apply 6 filters, each of size \( 3 \times 5 \times 5 \), to a \( 3 \times 32 \times 32 \) input image, the output consists of 6 activation maps, each of size \( 1 \times 28 \times 28 \). These maps can be stacked to form an output tensor of shape:
+$ 6 \times 28 \times 28.$
+
+\newpage
+
+\subsection{Two Interpretations of Convolutional Outputs}
+\label{subsec:conv_output_interpretation}
+
+The output of a convolutional layer can be viewed in two equivalent ways:
+\begin{enumerate}
+	\item Stack of 2D Feature Maps: Each filter produces one activation map, so stacking all \(C_{\text{out}}\) maps yields a \((C_{\text{out}} \times H' \times W')\) volume.
+	\item Grid of Feature Vectors: Each spatial position \((h,w)\) in the output corresponds to a \(C_{\text{out}}\)-dimensional feature vector, representing learned features at approximately (convolutions without padding can reduce the spatial dim of the output tensor a bit) that location in the input tensor.
+\end{enumerate}
+
+\subsection{Batch Processing with Convolutional Layers}
+\label{subsec:conv_batch_processing}
+
+In practice, convolutional layers process batches of images. If we have a batch of \(N\) input images, each of shape \(C_{\text{in}} \times H \times W\), then the input tensor has shape:
+\[
+N \times C_{\text{in}} \times H \times W.
+\]
+The corresponding output tensor has shape:
+\[
+N \times C_{\text{out}} \times H' \times W'.
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_24.jpg}
+	\caption{The general form of a convolutional layer applied to a batch of images, producing a batch of feature maps.}
+	\label{fig:chapter7_general_conv}
+\end{figure}
+
+\section{Building Convolutional Neural Networks}
+\label{sec:conv_nets}
+
+\subsection{Stacking Convolutional Layers}
+\label{subsec:stacking_convs}
+
+With convolutional layers, we can construct a new type of neural network by stacking multiple convolutions sequentially. Unlike fully connected layers, where each neuron connects to every input feature, convolutional layers operate locally, extracting spatial features at each step.
+
+The filters in convolutional layers are \textbf{learned} throughout the training process. They adjust dynamically to capture features useful for minimizing the network’s loss, just like the weights in fully connected layers. The output feature map after each convolution has:
+\begin{itemize}
+	\item \( C_{\text{out}} \) channels (determined by the number of filters in that layer),
+	\item A height \( H' \) and width \( W' \), which may differ from the input dimensions \( H \) and \( W \), depending on the use of padding and strides.
+\end{itemize}
+
+A common architectural pattern in convolutional networks is to \textbf{reduce spatial dimensions} while \textbf{increasing the number of channels}. The rationale for this is:
+\begin{itemize}
+	\item Each channel can be seen as a learned feature representation, abstracting spatial patterns across layers.
+	\item Reducing spatial dimensions while increasing channels allows the network to capture \textbf{high-level patterns}, moving from local details (e.g., edges) to global structures (e.g., entire objects).
+	\item It aligns with increasing the \textbf{receptive field}, allowing neurons in deeper layers to capture large-scale spatial dependencies (e.g., recognizing an entire cat’s face rather than just whiskers).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_25.jpg}
+	\caption{A simple convolutional neural network with three stacked convolutional layers. Each layer extracts progressively higher-level features.}
+	\label{fig:convnet_stack}
+\end{figure}
+
+\subsection{Adding Fully Connected Layers for Classification}
+\label{subsec:flatten_fc}
+
+After passing through several convolutional layers, the output is a multi-channel feature representation of the input. To use this representation for classification or regression tasks, we typically:
+\begin{itemize}
+	\item \textbf{Flatten} the feature maps into a 1D vector,
+	\item Pass the vector through a \textbf{fully connected} (MLP) layer,
+	\item Use a \textbf{SoftMax} activation (for classification).
+\end{itemize}
+
+This structure allows convolutional layers to act as \textbf{feature extractors}, and the final fully connected layers to perform \textbf{decision-making} based on the extracted features.
+
+\subsection{The Need for Non-Linearity}
+\label{subsec:conv_non_linearity}
+
+A major issue arises when stacking convolutional layers directly on top of each other: convolution itself is a \textbf{linear operation}. Recall from basic neural network theory that a sequence of linear transformations can always be reduced to a \textbf{single linear transformation}, meaning a network composed purely of stacked convolutional layers has limited expressive power.
+
+Mathematically, consider a network with two convolutional layers:
+\[
+X \xrightarrow{\text{Conv}_1} W_1 X \xrightarrow{\text{Conv}_2} W_2 W_1 X.
+\]
+Since both transformations are linear, the entire operation reduces to a single matrix multiplication. This is analogous to a multi-layer perceptron (MLP) without activation functions, which collapses into a single-layer network, greatly limiting its representational capacity.
+
+The solution is to introduce \textbf{non-linearity} after each convolution. This is typically done using \textbf{ReLU} (Rectified Linear Unit) activations, which apply an \emph{element-wise} transformation:
+\[
+f(x) = \max(0, x).
+\]
+ReLU allows the network to model complex relationships by breaking the linearity of stacked layers, significantly increasing representational power.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_28.jpg}
+	\caption{A convolutional network with three layers, now incorporating non-linear activations (ReLU) between them. This introduces non-linearity, enhancing the model’s expressive power.}
+	\label{fig:convnet_relu_stack}
+\end{figure}
+
+\subsection{Summary}
+\begin{itemize}
+	\item \textbf{Stacking Convolutions} allows deeper networks to learn increasingly abstract features.
+	\item \textbf{Reducing spatial dimensions while increasing channels} helps capture global patterns in images.
+	\item \textbf{Flattening and adding fully connected layers} enables classification and regression tasks.
+	\item \textbf{Introducing non-linearity} between convolutional layers prevents the network from collapsing into a simple linear transformation, significantly enhancing representational capacity.
+\end{itemize}
+
+In the next sections, we will explore additional techniques such as pooling layers and batch normalization, which further improve the efficiency and stability of convolutional networks.
+
+
+\section{Controlling Spatial Dimensions in Convolutional Layers}
+\label{sec:conv_dimensions}
+
+\subsection{How Convolution Affects Spatial Size}
+When applying a convolutional filter to an input image, the spatial dimensions of the output shrink. If we start with a square input tensor of spatial size \( W \times W \) and apply a convolutional filter of size \( K \times K \), the output spatial size is given by:
+\[
+W' = W - K + 1.
+\]
+For example, when we previously examined a \( 5 \times 5 \) patch of the Lotus image and applied a \( 3 \times 3 \) filter, the resulting feature map had dimensions:
+\[
+5 - 3 + 1 = 3 \times 3.
+\]
+This reduction in spatial size can become problematic as feature maps continue to shrink with deeper layers. If no corrective measures are taken, images may spatially collapse to an unrecognizable form, limiting the depth of our network.
+
+\subsection{Mitigating Shrinking Feature Maps: Padding}
+A common solution to prevent excessive spatial shrinkage is \textbf{padding}, where extra pixels are added around the borders of the input image before applying convolution. The most widely used approach is \emph{zero-padding}, where padding pixels are filled with zeros. More advanced techniques, such as \emph{replication padding} (copying the values of edge pixels) or \emph{reflection padding} (mirroring the border values), are sometimes used in practice as well.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_40.jpg}
+	\caption{Zero-padding around an image to maintain spatial dimensions during convolution.}
+	\label{fig:padding_visualization}
+\end{figure}
+
+\paragraph{Choosing the Padding Size}
+Padding introduces a new hyperparameter, \( P \), which determines how many pixels are added to the borders of the input. A commonly used setting is:
+\[
+P = \frac{K - 1}{2}.
+\]
+This choice ensures that the output retains the same spatial dimensions as the input:
+\[
+W' = W - K + 1 + 2P.
+\]
+For instance, using a \( 3 \times 3 \) filter with \( P = 1 \) ensures that a \( W \times W \) input produces a \( W \times W \) output. This technique, known as \textbf{same padding}, is widely used in deep convolutional architectures.
+
+\subsection{Receptive Fields: Understanding What Each Pixel Sees}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_42.jpg}
+	\caption{Receptive field of an output pixel for a single convolution operation.}
+	\label{fig:receptive_field_single_layer}
+\end{figure}
+
+Another way to analyze convolutional networks is by considering the \textbf{receptive field} of each output pixel. The receptive field of an output pixel represents the region in the original input that influenced its value.
+
+Each convolution with a filter of spatial size \( K \times K \) expands the receptive field. With \( L \) convolutional layers, each having a \( K \times K \) filter, the receptive field size can be computed as:
+\[
+\text{Receptive Field} = 1 + L \cdot (K - 1).
+\]
+
+\paragraph{The Problem of Limited Receptive Field Growth}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/slide_43.jpg}
+	\caption{Receptive field expansion across multiple layers. Deeper layers see a larger portion of the input image.}
+	\label{fig:receptive_field_multi_layers}
+\end{figure}
+
+For deep networks, we want each output pixel to have access to a large portion of the original image. However, small kernels (e.g., \(3 \times 3\)) grow the receptive field slowly. Consider a \( 1024 \times 1024 \) image processed with a network using \( 3 \times 3 \) filters. We would need hundreds of layers before each output pixel “sees” the entire image.
+
+\noindent
+Hence, we need to perform a more aggressive \emph{downsampling} along the neural network. Some of the tools we can use for that purpose are \textbf{strides} and \textbf{pooling layers}. We'll now cover both of these tools, starting with strides. As pooling layers are a different type of layer in the neural network, we'll touch them after finishing with convolutions first. 
+
+\subsection{Controlling Spatial Reduction with Strides}
+\textbf{Stride} is another technique for managing spatial dimensions in convolutional networks. Instead of moving the filter one pixel at a time, we can define a \textbf{stride} \( S \), which determines how many pixels the filter shifts per step. Increasing the stride results in downsampling, reducing the output’s spatial dimensions:
+\[
+W' = \frac{W - K + 2P}{S} + 1.
+\]
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_7/stride_eg.jpg}
+	\caption{Effect of stride on convolution. A stride of 2 moves the filter by 2 pixels, reducing spatial dimensions.}
+	\label{fig:stride_visualization}
+\end{figure}
+
+\section{Understanding What Convolutional Filters Learn}
+\label{sec:cnn_feature_learning}
+
+\subsection{MLPs vs. CNNs: Learning Spatial Structure}
+\label{subsec:mlp_vs_cnn}
+
+Traditional multilayer perceptrons (MLPs) learn weights for the entire image at once, often ignoring spatial structure. In contrast, convolutional neural networks (CNNs) learn filters that operate on small, localized patches, progressively building up more complex representations. This hierarchical feature extraction is key to CNNs’ ability to recognize objects and textures efficiently.
+
+\subsection{Learning Local Features: The First Layer}
+\label{subsec:learning_local_features}
+
+The first convolutional layer specializes in detecting fundamental image patterns:
+
+\begin{itemize}
+	\item \textbf{Local Receptive Fields:} Each filter “sees” only a small region of the image (e.g., a \( 3 \times 3 \) patch). As a result, first-layer filters typically learn to detect \textbf{edges, corners, color gradients, and small textures}.
+	\item \textbf{Feature Maps:} Each filter produces a feature map, highlighting areas where a learned pattern appears in the image. Strong activations indicate high similarity to the filter (e.g., bright responses for vertical edges).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_32.jpg}
+	\caption{Visualization of first-layer filters from AlexNet. Filters specialize in detecting edge orientations, color contrasts, and simple patterns.}
+	\label{fig:alexnet_first_layer}
+\end{figure}
+
+\subsection{Building More Complex Patterns in Deeper Layers}
+\label{subsec:deeper_features}
+
+As the network deepens, convolutional layers process feature maps instead of raw pixels, enabling hierarchical feature composition. Each successive layer captures increasingly abstract patterns by integrating information from a growing receptive field.
+
+\paragraph{Hierarchical Learning via Composition}
+\begin{itemize}
+	\item \textbf{Early layers:} Detect simple edges, gradients, and textures.
+	\item \textbf{Mid-layers:} Combine early features into complex structures like shapes and object parts.
+	\item \textbf{Deepest layers:} Recognize high-level semantic patterns, forming complete object representations.
+\end{itemize}
+
+Deeper networks enhance representational capacity by progressively composing features, transforming raw pixel data into hierarchical object representations. Each layer refines and abstracts information from previous layers, enabling more complex feature extraction. Empirical evidence, including visualization methods like DeepDream, confirms that deeper layers capture high-level semantic concepts. Modern architectures such as \textbf{ResNets} and \textbf{DenseNets} demonstrate that increased depth, when properly managed, improves feature learning and overall model performance.
+
+\section{Parameters and Computational Complexity in Convolutional Networks}
+\label{sec:conv_params}
+
+Thus far, we have examined how convolutional layers operate, but an equally important consideration is their computational cost and learnable parameters. Unlike fully connected layers, it's intuitive that convolutional layers significantly reduce the number of parameters, but what about computational operations? 
+
+\subsection{Example: Convolutional Layer Setup}
+To understand these calculations, consider a single convolutional layer with the following configuration:
+\begin{itemize}
+	\item \textbf{Input volume:} \(3 \times 32 \times 32\) (an RGB image with height 32, width 32, and 3 channels).
+	\item \textbf{Number of filters:} 10.
+	\item \textbf{Filter size:} \(3 \times 5 \times 5\).
+	\item \textbf{Stride:} 1.
+	\item \textbf{Padding:} Same padding (\(P = 2\)), preserving spatial dimensions.
+\end{itemize}
+
+\subsection{Output Volume Calculation}
+With same padding and stride 1, the spatial dimensions remain:
+\[
+H' = W' = \frac{32 + 2(2) - 5}{1} + 1 = 32.
+\]
+Since we have 10 filters, the final output volume is:
+\[
+10 \times 32 \times 32.
+\]
+
+\subsection{Number of Learnable Parameters}
+Each filter consists of \(3 \times 5 \times 5 = 75\) weights, plus one bias parameter:
+\[
+\text{Parameters per filter} = 75 + 1 = 76.
+\]
+With 10 filters in the layer:
+\[
+\text{Total parameters} = 76 \times 10 = 760.
+\]
+This is a significant reduction compared to fully connected layers, where each neuron connects to all input elements.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_53.jpg}
+	\caption{The number of learnable parameters in a convolutional layer, with 76 parameters per filter and 760 total.}
+	\label{fig:chapter7_params}
+\end{figure}
+
+\subsection{Multiply-Accumulate Operations (MACs)}
+The computational cost of a convolutional layer is typically measured in \emph{Multiply-Accumulate Operations (MACs)}, named after their two-step process: multiplying two values and accumulating the result into a running sum. This operation is fundamental in digital signal processing (DSP) and neural network computations, as it efficiently performs weighted summations required for convolutions.
+
+\paragraph{MACs Calculation:}
+The total number of positions in the output volume is:
+\[
+10 \times 32 \times 32 = 10,240.
+\]
+Each spatial position is computed via a dot product between the filter and the corresponding input region, requiring:
+\[
+3 \times 5 \times 5 = 75
+\]
+MACs per position. Thus, the total number of MACs for the layer is:
+\[
+75 \times 10,240 = 768,000.
+\]
+
+\subsection{MACs and FLOPs}
+In computational performance metrics, MACs are often translated into Floating-Point Operations (FLOPs). The definition of FLOPs varies depending on hardware:
+\begin{itemize}
+	\item Some systems count each MAC as 2 FLOPs (one multiply + one add).
+	\item Others treat a fused MAC as a single FLOP.
+\end{itemize}
+Thus, this layer requires:
+\begin{itemize}
+	\item \(768,000\) FLOPs (if MACs are counted as one FLOP).
+	\item \(1,536,000\) FLOPs (if each MAC counts as two FLOPs).
+\end{itemize}
+
+\subsection{Why Multiply-Add Operations (MACs) Matter}
+MACs provide a key measure of a neural network’s efficiency:
+\begin{itemize}
+	\item \textbf{Computational Cost:} The fewer MACs, the faster the network runs, making inference more efficient.
+	\item \textbf{Design Considerations:} Balancing accuracy and computational cost is crucial, and MACs provide a key metric for optimizing architectures.
+\end{itemize}
+
+Even though convolutional networks use fewer parameters than fully connected networks, their computational cost (measured in MACs) can be high, necessitating careful architecture design.
+
+\section{Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}
+\label{sec:special_convs}
+
+Beyond standard 2D convolutions, different variations exist to address various computational and structural needs in deep learning models. In this section, we explore \emph{1x1 convolutions} for feature adaptation, \emph{1D convolutions} for sequential data, and \emph{3D convolutions} for volumetric and spatiotemporal processing.
+
+\subsection{1x1 Convolutions}
+\label{subsec:1x1_convs}
+
+A \emph{1x1 convolution} applies a kernel of size \(1 \times 1\), meaning each filter operates on a single spatial position but across all input channels. Unlike traditional convolutions, which aggregate information from neighboring pixels, 1x1 convolutions focus solely on depth-wise transformations.
+
+\subsubsection{Dimensionality Reduction and Feature Selection}
+One common use of 1x1 convolutions is reducing computational complexity. For example, suppose a convolutional layer outputs an activation map of shape \( (N, F, H, W) \), where:
+\begin{itemize}
+	\item \( N \) is the batch size,
+	\item \( F \) is the number of input channels,
+	\item \( H, W \) are the spatial dimensions.
+\end{itemize}
+If we apply a layer with \( F_1 \) \emph{1x1} filters, the output shape becomes \( (N, F_1, H, W) \), effectively modifying the number of feature channels without altering spatial dimensions.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_57.jpg}
+	\caption{A visualization of a 1x1 convolution. The input tensor is of volume \(56 \times 56 \times 64\) and the convolutional layer has 32 \emph{1x1} filters, resulting in an output volume of \(56 \times 56 \times 32\).}
+	\label{fig:chapter7_1x1_conv}
+\end{figure}
+
+\subsubsection{Efficiency of 1x1 Convolutions as a Bottleneck}
+\label{subsubsec:conv_efficiency_1x1}
+
+A common strategy in modern CNN architectures (e.g., ResNet) is to introduce a \emph{1x1 convolution} before (and sometimes after) a more expensive \emph{3x3 convolution}, temporarily reducing the number of channels on which the 3x3 operates. This design, often called a \textbf{bottleneck}, lowers both parameter counts and floating-point operations (FLOPs) while preserving representational capacity.
+
+\paragraph{Example: Transforming 256 Channels to 256 Channels with a 3x3 Kernel.}
+Suppose the input has 256 channels of spatial size \(64\times64\), and we want an output of 256 channels with spatial size \(62\times62\) (no padding, stride 1).
+
+\begin{enumerate}
+	\item \textbf{Direct 3x3 Convolution.}
+	\begin{itemize}
+		\item \textbf{Parameters:} Each of the 256 output channels has \((256 \times 3 \times 3)\) weights plus 1 bias.  
+		Total:
+		\[
+		256 \times (256 \times 3 \times 3) + 256 
+		\;\approx\; 590{,}080.
+		\]
+		\item \textbf{FLOPs:} The output shape is \(256 \times 62 \times 62\), i.e.\ \(984{,}064\) output positions. Each position requires \((256 \times 3 \times 3) = 2304\) multiply-adds, giving approximately
+		\[
+		984{,}064 \times 2304 
+		\;\approx\; 2.27 \times 10^9 
+		\text{ MACs}.
+		\]
+	\end{itemize}
+	
+	\item \textbf{Bottleneck: 1x1 Then 3x3.}
+	First use a 1x1 convolution to reduce the input from 256 channels down to 64, apply the 3x3 on these 64 channels, and then restore 256 channels if needed.
+	\begin{itemize}
+		\item \textbf{1x1 stage (256 \(\to\) 64):} \((256 \times 64)\) weights plus 64 biases \(\Rightarrow \sim16{,}448\) parameters.  
+		The output is \((64 \times 64 \times 64)\) (i.e.\ \(64\) channels, each \(64\times64\)).  
+		This step requires \(\sim 64 \times 64\) spatial positions \(\times (256 \times 64)\) MACs \(\approx 67\times10^6\) MACs.
+		\item \textbf{3x3 stage (64 \(\to\) 256):} \((64 \times 256 \times 3 \times 3) + 256\) parameters \(\approx 147{,}712\).  
+		The final output shape is \((256 \times 62 \times 62)\). Each of the \(984{,}064\) positions requires \((64 \times 3 \times 3)=576\) MACs, totaling \(\sim 567\times10^6\) MACs.
+		\item \textbf{Totals for 1x1 + 3x3:}
+		\[
+		\text{Params} 
+		= 16{,}384 + 64 + 147{,}456 + 256 
+		\;=\;164{,}160,
+		\qquad
+		\text{MACs} 
+		\approx 67\times 10^6 + 567\times 10^6
+		= 634\times 10^6.
+		\]
+	\end{itemize}
+\end{enumerate}
+
+\paragraph{Parameter and FLOP Savings.}
+\begin{itemize}
+	\item \textbf{Parameters:} Direct 3x3 uses \(\sim590{,}080\) parameters versus \(\sim164{,}160\) in the bottleneck approach—a 3.6\(\times\) reduction.
+	\item \textbf{FLOPs:} Direct 3x3 costs \(\sim2.27\times10^9\) MACs vs.\ \(\sim0.63\times10^9\) for the 1x1+3x3 route—again around a 3.6\(\times\) speedup.
+\end{itemize}
+
+Although the bottleneck adds an extra layer (the 1x1 convolution), the combined memory footprint and compute overhead are significantly lower. This allows CNNs to grow deeper—by reducing intermediate channels—without exploding in parameter or FLOP requirements.
+
+\subsection{1D Convolutions} 
+\label{subsec:1D_convs}
+
+\emph{1D convolutions} operate on sequential data where input dimensions are \( C_{\text{in}} \times W \). Filters have shape \( C_{\text{out}} \times C_{\text{in}} \times K \), where \( K \) is the kernel size.
+
+\paragraph{Numerical Example: 1D Convolution on Multichannel Time Series Data}
+Consider an accelerometer dataset collected from a wearable device, where each row represents acceleration along the \( x, y, z \) axes over time. The input sequence is:
+
+\[
+X =
+\begin{bmatrix}
+	2 & 3 & 1 & 0 & 4 \\  
+	1 & 2 & 0 & 1 & 3 \\  
+	0 & 1 & 2 & 3 & 1
+\end{bmatrix}
+\]
+with dimensions \( 3 \times 5 \) (three input channels, five time steps).
+
+We apply a \emph{1D convolution} with:
+\begin{itemize}
+	\item A filter of size \( K = 3 \) operating across all input channels.
+	\item Kernel weights:
+	\[
+	W =
+	\begin{bmatrix}
+		1 & 0 & -1 \\
+		-1 & 1 & 0 \\
+		0 & -1 & 1
+	\end{bmatrix}
+	\]
+	\item Zero padding \( P = 0 \).
+	\item Stride \( S = 2 \).
+\end{itemize}
+
+\paragraph{Computing the Output}
+The output size is computed as:
+\[
+W' = \frac{(W - K + 2P)}{S} + 1 = \frac{(5 - 3 + 2 \times 0)}{2} + 1 = \frac{2}{2} + 1 = 1 + 1 = 2.
+\]
+
+Since the numerator \( (W - K + 2P) = 2 \) is divisible by \( S = 2 \), no flooring is needed. Thus, the final output has shape \( 1 \times 2 \).
+
+Now, computing the convolution while skipping every second step due to \( S=2 \):
+
+1. \textbf{First step (\( Y_1 \))}: Apply the kernel to the first three columns of the input (columns 1-3):
+\[
+Y_1 = (1 \cdot 2) + (0 \cdot 3) + (-1 \cdot 1) + (-1 \cdot 1) + (1 \cdot 2) + (0 \cdot 0) + (0 \cdot 0) + (-1 \cdot 1) + (1 \cdot 2)
+\]
+\[
+= 2 + 0 - 1 - 1 + 2 + 0 + 0 - 1 + 2 = 3.
+\]
+
+2. \textbf{Second step (\( Y_2 \))}: Move by \( S=2 \) steps, selecting columns 3-5:
+\[
+Y_2 = (1 \cdot 1) + (0 \cdot 0) + (-1 \cdot 4) + (-1 \cdot 0) + (1 \cdot 1) + (0 \cdot 3) + (0 \cdot 2) + (-1 \cdot 3) + (1 \cdot 1)
+\]
+\[
+= 1 + 0 - 4 - 0 + 1 + 0 + 0 - 3 + 1 = -4.
+\]
+
+Thus, the final output is:
+\[
+Y = [3, -4]
+\]
+with shape \( 1 \times 2 \).
+
+\paragraph{Applications of 1D Convolutions}
+\begin{itemize}
+	\item \emph{Activity Recognition:} Used on accelerometer data to classify human activity (e.g., standing, walking, running).
+	\item \emph{Audio Processing:} Applied to waveforms for sound classification or speech recognition.
+	\item \emph{Financial Time Series:} Detects trends and patterns in stock prices or sensor signals.
+\end{itemize}
+
+\subsection{3D Convolutions} 
+\label{subsec:3D_convs}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_62.jpg}
+	\caption{Visualization of \emph{3D convolution}, where a \emph{3D kernel} moves through a volumetric input to capture spatial-temporal relationships.}
+	\label{fig:chapter7_3D_conv}
+\end{figure}
+
+\emph{3D convolutions} extend 2D convolutions to volumetric data, where input dimensions are \( C_{\text{in}} \times H \times W \times D \). Filters have shape \( C_{\text{out}} \times C_{\text{in}} \times K \times K \times K \).
+
+\paragraph{Numerical Example: 3D Convolution on Volumetric Data}
+Consider a volumetric input (e.g., a video clip, a medical scan) represented as a \( 1 \times 4 \times 4 \times 4 \) tensor. We apply a \emph{3D convolution} with:
+\begin{itemize}
+	\item Kernel \( K = 3 \times 3 \times 3 \).
+	\item Zero padding \( P = 0 \).
+	\item Stride \( S = 1 \).
+\end{itemize}
+
+The output size for each dimension is computed using the following formula:
+\[
+D_{\text{out}} = \left\lfloor \frac{D_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+\]
+\[
+H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+\]
+\[
+W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+\]
+
+Substituting \( D_{\text{in}} = H_{\text{in}} = W_{\text{in}} = 4 \), \( K = 3 \), \( P = 0 \), \( S = 1 \), we get:
+\[
+D_{\text{out}} = H_{\text{out}} = W_{\text{out}} = 2.
+\]
+
+\textbf{Input Tensor}:
+
+\[
+X =
+\begin{bmatrix}
+	\begin{bmatrix} 
+		1 & -2 & 5 & 2 \\ 
+		-1 & 1 & 4 & -3 \\ 
+		1 & 5 & 5 & 2 \\ 
+		-1 & -2 & 2 & 2 
+	\end{bmatrix}, 
+	\begin{bmatrix} 
+		-3 & 0 & -1 & -4 \\ 
+		2 & 0 & -4 & -1 \\ 
+		-5 & 4 & 0 & 3 \\ 
+		-5 & 5 & 5 & 4 
+	\end{bmatrix}, 
+	\begin{bmatrix} 
+		-3 & 1 & -2 & 3 \\ 
+		-3 & -1 & -3 & 1 \\ 
+		-1 & 3 & 1 & -4 \\ 
+		-2 & 3 & -4 & 4 
+	\end{bmatrix}, 
+	\begin{bmatrix} 
+		3 & 4 & -1 & -4 \\ 
+		-2 & 1 & 2 & -3 \\ 
+		-5 & -2 & -4 & 2 \\ 
+		-2 & -4 & 0 & 0 
+	\end{bmatrix} 
+\end{bmatrix}
+\]
+
+\textbf{Filter Tensor}:
+\[
+K =
+\begin{bmatrix}
+	\begin{bmatrix} -2 & 0 & 2 \\ 1 & 3 & -2 \\ -2 & 0 & -2 \end{bmatrix}, 
+	\begin{bmatrix} -2 & 2 & 0 \\ 2 & 3 & 3 \\ 2 & 3 & 0 \end{bmatrix}, 
+	\begin{bmatrix} -3 & 2 & 1 \\ 1 & -2 & 3 \\ 1 & -2 & -3 \end{bmatrix}
+\end{bmatrix}
+\]
+
+\paragraph{3D Convolution Formula}
+Each output element in a 3D convolution is computed using the formula:
+
+\[
+Y(d, h, w) = \sum_{i=0}^{K-1} \sum_{j=0}^{K-1} \sum_{k=0}^{K-1} X(d+i, h+j, w+k) \cdot K(i, j, k)
+\]
+
+where:
+\begin{itemize}
+	\item \( Y(d, h, w) \) is the output at depth \( d \), height \( h \), and width \( w \).
+	\item \( X(d+i, h+j, w+k) \) is the corresponding element from the input tensor.
+	\item \( K(i, j, k) \) is the filter/kernel value at at depth \( i \), height \( j \), and width \( k \).
+\end{itemize}
+
+\paragraph{Computing the Output}
+Each output value is computed by performing an element-wise multiplication of a \( 3 \times 3 \times 3 \) region from the input tensor \( X \) with the filter \( K \), followed by summation. The filter slides over the input with a stride of 1, covering all possible subvolumes of size \( 3 \times 3 \times 3 \). The resulting output tensor has dimensions \( 2 \times 2 \times 2 \).
+
+To illustrate, we compute the first two elements:
+
+\begin{itemize}
+	\item \textbf{First element} \( Y_{0,0,0} \):
+	\[
+	Y_{0,0,0} = \sum_{i=0}^{2} \sum_{j=0}^{2} \sum_{k=0}^{2} X[i,j,k] \cdot K[i,j,k]
+	\]
+	\[
+	= (1 \cdot -2) + (-2 \cdot 0) + (5 \cdot 2) + (-1 \cdot 1) + (1 \cdot 3) + (4 \cdot -2) + (1 \cdot -2) + (5 \cdot 0) + (5 \cdot -2)
+	\]
+	\[
+	+ (-3 \cdot -2) + (0 \cdot 2) + (-1 \cdot 0) + (2 \cdot 2) + (0 \cdot 3) + (-4 \cdot 3) + (-5 \cdot 2) + (4 \cdot 3) + (0 \cdot 0)
+	\]
+	\[
+	+ (-3 \cdot -3) + (1 \cdot 2) + (-2 \cdot 1) + (-3 \cdot 1) + (-1 \cdot -2) + (-3 \cdot 3) + (-1 \cdot 1) + (3 \cdot -2) + (1 \cdot -3)
+	\]
+	\[
+	= 11
+	\]
+	
+	\item \textbf{Second element} \( Y_{0,0,1} \):
+	\[
+	Y_{0,0,1} = \sum_{i=0}^{2} \sum_{j=0}^{2} \sum_{k=0}^{2} X[i,j,k+1] \cdot K[i,j,k]
+	\]
+	\[
+	= (-2 \cdot -2) + (5 \cdot 0) + (2 \cdot 2) + (1 \cdot 1) + (4 \cdot 3) + (-3 \cdot -2) + (5 \cdot -2) + (5 \cdot 0) + (2 \cdot -2)
+	\]
+	\[
+	+ (0 \cdot -2) + (-1 \cdot 2) + (-4 \cdot 0) + (0 \cdot 2) + (-4 \cdot 3) + (-1 \cdot 3) + (4 \cdot 2) + (0 \cdot 3) + (3 \cdot 0)
+	\]
+	\[
+	+ (1 \cdot -3) + (-2 \cdot 2) + (3 \cdot 1) + (-1 \cdot 1) + (-3 \cdot -2) + (1 \cdot 3) + (3 \cdot 1) + (1 \cdot -2) + (-4 \cdot -3)
+	\]
+	\[
+	= -32
+	\]
+\end{itemize}
+
+\paragraph{Final Output Tensor}
+Applying the same computation process to all output elements, we obtain:
+
+\[
+Y =
+\begin{bmatrix}
+	\begin{bmatrix} 11 & -32 \\ 9 & -14 \end{bmatrix}, 
+	\begin{bmatrix} 1 & -7 \\ -34 & -4 \end{bmatrix}
+\end{bmatrix}
+\]
+
+Thus, the final output tensor has dimensions \( 2 \times 2 \times 2 \).
+
+\paragraph{Applications of 3D Convolutions}
+\begin{itemize}
+	\item \emph{Video Processing:} Learns spatial-temporal dependencies across multiple frames.
+	\item \emph{Medical Imaging:} Used in CT scans and MRI processing to analyze 3D volumes.
+	\item \emph{3D Object Recognition:} Applied to point cloud data and volumetric representations.
+\end{itemize}
+
+\paragraph{Advantages of 3D Convolutions}
+\begin{itemize}
+	\item Preserve spatial and temporal dependencies in video or volumetric data.
+	\item Capture motion-related features more effectively than stacking 2D convolutions.
+\end{itemize}
+
+\paragraph{Challenges of 3D Convolutions}
+\begin{itemize}
+	\item \emph{Computationally Expensive:} Requires significantly more memory and computation than 2D CNNs.
+	\item \emph{Limited Long-Term Dependencies:} Captures short-term temporal relationships but struggles with longer-range dependencies.
+\end{itemize}
+
+\subsection{Efficient Convolutions for Mobile and Embedded Systems}
+\label{subsec:efficient_convs}
+
+Deep learning models, particularly convolutional neural networks (CNNs), are computationally expensive, requiring extensive multiply-add (MAC) operations \cite{krizhevsky2012_alexnet}. Traditional convolutions, while effective, become infeasible for real-time applications on edge devices such as mobile phones, IoT devices, and embedded systems due to high memory and computational costs \cite{sandler2018_mobilenetv2, tan2019_efficientnet}. To address these limitations, efficient alternatives such as \emph{spatial separable convolutions} and \emph{depthwise separable convolutions} have been introduced. These techniques power lightweight architectures like MobileNet \cite{howard2017_mobilenets}, ShuffleNet \cite{zhang2018_shufflenet}, and EfficientNet \cite{tan2019_efficientnet}.
+
+\subsection{Spatial Separable Convolutions}
+\label{subsec:spatial_separable_convs}
+
+\paragraph{Concept and Intuition}
+\emph{Spatial separable convolutions} focus on reducing the computational complexity of convolution operations by factorizing a standard 2D convolution into two separate operations—one along the width and another along the height of the kernel. Instead of using a single \( K \times K \) kernel, spatial separable convolution decomposes it into two kernels: \( K \times 1 \) followed by \( 1 \times K \).
+
+For example, consider a standard \( 3 \times 3 \) convolution kernel applied to an \( H \times W \) input image. The output dimensions for a stride of 1 and no padding are computed as:
+
+\[
+(H - K + 1) \times (W - K + 1).
+\]
+
+Using spatial separable convolutions, we first apply a \( K \times 1 \) convolution, reducing only the height dimension:
+
+\[
+(H - K + 1) \times W.
+\]
+
+We then apply a \( 1 \times K \) convolution on the intermediate output, reducing the width dimension:
+
+\[
+(H - K + 1) \times (W - K + 1).
+\]
+
+Thus, the final output shape remains identical to that of a conventional \( K \times K \) convolution while significantly reducing the number of multiplications.
+
+To illustrate this process, consider the transformation of a \( 3 \times 3 \) matrix:
+
+\[
+\begin{bmatrix}
+	3 & 6 & 9 \\
+	4 & 8 & 12 \\
+	5 & 10 & 15
+\end{bmatrix}
+= 
+\begin{bmatrix} 3 \\ 4 \\ 5 \end{bmatrix} 
+\times 
+\begin{bmatrix} 1 & 2 & 3 \end{bmatrix}.
+\]
+
+Here, the \( 3 \times 3 \) matrix is first decomposed into a \( 3 \times 1 \) vector, producing an intermediate output of shape \( 3 \times 1 \). The second convolution then extends it back to a \( 3 \times 3 \) shape, preserving the feature representation while reducing computational cost.
+
+\paragraph{Limitations and Transition to Depthwise Separable Convolutions}
+Although spatial separable convolutions significantly reduce computations, they are \emph{not widely used} in deep learning architectures for feature extraction. This is because \emph{not all convolution kernels} can be factorized in this manner \cite{lecun1998_lenet}. During training, the network is constrained to use only separable kernels, limiting the representational power of the model.
+
+A common example of a \emph{spatially separable kernel} used in traditional computer vision is the \textbf{Sobel filter}, which is employed for edge detection. However, in deep learning applications, a more general and effective form of separable convolution, known as \emph{depthwise separable convolution}, has gained widespread adoption. Unlike spatial separable convolutions, depthwise separable convolutions do not impose constraints on the kernel’s factorability, making them more practical for efficient deep learning models.
+
+\subsection{Depthwise Separable Convolutions}
+\label{subsec:depthwise_separable_convs}
+
+\paragraph{Concept and Motivation}
+\emph{Depthwise separable convolutions} decompose a standard convolution into two successive steps, dramatically reducing compute and parameter counts while preserving representational power. They are sometimes called \emph{channel-wise spatial} or \emph{depthwise + pointwise} convolutions, reflecting their two-phase design:
+
+\begin{enumerate}
+	\item \textbf{Depthwise (Spatial) Convolution:} 
+	A \(K \times K\) convolution filter is applied \emph{independently} to each input channel, capturing local spatial patterns for every channel. No cross-channel mixing occurs at this stage.
+	\item \textbf{Pointwise (1x1) Convolution:} 
+	A \(1 \times 1\) filter then combines (or “mixes”) information across the channels resulting from the depthwise step. This also adjusts the final number of output channels.
+\end{enumerate}
+
+\noindent
+Compared to a spatially factorized kernel, depthwise separable convolutions do \emph{not} require any rank constraints on the kernel, making them easier to integrate into many CNN architectures \cite{chollet2017_xception, howard2017_mobilenets}.
+
+\paragraph{Computational Efficiency}
+
+Depthwise separable convolutions \emph{reorganize} a standard \((K \times K)\) convolution into two steps (\emph{depthwise} then \emph{pointwise}), substantially reducing multiply-add operations (MACs). Below, we clarify both the cost formulas when using “same” padding for simplicity.
+
+\paragraph{Standard \((K \times K)\) Convolution}
+Suppose we have an input volume shaped \((H \times W \times C_{\mathrm{in}})\). Under “same” padding and a stride of 1, the output shape remains \((H \times W \times C_{\mathrm{out}})\). Denoting:
+\begin{itemize}
+	\item \(\text{output\_elements} = H \times W \times C_{\mathrm{out}}\),
+	\item \(\text{MACs\_per\_element} = C_{\mathrm{in}} \times K \times K\)
+	(each output element is formed by a dot product over $\bigl(C_{\mathrm{in}} \times K^2\bigr)$ weights),
+\end{itemize}
+the total MAC cost of a standard convolution is:
+\[
+\text{MACs}_{\text{std}} 
+= \underbrace{(H \times W \times C_{\mathrm{out}})}_{\text{number of output elements}}
+\;\times\;
+\underbrace{(C_{\mathrm{in}} \times K^2)}_{\text{MACs per element}}
+= H\,W\,C_{\mathrm{out}}\,C_{\mathrm{in}}\,K^2.
+\]
+\emph{Note:} As we've seen earlier, “same” padding ensures \(H \times W\) stays unchanged by compensating around the borders.
+
+\paragraph{Depthwise Separable Convolution}
+We decompose the same operation into two parts:
+
+\begin{itemize}
+	\item \textbf{Depthwise Convolution (Spatial Only):}
+	\[
+	\text{output\_elements} = H \times W \times C_{\mathrm{in}},
+	\]
+	because we compute a \((K \times K)\) spatial filter \emph{independently} per channel. For each output element in this stage, there are \((K \times K)\) multiplications. Thus,
+	\[
+	\text{MACs}_{\text{depthwise}} 
+	= \Bigl(H \times W \times C_{\mathrm{in}}\Bigr) 
+	\times (K \times K).
+	\]
+	
+	\item \textbf{Pointwise Convolution (1x1):}
+	The depthwise step outputs \(\,(H \times W \times C_{\mathrm{in}})\). To reach \(\,(H \times W \times C_{\mathrm{out}})\), we apply a \(1\times1\) convolution that mixes channels:
+	\[
+	\text{output\_elements} = H \times W \times C_{\mathrm{out}},
+	\]
+	and each output element requires \(\,C_{\mathrm{in}}\) multiplications. Hence:
+	\[
+	\text{MACs}_{\text{pointwise}}
+	= \Bigl(H \times W \times C_{\mathrm{out}}\Bigr)
+	\;\times\; C_{\mathrm{in}}.
+	\]
+\end{itemize}
+
+Summing these yields the overall MACs for a depthwise separable convolution:
+\[
+\text{MACs}_{\text{DSConv}}
+\;=\;
+\Bigl(H\,W\,C_{\mathrm{in}} \times K^2\Bigr)
+\;+\;
+\Bigl(H\,W\,C_{\mathrm{out}} \times C_{\mathrm{in}}\Bigr).
+\]
+
+\subsubsection{Example: \((K=3,\;C_{\mathrm{in}}=128,\;C_{\mathrm{out}}=256,\;H=W=32)\)}
+\label{subsubsec:depthwise_separable_example}
+
+Assume an input shape of \(\,(32 \times 32 \times 128)\) and we want an output \(\,(32 \times 32 \times 256)\) under stride=1, “same” padding. Compare the MACs:
+
+\begin{itemize}
+	\item \emph{Standard Convolution:}
+	\[
+	\text{MACs}_{\text{standard}}
+	= (32 \times 32 \times 256)
+	\;\times\;
+	(128 \times 3^2).
+	\]
+	This is 
+	\[
+	32 \times 32 \times 256 \times 128 \times 9
+	\;=\; 1024 \times 128 \times 9 \times 256 
+	\;\;(=\text{very large}).
+	\]
+	
+	\item \emph{Depthwise Separable:}
+	\[
+	\text{MACs}_{\text{depthwise}}
+	= (32 \times 32 \times 128) \times (3 \times 3),
+	\]
+	\[
+	\text{MACs}_{\text{pointwise}}
+	= (32 \times 32 \times 256) \times 128.
+	\]
+	Summed, this is
+	\[
+	(1024 \times 128 \times 9)
+	\;+\;
+	(1024 \times 256 \times 128),
+	\]
+	which is significantly lower than doing the entire channel+spatial mixing in one go.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/depthwise_conv.png}
+	\caption{%
+		Illustration of a \emph{depthwise separable convolution}. 
+		\textbf{Step 1 (Depthwise)}: Each of the \(C_{\text{in}}\) input channels is convolved separately by a \(k \times k\) filter, preserving the spatial dimensions but not mixing channels.
+		\textbf{Step 2 (Pointwise)}: To produce the desired \(C_{\text{out}}\) channels, a series of \(1 \times 1 \times C_{\text{in}}\) filters (kernels) is applied—one for each output channel—resulting in a stack of 2D feature maps with the same spatial size.
+		Source: \cite{blog2023_separable_convolutions}.
+	}
+	\label{fig:chapter7_depthwise_conv}
+\end{figure}
+
+\paragraph{Reduction Factor}
+By separating \emph{spatial} and \emph{channel} mixing, depthwise separable convolutions can reduce computational cost by up to an order of magnitude in many practical scenarios, enabling advanced CNNs to run on mobile or embedded devices with minimal resource usage.
+
+\noindent
+A common approximate reduction ratio is:
+\[
+\frac{\text{Cost}_\text{DSConv}}{\text{Cost}_\text{StdConv}}
+\;\approx\;
+\frac{C_{\text{in}} \times K^2 + C_{\text{in}} \times C_{\text{out}}}{C_{\text{in}} \times C_{\text{out}} \times K^2}
+\;=\;
+\frac{1}{C_{\text{out}}} + \frac{1}{K^2}.
+\]
+As an example, for \(K=3\) and \(C_{\text{out}}=256\), the ratio is 
+\(\frac{1}{256} + \frac{1}{9} \approx 0.11\), i.e.\ about a \(\sim 9\times\) reduction in FLOPs compared to a standard \(3\times3\) convolution. 
+
+\paragraph{Practical Usage and Examples}
+\begin{itemize}
+	\item \textbf{MobileNet} \cite{howard2017_mobilenets}: 
+	Relies on depthwise separable layers to achieve low-latency inference on mobile devices.
+	\item \textbf{ShuffleNet} \cite{zhang2018_shufflenet}: 
+	Combines depthwise separable convs with a \emph{channel shuffle} operation to further improve efficiency.
+	\item \textbf{Xception} \cite{chollet2017_xception}: 
+	Extends Inception-like modules by fully replacing standard convolutions with depthwise separable variants for all spatial operations.
+	\item \textbf{EfficientNet} \cite{tan2019_efficientnet}:
+	Integrates depthwise separable layers in a compound scaling framework, balancing network width, depth, and resolution.
+\end{itemize}
+
+\paragraph{Trade-Offs}
+\begin{itemize}
+	\item \textbf{Reduced Cross-Channel Expressiveness:} 
+	Because depthwise filters process each channel independently, networks may lose some ability to model channel-wise correlations. Additional architectural elements (e.g., \texttt{Squeeze-and-Excitation} blocks, which we'll cover later) are sometimes added to mitigate this effect \cite{chollet2017_xception}.
+	\item \textbf{Significantly Lower Compute Cost:} 
+	Depthwise separable convolutions can reduce MACs significantly, enabling real-time inference even on low-power hardware.
+\end{itemize}
+
+Overall, depthwise separable convolutions have become an essential technique for designing efficient neural networks, especially those aimed at embedded or mobile environments. They strike a favorable balance between speed and accuracy in a wide range of tasks.
+
+\subsection{Summary of Specialized Convolutions}
+\label{subsec:conv_summary}
+
+\begin{itemize}
+	\item \emph{1x1 convolutions:} Used for feature selection, dimensionality reduction, and efficient computation.
+	\item \emph{1D convolutions:} Applied in sequential data processing, such as text and audio.
+	\item \emph{3D convolutions:} Extend feature extraction to volumetric and spatiotemporal data.
+	\item \emph{Spatial separable convolutions:} Factorize standard convolutions into separate width and height operations, reducing computation while maintaining output dimensions. Unfortunately, these convolutions are not common as only special filters can be spatially separated, which makes this type of convolutions impractical for deep learning purposes. 
+	\item \emph{Depthwise separable convolutions:} Split convolutions into depthwise and pointwise operations, significantly reducing computational cost while preserving some feature extraction capabilities, making it useful in efficient/mobile architectures where speed is a critical factor.
+\end{itemize}
+
+These specialized convolutions enhance the flexibility and efficiency of neural networks, enabling them to process diverse types of structured data, over different computation platforms (from expensive and powerful GPU servers up to common mobile devices). 
+
+

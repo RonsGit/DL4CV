@@ -77,14 +77,38 @@ The bias term \(\mathbf{b}\) in linear classifiers allows the decision boundary 
 	W \mathbf{x} + b = 0 \implies -x - y + b = 0.
 	\]
 	
-	\textbf{Without Bias (\(b = 0\)):}
-	\begin{itemize}
-		\item The decision boundary becomes \(y = -x\), which passes through the origin.
-		\item Both the red point \((1, 1)\) and the blue point \((2, 2)\) lie on the same side of the line $y=-x$.
-		\item As a result, the two classes cannot be separated correctly.
-	\end{itemize}
+\paragraph{Without Bias (\(b=0\)):}
+	The decision boundary simplifies to:
+	\[
+	w_1 x + w_2 y = 0 \quad\Longrightarrow\quad y = -\tfrac{w_1}{w_2}\,x.
+	\]
+	Suppose we want the model to classify:
+	\[
+	\text{Red point }(1,1)\;\text{on one side, and Blue point }(2,2)\;\text{on the other.}
+	\]
+	Concretely, for \((x,y)\) in Class 1, we want:
+	\[
+	w_1\cdot 1 + w_2\cdot 1 > 0,
+	\]
+	and for Class 2 we want:
+	\[
+	w_1\cdot 2 + w_2\cdot 2 < 0.
+	\]
+	These inequalities become:
+	\[
+	\begin{cases}
+		w_1 + w_2 > 0, \\
+		2w_1 + 2w_2 < 0.
+	\end{cases}
+	\]
+	Dividing the second by 2 yields:
+	\[
+	w_1 + w_2 < 0,
+	\]
+	which \emph{directly contradicts} \(w_1 + w_2 > 0\). Hence, no choice of \((w_1, w_2)\) can separate the points without a bias.
+
 	
-	\textbf{With Bias (\(b = 3\)):}
+	\paragraph{With Bias (\(b = 3\)):}
 	\begin{itemize}
 		\item The decision boundary becomes \(y = -x + 3\), shifting the line upward.
 		\item The red point \((1, 1)\) satisfies \(-x - y + 3 > 0\) (classified as red).
@@ -108,14 +132,15 @@ This concept generalizes beyond toy 2D problems. In higher-dimensional spaces, t
 
 \subsection{A Toy Example: Grayscale Cat Image}
 
-To build a strong foundation for understanding how linear classifiers work, let us consider a toy example of a grayscale \(2 \times 2\) image of a cat. Each pixel has a value ranging from 0 to 255, representing its intensity from black to white. Although real cat images are much larger, this simplified scenario helps illustrate the key principles with ease.
+To build a strong foundation for understanding how linear classifiers work, let us consider a toy example of a grayscale \(2 \times 2\) image of a cat. Each pixel has a value ranging from 0 to 255, representing its grayscale intensity. Although real cat images are much larger, this simplified scenario helps illustrate the key principles with ease.
 
 \begin{itemize}
-	\item \textbf{Image Representation:} The \(2 \times 2\) image is stretched into a column vector with 4 entries, denoted as:
+	\item \textbf{Image Representation:} The \(2 \times 2\) image is flattened into a column vector with 4 entries, denoted as:
 	\[
 	\mathbf{x} = [x_1, x_2, x_3, x_4]^T.
 	\]
 	\item \textbf{Weight Matrix \(\mathbf{W}\):} The weight matrix \(\mathbf{W}\) has \(K\) rows (one for each class) and 4 columns (one for each pixel). Each row of \(\mathbf{W}\) corresponds to a specific class and determines the influence of each pixel on the classification score.
+	\newpage
 	\item \textbf{Matrix Multiplication:} The input vector \(\mathbf{x}\) is multiplied with the weight matrix \(\mathbf{W}\) to produce a vector of scores:
 	\[
 	\mathbf{s} = \mathbf{W} \mathbf{x},
@@ -131,6 +156,7 @@ To build a strong foundation for understanding how linear classifiers work, let 
 	\label{fig:chapter3_slide14_toy_example}
 \end{figure}
 
+\noindent
 This simple yet powerful operation demonstrates how linear classifiers map raw data (pixel values) to class scores using a combination of learned weights and bias terms.
 
 \subsection{The Bias Trick}
@@ -139,7 +165,7 @@ In linear classifiers, the bias term \(\mathbf{b}\) plays a critical role in adj
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_15.jpg}
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_16.jpg}
 	\caption{The bias trick applied to the toy cat example: augmenting the image vector with a constant 1 and extending the weight matrix to incorporate the bias.}
 	\label{fig:chapter3_bias_trick}
 \end{figure}
@@ -342,7 +368,7 @@ The geometric viewpoint highlights scenarios where linear classifiers fail.
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_31.jpg}
 	\caption{Examples of classification problems that linear classifiers cannot solve.}
-	\label{fig:chapter3_geometric_failures}
+	\label{fig:chapter3_viewpoint_failures}
 \end{figure}
 
 \textbf{Left: Non-Linearly Separable Classes}  
@@ -379,14 +405,7 @@ Despite these challenges, the geometric viewpoint lays the foundation for unders
 
 \section{Summary: Shortcomings of Linear Classifiers}
 
-Linear classifiers, while foundational, exhibit several limitations that are evident through different viewpoints (Figure \ref{fig:chapter3_summary_viewpoints}).
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_31.jpg}
-	\caption{Shortcomings of linear classifiers from algebraic, visual, and geometric perspectives.}
-	\label{fig:chapter3_summary_viewpoints}
-\end{figure}
+Linear classifiers, while foundational, exhibit several limitations that are evident through different viewpoints (Figure \ref{fig:chapter3_viewpoint_failures}).
 
 \subsection{Algebraic Viewpoint}
 Linear classifiers rely on the weighted sum of input features. Without non-linear transformations, they:
@@ -439,18 +458,22 @@ s_j = f(x_i, W)_j,
 where \(s_j\) represents the score for class \(j\). These scores are unnormalized, and their magnitude or sign has no direct probabilistic interpretation.
 
 \subsubsection{Softmax Function}
+\label{subsec:softmax}
 
-The \textbf{softmax function} transforms the raw scores \(s_j\) into normalized probabilities \(p_j\), ensuring that they are non-negative and sum to 1:
+The \textbf{softmax} function transforms raw class scores \(\{s_j\}\) into normalized probabilities \(\{p_j\}\), ensuring that \(\sum_j p_j = 1\) and \(p_j \ge 0\). Concretely:
 \[
 p_j = \frac{e^{s_j}}{\sum_{k} e^{s_k}},
 \]
 where:
 \begin{itemize}
 	\item \(e^{s_j}\) is the exponentiated score for class \(j\).
-	\item \(\sum_{k} e^{s_k}\) is the sum of exponentiated scores over all classes, acting as the normalization factor.
+	\item \(\sum_{k} e^{s_k}\) sums these exponentiated values across all classes, serving as a normalization factor.
 \end{itemize}
+A large score \(s_j\) results in a disproportionately large exponent \(e^{s_j}\), making \(p_j\) close to 1 while other probabilities remain small.
 
-This normalization allows \(p_j\) to represent the probability of the input belonging to class \(j\). For example, if \(s_j = 5.1\), \(e^{s_j}\) is much larger than \(e^{s_k}\) for lower-scoring classes \(k\), resulting in a higher probability \(p_j\).
+\paragraph{Advanced Note: Boltzmann Perspective.}
+Softmax closely resembles a Boltzmann (Gibbs) distribution: each class’s weight is \(\exp(s_j)\), normalized so that \(\sum_j p_j = 1\). Although any mapping that yields a valid probability distribution could be used, \emph{softmax} is especially attractive because, in tandem with cross-entropy, the derivative of the loss with respect to each logit \(s_j\) collapses to \((p_j - y_j)\). This concise gradient form is both straightforward to implement and numerically stable, simplifying training for classification tasks.
+
 
 \subsubsection{Loss Computation}
 

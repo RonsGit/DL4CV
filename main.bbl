@@ -375,6 +375,35 @@
       \field{pages}{834\bibrangedash 848}
       \range{pages}{15}
     \endentry
+    \entry{chollet2017_xception}{inproceedings}{}{}
+      \name{author}{1}{}{%
+        {{hash=14134a39113404b1f80969c9ccc1f71e}{%
+           family={Chollet},
+           familyi={C\bibinitperiod},
+           given={François},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{fullhash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{fullhashraw}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{bibnamehash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{authorbibnamehash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{authornamehash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{authorfullhash}{14134a39113404b1f80969c9ccc1f71e}
+      \strng{authorfullhashraw}{14134a39113404b1f80969c9ccc1f71e}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{title}{Xception: Deep Learning with Depthwise Separable Convolutions}
+      \field{year}{2017}
+      \field{pages}{1251\bibrangedash 1258}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/CVPR.2017.195
+      \endverb
+    \endentry
     \entry{imagenet2009_hierarchicaldatabase}{inproceedings}{}{}
       \name{author}{6}{}{%
         {{hash=0ae7fdc13773f928525f673b05f37149}{%
@@ -935,6 +964,70 @@
       \range{pages}{46}
       \verb{doi}
       \verb 10.1162/neco.1997.9.8.1735
+      \endverb
+    \endentry
+    \entry{howard2017_mobilenets}{inproceedings}{}{}
+      \name{author}{8}{}{%
+        {{hash=315c4166fc1f7cb66324a7f0d82827cd}{%
+           family={Howard},
+           familyi={H\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d767e8e4d733bcf728bcdf2c193462f7}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Menglong},
+           giveni={M\bibinitperiod}}}%
+        {{hash=31960f03389184b7f052f5b197cc9fdf}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod}}}%
+        {{hash=6cbb997a11c6922af719c32863261918}{%
+           family={Kalenichenko},
+           familyi={K\bibinitperiod},
+           given={Dmitry},
+           giveni={D\bibinitperiod}}}%
+        {{hash=47ad65c82b1de7d642988df185d7d8ea}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Weijun},
+           giveni={W\bibinitperiod}}}%
+        {{hash=7dcb9c6d4d4251a7e32b502d03c9354b}{%
+           family={Weyand},
+           familyi={W\bibinitperiod},
+           given={Tobias},
+           giveni={T\bibinitperiod}}}%
+        {{hash=8f221f2afb0b5a3d95b3e97101924922}{%
+           family={Andreetto},
+           familyi={A\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=c707ec5b5997dc408a14a34a8380166c}{%
+           family={Adam},
+           familyi={A\bibinitperiod},
+           given={Hartwig},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{9c50b2a45a0cfd3fd86fb7850dc23eb0}
+      \strng{fullhash}{8c45999a5cf2cba943029d8b8327e261}
+      \strng{fullhashraw}{8c45999a5cf2cba943029d8b8327e261}
+      \strng{bibnamehash}{9c50b2a45a0cfd3fd86fb7850dc23eb0}
+      \strng{authorbibnamehash}{9c50b2a45a0cfd3fd86fb7850dc23eb0}
+      \strng{authornamehash}{9c50b2a45a0cfd3fd86fb7850dc23eb0}
+      \strng{authorfullhash}{8c45999a5cf2cba943029d8b8327e261}
+      \strng{authorfullhashraw}{8c45999a5cf2cba943029d8b8327e261}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{title}{MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications}
+      \field{year}{2017}
+      \field{pages}{484\bibrangedash 492}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.48550/arXiv.1704.04861
       \endverb
     \endentry
     \entry{hubel1959_receptivefields}{article}{}{}
@@ -1650,6 +1743,85 @@
       \field{title}{Rotation-Invariant Convolutional Neural Networks for Galaxy Morphology Prediction}
       \field{year}{2014}
     \endentry
+    \entry{sandler2018_mobilenetv2}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=8f90fd131c2bbfde4d0e9fdd7ed4ea8b}{%
+           family={Sandler},
+           familyi={S\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+        {{hash=315c4166fc1f7cb66324a7f0d82827cd}{%
+           family={Howard},
+           familyi={H\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d767e8e4d733bcf728bcdf2c193462f7}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Menglong},
+           giveni={M\bibinitperiod}}}%
+        {{hash=48f4090a93cf9f445057a9d6defe7973}{%
+           family={Zhmoginov},
+           familyi={Z\bibinitperiod},
+           given={Andrey},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9dddfcfd529634a150ee38ee5c0203d7}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Liang-Chieh},
+           giveni={L\bibinithyphendelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{70179dd377b16c4cfcc0748ef0bd028a}
+      \strng{fullhash}{8d58d04315a5e1c06300772330b235d7}
+      \strng{fullhashraw}{8d58d04315a5e1c06300772330b235d7}
+      \strng{bibnamehash}{70179dd377b16c4cfcc0748ef0bd028a}
+      \strng{authorbibnamehash}{70179dd377b16c4cfcc0748ef0bd028a}
+      \strng{authornamehash}{70179dd377b16c4cfcc0748ef0bd028a}
+      \strng{authorfullhash}{8d58d04315a5e1c06300772330b235d7}
+      \strng{authorfullhashraw}{8d58d04315a5e1c06300772330b235d7}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{title}{MobileNetV2: Inverted Residuals and Linear Bottlenecks}
+      \field{year}{2018}
+      \field{pages}{4510\bibrangedash 4520}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1109/CVPR.2018.00474
+      \endverb
+    \endentry
+    \entry{blog2023_separable_convolutions}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=bcad4513697f9eae9bda0c53d1d84e6c}{%
+           family={Science},
+           familyi={S\bibinitperiod},
+           given={Towards\bibnamedelima Data},
+           giveni={T\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{fullhash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{fullhashraw}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{bibnamehash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{authorbibnamehash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{authornamehash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{authorfullhash}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \strng{authorfullhashraw}{bcad4513697f9eae9bda0c53d1d84e6c}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-02-09}
+      \field{title}{A Basic Introduction to Separable Convolutions}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://medium.com/towards-data-science/a-basic-introduction-to-separable-convolutions-b99ec3102728
+      \endverb
+      \verb{url}
+      \verb https://medium.com/towards-data-science/a-basic-introduction-to-separable-convolutions-b99ec3102728
+      \endverb
+    \endentry
     \entry{shi1997_normalizedcuts}{article}{}{}
       \name{author}{2}{}{%
         {{hash=159989720a07cffdf1f8afdcf19f925d}{%
@@ -1714,6 +1886,40 @@
       \field{booktitle}{Neural Information Processing Systems (NeurIPS)}
       \field{title}{Two-Stream Convolutional Networks for Action Recognition in Videos}
       \field{year}{2014}
+    \endentry
+    \entry{tan2019_efficientnet}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=1e7d6abb8225099acc71f672b9ec336e}{%
+           family={Tan},
+           familyi={T\bibinitperiod},
+           given={Mingxing},
+           giveni={M\bibinitperiod}}}%
+        {{hash=c636f146591d51579a8119b777394878}{%
+           family={Le},
+           familyi={L\bibinitperiod},
+           given={Quoc\bibnamedelima V.},
+           giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \strng{namehash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{fullhash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{fullhashraw}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{bibnamehash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{authorbibnamehash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{authornamehash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{authorfullhash}{d029e8131f7a0bef056d7edc726f1529}
+      \strng{authorfullhashraw}{d029e8131f7a0bef056d7edc726f1529}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the International Conference on Machine Learning (ICML)}
+      \field{title}{EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks}
+      \field{year}{2019}
+      \field{pages}{6105\bibrangedash 6114}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.48550/arXiv.1905.11946
+      \endverb
     \endentry
     \entry{toshev2014pose_estimation}{article}{}{}
       \name{author}{2}{}{%
@@ -1927,6 +2133,50 @@
       \verb https://miro.medium.com/v2/resize:fit:1400/1*T5FDrB9yAWNkO00DpuOEBQ.png
       \endverb
     \endentry
+    \entry{zhang2018_shufflenet}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=5e72bc22dbcf0984c6d113d280e36990}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Xiangyu},
+           giveni={X\bibinitperiod}}}%
+        {{hash=5c1e75bf6f2b5386a54aff442f04d5cf}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Xinyu},
+           giveni={X\bibinitperiod}}}%
+        {{hash=a24609d7dfcf8f716059c40ed11ba974}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={Mengxiao},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f85751488058842b5777c7b4074077b5}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Jian},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{d8f4dadb2f7478b1e29f1f5f541e5a3e}
+      \strng{fullhash}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
+      \strng{fullhashraw}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
+      \strng{bibnamehash}{d8f4dadb2f7478b1e29f1f5f541e5a3e}
+      \strng{authorbibnamehash}{d8f4dadb2f7478b1e29f1f5f541e5a3e}
+      \strng{authornamehash}{d8f4dadb2f7478b1e29f1f5f541e5a3e}
+      \strng{authorfullhash}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
+      \strng{authorfullhashraw}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{title}{ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices}
+      \field{year}{2018}
+      \field{pages}{6848\bibrangedash 6856}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/CVPR.2018.00716
+      \endverb
+    \endentry
     \entry{zhou2017_places}{article}{}{}
       \name{author}{5}{}{%
         {{hash=c7cb7aa044ac5597397cceabad3765a3}{%
@@ -1979,6 +2229,9 @@
       \endverb
     \endentry
   \enddatalist
+  \missing{howard2017mobilenets}
+  \missing{tan2019efficientnet}
+  \missing{zhang2018shufflenet}
 \endrefsection
 \endinput
 
