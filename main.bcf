@@ -2422,7 +2422,7 @@
     <bcf:citekey order="42" intorder="1">donahue2015_ltrcnn</bcf:citekey>
     <bcf:citekey order="43" intorder="1">vaswani2017_attention</bcf:citekey>
     <bcf:citekey order="44" intorder="1">vit2020_transformers</bcf:citekey>
-    <bcf:citekey order="45" intorder="1">mamba2022_dynamic</bcf:citekey>
+    <bcf:citekey order="45" intorder="1">mamba2023_selective</bcf:citekey>
     <bcf:citekey order="46" intorder="1">dino2021_selfsupervised</bcf:citekey>
     <bcf:citekey order="47" intorder="1">clip2021_multimodal</bcf:citekey>
     <bcf:citekey order="48" intorder="1">sam2023_segmentation</bcf:citekey>
@@ -2462,7 +2462,7 @@
     <bcf:citekey order="80" intorder="1">dieleman2014_galaxycnn</bcf:citekey>
     <bcf:citekey order="81" intorder="1">sam2023_segmentation</bcf:citekey>
     <bcf:citekey order="82" intorder="1">dino2021_selfsupervised</bcf:citekey>
-    <bcf:citekey order="83" intorder="1">mamba2022_dynamic</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">mamba2023_selective</bcf:citekey>
     <bcf:citekey order="84" intorder="1">dalle2021_texttoimage</bcf:citekey>
     <bcf:citekey order="85" intorder="1">dalle2021_texttoimage</bcf:citekey>
     <bcf:citekey order="86" intorder="1">dalle2021_texttoimage</bcf:citekey>
@@ -2484,22 +2484,41 @@
     <bcf:citekey order="102" intorder="1">yenigun_overfitting</bcf:citekey>
     <bcf:citekey order="103" intorder="1">yenigun_overfitting</bcf:citekey>
     <bcf:citekey order="104" intorder="1">alger2019_data</bcf:citekey>
-    <bcf:citekey order="105" intorder="1">krizhevsky2012_alexnet</bcf:citekey>
-    <bcf:citekey order="106" intorder="1">sandler2018_mobilenetv2</bcf:citekey>
-    <bcf:citekey order="106" intorder="2">tan2019_efficientnet</bcf:citekey>
-    <bcf:citekey order="107" intorder="1">howard2017_mobilenets</bcf:citekey>
-    <bcf:citekey order="108" intorder="1">zhang2018_shufflenet</bcf:citekey>
-    <bcf:citekey order="109" intorder="1">tan2019_efficientnet</bcf:citekey>
-    <bcf:citekey order="110" intorder="1">lecun1998_lenet</bcf:citekey>
-    <bcf:citekey order="111" intorder="1">chollet2017_xception</bcf:citekey>
-    <bcf:citekey order="111" intorder="2">howard2017_mobilenets</bcf:citekey>
-    <bcf:citekey order="112" intorder="1">blog2023_separable_convolutions</bcf:citekey>
-    <bcf:citekey order="113" intorder="1">blog2023_separable_convolutions</bcf:citekey>
-    <bcf:citekey order="114" intorder="1">howard2017_mobilenets</bcf:citekey>
-    <bcf:citekey order="115" intorder="1">zhang2018_shufflenet</bcf:citekey>
-    <bcf:citekey order="116" intorder="1">chollet2017_xception</bcf:citekey>
-    <bcf:citekey order="117" intorder="1">tan2019_efficientnet</bcf:citekey>
-    <bcf:citekey order="118" intorder="1">chollet2017_xception</bcf:citekey>
+    <bcf:citekey order="105" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="106" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="107" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="108" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="109" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="110" intorder="1">solai2023_backpropconv</bcf:citekey>
+    <bcf:citekey order="111" intorder="1">krizhevsky2012_alexnet</bcf:citekey>
+    <bcf:citekey order="112" intorder="1">sandler2018_mobilenetv2</bcf:citekey>
+    <bcf:citekey order="112" intorder="2">tan2019_efficientnet</bcf:citekey>
+    <bcf:citekey order="113" intorder="1">howard2017_mobilenets</bcf:citekey>
+    <bcf:citekey order="114" intorder="1">zhang2018_shufflenet</bcf:citekey>
+    <bcf:citekey order="115" intorder="1">tan2019_efficientnet</bcf:citekey>
+    <bcf:citekey order="116" intorder="1">lecun1998_lenet</bcf:citekey>
+    <bcf:citekey order="117" intorder="1">chollet2017_xception</bcf:citekey>
+    <bcf:citekey order="117" intorder="2">howard2017_mobilenets</bcf:citekey>
+    <bcf:citekey order="118" intorder="1">blog2023_separable_convolutions</bcf:citekey>
+    <bcf:citekey order="119" intorder="1">blog2023_separable_convolutions</bcf:citekey>
+    <bcf:citekey order="120" intorder="1">howard2017_mobilenets</bcf:citekey>
+    <bcf:citekey order="121" intorder="1">zhang2018_shufflenet</bcf:citekey>
+    <bcf:citekey order="122" intorder="1">chollet2017_xception</bcf:citekey>
+    <bcf:citekey order="123" intorder="1">tan2019_efficientnet</bcf:citekey>
+    <bcf:citekey order="124" intorder="1">chollet2017_xception</bcf:citekey>
+    <bcf:citekey order="125" intorder="1">lecun1998_lenet</bcf:citekey>
+    <bcf:citekey order="126" intorder="1">ioffe2015_batchnorm</bcf:citekey>
+    <bcf:citekey order="127" intorder="1">santurkar2018_howdoesbatchnormhelp</bcf:citekey>
+    <bcf:citekey order="128" intorder="1">ioffe2015_batchnorm</bcf:citekey>
+    <bcf:citekey order="129" intorder="1">ioffe2015_batchnorm</bcf:citekey>
+    <bcf:citekey order="130" intorder="1">santurkar2018_howdoesbatchnormhelp</bcf:citekey>
+    <bcf:citekey order="131" intorder="1">becominghuman2018_allaboutnorm</bcf:citekey>
+    <bcf:citekey order="132" intorder="1">becominghuman2018_allaboutnorm</bcf:citekey>
+    <bcf:citekey order="133" intorder="1">becominghuman2018_allaboutnorm</bcf:citekey>
+    <bcf:citekey order="134" intorder="1">becominghuman2018_allaboutnorm</bcf:citekey>
+    <bcf:citekey order="135" intorder="1">sh-tsang2018_groupnorm</bcf:citekey>
+    <bcf:citekey order="136" intorder="1">sh-tsang2018_groupnorm</bcf:citekey>
+    <bcf:citekey order="137" intorder="1">zakka2016_batchnorm</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

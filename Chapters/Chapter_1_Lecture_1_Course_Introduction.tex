@@ -297,9 +297,9 @@ However, Transformers have their own limitations:
 	\item \textbf{Data Dependency:} Transformers often require massive datasets to generalize effectively, unlike CNNs that perform well with smaller datasets.
 \end{itemize}
 
-\textbf{MAMBA: Multi-Agent Dynamics (2022)}
+\textbf{MAMBA: Linear-Time Sequence Modeling with Selective State Spaces (2022)}
 
-\textbf{Multi-Agent and Multi-Body Analysis (MAMBA)} \cite{mamba2022_dynamic} extends the capabilities of vision systems to dynamic, multi-agent scenarios. MAMBA incorporates attention mechanisms to model interactions between multiple entities, making it particularly effective in applications like autonomous driving and robotics. By building on ViTs, MAMBA represents a significant step forward in understanding complex scenes and interactions.
+\textbf{MAMBA} \cite{mamba2023_selective} introduces a new paradigm in sequence modeling by leveraging structured state space models (SSMs) for efficient long-range dependency learning. Unlike traditional self-attention, MAMBA achieves linear-time complexity, making it a scalable alternative for high-dimensional sequential data. This approach improves computational efficiency while retaining the ability to capture complex dependencies, making it particularly useful for vision-based sequence modeling and multimodal learning.
 
 \textbf{Foundation Models: From Vision to Multimodal Intelligence}
 
@@ -314,7 +314,6 @@ The progression from AlexNet has led to the rise of \textbf{foundation models}, 
 \textbf{Conclusion}
 
 The legacy of AlexNet extends far beyond its initial success, shaping the evolution of neural network architectures and driving breakthroughs in computer vision. From CNNs to attention-based models like ViTs, and from vision-specific tasks to multimodal intelligence, this journey reflects the field's relentless pursuit of scalable, adaptable, and powerful algorithms.
-
 
 \section{Milestones in the Evolution of Learning in Computer Vision}
 
@@ -426,7 +425,7 @@ The transformative success of AlexNet in 2012 heralded the deep learning revolut
 \end{itemize}
 
 \subsubsection{State-of-the-Art Foundation Models}
-Recent advancements, such as the \textbf{Segment Anything Model (SAM)} \cite{sam2023_segmentation}, \textbf{DINO} \cite{dino2021_selfsupervised}, and \textbf{MAMBA} \cite{mamba2022_dynamic}, exemplify the cutting edge in computer vision. These models were trained on massive amounts of data over extended periods, leveraging vast computational resources to learn robust and generalizable representations. 
+Recent advancements, such as the \textbf{Segment Anything Model (SAM)} \cite{sam2023_segmentation}, \textbf{DINO} \cite{dino2021_selfsupervised}, and \textbf{MAMBA} \cite{mamba2023_selective}, exemplify the cutting edge in computer vision. These models were trained on massive amounts of data over extended periods, leveraging vast computational resources to learn robust and generalizable representations. 
 
 Their foundational nature lies in their versatility: they can be applied across a wide range of tasks without fine-tuning (or at the very least, minimal fine-tuning), making them highly effective out-of-the-box solutions. 
 

@@ -409,97 +409,188 @@
 \contentsline {paragraph}{MACs Calculation:}{191}{section*.310}%
 \contentsline {subsection}{\numberline {7.7.5}MACs and FLOPs}{191}{subsection.7.7.5}%
 \contentsline {subsection}{\numberline {7.7.6}Why Multiply-Add Operations (MACs) Matter}{191}{subsection.7.7.6}%
-\contentsline {section}{\numberline {7.8}Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}{191}{section.7.8}%
-\contentsline {subsection}{\numberline {7.8.1}1x1 Convolutions}{192}{subsection.7.8.1}%
-\contentsline {subsubsection}{Dimensionality Reduction and Feature Selection}{192}{section*.311}%
-\contentsline {subsubsection}{Efficiency of 1x1 Convolutions as a Bottleneck}{192}{section*.313}%
-\contentsline {paragraph}{Example: Transforming 256 Channels to 256 Channels with a 3x3 Kernel.}{192}{section*.314}%
-\contentsline {paragraph}{Parameter and FLOP Savings.}{193}{section*.315}%
-\contentsline {subsection}{\numberline {7.8.2}1D Convolutions}{193}{subsection.7.8.2}%
-\contentsline {paragraph}{Numerical Example: 1D Convolution on Multichannel Time Series Data}{193}{section*.316}%
-\contentsline {paragraph}{Computing the Output}{194}{section*.317}%
-\contentsline {paragraph}{Applications of 1D Convolutions}{194}{section*.318}%
-\contentsline {subsection}{\numberline {7.8.3}3D Convolutions}{194}{subsection.7.8.3}%
-\contentsline {paragraph}{Numerical Example: 3D Convolution on Volumetric Data}{195}{section*.320}%
-\contentsline {paragraph}{3D Convolution Formula}{195}{section*.321}%
-\contentsline {paragraph}{Computing the Output}{196}{section*.322}%
-\contentsline {paragraph}{Final Output Tensor}{196}{section*.323}%
-\contentsline {paragraph}{Applications of 3D Convolutions}{196}{section*.324}%
-\contentsline {paragraph}{Advantages of 3D Convolutions}{196}{section*.325}%
-\contentsline {paragraph}{Challenges of 3D Convolutions}{197}{section*.326}%
-\contentsline {subsection}{\numberline {7.8.4}Efficient Convolutions for Mobile and Embedded Systems}{197}{subsection.7.8.4}%
-\contentsline {subsection}{\numberline {7.8.5}Spatial Separable Convolutions}{197}{subsection.7.8.5}%
-\contentsline {paragraph}{Concept and Intuition}{197}{section*.327}%
-\contentsline {paragraph}{Limitations and Transition to Depthwise Separable Convolutions}{198}{section*.328}%
-\contentsline {subsection}{\numberline {7.8.6}Depthwise Separable Convolutions}{198}{subsection.7.8.6}%
-\contentsline {paragraph}{Concept and Motivation}{198}{section*.329}%
-\contentsline {paragraph}{Computational Efficiency}{198}{section*.330}%
-\contentsline {paragraph}{Standard \((K \times K)\) Convolution}{198}{section*.331}%
-\contentsline {paragraph}{Depthwise Separable Convolution}{199}{section*.332}%
-\contentsline {subsubsection}{Example: \((K=3,\tmspace +\thickmuskip {.2777em}C_{\mathrm {in}}=128,\tmspace +\thickmuskip {.2777em}C_{\mathrm {out}}=256,\tmspace +\thickmuskip {.2777em}H=W=32)\)}{199}{section*.333}%
-\contentsline {paragraph}{Reduction Factor}{200}{section*.335}%
-\contentsline {paragraph}{Practical Usage and Examples}{200}{section*.336}%
-\contentsline {paragraph}{Trade-Offs}{201}{section*.337}%
-\contentsline {subsection}{\numberline {7.8.7}Summary of Specialized Convolutions}{201}{subsection.7.8.7}%
-\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{202}{chapter.8}%
+\contentsline {subsection}{Enrichment 0.6: Backpropagation for Convolutional Neural Networks}{191}{subsection.7.7.6}%
+\contentsline {paragraph}{Key Idea: Convolution as a Graph Node}{192}{section*.312}%
+\contentsline {paragraph}{Computing \(\tfrac {dO}{dF}\)}{192}{section*.314}%
+\contentsline {paragraph}{Computing \(\tfrac {dL}{dX}\)}{193}{section*.315}%
+\contentsline {section}{\numberline {7.8}Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}{194}{section.7.8}%
+\contentsline {subsection}{\numberline {7.8.1}1x1 Convolutions}{194}{subsection.7.8.1}%
+\contentsline {subsubsection}{Dimensionality Reduction and Feature Selection}{194}{section*.317}%
+\contentsline {subsubsection}{Efficiency of 1x1 Convolutions as a Bottleneck}{194}{section*.319}%
+\contentsline {paragraph}{Example: Transforming 256 Channels to 256 Channels with a 3x3 Kernel.}{195}{section*.320}%
+\contentsline {paragraph}{Parameter and FLOP Savings.}{195}{section*.321}%
+\contentsline {subsection}{\numberline {7.8.2}1D Convolutions}{195}{subsection.7.8.2}%
+\contentsline {paragraph}{Numerical Example: 1D Convolution on Multichannel Time Series Data}{195}{section*.322}%
+\contentsline {paragraph}{Computing the Output}{196}{section*.323}%
+\contentsline {paragraph}{Applications of 1D Convolutions}{196}{section*.324}%
+\contentsline {subsection}{\numberline {7.8.3}3D Convolutions}{197}{subsection.7.8.3}%
+\contentsline {paragraph}{Numerical Example: 3D Convolution on Volumetric Data}{197}{section*.326}%
+\contentsline {paragraph}{3D Convolution Formula}{198}{section*.327}%
+\contentsline {paragraph}{Computing the Output}{198}{section*.328}%
+\contentsline {paragraph}{Final Output Tensor}{199}{section*.329}%
+\contentsline {paragraph}{Applications of 3D Convolutions}{199}{section*.330}%
+\contentsline {paragraph}{Advantages of 3D Convolutions}{199}{section*.331}%
+\contentsline {paragraph}{Challenges of 3D Convolutions}{199}{section*.332}%
+\contentsline {subsection}{\numberline {7.8.4}Efficient Convolutions for Mobile and Embedded Systems}{199}{subsection.7.8.4}%
+\contentsline {subsection}{\numberline {7.8.5}Spatial Separable Convolutions}{199}{subsection.7.8.5}%
+\contentsline {paragraph}{Concept and Intuition}{199}{section*.333}%
+\contentsline {paragraph}{Limitations and Transition to Depthwise Separable Convolutions}{200}{section*.334}%
+\contentsline {subsection}{\numberline {7.8.6}Depthwise Separable Convolutions}{200}{subsection.7.8.6}%
+\contentsline {paragraph}{Concept and Motivation}{200}{section*.335}%
+\contentsline {paragraph}{Computational Efficiency}{201}{section*.336}%
+\contentsline {paragraph}{Standard \((K \times K)\) Convolution}{201}{section*.337}%
+\contentsline {paragraph}{Depthwise Separable Convolution}{201}{section*.338}%
+\contentsline {subsubsection}{Example: \((K=3,\tmspace +\thickmuskip {.2777em}C_{\mathrm {in}}=128,\tmspace +\thickmuskip {.2777em}C_{\mathrm {out}}=256,\tmspace +\thickmuskip {.2777em}H=W=32)\)}{201}{section*.339}%
+\contentsline {paragraph}{Reduction Factor}{203}{section*.341}%
+\contentsline {paragraph}{Practical Usage and Examples}{203}{section*.342}%
+\contentsline {paragraph}{Trade-Offs}{203}{section*.343}%
+\contentsline {subsection}{\numberline {7.8.7}Summary of Specialized Convolutions}{203}{subsection.7.8.7}%
+\contentsline {section}{\numberline {7.9}Pooling Layers}{205}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}Types of Pooling}{205}{subsection.7.9.1}%
+\contentsline {subsection}{\numberline {7.9.2}Effect of Pooling}{205}{subsection.7.9.2}%
+\contentsline {subsection}{Enrichment 0.7: Pooling Layers in Backpropagation}{206}{figure.caption.347}%
+\contentsline {subsubsection}{Forward Pass of Pooling Layers}{206}{section*.349}%
+\contentsline {paragraph}{Example of Forward Pass}{206}{section*.350}%
+\contentsline {subsubsection}{Backpropagation Through Pooling Layers}{207}{section*.351}%
+\contentsline {paragraph}{Max Pooling Backpropagation}{207}{section*.352}%
+\contentsline {paragraph}{Average Pooling Backpropagation}{207}{section*.353}%
+\contentsline {subsubsection}{Generalization of Backpropagation for Pooling}{207}{section*.354}%
+\contentsline {subsection}{\numberline {7.9.3}Global Pooling Layers}{208}{subsection.7.9.3}%
+\contentsline {subsubsection}{General Advantages}{208}{section*.355}%
+\contentsline {subsubsection}{Global Average Pooling (GAP)}{208}{section*.356}%
+\contentsline {paragraph}{Operation.}{208}{section*.357}%
+\contentsline {paragraph}{Upsides.}{208}{section*.358}%
+\contentsline {paragraph}{Downsides.}{208}{section*.359}%
+\contentsline {paragraph}{Backpropagation.}{208}{section*.360}%
+\contentsline {subsubsection}{Global Max Pooling (GMP)}{209}{section*.361}%
+\contentsline {paragraph}{Operation.}{209}{section*.362}%
+\contentsline {paragraph}{Upsides.}{209}{section*.363}%
+\contentsline {paragraph}{Downsides.}{209}{section*.364}%
+\contentsline {paragraph}{Backpropagation.}{209}{section*.365}%
+\contentsline {subsubsection}{Comparison of GAP and GMP}{209}{section*.366}%
+\contentsline {subsubsection}{Contrasting with Regular Pooling}{209}{section*.367}%
+\contentsline {paragraph}{Window Size.}{209}{section*.368}%
+\contentsline {paragraph}{When to Use Global Pooling.}{209}{section*.369}%
+\contentsline {paragraph}{When to Use Regular Pooling.}{209}{section*.370}%
+\contentsline {section}{\numberline {7.10}Classical CNN Architectures}{210}{section.7.10}%
+\contentsline {subsection}{\numberline {7.10.1}LeNet-5 Architecture}{210}{subsection.7.10.1}%
+\contentsline {subsubsection}{Detailed Layer Breakdown}{211}{section*.372}%
+\contentsline {subsubsection}{Summary of LeNet-5}{212}{section*.373}%
+\contentsline {subsubsection}{Key Architectural Trends in CNNs, Illustrated by LeNet-5}{212}{section*.374}%
+\contentsline {paragraph}{Hierarchical Feature Learning.}{212}{section*.375}%
+\contentsline {paragraph}{Alternating Convolution and Pooling.}{212}{section*.376}%
+\contentsline {paragraph}{Transition to Fully Connected (FC) Layers.}{212}{section*.377}%
+\contentsline {subsection}{\numberline {7.10.2}How Are CNN Architectures Designed?}{212}{subsection.7.10.2}%
+\contentsline {section}{\numberline {7.11}Batch Normalization}{213}{section.7.11}%
+\contentsline {subsection}{\numberline {7.11.1}Understanding Mean, Variance, and Normalization}{213}{subsection.7.11.1}%
+\contentsline {paragraph}{Mean:}{213}{section*.378}%
+\contentsline {paragraph}{Variance:}{213}{section*.379}%
+\contentsline {paragraph}{Standard Deviation:}{213}{section*.380}%
+\contentsline {paragraph}{Effect of Normalization:}{213}{section*.381}%
+\contentsline {subsection}{\numberline {7.11.2}Internal Covariate Shift and Batch Normalization’s Role}{214}{subsection.7.11.2}%
+\contentsline {paragraph}{What is Covariate Shift?}{214}{section*.382}%
+\contentsline {paragraph}{What is Internal Covariate Shift?}{214}{section*.383}%
+\contentsline {subsection}{\numberline {7.11.3}Batch Normalization Process}{214}{subsection.7.11.3}%
+\contentsline {subsubsection}{Batch Normalization for Convolutional Neural Networks (CNNs)}{215}{section*.385}%
+\contentsline {subsection}{\numberline {7.11.4}Batch Normalization and Optimization}{217}{subsection.7.11.4}%
+\contentsline {subsubsection}{Beyond Covariate Shift: Why Does BatchNorm Improve Training?}{217}{section*.387}%
+\contentsline {subsubsection}{Why Does BatchNorm Smooth the Loss Surface?}{218}{section*.390}%
+\contentsline {paragraph}{1. Hessian Eigenvalues and Loss Surface Curvature}{218}{section*.391}%
+\contentsline {paragraph}{Computing Eigenvalues}{218}{section*.392}%
+\contentsline {paragraph}{Interpretation of Eigenvalues}{218}{section*.393}%
+\contentsline {paragraph}{2. Reducing the Lipschitz Constant}{219}{section*.394}%
+\contentsline {paragraph}{3. Implicit Regularization via Mini-Batch Noise}{219}{section*.395}%
+\contentsline {subsubsection}{BN Helps Decoupling Weight Magnitude from Activation Scale}{220}{section*.396}%
+\contentsline {paragraph}{Mini Example: ReLU Dead Zone Prevention}{220}{section*.397}%
+\contentsline {subsubsection}{Conclusion: The Real Reason BatchNorm Works}{220}{section*.398}%
+\contentsline {subsubsection}{Batch Normalization in Test Time}{221}{section*.399}%
+\contentsline {subsubsection}{Limitations of BatchNorm}{221}{section*.401}%
+\contentsline {subsubsection}{Alternative Normalization Methods}{222}{section*.402}%
+\contentsline {subsubsection}{Layer Normalization (LN)}{222}{section*.403}%
+\contentsline {paragraph}{Core Idea}{222}{section*.404}%
+\contentsline {paragraph}{Definition}{223}{section*.406}%
+\contentsline {subsubsection}{Layer Normalization (LN)}{223}{section*.407}%
+\contentsline {paragraph}{Definition (Fully Connected Layers).}{223}{section*.409}%
+\contentsline {paragraph}{Extension to Convolutional Layers}{224}{section*.410}%
+\contentsline {paragraph}{Interpretation}{224}{section*.412}%
+\contentsline {paragraph}{Advantages of LN}{224}{section*.413}%
+\contentsline {subsubsection}{Instance Normalization (IN)}{224}{section*.414}%
+\contentsline {paragraph}{Interpretation}{225}{section*.416}%
+\contentsline {paragraph}{Advantages of Instance Normalization}{225}{section*.417}%
+\contentsline {subsubsection}{Group Normalization (GN)}{226}{section*.418}%
+\contentsline {paragraph}{Interpretation}{226}{section*.420}%
+\contentsline {paragraph}{Advantages of Group Normalization}{226}{section*.421}%
+\contentsline {subsubsection}{Why Do IN, LN, and GN Improve Optimization?}{227}{section*.422}%
+\contentsline {paragraph}{Common Benefits Across IN, LN, and GN}{227}{section*.423}%
+\contentsline {paragraph}{Summary: How These Methods Enhance Training}{227}{section*.424}%
+\contentsline {subsection}{Enrichment 0.8: Backpropagation for Batch Normalization}{227}{section*.424}%
+\contentsline {paragraph}{Chain Rule in the Graph}{228}{section*.426}%
+\contentsline {subparagraph}{Gradients w.r.t.\ \(\gamma \) and \(\beta \)}{228}{subparagraph*.427}%
+\contentsline {subparagraph}{Gradient w.r.t.\ \(\hat {x}_i\)}{228}{subparagraph*.428}%
+\contentsline {paragraph}{Gradients Involving \(\mu \) and \(\sigma ^2\)}{228}{section*.429}%
+\contentsline {paragraph}{Final: Gradients w.r.t.\ Each \(x_i\)}{229}{section*.430}%
+\contentsline {paragraph}{Computational Efficiency}{229}{section*.431}%
+\contentsline {paragraph}{Extension to LN, IN, GN}{229}{section*.432}%
+\contentsline {paragraph}{Conclusion}{229}{section*.433}%
+\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{230}{chapter.8}%
 \ttl@stoptoc {default@7}
 \ttl@starttoc {default@8}
-\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{203}{chapter.9}%
+\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{231}{chapter.9}%
 \ttl@stoptoc {default@8}
 \ttl@starttoc {default@9}
-\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{204}{chapter.10}%
+\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{232}{chapter.10}%
 \ttl@stoptoc {default@9}
 \ttl@starttoc {default@10}
-\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{205}{chapter.11}%
+\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{233}{chapter.11}%
 \ttl@stoptoc {default@10}
 \ttl@starttoc {default@11}
-\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{205}{section.11.1}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{206}{chapter.12}%
+\contentsline {section}{\numberline {11.1}Efficient Models for Edge Devices}{233}{section.11.1}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{234}{chapter.12}%
 \ttl@stoptoc {default@11}
 \ttl@starttoc {default@12}
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{207}{chapter.13}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{235}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{208}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{236}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{209}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{237}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{210}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{238}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{211}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{239}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{212}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{240}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{213}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{241}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{214}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{242}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{215}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{243}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{216}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{244}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{217}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{245}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{218}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{246}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{219}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{247}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{220}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{248}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{221}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{249}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

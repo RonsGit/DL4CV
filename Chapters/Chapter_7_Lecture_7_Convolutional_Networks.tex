@@ -670,6 +670,94 @@ MACs provide a key measure of a neural network’s efficiency:
 
 Even though convolutional networks use fewer parameters than fully connected networks, their computational cost (measured in MACs) can be high, necessitating careful architecture design.
 
+\begin{enrichment}[Backpropagation for Convolutional Neural Networks][subsection]
+	This enrichment section is adapted from the Medium article by Pavithra Solai \cite{solai2023_backpropconv}, providing a clear illustration of backpropagation in convolutional layers.
+	
+	\paragraph{Key Idea: Convolution as a Graph Node}
+	In a computational graph, each convolutional layer receives an upstream gradient \(\frac{dL}{dO}\), where \(O\) is the output of the convolution:
+	\[
+	O = X \circledast F,
+	\]
+	with \(X\) denoting the input tensor (patch) and \(F\) the convolution filter.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/backprop_conv_graph.jpg}
+		\caption{Backpropagation in a convolution: A computational graph demonstrates convolving input tensor \(X\) and filter \(F\), then propagating gradients \(\frac{dL}{dO}\). Source: \cite{solai2023_backpropconv}.}
+		\label{fig:chapter7_backprop_conv}
+	\end{figure}
+	
+	\noindent
+	Using the chain rule, we can write:
+	\[
+	\frac{dL}{dX} = \frac{dL}{dO} \times \frac{dO}{dX},
+	\quad
+	\frac{dL}{dF} = \frac{dL}{dO} \times \frac{dO}{dF},
+	\]
+	where \(\tfrac{dO}{dX}\) and \(\tfrac{dO}{dF}\) are the local gradients from the convolution operation, and \(\tfrac{dL}{dO}\) is the upstream gradient arriving from deeper layers.
+	
+	\paragraph{Computing \(\tfrac{dO}{dF}\)}
+	Consider a \((3\times3)\) input patch \(X\) and a \((2\times2)\) filter \(F\):
+	
+	\[
+	X =
+	\begin{bmatrix}
+		X_{11} & X_{12} & X_{13}\\
+		X_{21} & X_{22} & X_{23}\\
+		X_{31} & X_{32} & X_{33}
+	\end{bmatrix},\quad
+	F =
+	\begin{bmatrix}
+		F_{11} & F_{12}\\
+		F_{21} & F_{22}
+	\end{bmatrix}.
+	\]
+	When convolved, the first element \(O_{11}\) is:
+	\[
+	O_{11}
+	= X_{11}F_{11} 
+	+ X_{12}F_{12}
+	+ X_{21}F_{21}
+	+ X_{22}F_{22}.
+	\]
+	Taking derivatives:
+	\[
+	\tfrac{\partial O_{11}}{\partial F_{11}} 
+	= X_{11},\quad
+	\tfrac{\partial O_{11}}{\partial F_{12}}
+	= X_{12},\quad
+	\tfrac{\partial O_{11}}{\partial F_{21}}
+	= X_{21},\quad
+	\tfrac{\partial O_{11}}{\partial F_{22}}
+	= X_{22}.
+	\]
+	Repeating for \(O_{12},O_{21},O_{22}\) yields similar terms. Thus, \(\tfrac{dL}{dF_i}\) arises from summing elementwise gradients over all spatial locations:
+	\[
+	\tfrac{dL}{dF_i}
+	= \sum_{k=1}^{M}
+	\tfrac{dL}{dO_k}
+	\;\tfrac{\partial O_k}{\partial F_i}.
+	\]
+	Effectively, \(\tfrac{dL}{dF}\) can be interpreted as a convolution of \(X\) with \(\tfrac{dL}{dO}\).
+	
+	\paragraph{Computing \(\tfrac{dL}{dX}\)}
+	A similar argument applies to \(\tfrac{dL}{dX}\). In fact,
+	\[
+	\tfrac{dL}{dX}
+	= F^\star \;\circledast\;
+	\tfrac{dL}{dO},
+	\]
+	where \(F^\star\) is a 180-degree rotation of the filter \(F\).
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/backprop_through_convolutions.jpg}
+		\caption{Backpropagation through convolutions: The gradient computation involves convolution between the input \(X\) (or a rotated version of \(F\)) and the upstream gradient \(\tfrac{dL}{dO}\). Source: \cite{solai2023_backpropconv}.}
+		\label{fig:chapter7_backprop_through_conv}
+	\end{figure}
+	
+	Full details and visual examples can be found in \cite{solai2023_backpropconv}, which provide additional insights into the math and coding approach for convolutional backprop.
+\end{enrichment}
+
 \section{Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}
 \label{sec:special_convs}
 
@@ -1214,4 +1302,1093 @@ Overall, depthwise separable convolutions have become an essential technique for
 
 These specialized convolutions enhance the flexibility and efficiency of neural networks, enabling them to process diverse types of structured data, over different computation platforms (from expensive and powerful GPU servers up to common mobile devices). 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_63.jpg}
+	\caption{Illustration of \texttt{torch.nn.Conv2d} and its parameters. The attached paragraph shows how the convolution operation applies filters to input data, computing feature maps based on the hyper-parameters of stride, padding, and kernel size.}
+	\label{fig:chapter7_pytorch_conv2d}
+\end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_64.jpg}
+	\caption{Comparison of PyTorch convolution layers: \texttt{Conv1d}, \texttt{Conv2d}, and \texttt{Conv3d}. The figure highlights their function signatures and input parameter definitions in the PyTorch library.}
+	\label{fig:chapter7_pytorch_conv_layers}
+\end{figure}
+
+\newpage
+\section{Pooling Layers}
+\label{subsec:pooling_layers}
+
+Pooling layers play a crucial role in convolutional neural networks (CNNs) by reducing the spatial dimensions of feature maps. Unlike convolutional layers, pooling layers do not involve learnable parameters; instead, they rely on hyperparameters such as kernel size, stride, and pooling function to downsample the input. This dimensionality reduction helps in decreasing computational costs, limiting overfitting, and increasing the receptive field of each output feature.
+
+\subsection{Types of Pooling}
+The most common types of pooling operations are:
+
+\begin{itemize}
+	\item \textbf{Max Pooling:} Selects the maximum value within each window, preserving the most prominent feature in the region.
+	\item \textbf{Average Pooling:} Computes the average of values within each window, providing a smoothed representation of the feature map.
+\end{itemize}
+
+Pooling operates similarly to convolutions: a window of predefined size scans the input tensor, moving according to the stride. If the stride equals the kernel size, the pooling regions do not overlap. Within each region, the pooling function is applied, producing a single output value per region.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_67.jpg}
+	\caption{Example of \emph{max pooling} with a \( 2 \times 2 \) kernel and stride of 2. The operation introduces slight spatial invariance, helping retain dominant features.}
+	\label{fig:chapter7_max_pooling}
+\end{figure}
+
+\subsection{Effect of Pooling}
+Pooling helps retain the most important features while reducing dimensionality, summarizing feature maps efficiently. Some key benefits include:
+
+\begin{itemize}
+	\item \textbf{Reduced Computation:} Fewer spatial elements result in fewer operations in subsequent layers.
+	\item \textbf{Invariance to Small Translations:} Slight shifts in input data have less impact on the network’s output, making models more robust.
+	\item \textbf{Improved Generalization:} Pooling reduces sensitivity to local changes in input, mitigating overfitting.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_68.jpg}
+	\caption{Summary of pooling layers: input size, hyperparameters (kernel size, stride, pooling function), output size, and common pooling configurations.}
+	\label{fig:chapter7_pooling_summary}
+\end{figure}
+
+\begin{enrichment}[Pooling Layers in Backpropagation][subsection]
+	
+Pooling layers are commonly used in Convolutional Neural Networks (CNNs) to reduce spatial dimensions while retaining important features. The two most common types are \emph{Max Pooling} and \emph{Average Pooling}. Understanding how backpropagation works for these layers is crucial for training CNNs.
+
+\subsubsection{Forward Pass of Pooling Layers}
+Pooling operates on small regions (e.g., \(2 \times 2\) window) and reduces them to a single value:
+
+\begin{itemize}
+	\item \textbf{Max Pooling:} Selects the maximum value from the window.
+	\item \textbf{Average Pooling:} Computes the average of all values in the window.
+\end{itemize}
+
+\paragraph{Example of Forward Pass}
+Consider a \(4 \times 4\) input matrix:
+
+\[
+X = \begin{bmatrix} 
+	1 & 3 & 2 & 1 \\ 
+	4 & 2 & 1 & 5 \\ 
+	2 & 0 & 3 & 1 \\ 
+	1 & 5 & 2 & 4 
+\end{bmatrix}
+\]
+
+Applying a \(2 \times 2\) filter with stride 2:
+
+\textbf{Max Pooling:}
+\[
+\begin{bmatrix} 
+	\max(1,3,4,2) & \max(2,1,1,5) \\ 
+	\max(2,0,1,5) & \max(3,1,2,4) 
+\end{bmatrix} 
+= \begin{bmatrix} 4 & 5 \\ 5 & 4 \end{bmatrix}
+\]
+
+\textbf{Average Pooling:}
+\[
+\begin{bmatrix} 
+	\frac{1+3+4+2}{4} & \frac{2+1+1+5}{4} \\ 
+	\frac{2+0+1+5}{4} & \frac{3+1+2+4}{4} 
+\end{bmatrix} 
+= \begin{bmatrix} 2.5 & 2.25 \\ 2 & 2.5 \end{bmatrix}
+\]
+
+\subsubsection{Backpropagation Through Pooling Layers}
+Backpropagation propagates gradients from the output back to the input. The process differs for max pooling and average pooling.
+
+\paragraph{Max Pooling Backpropagation}
+For max pooling, the gradient is passed only to the maximum value in each window; all other values receive a gradient of zero.
+
+\textbf{Example:}
+Let the upstream gradient be:
+\[
+\begin{bmatrix} 
+	0.2 & -0.3 \\ 
+	0.4 & 0.1 
+\end{bmatrix}
+\]
+
+The original \(4 \times 4\) input matrix receives the following gradients:
+
+\[
+\begin{bmatrix} 
+	0 & 0 & 0 & 0 \\ 
+	0.2 & 0 & 0 & -0.3 \\ 
+	0 & 0 & 0 & 0.4 \\ 
+	0 & 0.1 & 0 & 0 
+\end{bmatrix}
+\]
+
+\paragraph{Average Pooling Backpropagation}
+For average pooling, the gradient is distributed equally among all elements in the window.
+
+Each \(2 \times 2\) window has 4 elements, so each element gets \(\text{gradient} / 4\).
+
+\textbf{Example:}
+
+\[
+\begin{bmatrix} 
+	0.05 & 0.05 & -0.075 & -0.075 \\ 
+	0.05 & 0.05 & -0.075 & -0.075 \\ 
+	0.1 & 0.1 & 0.025 & 0.025 \\ 
+	0.1 & 0.1 & 0.025 & 0.025 
+\end{bmatrix}
+\]
+
+\subsubsection{Generalization of Backpropagation for Pooling}
+Consider a computational node with output \(O\) that returns the pooling result:
+
+\begin{itemize}
+	\item For \textbf{Max Pooling}, the gradient \(\frac{\partial L}{\partial O}\) is passed only to the input value that was selected as the maximum in the forward pass. Let \(x_{max}\) be the selected max value in the pooling window, then:
+	\[
+	\frac{\partial L}{\partial x_{max}} = \frac{\partial L}{\partial O}, \quad \text{and all other } x_i \text{ receive } 0.
+	\]
+	\item For \textbf{Average Pooling}, the gradient is distributed equally among all input values in the pooling window. If there are \(n\) elements in the window, then each input \(x_i\) receives:
+	\[
+	\frac{\partial L}{\partial x_i} = \frac{\partial L}{\partial O} \times \frac{1}{n}.
+	\]
+\end{itemize}
+\end{enrichment}
+
+\subsection{Global Pooling Layers}
+\label{subsec:global_pooling}
+
+Global pooling layers apply a pooling operation over the \emph{entire} spatial dimension of a feature map, unlike regular pooling (e.g., \(2\times2\)) which operates on smaller local regions. By collapsing each feature map into a \emph{single} value, these layers often replace fully connected (FC) layers at the end of convolutional networks, drastically reducing parameter counts.
+
+\subsubsection{General Advantages}
+\begin{itemize}
+	\item \textbf{More Robustness to Overfitting:} Global pooling removes the need for large FC layers. 
+	It doesn't introduce additional learnable weights, and merely aggregates existing activations. Hence, using it significantly cuts the number of trainable parameters.
+	\item \textbf{Lightweight Alternative to FC Layers:} Rather than flattening high-dimensional feature maps, introducing several MLP layers at the end of the CNN, a single value per map suffices, increasing computation speed while decreasing the size of the model.
+	\item \textbf{Improved Generalization:} Summarizing or selecting the strongest feature responses promotes focusing on essential aspects of the learned representation.
+\end{itemize}
+
+\subsubsection{Global Average Pooling (GAP)}
+\label{subsubsec:gap}
+
+\paragraph{Operation.} 
+GAP computes the mean of all activations in a feature map \(X\in \mathbb{R}^{H\times W}\):
+\[
+O = \frac{1}{HW}\sum_{i=1}^{H}\sum_{j=1}^{W} X_{ij}.
+\]
+This is performed independently for each channel.
+
+\paragraph{Upsides.}
+\begin{itemize}
+	\item \textbf{Direct Channel-to-Feature Mapping:} Each channel in the input shrinks to a single numeric representation, facilitating interpretability.
+	\item \textbf{Smooth Gradient Flow:} Since every spatial element contributes equally, gradients are spread out evenly, stabilizing training.
+\end{itemize}
+
+\paragraph{Downsides.}
+\begin{itemize}
+	\item \textbf{Loss of Spatial Detail:} Global averaging discards \emph{where} a feature occurs.
+	\item \textbf{Sensitivity to Very Small Feature Maps:} If \((H,W)\) is tiny, the mean could be too coarse, omitting relevant details.
+\end{itemize}
+
+\paragraph{Backpropagation.}
+Since \(O\) is the average over \(HW\) elements,
+\[
+\frac{\partial L}{\partial X_{ij}}
+= \frac{\partial L}{\partial O}\times \frac{1}{HW}.
+\]
+
+\subsubsection{Global Max Pooling (GMP)}
+\label{subsubsec:gmp}
+
+\paragraph{Operation.} 
+GMP takes the maximum over \(\{X_{ij}\}\) in a feature map:
+\[
+O = \max_{i,j} X_{ij}.
+\]
+
+\paragraph{Upsides.}
+\begin{itemize}
+	\item \textbf{Captures Strongest Activations:} Highlights the most prominent response within the map.
+	\item \textbf{Useful in Detection Tasks:} Identifying a key active neuron can help in bounding box predictions or coarse localization.
+\end{itemize}
+
+\paragraph{Downsides.}
+\begin{itemize}
+	\item \textbf{Sparse Gradient Updates:} Only the max element receives gradient signals; others get zero, potentially harming learning.
+	\item \textbf{Overemphasis on a Single Activation:} Non-max elements, which might contain relevant sub-features, are ignored.
+\end{itemize}
+
+\paragraph{Backpropagation.}
+Only the maximum entry obtains a nonzero derivative:
+\[
+\frac{\partial L}{\partial X_{ij}}
+= 
+\begin{cases}
+	\frac{\partial L}{\partial O}, & \text{if } X_{ij}=O,\\
+	0, & \text{otherwise}.
+\end{cases}
+\]
+
+\subsubsection{Comparison of GAP and GMP}
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Layer} & \textbf{Computation} & \textbf{Gradient Flow}\\
+		\hline
+		Global Average Pooling & Mean of \emph{all} elements & Evenly distributed \\
+		Global Max Pooling & Single maximum element & Only max location receives updates \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsubsection{Contrasting with Regular Pooling}
+\paragraph{Window Size.}
+\begin{itemize}
+	\item \textbf{Regular Pooling:} Uses smaller windows (\(2\times2\), \(3\times3\), \dots) gradually reducing dimensions, preserving some notion of spatial layout.
+	\item \textbf{Global Pooling:} Collapses the entire feature map to one value per channel, often as a final layer (or near the end).
+\end{itemize}
+
+\paragraph{When to Use Global Pooling.}
+\begin{itemize}
+	\item To replace fully connected layers, common in many efficient CNN architectures like \emph{MobileNet}.
+	\item When a concise channel-level summary suffices (e.g.\ final classification).
+\end{itemize}
+
+\paragraph{When to Use Regular Pooling.}
+\begin{itemize}
+	\item Early or mid-layer dimension reduction where preserving partial spatial context is beneficial.
+	\item Tasks requiring finer feature localization (e.g.\ segmentation).
+\end{itemize}
+
+\newpage
+\section{Classical CNN Architectures}
+\label{subsec:lenet5}
+
+Now that we have covered fully connected layers, activation functions, convolutional layers, and pooling layers, we can begin exploring classical Convolutional Neural Network (CNN) architectures. One of the earliest and most influential architectures is \textbf{LeNet-5}, developed by Yann LeCun in 1998 for handwritten character recognition \cite{lecun1998_lenet}. This model laid the foundation for modern CNNs, demonstrating how multiple convolutional and pooling layers can be stacked to learn hierarchical representations.
+
+\subsection{LeNet-5 Architecture}
+LeNet-5 follows the classical approach of multiple blocks of \([ \text{Conv}, \text{ReLU}, \text{Pool} ]\), meaning:
+\[
+\left[ \text{Conv}, \text{ReLU}, \text{Pool} \right] \times N
+\]
+where \(N\) denotes the number of convolutional blocks. After progressively reducing the spatial dimensionality while increasing the number of feature channels, the architecture flattens the output and applies additional fully connected layers:
+\[
+\left[ \text{FC}, \text{ReLU} \right] \times M, \text{ followed by an FC output layer.}
+\]
+The final layer typically performs classification using \textbf{Softmax} or another activation function suited to the task.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_80.jpg}
+	\caption{LeNet-5 architecture following the classical \([ \text{Conv}, \text{ReLU}, \text{Pool} ] \times N\), Flatten, \([ \text{FC}, \text{ReLU} ] \times M\), FC design. The network reduces spatial dimensions while increasing the number of feature channels, a pattern common in CNNs.}
+	\label{fig:lenet5_architecture}
+\end{figure}
+
+\newpage
+\subsubsection{Detailed Layer Breakdown}
+
+\begin{itemize}
+	\item \textbf{Input:} A grayscale \(28 \times 28\) image, represented as a tensor of shape \(1 \times 28 \times 28\) (one channel, height 28, width 28). This example assumes processing one image at a time rather than a batch.
+	
+	\item \textbf{First Convolutional Layer:} 
+	\begin{itemize}
+		\item Number of output channels: \(C_{\text{out}} = 20\).
+		\item Kernel size: \(K = 5\), padding: \(P = 2\), stride: \(S = 1\).
+		\item Output spatial size remains \(28 \times 28\) due to \emph{same padding}, but now with 20 channels.
+		\item Output tensor shape: \(20 \times 28 \times 28\).
+		\item Filter weight dimensions: \(20 \times 1 \times 5 \times 5\).
+		\item \textbf{Activation:} ReLU applied, preserving the output shape.
+	\end{itemize}
+	
+	\item \textbf{First Pooling Layer:} 
+	\begin{itemize}
+		\item Type: Max Pooling.
+		\item Kernel size: \(K = 2\), stride: \(S = 2\).
+		\item Reduces spatial dimensions to \(14 \times 14\) while keeping 20 channels.
+		\item Output tensor shape: \(20 \times 14 \times 14\).
+		\item No additional learnable parameters.
+	\end{itemize}
+	
+	\item \textbf{Second Convolutional Layer:}
+	\begin{itemize}
+		\item Number of output channels: \(C_{\text{out}} = 50\).
+		\item Kernel size: \(K = 5\), padding: \(P = 2\), stride: \(S = 1\).
+		\item Output spatial size remains \(14 \times 14\) (same padding).
+		\item Output tensor shape: \(50 \times 14 \times 14\).
+		\item Filter weight dimensions: \(50 \times 20 \times 5 \times 5\).
+		\item \textbf{Activation:} ReLU applied.
+	\end{itemize}
+	
+	\item \textbf{Second Pooling Layer:}
+	\begin{itemize}
+		\item Type: Max Pooling.
+		\item Kernel size: \(K = 2\), stride: \(S = 2\).
+		\item Reduces spatial dimensions to \(7 \times 7\), maintaining 50 channels.
+		\item Output tensor shape: \(50 \times 7 \times 7\).
+		\item No additional learnable parameters.
+	\end{itemize}
+	
+	\item \textbf{Flattening Layer:}
+	\begin{itemize}
+		\item Converts \(50 \times 7 \times 7\) into a single vector of \(2450\) elements.
+	\end{itemize}
+	
+	\item \textbf{Fully Connected Layers:}
+	\begin{itemize}
+		\item First FC layer: 
+		\begin{itemize}
+			\item Output size: 500 neurons.
+			\item Weights: \(2450 \times 500\).
+			\item \textbf{Activation:} ReLU.
+		\end{itemize}
+		
+		\item Second FC layer (output layer):
+		\begin{itemize}
+			\item Output size: 10 neurons (assuming classification into 10 classes).
+			\item Weights: \(500 \times 10\).
+			\item \textbf{Activation:} Softmax (for classification tasks).
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Summary of LeNet-5}
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Layer} & \textbf{Output Shape} & \textbf{Filter Size} & \textbf{Parameters} \\
+		\hline
+		Input & \(1 \times 28 \times 28\) & - & 0 \\
+		Conv1 & \(20 \times 28 \times 28\) & \(5 \times 5\) & \(20 \times 1 \times 5 \times 5\) \\
+		Pool1 & \(20 \times 14 \times 14\) & \(2 \times 2\) & 0 \\
+		Conv2 & \(50 \times 14 \times 14\) & \(5 \times 5\) & \(50 \times 20 \times 5 \times 5\) \\
+		Pool2 & \(50 \times 7 \times 7\) & \(2 \times 2\) & 0 \\
+		Flatten & \(2450\) & - & 0 \\
+		FC1 & \(500\) & - & \(2450 \times 500\) \\
+		FC2 & \(10\) & - & \(500 \times 10\) \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsubsection{Key Architectural Trends in CNNs, Illustrated by LeNet-5}
+\label{subsubsec:lenet_trends}
+
+\paragraph{Hierarchical Feature Learning.}
+LeNet-5 demonstrated how progressively reducing spatial dimensions while increasing channel depth leads to feature representations that capture multiple abstraction levels (edges, textures, shapes, etc.).
+
+\paragraph{Alternating Convolution and Pooling.}
+By interleaving convolutional and pooling layers, the network efficiently extracts features while gradually shrinking the spatial resolution, reducing both compute and parameter counts.
+
+\paragraph{Transition to Fully Connected (FC) Layers.}
+After sufficient feature extraction in convolutional/pooling blocks, LeNet-5 relies on FC layers to finalize classification or regression tasks—an approach still prevalent in many CNNs.
+
+\subsection{How Are CNN Architectures Designed?}
+\label{subsec:cnn_design}
+
+Designing a modern CNN involves balancing multiple factors:
+
+\begin{itemize}
+	\item \textbf{Spatial Reduction vs.\ Feature Expansion:}
+	Typical CNNs downsample \((H \times W)\) over depth while increasing the number of channels. This balance preserves rich representational capacity without bloating the parameter count.
+	
+	\item \textbf{Depth and Network Complexity:}
+	Deeper networks can model more complex structures but face potential pitfalls like \emph{vanishing} or \emph{exploding gradients}. Architectures increasingly include smarter activation function choices (e.g., replacing Sigmoid with ReLU based activations), \textbf{batch normalization} layers, and \textbf{skip connections} (to be covered later) to mitigate these issues in training deep CNNs.
+	
+	\item \textbf{Computational Efficiency:}
+	Streamlined designs avoid excessive parameters to ensure faster training and real-time inference, especially crucial in mobile or embedded contexts.
+\end{itemize}
+
+\newpage
+\section{Batch Normalization}
+\label{sec:batchnorm}
+
+Training deep neural networks presents several challenges, such as unstable gradients and slow convergence. \emph{Normalization layers} address these issues by stabilizing and accelerating training. The most widely used normalization layer is \textbf{Batch Normalization (BatchNorm)}, introduced by Ioffe and Szegedy in 2015 \cite{ioffe2015_batchnorm}. The core idea behind BatchNorm is to normalize the activations of each layer to have zero mean and unit variance, ensuring more stable distributions during training.
+
+\subsection{Understanding Mean, Variance, and Normalization}
+
+Before introducing the Batch Normalization process, it is essential to understand the statistical concepts of \emph{mean}, \emph{variance}, and \emph{normalization}. These concepts help explain why BatchNorm improves neural network training.
+
+\paragraph{Mean:} The mean (or average) of a set of values provides a central reference point and is computed as:
+
+\begin{equation}
+	\mu_i = \frac{1}{N} \sum_{j=1}^{N} x_i^{(j)}
+\end{equation}
+
+where  is the number of observations in the dataset (or batch), and  represents each sample in the feature dimension . The mean provides an estimate of the central tendency of the dataset.
+
+\paragraph{Variance:} The variance quantifies the spread of values around the mean and is given by:
+
+\begin{equation}
+	\sigma_i^2 = \frac{1}{N} \sum_{j=1}^{N} (x_i^{(j)} - \mu_i)^2
+\end{equation}
+
+Variance measures how much the values deviate from the mean. A high variance indicates that values are spread out, while a low variance suggests they are clustered closely around the mean.
+
+\paragraph{Standard Deviation:} The standard deviation is simply the square root of the variance:
+
+\begin{equation}
+	\sigma_i = \sqrt{\sigma_i^2} = \sqrt{\frac{1}{N} \sum_{j=1}^{N} (x_i^{(j)} - \mu_i)^2}
+\end{equation}
+
+It provides an interpretable measure of dispersion, showing how much values deviate from the mean in the same unit as the original data.
+
+\paragraph{Effect of Normalization:}
+When normalizing values to have zero mean and unit variance, we apply the transformation:
+
+\begin{equation}
+	\hat{x}_i = \frac{x_i - \mu_i}{\sigma_i}
+\end{equation}
+
+This process ensures that each feature has a consistent scale, preventing some features from dominating the learning process. 
+
+\subsection{Internal Covariate Shift and Batch Normalization’s Role}
+
+The authors of the BatchNorm paper proposed that their layer helps mitigate a non-rigorous phenomenon known as \emph{Internal Covariate Shift}, which can slow down training and reduce model robustness.
+
+\paragraph{What is Covariate Shift?}
+Covariate shift occurs when the distribution of features (input variables) changes between the training and testing datasets in machine learning. This means that while a model assumes a fixed distribution during training, it may encounter a different statistical distribution in the test set, leading to degraded performance.
+
+If a model is trained on one distribution and evaluated on another, it may fail to generalize effectively because it has learned patterns that do not hold under the new conditions.
+
+\paragraph{What is Internal Covariate Shift?}
+Internal covariate shift is a phenomenon described by the authors of Batch Normalization, where the distribution of each layer’s inputs changes as the parameters of preceding layers are updated. This continuous shift forces each layer to constantly adapt to new input distributions, making training unstable and inefficient. The shifting distribution of activations across layers slows convergence, requiring lower learning rates and careful weight initialization.
+
+BatchNorm aims to mitigate internal covariate shift by normalizing layer inputs at each training step. By ensuring that activations have a more stable distribution, BatchNorm enables the use of higher learning rates, reduces sensitivity to weight initialization, and accelerates network convergence. However, later research discovers that reducing internal covariate shift is not the primary reason for BatchNorm's effectiveness. We will revisit this topic later and explore additional more concrete reasons why BatchNorm improves training speed and performance.
+
+\subsection{Batch Normalization Process}
+Assume the output tensor of a previous layer consists of features \( x_1, x_2, \dots, x_D \), where \( D \) is the feature dimension. For each feature \( x_i \), we compute the mean and variance across the batch:
+
+\begin{equation}
+	\mu_i = \frac{1}{N} \sum_{j=1}^{N} x_i^{(j)}, \quad \sigma_i^2 = \frac{1}{N} \sum_{j=1}^{N} (x_i^{(j)} - \mu_i)^2
+\end{equation}
+
+where \( N \) is the batch size. We then normalize the feature values:
+
+\begin{equation}
+	\hat{x}_i = \frac{x_i - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}}
+\end{equation}
+
+where \( \epsilon \) is a small constant to prevent division by zero. Normalizing in this way forces activations to have zero mean and unit variance, but such strict standardization may limit the expressiveness of the network.
+
+To allow the model to learn more expressive transformations, BatchNorm introduces two additional learnable parameters: \( \gamma_i \) (scale) and \( \beta_i \) (shift):
+
+\begin{equation}
+	y_i = \gamma_i \hat{x}_i + \beta_i
+\end{equation}
+
+where \( \gamma_i \) allows the network to scale the normalized values, and \( \beta_i \) allows shifting them. Every feature \( x_i \) has its own \( \gamma_i \) and \( \beta_i \), making them \( D \)-dimensional vectors, where \( D \) is the number of features in the input tensor. Typically, \( \gamma \) is initialized to 1 and \( \beta \) is initialized to 0, but both are updated throughout training via backpropagation.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_86.jpg}
+	\caption{Summary of shapes and formulas of the 'Batch Normalization' process: normalization followed by learnable scaling and shifting (de-normalization).}
+	\label{fig:batchnorm_process}
+\end{figure}
+
+Why is this flexibility useful? During backpropagation, the gradient of the loss with respect to \( x_i \) is given by:
+
+\begin{equation}
+	\frac{dL}{dx_i} = \frac{\gamma_i}{\sqrt{\sigma^2_B + \epsilon}} \cdot \frac{dL}{dy_i}.
+\end{equation}
+
+Since \( \gamma \) is a learnable parameter, the network can adaptively scale the gradients, preventing them from becoming too large or too small. Additionally, the denominator \( \sqrt{\sigma^2_B + \epsilon} \) rescales the gradient based on the batch statistics, ensuring that if activations vary too much, their magnitude remains consistent, stabilizing gradient flow.
+
+This flexibility in relaxing the harsh constraint of strict standardization (zero mean, unit variance) is often crucial for enabling deep networks to train effectively. As we will explore later, BatchNorm’s impact extends beyond just reducing internal covariate shift—it fundamentally influences gradient propagation, optimization dynamics, and network robustness.
+
+\subsubsection{Batch Normalization for Convolutional Neural Networks (CNNs)}
+
+Batch Normalization was initially introduced for fully connected (FC) layers, where normalization is performed across the batch dimension. However, in convolutional layers, activations have an additional spatial structure due to the height (\(H\)) and width (\(W\)) dimensions of the feature maps. To adapt Batch Normalization for CNNs, we extend the normalization over both the batch dimension (\(N\)) and spatial dimensions (\(H, W\)).
+
+Instead of computing the mean and variance per feature across only the batch dimension, in CNNs we compute these statistics across the entire feature map. For an input tensor \(X\) of shape \( (N, C, H, W) \), BatchNorm is applied independently to each of the \(C\) feature maps, normalizing over all pixels in \(H \times W\) and all samples in the batch:
+
+\begin{equation}
+	\mu_c = \frac{1}{N H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{nchw}
+\end{equation}
+
+\begin{equation}
+	\sigma_c^2 = \frac{1}{N H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W} (x_{nchw} - \mu_c)^2
+\end{equation}
+
+The computed mean and variance are then used to normalize each feature map:
+
+\begin{equation}
+	\hat{x}_{nchw} = \frac{x_{nchw} - \mu_c}{\sqrt{\sigma_c^2 + \epsilon}}
+\end{equation}
+
+Similar to fully connected layers, learnable parameters \( \gamma_c \) and \( \beta_c \) allow the network to restore any necessary transformations:
+
+\begin{equation}
+	y_{nchw} = \gamma_c \hat{x}_{nchw} + \beta_c
+\end{equation}
+
+where \( \gamma_c \) and \( \beta_c \) are channel-wise scaling and shifting parameters, ensuring that each feature map can maintain flexibility in representation learning.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_92.jpg}
+	\caption{Extending Batch Normalization to CNNs by computing batch statistics across spatial dimensions (H, W) in addition to batch samples (N). Each feature map is normalized independently.}
+	\label{fig:batchnorm_cnn}
+\end{figure}
+
+\newpage
+\subsection{Batch Normalization and Optimization}
+\subsubsection{Beyond Covariate Shift: Why Does BatchNorm Improve Training?}
+
+Santurkar et al. (2018) \cite{santurkar2018_howdoesbatchnormhelp} challenged the notion that eliminating internal covariate shift is the key benefit of BatchNorm. They conducted experiments comparing networks trained with BatchNorm under three different conditions:
+
+\begin{itemize}
+	\item \textbf{Standard:} A VGG network trained without BatchNorm.
+	\item \textbf{Standard + BatchNorm:} The same network trained with BatchNorm.
+	\item \textbf{Standard + "Noisy" BatchNorm:} A BatchNorm-enhanced network where artificial noise was added to induce internal covariate shift (ICS).
+\end{itemize}
+
+Surprisingly, the third setting (which artificially increased internal covariate shift) performed similarly to standard BatchNorm and significantly better than the network without BatchNorm. This suggests that reducing covariate shift is not the primary reason for BatchNorm's success.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/batchnorm_training_stability.jpg}
+	\caption{Training accuracy across different conditions (no BN, with BN, BN with artificially induced covariate shift). Performance differences indicate that covariate shift is not the key issue affecting training efficiency.}
+	\label{fig:batchnorm_training_stability}
+\end{figure}
+
+\noindent
+Hence, the authors suggest that secret behind the impact of Batch Normalization is different. Further experiments they conducted suggest that its power comes mainly from smoothing the loss landscape, making training more stable and efficient. The research paper introducing BatchNorm demonstrated that applying it to deep networks leads to a significant reduction in sharp spikes in the loss function.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/batchnorm_loss_smooth.jpg}
+	\caption{Impact of Batch Normalization on optimization: smoother loss landscape (left), more stable gradients (middle), and overall training stability (right) \cite{ioffe2015_batchnorm}.}
+	\label{fig:batchnorm_loss_smooth}
+\end{figure}
+
+A smoother loss landscape provides several advantages:
+
+\begin{itemize}
+	\item \textbf{Higher Learning Rates:} With reduced variance in activations, the network can tolerate higher learning rates without divergence.
+	\item \textbf{Reduced Regularization Needs:} Since BatchNorm prevents sharp fluctuations, models can often train without excessive weight decay or dropout.
+	\item \textbf{Faster Convergence:} Optimizers can traverse the loss landscape more efficiently, reducing training time.
+\end{itemize}
+
+\subsubsection{Why Does BatchNorm Smooth the Loss Surface?}
+
+Batch Normalization fundamentally re-parameterizes neural networks in a way that smooths the loss surface, making optimization more efficient. The key reasons behind this effect are:
+
+\paragraph{1. Hessian Eigenvalues and Loss Surface Curvature}
+
+To understand how BatchNorm influences the loss surface, we first recall the concept of eigenvalues and eigenvectors. Given a square matrix \( A \), an eigenvector \( v \) and its corresponding eigenvalue \( \lambda \) satisfy:
+
+\begin{equation}
+	A v = \lambda v
+\end{equation}
+
+This means that \( A \) scales \( v \) by \( \lambda \) without changing its direction. The eigenvalues \( \lambda \) indicate the magnitude of stretching or compression in different directions.
+
+\paragraph{Computing Eigenvalues} 
+Eigenvalues are computed by solving the characteristic equation:
+
+\begin{equation}
+	\det(A - \lambda I) = 0
+\end{equation}
+
+where \( I \) is the identity matrix and \( \det \) denotes the determinant. The roots of this equation give the eigenvalues of \( A \), providing insight into how transformations affect different directions in the space.
+
+\paragraph{Interpretation of Eigenvalues}
+
+Eigenvalues provide information on how much the function expands or contracts in specific directions:
+
+\begin{itemize}
+	\item Large eigenvalues \( \lambda \) \( \Rightarrow \) significant stretching along that direction.
+	\item Small eigenvalues \( \lambda \) \( \Rightarrow \) minimal effect in that direction.
+	\item Negative eigenvalues \( \Rightarrow \) reversal in direction (indicative of saddle points or local maxima in optimization).
+\end{itemize}
+
+In the context of optimization, the Hessian matrix \( H \) captures the second-order partial derivatives of the loss function:
+
+\begin{equation}
+	H_{ij} = \frac{\partial^2 \mathcal{L}}{\partial \theta_i \partial \theta_j}
+\end{equation}
+
+where \( \theta \) represents trainable parameters of the model. The eigenvalues of \( H \) provide insights into the curvature of the loss surface:
+
+\begin{itemize}
+	\item Large eigenvalues \( \lambda \) \( \Rightarrow \) sharp curvature \( \Rightarrow \) unstable gradients and high sensitivity to small parameter updates.
+	\item Small eigenvalues \( \lambda \) \( \Rightarrow \) flatter curvature \( \Rightarrow \) more stable gradients but potentially slower learning.
+\end{itemize}
+
+Empirical studies show that BatchNorm reduces the largest eigenvalues of \( H \), effectively smoothing the loss surface \cite{santurkar2018_howdoesbatchnormhelp}. Researchers assume it occurs because:
+
+\begin{itemize}
+	\item \textbf{Controlling Activation Magnitudes:} Without BN, activations may fluctuate widely, leading to extreme gradient updates. BN normalizes activations, keeping gradients in check and preventing steep loss curvatures.
+	\item \textbf{Reducing Sensitivity to Parameter Updates:} By standardizing activations, small changes in parameters no longer produce unpredictable shifts in the loss function. This keeps the gradient flow stable, preventing large variations in the loss landscape.
+\end{itemize}
+
+\paragraph{2. Reducing the Lipschitz Constant}
+
+The Lipschitz constant \(L\) quantifies how sensitive the loss function is to parameter changes:
+
+\begin{equation}
+	\| f(x_1) - f(x_2) \| \leq L \| x_1 - x_2 \|
+\end{equation}
+
+A high \(L\) means that small parameter changes can cause large fluctuations in the loss, making optimization unstable. Since the Lipschitz constant is upper-bounded by the largest eigenvalue of \(H\), reducing the Hessian eigenvalues effectively lowers \(L\), making gradient-based optimization more stable and allowing for larger learning rates without oscillations or divergence.
+
+\paragraph{3. Implicit Regularization via Mini-Batch Noise}
+During training, each mini-batch is normalized with its \emph{own} mean and variance, leading to slight fluctuations in the forward pass across iterations. This acts as a mild form of noise, conferring several regularization benefits:
+
+\begin{itemize}
+	\item \textbf{Encourages Broader Optima:} 
+	Since the model repeatedly sees small variations in its activation distributions, it must learn features robust to those shifts. This steers optimization toward flatter, more generalizable minima.
+	\item \textbf{Acts Like Mild Data Augmentation:}
+	The random normalization offsets per batch resemble an on-the-fly perturbation of inputs/activations, preventing overfitting to a single “static” distribution of feature maps.
+\end{itemize}
+
+\subsubsection{BN Helps Decoupling Weight Magnitude from Activation Scale}
+
+BatchNorm ensures that small parameter changes do not produce drastic changes in activation distributions, stabilizing the network’s behavior.
+
+\textbf{Without BN:} A small weight increase in a deep layer might cause activations to shift significantly, propagating instability and leading to vanishing/exploding gradients.
+
+\textbf{With BN:} Because activations are normalized, small weight updates lead to controlled changes, preventing activations from blowing up or collapsing.
+
+This effect allows for higher learning rates, as networks become less sensitive to parameter updates.
+
+\paragraph{Mini Example: ReLU Dead Zone Prevention}
+
+Consider a layer feeding into a ReLU activation. If the layer's bias or weights shift slightly, many inputs could enter ReLU’s "dead zone," where all outputs become zero $ (\text{inputs} <0)$. With BatchNorm, activations are re-centered and scaled to maintain unit variance, preventing small weight shifts from abruptly suppressing activations. This helps maintain a more expressive network, avoiding cases where neurons stop contributing to learning.
+
+\subsubsection{Conclusion: The Real Reason BatchNorm Works}
+
+While BatchNorm was originally introduced to address internal covariate shift, later research has shown that its primary benefit lies in smoothing the loss landscape and stabilizing gradients. By keeping activations within a well-behaved range, BatchNorm enables higher learning rates, reduces sensitivity to initialization, and allows deep networks to train more efficiently.
+
+This insight has influenced the development of alternative normalization techniques such as Layer Normalization (LN), Instance Normalization (IN), and Group Normalization (GN), which similarly aim to improve optimization stability without relying on batch-level statistics. We'll cover these extensively later. 
+
+\newpage
+\subsubsection{Batch Normalization in Test Time}
+
+One challenge with Batch Normalization as presented so far is that the estimated mean and standard deviation depend on the batch statistics, making it impractical for inference where a single input or dynamically arriving data must be processed independently. For example, in a real-time web service where users upload data at unpredictable times, a network that depends on batch statistics would yield inconsistent predictions depending on the users uploading at any moment. This is a critical issue for deploying machine learning models.
+
+To address this, BatchNorm behaves differently during training and testing. During training, the layer operates as described—computing mean and variance over the current batch. However, during inference, instead of relying on batch statistics, the mean and variance are fixed constants obtained from a running average accumulated during training over all batches.
+
+This has two key benefits:
+
+\begin{itemize}
+	\item It restores independence among test-time samples, ensuring consistency.
+	\item It makes the layer effectively linear during inference, meaning it can be merged with the preceding convolution or fully connected layer, introducing no extra computational cost at inference.
+\end{itemize}
+
+Since BatchNorm is typically applied directly after FC/Conv layers but before activation functions (e.g., ReLU), this property is particularly useful, as these can be grouped together, removing the computational overhead of applying BN. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_91.jpg}
+	\caption{Batch Normalization in test time: mean and variance are fixed, computed using a running average during training.}
+	\label{fig:batchnorm_test}
+\end{figure}
+
+\subsubsection{Limitations of BatchNorm}
+
+Despite its effectiveness, BatchNorm has several downsides:
+
+\begin{itemize}
+	\item \textbf{Fixed mean and variance can fail with imbalanced data:} If the dataset contains highly imbalanced distributions, the running mean and variance might not generalize well, leading to poor normalization at test time.
+	\item \textbf{Ineffective for small batch sizes or online learning:} Since BatchNorm relies on batch statistics, it does not perform well when batch sizes are small or variable, such as in online learning settings.
+	\item \textbf{Not suitable for sequential models:} Since BatchNorm computes statistics across the batch dimension, it does not naturally fit recurrent architectures like RNNs, which process data sequentially. In addition, it is not suitable for batches of varying sizes (which is often the case with many-to-many or many-to-one problems, which are the ones RNNs and Transformers can solve but regular CNNs/FC networks aren't built to). Not only that, it is hard to parallellize batch-normalized models, which is critical for Transformers. 
+	\item \textbf{Train-Test Mode Switching Can Cause Bugs:} BN requires explicit mode switching between training \& inference. Failing to do so can lead to performance degradation if, for instance, the model mistakenly computes statistics from a single test sample as if it were a full batch. 
+\end{itemize}
+
+\subsubsection{Alternative Normalization Methods}
+\label{subsubsec:alt_norms}
+
+Despite BatchNorm’s widespread success, it has drawbacks—particularly with small or non-i.i.d.\ batches. Various alternatives have emerged to address these limitations:
+
+\begin{itemize}
+	\item \textbf{Layer Normalization (LN):} Normalizes activations across all features for each \emph{individual} sample, making it batch-size independent; commonly used in RNNs and Transformers.
+	\item \textbf{Instance Normalization (IN):} Applied channel-wise per example (per \emph{instance}), often in style-transfer tasks where batch statistics are less meaningful.
+	\item \textbf{Group Normalization (GN):} Partitions channels into smaller groups before normalizing; designed for cases (e.g., small batch training) where BatchNorm struggles.
+\end{itemize}
+
+In many CNN applications with large batches, BatchNorm still tends to excel. However, when batch sizes are tiny or data isn’t i.i.d.\ per batch—such as in Transformers or reinforcement learning—\emph{layer normalization} or \emph{group normalization} can prove more stable.
+
+\subsubsection{Layer Normalization (LN)}
+\label{subsubsec:layer_norm}
+
+\noindent
+\paragraph{Core Idea}
+Layer Normalization operates \emph{per sample}, computing mean and variance across all features/channels of a single training example. This makes it insensitive to batch size (and thus suitable for tiny or single-sample batches).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_96.jpg}
+	\caption{Layer Normalization in a fully connected layer: each sample’s hidden activations are normalized independently.}
+	\label{fig:layernorm_fc}
+\end{figure}
+
+\paragraph{Definition}
+For an input vector \(\mathbf{x} \in \mathbb{R}^N\),
+\[
+\mu(\mathbf{x}) = \frac{1}{N}\sum_{i=1}^N x_i,
+\quad
+\sigma^2(\mathbf{x})
+= \frac{1}{N}\sum_{i=1}^N \bigl(x_i - \mu(\mathbf{x})\bigr)^2.
+\]
+Then LN transforms each component \(x_i\) to:
+\[
+y_i = \gamma_i\,\frac{x_i - \mu(\mathbf{x})}{\sqrt{\sigma^2(\mathbf{x}) + \epsilon}} + \beta_i,\quad i=1,\dots,N,
+\]
+where \(\{\gamma_i\}\) and \(\{\beta_i\}\) are trainable parameters (per feature), and \(\epsilon\) is a small constant for numerical stability.
+
+\subsubsection{Layer Normalization (LN)}
+\label{subsubsec:layer_norm}
+
+\noindent
+\textbf{Core Idea.}
+Layer Normalization (LN) operates \emph{per sample}, computing mean and variance \emph{within a single training example} rather than across a batch. Unlike BatchNorm, LN thus remains effective when the batch size is very small or even one.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_96.jpg}
+	\caption{Layer Normalization in a fully connected layer: each sample’s hidden activations are normalized independently.}
+	\label{fig:layernorm_fc}
+\end{figure}
+
+\paragraph{Definition (Fully Connected Layers).}
+Given an input vector \(\mathbf{x} \in \mathbb{R}^N\):
+\[
+\mu(\mathbf{x}) 
+= \frac{1}{N}\sum_{i=1}^N x_i,
+\quad
+\sigma^2(\mathbf{x})
+= \frac{1}{N}\sum_{i=1}^N \bigl(x_i - \mu(\mathbf{x})\bigr)^2.
+\]
+Each component is normalized and then scaled/shifted:
+\[
+y_i 
+= \gamma_i \,\frac{x_i - \mu(\mathbf{x})}
+{\sqrt{\sigma^2(\mathbf{x})+\epsilon}}
+\;+\;
+\beta_i,
+\quad
+i=1,\dots,N,
+\]
+where \(\{\gamma_i\}\) and \(\{\beta_i\}\) are learnable parameters. Here, LN does not rely on batch-level statistics, making it robust for small-batch or sequence-based scenarios.
+
+\paragraph{Extension to Convolutional Layers}
+
+Layer Normalization can be applied to convolutional layers by computing the mean and variance across all channels and spatial positions within each individual sample:
+
+\begin{equation}
+	\mu_{n} = \frac{1}{C H W} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} x_{n i j k},
+	\quad
+	\sigma_{n}^2 = \frac{1}{C H W} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} \bigl(x_{n i j k}-\mu_{n}\bigr)^2.
+\end{equation}
+
+Each activation \(x_{n i j k}\) is then normalized as:
+
+\begin{equation}
+	\hat{x}_{n i j k} = \frac{x_{n i j k}-\mu_{n}}{\sqrt{\sigma_{n}^2+\epsilon}},
+\end{equation}
+
+followed by learnable scale \(\gamma\) and shift \(\beta\), maintaining the network’s expressiveness.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/layer_norm.jpg}
+	\caption{Visualization of Layer Normalization operation, indicating how it is applied to each input image in the batch, with its own corresponding mean and std values \cite{becominghuman2018_allaboutnorm}.}
+	\label{fig:layernorm_visual}
+\end{figure}
+
+\paragraph{Interpretation}
+\begin{itemize}
+	\item \textbf{Per-Sample Aggregation:} All features (channels) and spatial positions in the \emph{same} image share the same mean \(\mu_n\) and variance \(\sigma_n^2\), ensuring consistency across different feature maps.
+	\item \textbf{Batch-Size Independence:} No averaging across different samples, making LN robust for small-batch or sequence-oriented settings (e.g., RNNs, Transformers).
+\end{itemize}
+
+\paragraph{Advantages of LN}
+\begin{enumerate}
+	\item \textbf{Stable with Small Batches:}
+	LN relies solely on per-example statistics, preserving effectiveness even with batch size \(=1\). This is particularly valuable in online learning and reinforcement learning.
+	\item \textbf{Widely Used in RNNs \& Transformers:}
+	Because LN does not average across batches, it naturally suits sequence models. Modern transformer architectures apply LN after multi-head attention and feedforward blocks, enhancing stability and training speed.
+\end{enumerate}
+
+\subsubsection{Instance Normalization (IN)}
+A more common normalization approach for images, that resembles layer normalization but makes more sense for a CNN use-case (as it applies per feature map, averaging \textbf{only} over the spatial dimensions, and not on the entirety of the input tensor, across all of the channels). 
+\newpage
+\noindent
+\textbf{Definition:} For each sample \(n\) and channel \(c\), \emph{instance normalization} computes the mean and variance across the spatial dimensions \((H \times W)\) only:
+
+\begin{equation}
+	\mu_{n c} = \frac{1}{H W} \sum_{j=1}^{H} \sum_{k=1}^{W} x_{n c j k},
+	\quad
+	\sigma_{n c}^2 = \frac{1}{H W} \sum_{j=1}^{H} \sum_{k=1}^{W} \bigl(x_{n c j k}-\mu_{n c}\bigr)^2.
+\end{equation}
+
+Then, each activation \(x_{n c j k}\) is normalized as:
+
+\begin{equation}
+	\hat{x}_{n c j k} = \frac{x_{n c j k}-\mu_{n c}}{\sqrt{\sigma_{n c}^2+\epsilon}},
+\end{equation}
+
+\noindent
+often followed by learnable scale and shift parameters \((\gamma_c,\,\beta_c)\).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/instance_norm_visual.jpg}
+	\caption{Visualization of Instance Normalization operation \cite{becominghuman2018_allaboutnorm}.}
+	\label{fig:instancenorm_visual}
+\end{figure}
+
+\paragraph{Interpretation}
+Instance Normalization operates at a more granular level than BatchNorm, normalizing each channel within a single image rather than across a batch. This ensures that:
+\begin{itemize}
+	\item \textbf{Each Sample is Treated Independently:} Since normalization is applied per sample, IN prevents dependency on batch statistics, which is useful in domains where batch sizes vary significantly.
+	\item \textbf{Local Contrast is Preserved:} Unlike BatchNorm, which normalizes across the batch, IN ensures that fine details remain within individual images while still removing global contrast variations.
+\end{itemize}
+
+\paragraph{Advantages of Instance Normalization}
+\begin{itemize}
+	\item \textbf{Batch-Size Independence:} Unlike BatchNorm, IN does not rely on batch statistics, making it suitable for applications with small or varying batch sizes.
+	\item \textbf{Better Style Transfer:} By normalizing each sample independently, IN effectively removes contrast variations, enabling consistent style adaptation in tasks such as AdaIN (Adaptive Instance Normalization).
+	\item \textbf{Effective for Image Generation Tasks:} IN helps maintain style consistency in generative models, particularly in GANs and neural style transfer networks.
+\end{itemize}
+
+\newpage
+\subsubsection{Group Normalization (GN)}
+
+\noindent
+\textbf{Definition:} Group Normalization (GN) normalizes activations across a defined number of groups instead of across the batch (BatchNorm) or spatial dimensions (InstanceNorm). Given a sample \(n\) and a set of \(G\) groups, GN computes the mean and variance for each group across the channels \(C\) and spatial dimensions \(H \times W\):
+
+\begin{equation}
+	\mu_{n g} = \frac{1}{|G| H W} \sum_{c \in G} \sum_{j=1}^{H} \sum_{k=1}^{W} x_{n c j k},
+	\quad
+	\sigma_{n g}^2 = \frac{1}{|G| H W} \sum_{c \in G} \sum_{j=1}^{H} \sum_{k=1}^{W} \bigl(x_{n c j k}-\mu_{n g}\bigr)^2.
+\end{equation}
+
+Each activation \(x_{n c j k}\) is then normalized as:
+
+\begin{equation}
+	\hat{x}_{n c j k} = \frac{x_{n c j k}-\mu_{n g}}{\sqrt{\sigma_{n g}^2+\epsilon}},
+\end{equation}
+
+
+\noindent
+followed by learnable scale and shift parameters \((\gamma_c, \beta_c)\).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/normalizations_comparison.jpg}
+	\caption{Visualization of Group Normalization operation compared to the rest of normalization methods (BN, LN, and IN) \cite{sh-tsang2018_groupnorm}.}
+	\label{fig:groupnorm_visual}
+\end{figure}
+
+\paragraph{Interpretation}
+Group Normalization introduces an intermediate normalization strategy:
+\begin{itemize}
+	\item \textbf{More Structured than IN:} Unlike IN, which normalizes per channel, GN groups multiple channels together, maintaining more structural consistency across activations.
+	\item \textbf{Avoids Batch Dependency:} Unlike BN, GN does not require large batch sizes, making it useful for applications with memory constraints or small datasets.
+\end{itemize}
+
+\paragraph{Advantages of Group Normalization}
+\begin{itemize}
+	\item \textbf{Robust to Batch Size:} GN does not depend on batch statistics, making it ideal for small-batch training or scenarios where batch sizes vary dynamically.
+	\item \textbf{Balanced Between BN and IN:} GN is more flexible than IN while avoiding the batch dependency of BN. 
+	\item \textbf{Better Regularization:} GN effectively captures feature dependencies by normalizing groups of channels together, reducing sensitivity to changes in activation distributions.
+	\item \textbf{Applicable in Various Architectures:} GN is particularly effective in object detection and segmentation tasks where batch sizes tend to be small due to high-resolution inputs.
+\end{itemize}
+
+\subsubsection{Why Do IN, LN, and GN Improve Optimization?}
+\label{subsubsec:why_alt_norm}
+
+While \textbf{Batch Normalization (BN)} is often described as ``smoothing the loss landscape,'' alternative normalization methods---\emph{Instance Normalization (IN)}, \emph{Layer Normalization (LN)}, and \emph{Group Normalization (GN)}---improve training stability by regulating feature statistics in different ways. Rather than relying on batch statistics, they normalize activations \emph{per sample} or \emph{within groups}, thereby stabilizing gradients and feature scales.
+
+\paragraph{Common Benefits Across IN, LN, and GN}
+\begin{itemize}
+	\item \textbf{Stabilized Gradient Magnitudes:}
+	Normalizing activations (and thus gradients) prevents exploding or vanishing updates, facilitating more robust backpropagation.
+	\item \textbf{Predictable Parameter Updates:}
+	By standardizing features, these methods keep updates in a more uniform range, reducing erratic steps during optimization.
+	\item \textbf{Improved Generalization:}
+	Limiting extreme activation shifts makes models less sensitive to input variations, mitigating overfitting.
+	\item \textbf{Independence from Large Batches:}
+	Unlike BN (which needs reliable batch statistics), these methods (especially LN and IN) work effectively with small or fluctuating batch sizes.
+\end{itemize}
+
+\paragraph{Summary: How These Methods Enhance Training}
+Instead of “smoothing the loss surface” in the manner often attributed to BN, these alternatives primarily \emph{manage activation scales and gradients} at levels more localized than a full batch:
+\begin{itemize}
+	\item \textbf{IN}: Per-channel, per-sample normalization removes contrast shifts and stabilizes updates in image-focused tasks.
+	\item \textbf{LN}: Normalizes across all features for each example, crucial in RNN and Transformer contexts where batch-level statistics are unwieldy.
+	\item \textbf{GN}: Group-wise normalization balances local feature scaling, beneficial for vision tasks under small or dynamic batch sizes.
+\end{itemize}
+All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts, and maintain consistent training dynamics---ultimately improving optimization stability and performance.
+
+\begin{enrichment}[Backpropagation for Batch Normalization][subsection]
+	\label{enrichment:bn_backprop_node}
+	\noindent
+	\textbf{Context and Goal:}
+	In a computational-graph framework, \(\text{BN}\) (Batch Norm) is viewed as a node receiving input activations \(\mathbf{x}\) and producing outputs \(\mathbf{y}\). Our objective is to compute partial derivatives of an upstream function \(f\) (the next layer's output) w.r.t.\ \(\gamma, \beta,\) and each \(x_i\). Below is the standard BN forward pass:
+	
+	\[
+	\begin{aligned}
+		\mu &= \frac{1}{m}\sum_{i=1}^{m} x_i, 
+		&& \sigma^2 = \frac{1}{m}\sum_{i=1}^{m} (x_i - \mu)^2, \\
+		\hat{x}_i &= \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}, 
+		&& y_i = \gamma \,\hat{x}_i + \beta.
+	\end{aligned}
+	\]
+	Here:
+	\begin{itemize}
+		\item \(\mu,\sigma^2\) are the mini-batch mean and variance,
+		\item \(\hat{x}_i\) is the normalized input,
+		\item \(y_i\) is the scaled/shifted output (linear transform),
+		\item \(\gamma,\beta\) are trainable parameters,
+		\item \(f\) is an upstream layer’s output (e.g., a loss or the next layer’s activation) that depends on \(y\).
+	\end{itemize}
+	
+	\paragraph{Chain Rule in the Graph}
+	We consider the node \(\text{BN}\) with inputs \(\bigl(\mathbf{x}, \gamma, \beta\bigr)\). The partial derivatives we want are:
+	\[
+	\frac{\partial f}{\partial x_i}, \quad
+	\frac{\partial f}{\partial \gamma}, \quad
+	\frac{\partial f}{\partial \beta}.
+	\]
+	In a graph sense, “\(\text{BN}\) node” receives \(\mathbf{x}\), \(\gamma,\beta\), and outputs \(\mathbf{y}\) on which the next function \(f\) depends.
+	
+	\subparagraph{Gradients w.r.t.\ \(\gamma\) and \(\beta\)}
+	Recall the output of BatchNorm at each index \(i\) is:
+	\[
+	y_i = \gamma \,\hat{x}_i + \beta.
+	\]
+	Let \(\frac{\partial f}{\partial y_i}\) be the \emph{upstream gradient} from the next node in the computational graph (often noted \(\mathrm{dout}[i]\) in code). Applying the chain rule for the local operation \(\hat{x}_i \mapsto y_i\), we get:
+	
+	\[
+	\frac{\partial f}{\partial \gamma}
+	= \sum_{i=1}^m
+	\underbrace{
+		\frac{\partial f}{\partial y_i}
+	}_{\text{upstream}}
+	\times
+	\underbrace{
+		\frac{\partial y_i}{\partial \gamma}
+	}_{\text{local} = \hat{x}_i}
+	= \sum_{i=1}^m
+	\Bigl(
+	\frac{\partial f}{\partial y_i} \;\hat{x}_i
+	\Bigr),
+	\]
+	\[
+	\frac{\partial f}{\partial \beta}
+	= \sum_{i=1}^m
+	\underbrace{
+		\frac{\partial f}{\partial y_i}
+	}_{\text{upstream}}
+	\times
+	\underbrace{
+		\frac{\partial y_i}{\partial \beta}
+	}_{\text{local}=1}
+	= \sum_{i=1}^m
+	\Bigl(
+	\frac{\partial f}{\partial y_i}
+	\Bigr).
+	\]
+	Hence, each \(\hat{x}_i\) contributes to \(\frac{\partial f}{\partial \gamma}\), while \(\beta\) accumulates the gradient across all outputs.
+	
+	\subparagraph{Gradient w.r.t.\ \(\hat{x}_i\)}
+	Again by the chain rule,
+	\[
+	\frac{\partial f}{\partial \hat{x}_i}
+	= \underbrace{
+		\frac{\partial f}{\partial y_i}
+	}_{\text{upstream}}
+	\times
+	\underbrace{
+		\frac{\partial y_i}{\partial \hat{x}_i}
+	}_{\text{local}=\gamma}
+	= \frac{\partial f}{\partial y_i} \;\gamma.
+	\]
+	Thus, the normalized input \(\hat{x}_i\) receives an upstream gradient scaled by \(\gamma\).
+	
+	\paragraph{Gradients Involving \(\mu\) and \(\sigma^2\)}
+	The normalized input \(\hat{x}_i\) depends on the \emph{batch mean} \(\mu\) and variance \(\sigma^2\):
+	\[
+	\mu = \frac{1}{m}\sum_{j=1}^m x_j,\quad
+	\sigma^2 = \frac{1}{m}\sum_{j=1}^m (x_j - \mu)^2,
+	\quad
+	\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2+\epsilon}}.
+	\]
+	Hence, to find \(\tfrac{\partial f}{\partial \mu}\) and \(\tfrac{\partial f}{\partial \sigma^2}\), we first compute local derivatives w.r.t.\ \(\mu,\sigma^2\) and multiply by the upstream gradient \(\tfrac{\partial f}{\partial \hat{x}_i}\). Formally:
+	\[
+	\frac{\partial f}{\partial \sigma^2}
+	= \sum_{i=1}^m
+	\Bigl(
+	\underbrace{
+		\frac{\partial f}{\partial \hat{x}_i}
+	}_{\text{upstream}}
+	\times
+	\underbrace{
+		\frac{\partial \hat{x}_i}{\partial \sigma^2}
+	}_{\text{local}}
+	\Bigr),
+	\quad
+	\frac{\partial f}{\partial \mu}
+	= \sum_{i=1}^m
+	\Bigl[
+	\underbrace{
+		\frac{\partial f}{\partial \hat{x}_i}
+		\times
+		\frac{\partial \hat{x}_i}{\partial \mu}
+	}_{\text{direct}}
+	\;+\;
+	\underbrace{
+		\frac{\partial f}{\partial \sigma^2}
+		\times
+		\frac{\partial \sigma^2}{\partial \mu}
+	}_{\text{indirect}}
+	\Bigr].
+	\]
+	Deriving each partial (e.g.\ \(\tfrac{\partial \hat{x}_i}{\partial \sigma^2}\), \(\tfrac{\partial \sigma^2}{\partial \mu}\), etc.) involves basic calculus on the above definitions.
+	
+	\paragraph{Final: Gradients w.r.t.\ Each \(x_i\)}
+	Each input \(x_i\) influences \(\hat{x}_i\), \(\mu\), and \(\sigma^2\). By the chain rule, we combine all relevant paths:
+	\[
+	\frac{\partial f}{\partial x_i}
+	= 
+	\underbrace{
+		\frac{\partial f}{\partial \hat{x}_i}
+		\times
+		\frac{\partial \hat{x}_i}{\partial x_i}
+	}_{\text{direct path}}
+	\;+\;
+	\underbrace{
+		\frac{\partial f}{\partial \mu}
+		\times
+		\frac{\partial \mu}{\partial x_i}
+	}_{\text{indirect via mean}}
+	\;+\;
+	\underbrace{
+		\frac{\partial f}{\partial \sigma^2}
+		\times
+		\frac{\partial \sigma^2}{\partial x_i}
+	}_{\text{indirect via variance}}.
+	\]
+
+	Careful algebraic manipulation of these terms leads to the well-known "batchnorm backward" formula, which is often expressed in compact summations (e.g., \(\sum_i \frac{\partial f}{\partial \hat{x}_i} \hat{x}_i\)). If you're interested in a more detailed step-by-step derivation, including further simplifications and an efficient implementation, Kevin Zakka provides an excellent breakdown in his blog post \cite{zakka2016_batchnorm}. His explanation follows a structured approach to deriving the gradients and includes an optimized implementation of the backpropagation process.
+	
+	\paragraph{Computational Efficiency}
+	Though the above derivatives look cumbersome, summation terms (like \(\sum_i \tfrac{\partial f}{\partial \hat{x}_i}\,\hat{x}_i\)) are typically computed once per batch. This staged approach significantly reduces redundant calculations.
+	
+	\paragraph{Extension to LN, IN, GN}
+	The same chain-rule derivation applies to \emph{layer, instance, or group} normalization, changing only which axes are used for \(\mu\) and \(\sigma^2\). In all cases, the node perspective remains:
+	\[
+	\text{(in) } \to [\mu, \sigma^2] 
+	\to \hat{x} 
+	\to [\gamma,\beta] 
+	\to \text{(out).}
+	\]
+	Hence the backward pass is conceptually the same, ensuring one can unify the code logic with minor changes to which dimensions are averaged.
+	
+	\paragraph{Conclusion}
+	Treating BN as a node in the computational graph clarifies how gradients w.r.t.\ \(\gamma\), \(\beta\), and \(\{x_i\}\) are computed step by step. Although the algebra is more involved than standard layers, frameworks typically perform these summations under the hood, allowing practitioners to reap BN’s benefits with minimal overhead.
+\end{enrichment}

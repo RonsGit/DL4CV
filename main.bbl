@@ -803,6 +803,57 @@
       \field{title}{Explaining and harnessing adversarial examples}
       \field{year}{2014}
     \endentry
+    \entry{mamba2023_selective}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=aa9ec56190423bb01ead50d96b94ba93}{%
+           family={Gu},
+           familyi={G\bibinitperiod},
+           given={Albert},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ede2395a7f566a456448fcb5f8222c99}{%
+           family={Dao},
+           familyi={D\bibinitperiod},
+           given={Tri},
+           giveni={T\bibinitperiod}}}%
+        {{hash=e879c19d2676918825359f7d93d110ca}{%
+           family={Gupta},
+           familyi={G\bibinitperiod},
+           given={Ankit},
+           giveni={A\bibinitperiod}}}%
+        {{hash=160929a7e6ceecdf3f7c9a13abd5ea35}{%
+           family={Ermon},
+           familyi={E\bibinitperiod},
+           given={Stefano},
+           giveni={S\bibinitperiod}}}%
+        {{hash=eb1f5a2ba08ea12db36c871fe601f5f1}{%
+           family={Ré},
+           familyi={R\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{8e4a2f2eae3c5bfdb3949738a6e69d9e}
+      \strng{fullhash}{bafc6091c4be330ed0cc83d81f1d1348}
+      \strng{fullhashraw}{bafc6091c4be330ed0cc83d81f1d1348}
+      \strng{bibnamehash}{8e4a2f2eae3c5bfdb3949738a6e69d9e}
+      \strng{authorbibnamehash}{8e4a2f2eae3c5bfdb3949738a6e69d9e}
+      \strng{authornamehash}{8e4a2f2eae3c5bfdb3949738a6e69d9e}
+      \strng{authorfullhash}{bafc6091c4be330ed0cc83d81f1d1348}
+      \strng{authorfullhashraw}{bafc6091c4be330ed0cc83d81f1d1348}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint}
+      \field{title}{Mamba: Linear-Time Sequence Modeling with Selective State Spaces}
+      \field{volume}{arXiv:2312.00752}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2312.00752
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2312.00752
+      \endverb
+    \endentry
     \entry{harris1988_combined}{inproceedings}{}{}
       \name{author}{2}{}{%
         {{hash=26c2e30a214100e1224d04b183a1e7da}{%
@@ -1064,6 +1115,73 @@
       \range{pages}{18}
       \verb{doi}
       \verb 10.1113/jphysiol.1959.sp006308
+      \endverb
+    \endentry
+    \entry{becominghuman2018_allaboutnorm}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=95546730ff1c0d2c7fcea272fb41f992}{%
+           family={Human},
+           familyi={H\bibinitperiod},
+           given={Becoming},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{fullhash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{fullhashraw}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{bibnamehash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{authorbibnamehash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{authornamehash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{authorfullhash}{95546730ff1c0d2c7fcea272fb41f992}
+      \strng{authorfullhashraw}{95546730ff1c0d2c7fcea272fb41f992}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Becoming Human}
+      \field{title}{All About Normalization}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://becominghuman.ai/all-about-normalization-6ea79e70894b
+      \endverb
+      \verb{url}
+      \verb https://becominghuman.ai/all-about-normalization-6ea79e70894b
+      \endverb
+    \endentry
+    \entry{ioffe2015_batchnorm}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=5543e82359e26b035efc009cb3efff9d}{%
+           family={Ioffe},
+           familyi={I\bibinitperiod},
+           given={Sergey},
+           giveni={S\bibinitperiod}}}%
+        {{hash=ed568d9c3bb059e6bf22899fbf170f86}{%
+           family={Szegedy},
+           familyi={S\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{fullhash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{fullhashraw}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{bibnamehash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{authorbibnamehash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{authornamehash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{authorfullhash}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \strng{authorfullhashraw}{7e8dee717d54c2984b1c6bd3f3c0561f}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 32nd International Conference on Machine Learning (ICML)}
+      \field{title}{Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift}
+      \field{year}{2015}
+      \field{pages}{448\bibrangedash 456}
+      \range{pages}{9}
+      \verb{urlraw}
+      \verb http://proceedings.mlr.press/v37/ioffe15.html
+      \endverb
+      \verb{url}
+      \verb http://proceedings.mlr.press/v37/ioffe15.html
       \endverb
     \endentry
     \entry{karpathy2015_visualsemantic}{article}{}{}
@@ -1792,6 +1910,51 @@
       \verb 10.1109/CVPR.2018.00474
       \endverb
     \endentry
+    \entry{santurkar2018_howdoesbatchnormhelp}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=bb66a5fcd7966034f5477f12cf059156}{%
+           family={Santurkar},
+           familyi={S\bibinitperiod},
+           given={Shibani},
+           giveni={S\bibinitperiod}}}%
+        {{hash=240422b4c9d0d047da2b6f51d9220b59}{%
+           family={Tsipras},
+           familyi={T\bibinitperiod},
+           given={Dimitris},
+           giveni={D\bibinitperiod}}}%
+        {{hash=924b414be21dcfc4f4f9f08196520746}{%
+           family={Ilyas},
+           familyi={I\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=155359c985c7d112498d27d32ad89bfe}{%
+           family={Madry},
+           familyi={M\bibinitperiod},
+           given={Aleksander},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{5616016bf46b4397fdcdc25870ca89dd}
+      \strng{fullhash}{633293d1151716344015b7d9191e7aa4}
+      \strng{fullhashraw}{633293d1151716344015b7d9191e7aa4}
+      \strng{bibnamehash}{5616016bf46b4397fdcdc25870ca89dd}
+      \strng{authorbibnamehash}{5616016bf46b4397fdcdc25870ca89dd}
+      \strng{authornamehash}{5616016bf46b4397fdcdc25870ca89dd}
+      \strng{authorfullhash}{633293d1151716344015b7d9191e7aa4}
+      \strng{authorfullhashraw}{633293d1151716344015b7d9191e7aa4}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Advances in Neural Information Processing Systems (NeurIPS)}
+      \field{title}{How Does Batch Normalization Help Optimization?}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1805.11604
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1805.11604
+      \endverb
+    \endentry
     \entry{blog2023_separable_convolutions}{misc}{}{}
       \name{author}{1}{}{%
         {{hash=bcad4513697f9eae9bda0c53d1d84e6c}{%
@@ -1887,6 +2050,35 @@
       \field{title}{Two-Stream Convolutional Networks for Action Recognition in Videos}
       \field{year}{2014}
     \endentry
+    \entry{solai2023_backpropconv}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=c514f3915c2492d6f44eb7dd6af317fc}{%
+           family={Solai},
+           familyi={S\bibinitperiod},
+           given={Pavithra},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{fullhash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{fullhashraw}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{bibnamehash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{authorbibnamehash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{authornamehash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{authorfullhash}{c514f3915c2492d6f44eb7dd6af317fc}
+      \strng{authorfullhashraw}{c514f3915c2492d6f44eb7dd6af317fc}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Convolutions and Backpropagation}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://pavisj.medium.com/convolutions-and-backpropagations-46026a8f5d2c
+      \endverb
+      \verb{url}
+      \verb https://pavisj.medium.com/convolutions-and-backpropagations-46026a8f5d2c
+      \endverb
+    \endentry
     \entry{tan2019_efficientnet}{inproceedings}{}{}
       \name{author}{2}{}{%
         {{hash=1e7d6abb8225099acc71f672b9ec336e}{%
@@ -1949,6 +2141,34 @@
       \field{journaltitle}{Computer Vision and Pattern Recognition (CVPR)}
       \field{title}{DeepPose: Human Pose Estimation via Deep Neural Networks}
       \field{year}{2014}
+    \endentry
+    \entry{sh-tsang2018_groupnorm}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=cd3139d4d2a7bdac0ba33fd7ec9b0a48}{%
+           family={Sh-Tsang},
+           familyi={S\bibinithyphendelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{fullhash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{fullhashraw}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{bibnamehash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{authorbibnamehash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{authornamehash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{authorfullhash}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \strng{authorfullhashraw}{cd3139d4d2a7bdac0ba33fd7ec9b0a48}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Medium}
+      \field{title}{Review: Group Normalization (GN) for Image Classification}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://sh-tsang.medium.com/review-group-norm-gn-group-normalization-image-classification-5f7fe0f58eb6
+      \endverb
+      \verb{url}
+      \verb https://sh-tsang.medium.com/review-group-norm-gn-group-normalization-image-classification-5f7fe0f58eb6
+      \endverb
     \endentry
     \entry{vaswani2017_attention}{inproceedings}{}{}
       \name{author}{8}{}{%
@@ -2046,40 +2266,6 @@
       \verb 10.1109/CVPR.2001.990517
       \endverb
     \endentry
-    \entry{mamba2022_dynamic}{article}{}{}
-      \name{author}{3}{}{%
-        {{hash=1592421333bfd0f0959df5c10c89b491}{%
-           family={Wang},
-           familyi={W\bibinitperiod},
-           given={Ziyan},
-           giveni={Z\bibinitperiod}}}%
-        {{hash=04f35058122a87a61ede2c451b41563a}{%
-           family={Tripathi},
-           familyi={T\bibinitperiod},
-           given={Shashank},
-           giveni={S\bibinitperiod}}}%
-        {{hash=90edc587e1d523d4e173b1fe6e733445}{%
-           family={Johnson},
-           familyi={J\bibinitperiod},
-           given={Justin},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{fullhash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{fullhashraw}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{bibnamehash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{authorbibnamehash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{authornamehash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{authorfullhash}{791b37c93d58aeb4c809e063e3d12194}
-      \strng{authorfullhashraw}{791b37c93d58aeb4c809e063e3d12194}
-      \field{sortinit}{W}
-      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{arXiv preprint arXiv:2210.14267}
-      \field{title}{MAMBA: Multi-Agent Multi-Body Analysis for Dynamic Scene Understanding}
-      \field{year}{2022}
-    \endentry
     \entry{guo2014_atari}{article}{}{}
       \name{author}{1}{}{%
         {{hash=7ef846078d0c76d3640db36fee5f0447}{%
@@ -2131,6 +2317,35 @@
       \endverb
       \verb{url}
       \verb https://miro.medium.com/v2/resize:fit:1400/1*T5FDrB9yAWNkO00DpuOEBQ.png
+      \endverb
+    \endentry
+    \entry{zakka2016_batchnorm}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=079406e74075774f3657f1b9c1e3e379}{%
+           family={Zakka},
+           familyi={Z\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{fullhash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{fullhashraw}{079406e74075774f3657f1b9c1e3e379}
+      \strng{bibnamehash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{authorbibnamehash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{authornamehash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{authorfullhash}{079406e74075774f3657f1b9c1e3e379}
+      \strng{authorfullhashraw}{079406e74075774f3657f1b9c1e3e379}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Understanding Batch Normalization Backpropagation}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://kevinzakka.github.io/2016/09/14/batch_normalization/
+      \endverb
+      \verb{url}
+      \verb https://kevinzakka.github.io/2016/09/14/batch_normalization/
       \endverb
     \endentry
     \entry{zhang2018_shufflenet}{inproceedings}{}{}
@@ -2229,9 +2444,6 @@
       \endverb
     \endentry
   \enddatalist
-  \missing{howard2017mobilenets}
-  \missing{tan2019efficientnet}
-  \missing{zhang2018shufflenet}
 \endrefsection
 \endinput
 
