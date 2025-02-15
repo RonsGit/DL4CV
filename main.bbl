@@ -2042,6 +2042,7 @@
       \strng{authornamehash}{25d2f3c4577a6632d37f0126cc781232}
       \strng{authorfullhash}{25d2f3c4577a6632d37f0126cc781232}
       \strng{authorfullhashraw}{25d2f3c4577a6632d37f0126cc781232}
+      \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
@@ -2049,6 +2050,42 @@
       \field{booktitle}{Neural Information Processing Systems (NeurIPS)}
       \field{title}{Two-Stream Convolutional Networks for Action Recognition in Videos}
       \field{year}{2014}
+    \endentry
+    \entry{simonyan2014_vgg}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=9d16b7284df92c9adaee86c37ab992df}{%
+           family={Simonyan},
+           familyi={S\bibinitperiod},
+           given={Karen},
+           giveni={K\bibinitperiod}}}%
+        {{hash=c72fc39e94030f67717052309266a44d}{%
+           family={Zisserman},
+           familyi={Z\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{fullhash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{fullhashraw}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{bibnamehash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{authorbibnamehash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{authornamehash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{authorfullhash}{25d2f3c4577a6632d37f0126cc781232}
+      \strng{authorfullhashraw}{25d2f3c4577a6632d37f0126cc781232}
+      \field{extraname}{2}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{International Conference on Learning Representations (ICLR)}
+      \field{title}{Very Deep Convolutional Networks for Large-Scale Image Recognition}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1409.1556
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1409.1556
+      \endverb
     \endentry
     \entry{solai2023_backpropconv}{misc}{}{}
       \name{author}{1}{}{%
@@ -2077,6 +2114,36 @@
       \endverb
       \verb{url}
       \verb https://pavisj.medium.com/convolutions-and-backpropagations-46026a8f5d2c
+      \endverb
+    \endentry
+    \entry{janestreet_l2_bn}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=dc658f3c4626e15c249c8b1bc7a7e03e}{%
+           family={Street},
+           familyi={S\bibinitperiod},
+           given={Jane},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{fullhash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{fullhashraw}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{bibnamehash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{authorbibnamehash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{authornamehash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{authorfullhash}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \strng{authorfullhashraw}{dc658f3c4626e15c249c8b1bc7a7e03e}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Jane Street Blog}
+      \field{title}{L2 Regularization and Batch Normalization: How They Interact}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://blog.janestreet.com/l2-regularization-and-batch-norm/
+      \endverb
+      \verb{url}
+      \verb https://blog.janestreet.com/l2-regularization-and-batch-norm/
       \endverb
     \endentry
     \entry{tan2019_efficientnet}{inproceedings}{}{}
@@ -2346,6 +2413,48 @@
       \endverb
       \verb{url}
       \verb https://kevinzakka.github.io/2016/09/14/batch_normalization/
+      \endverb
+    \endentry
+    \entry{zeiler2014_visualizing}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=90d345b65e166a9cfc0c6ddec4ddc3d6}{%
+           family={Zeiler},
+           familyi={Z\bibinitperiod},
+           given={Matthew\bibnamedelima D.},
+           giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=a6784304d1cc890b2cb6c6c7f2f3fd76}{%
+           family={Fergus},
+           familyi={F\bibinitperiod},
+           given={Rob},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{fullhash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{fullhashraw}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{bibnamehash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{authorbibnamehash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{authornamehash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{authorfullhash}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \strng{authorfullhashraw}{85ff4f1b7cd8e8f00fa953ed2f69136a}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the European Conference on Computer Vision (ECCV)}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Visualizing and Understanding Convolutional Networks}
+      \field{year}{2014}
+      \field{pages}{818\bibrangedash 833}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1007/978-3-319-10590-1_53
+      \endverb
+      \verb{eprint}
+      \verb 1311.2901
       \endverb
     \endentry
     \entry{zhang2018_shufflenet}{inproceedings}{}{}

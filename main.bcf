@@ -2519,6 +2519,9 @@
     <bcf:citekey order="135" intorder="1">sh-tsang2018_groupnorm</bcf:citekey>
     <bcf:citekey order="136" intorder="1">sh-tsang2018_groupnorm</bcf:citekey>
     <bcf:citekey order="137" intorder="1">zakka2016_batchnorm</bcf:citekey>
+    <bcf:citekey order="138" intorder="1">krizhevsky2012_alexnet</bcf:citekey>
+    <bcf:citekey order="139" intorder="1">zeiler2014_visualizing</bcf:citekey>
+    <bcf:citekey order="140" intorder="1">simonyan2014_vgg</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

@@ -2392,3 +2392,63 @@ All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts,
 	\paragraph{Conclusion}
 	Treating BN as a node in the computational graph clarifies how gradients w.r.t.\ \(\gamma\), \(\beta\), and \(\{x_i\}\) are computed step by step. Although the algebra is more involved than standard layers, frameworks typically perform these summations under the hood, allowing practitioners to reap BN’s benefits with minimal overhead.
 \end{enrichment}
+
+\newpage
+\begin{enrichment}[BatchNorm and \(L_2\) Regularization][subsection]
+	\label{enrichment:bn_l2_regularization}
+	
+	\paragraph{Context and Motivation}
+	Batch Normalization (BN) and \(L_2\) regularization (a.k.a.\ weight decay) are both common in modern deep learning. BN stabilizes training by normalizing feature activations in each mini-batch, while \(L_2\) shrinks weights to control overfitting. However, \emph{once BN is applied to a convolutional layer, the usual “shrink the filter weights” mechanism of \(L_2\) may change meaningfully}.
+	
+	\paragraph{Why Combine Them?}
+	\begin{itemize}
+		\item \textbf{Mild Extra Regularization:}
+		BN somewhat regularizes by making activations less sensitive to weight scale; layering on \(L_2\) can further suppress overfitting.
+		\item \textbf{Smoother Activations + Weight Decay:}
+		BN ensures stable feature scales, which can complement the incremental shrinkage from \(L_2\), often improving convergence.
+	\end{itemize}
+	
+	\paragraph{Key Interaction: BN Masks the Scale of Weights}
+	\subparagraph{Invariance to Weight Scaling}
+	BN’s mean/variance normalization effectively discards the absolute magnitude of incoming weights. As a result:
+	\[
+	\text{If } w \mapsto \lambda\, w,\quad \text{then }\, \mathrm{BN}(w) \approx \mathrm{BN}(\lambda\,w).
+	\]
+	Hence, weight decay’s “shrink the weights” effect no longer reduces overfitting in a straightforward sense, because BN can \emph{undo} that scale change.
+	
+	\subparagraph{Shifting Role of \(L_2\)}
+	Rather than acting as a direct \emph{regularizer} on that layer’s capacity, \(L_2\) can become a mechanism controlling the \emph{effective learning rate}. When weights grow large, BN normalizes them, causing gradients to shrink inversely with weight magnitude. If there is no \(L_2\) to counterbalance this, the net effect can lead to an unbounded weight scale (and a diminishing step size), effectively making training freeze or behave oddly. With weight decay, however, the network is forced to maintain a consistent weight scale, preserving a stable gradient regime.
+	
+	\paragraph{Practical Pitfalls}
+	\subparagraph{(1) Excluding \(\gamma,\beta\) from Decay}
+	BN layers introduce \(\gamma\) (scale) and \(\beta\) (shift). Standard practice excludes these from weight decay:
+	\begin{itemize}
+		\item \textbf{Why Exclude?} 
+		Penalizing \(\gamma\) can prevent BN from effectively rescaling channels.
+		\item \textbf{Danger of Huge \(\gamma\):} 
+		Conversely, if main filter weights are heavily decayed, BN might “compensate” by inflating \(\gamma\). Carefully observe or limit \(\gamma\) to avoid large amplitude in activations.
+	\end{itemize}
+	
+	\subparagraph{(2) Small Batches}
+	BN relies on stable batch-level statistics. With small batch sizes (e.g., \(<8\) or \(<16\)), the noise in mean/variance estimates can conflict with steady weight decay, causing:
+	\begin{itemize}
+		\item \textbf{Oscillating Updates:} Variation in BN’s normalization plus constant shrinking of weights can destabilize training.
+		\item \textbf{Under/Overfitting Mix:} The network may converge suboptimally or require more complex tuning (e.g., smaller momentum in BN).
+	\end{itemize}
+	
+	\paragraph{Recommendations}
+	\begin{itemize}
+		\item \textbf{Exclude or Lightly Penalize BN’s \(\gamma,\beta\):}
+		Typically, BN’s scale/shift are not included in weight decay. Or use only a gentle decay on \(\gamma\).
+		\item \textbf{Tune Decay Strength Carefully:}
+		If BN already helps stabilize/regularize, an overly large \(L_2\) might hamper learning.
+		\item \textbf{Track \(\gamma\) Behavior:}
+		If \(\gamma\) grows excessively, consider lowering its learning rate or mild penalty.
+		\item \textbf{For Small Batches:}
+		Higher BN momentum (less variance in mean/var estimates) or alternative normalizations can reduce instability.
+	\end{itemize}
+	
+	\paragraph{Summary}
+	When a convolutional layer feeds into BN, scaling down its weights via \(L_2\) no longer directly reduces overfitting—BN can “cancel out” the shrinkage. Instead, the main effect of \(L_2\) is to bound weight scale and thus preserve a stable gradient magnitude. In many architectures, this indirect role still benefits training, but practitioners should be aware of potential pitfalls such as runaway \(\gamma\) and fragile updates with tiny batch sizes.
+
+\end{enrichment}

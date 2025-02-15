@@ -6,3 +6,239 @@
 %----------------------------------------------------------------------------------------
 %	CHAPTER 8 - Lecture 8: CNN Architectures I
 %----------------------------------------------------------------------------------------
+
+\section{Introduction: From Building Blocks to SOTA CNNs}
+
+Convolutional Neural Networks (CNNs) have revolutionized computer vision by providing state-of-the-art results in image classification, object detection, and many other tasks. While previous chapters introduced the core building blocks of CNNs—convolutional layers, activation functions, normalization techniques, and pooling layers—the question remains: \emph{how do we structure these components into effective architectures?}
+
+This chapter explores the historical progression of CNN architectures, focusing on key models that have shaped modern deep learning. We ground our discussion in the \emph{ImageNet Large Scale Visual Recognition Challenge (ILSVRC)}, which has served as a driving force for innovation in deep learning-based image classification.
+
+\section{AlexNet}
+
+In 2012, a breakthrough in the field of computer vision—and the winner of the ImageNet classification challenge—was \textbf{AlexNet} \cite{krizhevsky2012_alexnet}. 
+While modern architectures are significantly deeper, AlexNet marked the beginning of deep convolutional networks. It accepted input images of spatial dimensions \(227 \times 227\), with three color channels, leading to an input tensor shape of \(3 \times 227 \times 227\) per image, and a total input batch shape of \(N \times 3 \times 227 \times 227\).
+
+AlexNet consisted of:
+\begin{itemize}
+	\item \textbf{Five convolutional layers}, interleaved with max pooling layers.
+	\item \textbf{Three fully connected layers}, finalizing the classification with a softmax output.
+	\item \textbf{ReLU non-linearity}, one of the first architectures to introduce it.
+	\item \textbf{Local Response Normalization (LRN)}, a now obsolete normalization technique used before BatchNorm.
+	\item \textbf{Multi-GPU training}, splitting the model across two NVIDIA GTX 580 GPUs, each with only 3GB of memory.
+\end{itemize}
+
+Despite its relatively simple design, AlexNet was hugely influential, accumulating over 100,000 citations since its publication. This makes it one of the most cited works in modern science, surpassing even landmark research in information theory and fundamental physics. 
+
+\subsection{Architecture Details}
+
+Let us analyze AlexNet layer by layer, focusing on output dimensions, memory consumption, and computational cost.
+
+\paragraph{First Convolutional Layer (Conv1)}
+The first convolutional layer has \(C_{\text{out}} = 64\) filters, kernel size \(K = 11 \times 11\), stride \(S = 4\), and padding \(P = 2\). The output spatial size is computed as:
+
+\begin{equation}
+	W' = \frac{W - K + 2P}{S} + 1 = \frac{227 - 11 + 2(2)}{4} + 1 = 56
+\end{equation}
+
+Thus, the output tensor shape is \(64 \times 56 \times 56\).
+
+\paragraph{Memory Requirements}
+Assuming 32-bit floating-point representation (4 bytes per element), the output tensor storage requirement is:
+
+\begin{equation}
+	\frac{(C_{\text{out}} \times H' \times W') \times 4}{1024} = \frac{(64 \times 56 \times 56) \times 4}{1024} = 784 \text{KB}
+\end{equation}
+
+\paragraph{Number of Learnable Parameters}
+The weight tensor shape is \(C_{\text{out}} \times C_{\text{in}} \times K \times K = 64 \times 3 \times 11 \times 11\), with an additional bias term per channel:
+
+\begin{equation}
+	\text{Total Params} = (64 \times 3 \times 11 \times 11) + 64 = 23,296
+\end{equation}
+
+\paragraph{Computational Cost}
+Each output element requires a convolution with a \(C_{\text{in}} \times K \times K\) receptive field, leading to the following Multiply-Accumulate operations (MACs):
+
+\begin{equation}
+	\text{\#MACs} = (C_{\text{out}} \times H' \times W') \times (C_{\text{in}} \times K \times K)
+\end{equation}
+
+\begin{equation}
+	= (64 \times 56 \times 56) \times (3 \times 11 \times 11) = 72,855,552 \approx 78M \text{ MACs}
+\end{equation}
+
+Note: In practice, 1 MAC = 2 FLOPs, since each multiply-accumulate consists of both a multiplication and an addition.
+
+\paragraph{Max Pooling Layer}
+The first pooling layer follows the ReLU activation and has a \(3 \times 3\) kernel with stride \(S = 2\), reducing the spatial size:
+
+\begin{equation}
+	W' = \lfloor (W - K) / S + 1 \rfloor = \lfloor (56 - 3) / 2 + 1 \rfloor = 27
+\end{equation}
+
+Thus, the output tensor shape is \(64 \times 27 \times 27\).
+
+\paragraph{Memory and Computational Cost}
+\begin{itemize}
+	\item \textbf{Memory:} \(64 \times 27 \times 27 \times 4 / 1024 = 182.25\) KB.
+	\item \textbf{MACs:} Since pooling takes only a maximum over a \(3 \times 3\) window, the cost is:
+	
+	\begin{equation}
+		(C_{\text{out}} \times H' \times W') \times (K \times K) = (64 \times 27 \times 27) \times (3 \times 3) = 0.4M \text{ MACs}.
+	\end{equation}
+\end{itemize}
+
+Max pooling is computationally inexpensive compared to convolutions.
+
+\subsection{Final Fully Connected Layers}
+The final three layers form a Multi-Layer Perceptron (MLP):
+
+\begin{itemize}
+	\item \textbf{Flatten Layer:} Flattens the \(256 \times 6 \times 6\) tensor into a 9216-dimensional vector.
+	\item \textbf{First FC Layer:} Maps 9216 to 4096 neurons.
+	\item \textbf{Second FC Layer:} Maps 4096 to another 4096 neurons.
+	\item \textbf{Final FC Layer:} Maps 4096 to 1000 output classes (ImageNet categories).
+\end{itemize}
+
+\paragraph{Computational Cost}
+For the first fully connected layer:
+
+\begin{equation}
+	\text{FC Params} = (C_{\text{in}} \times C_{\text{out}}) + C_{\text{out}}
+\end{equation}
+
+\begin{equation}
+	= (9216 \times 4096) + 4096 = 37,725,832
+\end{equation}
+
+\begin{equation}
+	\text{\#MACs} = 9216 \times 4096 = 37,748,736.
+\end{equation}
+
+The process continues for the other FC layers, culminating in a final output of 1000 neurons for classification.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_46.jpg}
+	\caption{The AlexNet architecture, including a table summarizing memory, parameters, and FLOPs per layer.}
+	\label{fig:alexnet_architecture}
+\end{figure}
+
+\subsection{Key Takeaways from AlexNet}
+\begin{itemize}
+	\item The memory footprint is largest in the early convolutional layers.
+	\item Nearly all parameters are stored in the fully connected layers.
+	\item Most computational cost (FLOPs) occurs in convolutional layers.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_49.jpg}
+	\caption{Trends in AlexNet: memory usage in early conv layers, parameter-heavy FC layers, and computational cost concentrated in convolutions.}
+	\label{fig:alexnet_trends}
+\end{figure}
+
+\subsection{ZFNet: An Improvement on AlexNet}
+
+In 2013, most competitors in the ImageNet challenge used CNNs following AlexNet’s success. The winner, \textbf{ZFNet} \cite{zeiler2014_visualizing}, was essentially a refined, larger version of AlexNet.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_52.jpg}
+	\caption{The ZFNet architecture and its improvements over AlexNet.}
+	\label{fig:zfnet_architecture}
+\end{figure}
+
+\subsubsection{Key Modifications in ZFNet}
+\begin{itemize}
+	\item The first convolutional layer was adjusted to use a \(7 \times 7\) kernel with stride 2, instead of \(11 \times 11\) with stride 4 in AlexNet. This resulted in finer spatial resolution in early layers.
+	\item Increased number of parameters and computation, leading to improved performance.
+\end{itemize}
+
+\noindent The main lesson from AlexNet and ZFNet: \textbf{larger networks tend to perform better, but architecture refinement is critical.}
+
+\section{VGG: A Principled CNN Architecture}
+\label{sec:vgg_architecture}
+
+\paragraph{Historical Context.}
+Proposed in the 2014 ImageNet challenge by Oxford’s \emph{Visual Geometry Group} (\cite{simonyan2014_vgg}), \textbf{VGG} demonstrated the power of systematically deepening CNNs. In contrast to ad-hoc predecessor designs like AlexNet, VGG introduced a uniform blueprint for increasing depth using only small kernels and structured downsampling.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_8/slide_63.jpg}
+	\caption{Comparison of AlexNet vs.\ VGG: model size, parameter count, and FLOPs.}
+	\label{fig:slide_63_vgg_alexnet}
+\end{figure}
+
+\paragraph{Core Design Principles.}
+VGG’s architecture rests on three simple rules:
+\begin{enumerate}
+	\item All convolutions are \(\,3\times3\), stride=1, pad=1.
+	\item All pooling is \(\,2\times2\) max-pool with stride=2.
+	\item After each pool, the number of channels doubles.
+\end{enumerate}
+These guidelines enabled much deeper networks than earlier CNNs, yet kept computations relatively manageable.
+
+\subsection{Network Structure}
+Five hierarchical \emph{stages} group VGG’s convolutional layers:
+\begin{itemize}
+	\item \textbf{Stages 1--3}: \([\,\mathrm{conv}\!-\!\mathrm{conv}\!-\!\mathrm{pool}\,]\).
+	\item \textbf{Stages 4--5}: \([\,\mathrm{conv}\!-\!\mathrm{conv}\!-\!\mathrm{conv}\!-\![\mathrm{conv}]\!-\!\mathrm{pool}\,]\).
+\end{itemize}
+Popular variants are:
+\begin{itemize}
+	\item \textbf{VGG-16} with 16 total convolutional layers,
+	\item \textbf{VGG-19} with 19 layers (extra conv in stages 4,5).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/Chapter_8/slide_56.jpg}
+	\caption{AlexNet vs.\ VGG-16 and VGG-19, highlighting VGG’s deeper, more uniform design. (Slide~\ref{fig:slide_56_vgg_alexnet})}
+	\label{fig:slide_56_vgg_alexnet}
+\end{figure}
+
+\subsection{Key Architectural Insights}
+
+\subsubsection{Small-Kernel Convolutions (\(3\times3\))}
+VGG replaces larger kernels (e.g.\ \(5\times5\), \(7\times7\)) with multiple \((3\times3)\) layers in sequence:
+\begin{itemize}
+	\item \textbf{Fewer Parameters:} 
+	A \(5\times5\) layer (C\(\rightarrow\)C) needs \(25C^2\) params vs.\ \((2\times 3\times3)=18C^2\) for two \((3\times3)\) layers—saving \(\sim28\%\).
+	\item \textbf{Fewer FLOPs:} A single \(5\times5\) convolution requires \(25C^2HW\) MACs, whereas two stacked \(3\times3\) layers require only \(18C^2HW\) MACs, reducing the computational cost significantly.
+	\item \textbf{Additional Non-Linearities:}
+	Each \((3\times3)\) block adds an extra \texttt{ReLU}, enhancing representational power.
+	\item \textbf{Equivalent Receptive Field:}
+	Stacked \((3\times3)\) kernels can mimic a \(5\times5\) or \(7\times7\) receptive field with less cost.
+\end{itemize}
+
+\subsubsection{Pooling \(\,2\times2\), Stride=2, No Padding}
+Each max-pool halves the spatial resolution. This systematically shrinks \((H\times W)\) by a factor of 2 at each stage, reducing compute in subsequent conv layers while retaining key feature activations.
+
+\subsubsection{Doubling Channels After Each Pool}
+Every time \((H\times W)\) halves, VGG doubles the channel dimension:
+\begin{itemize}
+	\item \textbf{Keeps Compute Balanced:}
+	Halving spatial size cuts the feature map area by \(\tfrac{1}{4}\). Doubling channels multiplies it by 2, netting an overall consistent computational load.
+	\item \textbf{Deep Hierarchical Features:}
+	As resolution shrinks, more channels capture increasingly complex patterns.
+\end{itemize}
+
+\subsection{Why This Strategy Works}
+\paragraph{Balanced Computation.}
+Downsampling by \(\tfrac{1}{2}\) in height/width decreases memory usage fourfold, while doubling channels boosts parameter usage. These changes roughly offset, so deeper stages keep a similar cost to earlier ones.
+
+\paragraph{Influence on Later Architectures.}
+ResNet, DenseNet, and other modern CNNs commonly adopt the \emph{“halve spatial dimension, double channels”} approach, ensuring that \emph{even as networks grow deeper,} no single layer becomes exorbitantly expensive.
+
+\subsection{Practical Observations}
+\begin{itemize}
+	\item \textbf{Depth over Large Kernels:} Multiple small convs outperform fewer large-kernel layers, enabling higher nonlinearity and fewer parameters.
+	\item \textbf{Uniform Design Eases Scaling:} A consistent set of kernel and pooling choices fosters more predictable performance and simpler scaling options.
+	\item \textbf{Increased Memory \& FLOPs:} VGG’s deeper nature raises parameter counts and compute demands, making it significantly—less suited to edge devices and real-time applications.
+\end{itemize}
+
+\noindent
+Despite higher resource usage, VGG’s straightforward, principled design pioneered deeper networks and influenced countless subsequent CNN architectures (e.g., \emph{ResNet}, \emph{EfficientNet}) that build on its core ideas and refine efficiency.
+
+
