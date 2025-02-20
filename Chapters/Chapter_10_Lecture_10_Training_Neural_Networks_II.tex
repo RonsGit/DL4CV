@@ -3,7 +3,607 @@
 % Chapter-specific content starts here
 \chapter{Lecture 10: Training Neural Networks II}
 
-%-------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
 %	CHAPTER 10 - Lecture 10: Training Neural Networks II
-%-------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+\section{Learning Rate Schedules}
+\label{sec:learning_rate_schedules}
+
+\noindent In this lecture, we continue our discussion on training deep neural networks, focusing on strategies to improve optimization efficiency. One of the most critical hyperparameters in training is the \textbf{learning rate} (\(\eta\)). Regardless of the optimizer used—SGD, Momentum, Adagrad, RMSProp, Adam, or others—the learning rate heavily influences training dynamics.
+
+\subsection{The Importance of Learning Rate Selection}
+\label{subsec:learning_rate_selection}
+
+\noindent The choice of learning rate significantly impacts the training process:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_35.jpg}
+	\caption{Effect of different learning rates on training. Yellow: too high, leading to divergence; Blue: too low, resulting in slow progress; Green: somewhat high, converging suboptimally; Red: well-chosen learning rate, ensuring efficient training.}
+	\label{fig:chapter10_lr_selection}
+\end{figure}
+
+As we can see in the figure \ref{fig:chapter10_lr_selection}:
+
+\begin{itemize}
+	\item If the learning rate is \textbf{too high}, the training process may become unstable, causing the loss to diverge to infinity or result in NaNs.
+	\item If the learning rate is \textbf{too low}, training will progress extremely slowly, requiring an excessive number of iterations to reach convergence.
+	\item A \textbf{moderately high} learning rate may accelerate training initially but fail to reach the optimal loss value, settling at a suboptimal solution.
+	\item An \textbf{adequate} learning rate achieves a balance between fast convergence and optimal loss minimization.
+\end{itemize}
+
+\noindent Since manually choosing an optimal learning rate can be difficult, a common strategy is to \textbf{start with a relatively large learning rate and decay it over time}. This approach combines the benefits of rapid initial learning with stable long-term convergence.
+
+\subsection{Step Learning Rate Schedule}
+\label{subsec:step_lr}
+
+\noindent A widely used method to adjust the learning rate over time is the \textbf{Step Learning Rate Schedule}. This strategy begins with a relatively high learning rate (e.g., \(0.1\) for ResNets) and decreases it at predefined epochs by multiplying it with a fixed factor/factors (e.g., \(0.1\)).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_36.jpg}
+	\caption{Step Learning Rate Decay: The learning rate is reduced by a factor of $0.1$ at epochs 30, 60, and 90, indicated by the dashed vertical lines. The red curve represents the noisy per-iteration loss, highlighting the inherent variance in training. The light blue curve shows the Exponential Moving Average (EMA) of the loss, providing a smoother trajectory of the loss progression. The EMA helps visualize the overall trend despite the noise, demonstrating the impact of learning rate drops on loss reduction over time.}
+	\label{fig:chapter10_step_lr}
+\end{figure}
+
+\noindent A complete pass through the training dataset is known as an \textbf{epoch}. The Step LR schedule is designed to exploit the \textbf{exponential loss reduction phase} observed in deep learning training. Initially, the loss decreases rapidly, but after a certain number of epochs, progress slows down. At this point, reducing the learning rate initiates a new phase of accelerated loss reduction. In Figure~\ref{fig:chapter10_step_lr}, we see that lowering the learning rate at epoch 30 causes another rapid improvement, and similar effects occur at epochs 60 and 90.
+
+\noindent However, Step LR scheduling introduces several hyperparameters:
+
+\begin{enumerate}
+	\item \textbf{Initial learning rate} (\(\eta_0\)).
+	\item \textbf{Decay epochs} (when to lower the learning rate).
+	\item \textbf{Decay factor} (by how much to reduce the learning rate).
+\end{enumerate}
+
+\noindent These hyperparameters must be tuned manually, often requiring extensive trial and error. 
+
+\subsubsection{Practical Considerations}
+\label{subsec:step_lr_practical}
+
+\noindent One practical approach is to start with a high learning rate, monitor validation accuracy and loss curves, and reduce the learning rate when progress slows down (i.e., when validation accuracy plateaus or loss reduction stagnates). This method allows practitioners to adaptively set the decay points, avoiding the need for fixed schedules.
+
+\noindent However, manually adjusting the learning rate can be time-consuming, and automatic methods for adjusting learning rates over time are often preferred. In the following sections, we explore more adaptive learning rate schedules that reduce the need for manual intervention.
+
+\subsection{Cosine Learning Rate Decay}
+\label{subsubsec:cosine_lr}
+
+\noindent While the \textbf{Step LR schedule} provides significant improvements over using a constant learning rate, it requires manual selection of multiple hyperparameters. A more automated approach is to use \textbf{Cosine Learning Rate Decay}, which gradually reduces the learning rate in a smooth and continuous manner.
+
+\noindent Instead of reducing the learning rate at predefined epochs, as done in step decay, the \textbf{Cosine Learning Rate Schedule} updates the learning rate at each training step. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_37.jpg}
+	\caption{Cosine learning rate decay: smoothly reducing the learning rate following a cosine wave shape.}
+	\label{fig:chapter10_cosine_lr}
+\end{figure}
+
+\newpage
+It does so using the following formula:
+\begin{equation}
+	\alpha_t = \frac{1}{2} \alpha_0 \left(1 + \cos \left( \frac{t \pi}{T} \right) \right),
+\end{equation}
+
+\noindent where:
+\begin{itemize}
+	\item \( \alpha_0 \) is the initial learning rate.
+	\item \( t \) is the current epoch.
+	\item \( T \) is the total number of epochs.
+\end{itemize}
+
+\noindent This function follows the shape of \textbf{half a cosine wave}, smoothly transitioning from the initial learning rate to near-zero over the course of training. 
+
+\noindent \textbf{Advantages of Cosine Decay:}
+\begin{itemize}
+	\item Only requires \textbf{two hyperparameters}: the initial learning rate \( \alpha_0 \) and the total number of epochs \( T \).
+	\item Both of these parameters are typically chosen in any training setup, making the approach intuitive.
+\end{itemize}
+
+\noindent Cosine LR decay has been widely adopted in recent deep learning research, appearing in many high-profile papers at conferences such as \textbf{ICLR and ICCV}.
+
+\subsection{Linear Learning Rate Decay}
+\label{subsubsec:linear_lr}
+
+\noindent The cosine decay function is just one possible shape for reducing the learning rate over time. Another simple and effective alternative is \textbf{Linear Learning Rate Decay}, which follows the equation:
+
+\begin{equation}
+	\alpha_t = \alpha_0 \left(1 - \frac{t}{T} \right).
+\end{equation}
+
+\noindent Here, the learning rate decreases linearly from \( \alpha_0 \) to zero over the training period. It's important to note that this learning rate schedule is commonly used in the field of NLP, and is less common in popular CV papers. Nevertheless, there is no theoretical ground putting the cosine LR decay a clear winner for the CV research area, and both are applicable.  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_38.jpg}
+	\caption{Linear learning rate decay: a simple alternative to cosine decay, reducing the learning rate linearly over time.}
+	\label{fig:chapter10_linear_lr}
+\end{figure}
+
+\noindent \textbf{Comparison Between Cosine and Linear Decay:}
+\begin{itemize}
+	\item \textbf{Cosine decay} has a more gradual reduction at the beginning and a steeper drop toward the end, which may help with fine-tuning.
+	\item \textbf{Linear decay} provides a consistent reduction rate, which can be beneficial for models that require steady adaptation.
+	\item Both approaches have been used successfully in large-scale models, while the linear decay was even used in previous SOTA models such as \textbf{BERT} \cite{devlin2019_bert} and \textbf{RoBERTa} \cite{liu2019_roberta}. 
+\end{itemize}
+
+\noindent In many cases, the choice between these schedules is not critical; they are often selected based on conventions within a particular research area rather than empirical/theoretical superiority. The adoption of specific learning rate schedules is often driven by the need for \textbf{fair comparisons} in research rather than their inherent effectiveness. 
+
+\subsection{Inverse Square Root Decay}
+\label{subsec:inverse_sqrt_decay}
+
+Another schedule is the \emph{Inverse Square Root} schedule, where the learning rate at time step $t$ is defined as:
+\begin{equation}
+	\alpha_t = \frac{\alpha_0}{\sqrt{t}}.
+\end{equation}
+Unlike schedules such as cosine or linear decay, this approach does not require specifying the total number of training epochs ($T$). Although less popular, it was notably used in the Transformer model \cite{vaswani2017_attention}, making it a relevant approach to mention.
+
+One drawback of this schedule is its aggressive initial decay. The learning rate decreases rapidly at the beginning of training, meaning the model spends very little time at high learning rates. In contrast, other schedules, such as cosine or linear decay, tend to maintain a higher learning rate for a longer period, which can be beneficial for appropriate training pace.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_39.jpg}
+	\caption{Inverse Square Root learning rate decay.}
+	\label{fig:chapter10_inverse_sqrt}
+\end{figure}
+
+\subsection{Constant Learning Rate}
+\label{subsec:constant_lr}
+
+The last learning rate schedule we present is the \emph{constant learning rate}, which is the simplest and most common:
+\begin{equation}
+	\alpha_t = \alpha_0.
+\end{equation}
+This schedule maintains a fixed learning rate throughout training. It is often the recommended starting point, as it allows for straightforward debugging and quick experimentation before considering more sophisticated schedules. Adjusting the learning rate schedule should generally be motivated by specific needs, such as:
+\begin{itemize}
+	\item Reducing oscillations or instability in training.
+	\item Ensuring convergence towards an optimal solution without premature stagnation.
+	\item Improving generalization performance by fine-tuning decay behaviors.
+\end{itemize}
+
+\noindent Although more advanced schedules may improve final performance by a few percentage points, they typically do not turn a failing training process into a successful one. Thus, constant learning rates provide a strong baseline for getting models up and running efficiently.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_40.jpg}
+	\caption{Constant learning rate decay.}
+	\label{fig:chapter10_constant_lr}
+\end{figure}
+
+\noindent However, the choice of optimizer plays a crucial role in determining the effectiveness of different learning rate schedules. For instance, when using \textbf{SGD with Momentum}, a more complex learning rate decay schedule is often essential. This is because momentum accumulates gradients over time, and if the learning rate is not adjusted appropriately, the optimization process may become unstable or fail to converge efficiently.
+
+\noindent On the other hand, adaptive optimizers such as \textbf{RMSProp} and \textbf{Adam} dynamically adjust learning rates per parameter based on past gradients. This self-adjusting nature allows these optimizers to perform well even with a constant learning rate, as they inherently account for gradient magnitudes and adapt learning rates accordingly.
+
+\newpage
+\subsection{Adaptive Learning Rate Mechanisms}
+\label{subsec:adaptive_lr}
+
+\noindent Adaptive learning rate algorithms such as \textbf{AdaGrad}, \textbf{RMSProp}, and \textbf{Adam} attempt to improve optimization stability by adjusting the learning rate based on gradient statistics. However, relying purely on adaptive mechanisms introduces challenges. A common question is: why not create a mechanism that follows the training loss and adjusts the learning rate accordingly?
+
+\noindent The main difficulty in implementing such an approach is the presence of numerous edge cases, such as:
+\begin{itemize}
+	\item \textbf{Noisy loss curves}: Training loss fluctuates due to mini-batch noise, making it difficult to extract meaningful trends.
+	\item \textbf{Slow convergence}: Decaying too early or too aggressively can lead to suboptimal solutions.
+\end{itemize}
+
+\noindent Despite these challenges, adaptive learning rate techniques remain an essential tool in deep learning optimization, particularly for scenarios involving complex architectures and non-stationary data distributions, in which they tend to shine and provide top-notch results.
+
+\subsection{Early Stopping}
+\label{subsec:early_stopping}
+
+Another crucial technique to determine when to stop training is \emph{early stopping}. This method helps prevent overfitting and ensures that the model achieves optimal performance on unseen data. Early stopping relies on monitoring three key curves during training:
+\begin{itemize}
+	\item \textbf{Training loss}: This should ideally decay exponentially over time.
+	\item \textbf{Training accuracy}: Should increase steadily as the training loss decreases, indicating that the model is learning effectively.
+	\item \textbf{Validation accuracy}: Should also improve, mirroring the decrease in validation loss.
+\end{itemize}
+
+The idea is to select the checkpoint where the model achieves the highest validation accuracy. During training, model parameters are periodically saved to disk. After training concludes, these checkpoints are analyzed, and the optimal one is chosen based on validation performance. This technique is an effective safeguard against overfitting.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_41.jpg}
+	\caption{Early stopping mechanism: monitoring loss and accuracy trends to determine the best checkpoint.}
+	\label{fig:chapter10_early_stopping}
+\end{figure}
+
+\section{Hyperparameter Selection}
+\label{sec:hyperparameter_selection}
+
+Choosing the right hyperparameters is a crucial step in training deep learning models. In this section, we discuss different strategies for hyperparameter selection and practical methods to make the process efficient.
+
+\subsection{Grid Search}
+\label{subsec:grid_search}
+
+A common approach is \emph{grid search}, where we define a set of values for each hyperparameter and evaluate all possible combinations. Typically, hyperparameters such as weight decay, learning rate, and dropout probability are spaced log-linearly or linearly, depending on their nature. For example:
+
+\begin{itemize}
+	\item Weight decay: $[10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}]$
+	\item Learning rate: $[10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}]$
+\end{itemize}
+
+Given these choices, we have $4 \times 4 = 16$ configurations to evaluate. If sufficient computational resources are available, all combinations can be tested in parallel. However, as the number of hyperparameters increases, the search space grows exponentially, making grid search infeasible for a large number of parameters.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_43.jpg}
+	\caption{Grid search mechanism for hyperparameter tuning.}
+	\label{fig:chapter10_grid_search}
+\end{figure}
+
+\subsection{Random Search}
+\label{subsec:random_search}
+
+It is counter-intuitive, but empirical evidence suggests that \emph{random search} often outperforms grid search in most scenarios by reaching better results faster. The study \cite{bergstra2012_randomsearch} explains why. The key insight is that hyperparameters can be classified into \textbf{important} and \textbf{unimportant} ones:
+
+\begin{itemize}
+	\item Important hyperparameters significantly affect model performance.
+	\item Unimportant hyperparameters have little to no effect.
+\end{itemize}
+
+When we begin training, it is difficult to determine which hyperparameters fall into which category. In grid search, every combination of hyperparameters is systematically evaluated, meaning we sample the important parameters in a structured but inefficient manner. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_45.jpg}
+	\caption{Comparison of grid search and random search strategies. The green distribution over the horizontal axis represents the model performance based on the values of the important hyperparameter, while the orange distribution over the vertical axis represents the performance of the model based on the values of the unimportant one. As we can see, the yellow distribution is rather flat, while the green one has a clear pick, corresponding to a parameter value that maximizes the model's performance. Random search provides better coverage of the important hyperparameters (as it allows us to sample more values for each parameter in a fixed number of tries), and with it we manage to sample the distribution near the pick, as we would like.}
+	\label{fig:chapter10_random_vs_grid}
+\end{figure}
+
+\noindent For example, in \autoref{fig:chapter10_random_vs_grid}, consider a scenario with two hyperparameters:
+
+\begin{itemize}
+	\item The \textbf{vertical axis} (orange distribution) represents an unimportant parameter that does not significantly impact accuracy.
+	\item The \textbf{horizontal axis} (green distribution) represents an important parameter with a small sweet spot near the middle, which yields the best accuracy.
+\end{itemize}
+
+\noindent Using grid search, each value of the important hyperparameter is evaluated for all values of the unimportant one. If we have a $3 \times 3$ grid, we get only three different values for the important parameter, potentially missing the peak of the green distribution. Since grid search samples systematically, many trials will be wasted on evaluating different values of the unimportant parameter without gathering enough information about the critical one.
+
+\noindent In contrast, \textbf{random search} selects hyperparameters independently, meaning more trials sample different values of the important parameter. This increases the likelihood of hitting the peak region of the green curve at least once, thereby selecting a better-performing model configuration.
+
+\subsection{Steps for Hyperparameter Tuning}
+\label{subsec:steps_hyperparam_tuning}
+
+When computational resources are limited, an efficient stepwise approach is essential for optimizing hyperparameters without excessive trial and error. The following steps help establish a structured tuning process.
+
+\begin{enumerate}
+	\item \textbf{Check Initial Loss}: Before running any extensive training, check whether the model's loss behaves as expected at initialization. This can catch fundamental issues early on.
+	\begin{itemize}
+		\item Turn off weight decay (L2 regularization) to ensure it does not artificially alter the loss.
+		\item Compute the expected initial loss. For instance, in a classification task with $C$ classes using softmax cross-entropy, the expected initial loss with random weights should be approximately $\log(C)$. 
+		\item If the loss is significantly higher, this may indicate:
+		\begin{itemize}
+			\item Incorrect data preprocessing (e.g., improper normalization).
+			\item A bug in the loss function computation.
+			\item Problems in weight initialization (e.g., weights too large or too small).
+			\item An issue with label encoding or one-hot encoding.
+		\end{itemize}
+	\end{itemize}
+	
+	\item \textbf{Overfit a Small Dataset}: Before launching full-scale training, verify that the model can memorize a tiny dataset (5-10 minibatches). This serves as a sanity check to ensure the model has the capacity to learn.
+	\begin{itemize}
+		\item Train without regularization (e.g., dropout, weight decay) and see if the model can reach 100\% accuracy on this subset.
+		\item If the model fails to overfit:
+		\begin{itemize}
+			\item The learning rate might be too low, preventing effective optimization.
+			\item Initialization might be poor, leading to vanishing or exploding gradients.
+			\item The architecture might be too simple, lacking sufficient capacity to fit even small data samples.
+		\end{itemize}
+	\end{itemize}
+	
+	\item \textbf{Find a Good Learning Rate}: Train on the full dataset but with minimal regularization. We want to take the architecture of the previous step, use all the training data, turn on a small weight decay (L2 reg), and find a learning rate that makes	the loss drop significantly within $\approx 100$ iterations.
+	\begin{itemize}
+		\item Experiment with different learning rates (e.g., $10^{-1}$, $10^{-2}$, $10^{-3}$, $10^{-4}$).
+		\item Monitor how the loss decreases within the first 100 iterations.
+		\item A learning rate that is too high might cause instability (e.g., NaNs or loss oscillations).
+		\item A learning rate that is too low may result in extremely slow convergence.
+		\item A good learning rate should cause the loss to decrease exponentially in the early iterations.
+	\end{itemize}
+	
+	\item \textbf{Run a Coarse Grid Search}: Select a small set of hyperparameter values (e.g., 2-3 values per parameter) and run short training sessions (1-5 epochs).
+	\begin{itemize}
+		\item This step is useful to identify promising regions in the hyperparameter space without wasting too many resources.
+		\item Good initial choices:
+		\begin{itemize}
+			\item Weight decay: $\{10^{-4}, 10^{-5}, 0\}$.
+			\item Learning rate: Best value from Step 3.
+			\item Batch size: $\{32, 64, 128\}$ (depending on GPU memory constraints).
+		\end{itemize}
+	\end{itemize}
+	
+	\item \textbf{Refine the Hyperparameter Grid}: Take the best-performing configurations from the coarse grid search and train longer (10-20 epochs).
+	\begin{itemize}
+		\item Start incorporating more regularization techniques (dropout, weight decay) only if overfitting occurs. Start without these at first.
+		\item Consider adding data augmentation techniques if applicable.
+	\end{itemize}
+	
+	\item \textbf{Analyze Learning Curves}: Look at training loss, training accuracy, and validation accuracy trends.
+	\begin{itemize}
+		\item Identify when the loss stops decreasing and whether accuracy plateaus or continues improving.
+		\item Determine if early stopping should be applied.
+	\end{itemize}
+	
+	\item \textbf{Iterate and Fine-Tune}: Based on the learning curves, refine hyperparameters and repeat from Step 5.
+	\begin{itemize}
+		\item Introduce learning rate decay strategies to improve late-stage training.
+		\item Continue this cycle until the model reaches satisfactory performance or resources run out.
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Interpreting Learning Curves}
+\label{subsec:learning_curves}
+
+Analyzing learning curves provides valuable insights into model performance. Some common learning curve patterns and their implications are:
+
+\begin{itemize}
+	\item \textbf{Very Flat at the Beginning, Then a Sharp Drop}: This typically indicates poor initialization, as the model fails to make enough progress at the start of training.
+	\begin{itemize}
+		\item A likely solution is to reinitialize the weights using a more suitable initialization method (e.g., Xavier or He initialization).
+		\item If the loss remains stagnant, check if the learning rate is too low.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_55.jpg}
+		\caption{A learning curve that is very flat at the beginning and then drops sharply, indicating poor initialization.}
+		\label{fig:chapter10_bad_init}
+	\end{figure}
+	
+	\item \textbf{Plateau After Initial Progress}: If the loss decreases at first but then flattens out, the model may have reached a suboptimal local minimum.
+	\begin{itemize}
+		\item Introducing \textbf{learning rate decay} (e.g., step decay, cosine decay, or inverse square root decay) at the right point can help the model escape the plateau.
+		\item Increasing model complexity (e.g., adding more layers or neurons) might be necessary.
+		\item Increasing weight decay or using a more sophisticated optimization method could be useful if we are stuck in this state.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_56.jpg}
+		\caption{Learning curve plateauing, indicating the need for learning rate decay or weight decay tuning.}
+		\label{fig:chapter10_plateau}
+	\end{figure}
+	
+	\item \textbf{Step Decay Causing Stagnation}: If a sharp drop in the learning rate is applied too early, the loss may stop improving.
+	\begin{itemize}
+		\item The learning rate should ideally be reduced gradually rather than abruptly.
+		\item Implementing \textbf{adaptive decay schedules} based on validation loss can prevent premature stagnation.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_57.jpg}
+		\caption{Step decay applied too early, leading to stagnation. Adjusting the decay timing may help.}
+		\label{fig:chapter10_step_decay}
+	\end{figure}
+	
+	\item \textbf{Continued Accuracy Growth}: If both training and validation accuracy continue increasing, training should be extended.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_58.jpg}
+		\caption{Accuracy still increasing, suggesting longer training is needed.}
+		\label{fig:chapter10_longer_training}
+	\end{figure}
+	
+	\item \textbf{Large Train-Validation Gap (Overfitting)}: If training accuracy keeps increasing while validation accuracy plateaus or drops, overfitting is likely occurring.
+	\begin{itemize}
+		\item Solutions include increasing regularization, expanding the dataset, or simplifying the model.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_59.jpg}
+		\caption{Train-validation accuracy gap, indicating overfitting. Regularization techniques may help.}
+		\label{fig:chapter10_overfitting}
+	\end{figure}
+	
+	\item \textbf{Train and Validation Accuracy Increasing Together (Underfitting)}: If both curves are increasing but are gap between the train and val accuracy is much lower than expected, the model might be underfitting.
+	\begin{itemize}
+		\item Possible solutions include increasing model capacity, training for longer, or reducing excessive regularization.
+	\end{itemize}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_60.jpg}
+		\caption{Underfitting: train and validation accuracy increasing together but at a low level. Model capacity should be increased.}
+		\label{fig:chapter10_underfitting}
+	\end{figure}
+\end{itemize}
+
+Beyond loss and accuracy curves, tracking the \textbf{weight update-to-weight magnitude ratio} is useful for diagnosing training stability:
+\begin{itemize}
+	\item A ratio around \textbf{0.001} is typically healthy.
+	\item If the ratio is too high, learning might be unstable.
+	\item If the ratio is too low, learning might be too slow, requiring a learning rate adjustment.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_64.jpg}
+	\caption{Monitoring weight update to weight magnitude ratio, an important stability metric during training.}
+	\label{fig:chapter10_weight_update_ratio}
+\end{figure}
+
+\newpage
+\noindent When training multiple models in parallel or sequentially (as seen in Step 6), analyzing different learning curves helps guide further hyperparameter adjustments. Prior to modern visualization tools like TensorBoard, interpreting learning progress was challenging. Today, tools such as \textbf{Wandb, MLflow, and Comet} enable real-time logging and comparison of models, making hyperparameter tuning more efficient. By leveraging these insights, we can iteratively refine our model selection process and improve generalization to unseen data.
+
+\subsection{Model Ensembles and Averaging Techniques}
+\label{subsec:model_ensembles}
+
+Model ensembling is a widely used technique that can provide an additional 1-2\% performance boost compared to using a single model, regardless of architecture, dataset, or task. The core idea is to train multiple independent models and, at test time, aggregate their outputs to achieve better generalization and robustness. 
+
+For classification tasks, an effective ensembling method is to average the probability distributions predicted by different models and then select the class with the highest average probability:
+\begin{equation}
+	\hat{y} = \arg\max \frac{1}{N} \sum_{i=1}^{N} P_i(y | x)
+\end{equation}
+where $N$ is the number of models in the ensemble, and $P_i(y | x)$ is the probability distribution predicted by the $i$-th model.
+
+While ensembling multiple independently trained models is the most common approach, an interesting variation involves leveraging a \textbf{cyclic learning rate schedule} to generate multiple checkpoints from a single training run. This approach, while not mainstream, has been observed to yield performance gains without requiring us to train different unrelated models. Instead of training multiple models separately, we save several checkpoints from different training epochs (using cyclic learning rate scheduling) and ensemble their predictions at test time.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_67.jpg}
+	\caption{Visualization of model ensemble using different checkpoints from a single model trained with a cyclic learning rate schedule.}
+	\label{fig:chapter10_ensemble_checkpoints}
+\end{figure}
+
+\subsection{Exponential Moving Average (EMA) and Polyak Averaging}
+\label{subsec:polyak_averaging}
+
+In large-scale generative models and other deep learning applications, researchers sometimes use \textbf{Polyak averaging} \cite{polyak1992_averagegradient}, which maintains a moving average of the model parameters over training iterations. Instead of using the final model weights from the last iteration, the model employs an \textbf{exponential moving average (EMA)} of the weights for evaluation:
+\begin{equation}
+	\theta_{EMA} = \alpha \theta_{EMA} + (1 - \alpha) \theta_t
+\end{equation}
+where $\theta_t$ are the model parameters at iteration $t$, and $\alpha$ is a smoothing coefficient close to 1 (e.g., 0.999).
+
+Using EMA helps smooth out loss fluctuations and reduces variance in predictions, improving robustness to noise. This technique is conceptually similar to Batch Normalization \cite{ioffe2015_batchnorm}, but instead of maintaining moving averages of activation statistics, EMA applies to model weights.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_68.jpg}
+	\caption{Visualization of Polyak averaging, showing how model weights are updated via an exponential moving average to reduce noise and stabilize training.}
+	\label{fig:chapter10_polyak_averaging}
+\end{figure}
+
+\section{Transfer Learning}
+\label{subsec:transfer_learning}
+
+There is a common myth that training a deep convolutional neural network (CNN) requires an extremely large dataset to achieve good performance. However, this is not necessarily true if we leverage \textbf{transfer learning}. Transfer learning has become a fundamental part of modern computer vision research, allowing models trained on large datasets like ImageNet to generalize well to new tasks with significantly smaller datasets.
+
+The key idea behind transfer learning is straightforward: 
+\begin{enumerate}
+	\item Train a CNN on a large dataset such as ImageNet.
+	\item Remove the last layer(s), which are specific to the original dataset.
+	\item Freeze the remaining layers and use them as a feature extractor.
+	\item Train a new classifier (e.g., logistic regression, SVM, or a shallow neural network) on top of the extracted features.
+\end{enumerate}
+
+This concept is applicable not only to CNNs but also to other architectures like Transformers, making it highly versatile across various deep learning domains. It enables impressive performance even on datasets with limited training samples.
+
+One compelling example of the impact of transfer learning can be observed in the classification performance on the \textbf{Caltech-101 dataset}. The previous state-of-the-art methods (before deep learning, shown in red) performed significantly worse compared to deep learning-based approaches. By using \textbf{AlexNet}, pretrained on ImageNet, and applying a simple classifier such as logistic regression (blue) or an SVM (green) on top of the learned feature representations, performance improved dramatically—even with limited training data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_73.jpg}
+	\caption{Visualization of the transfer learning process and its impact on the Caltech-101 dataset, which is relatively small compared to ImageNet.}
+	\label{fig:chapter10_transfer_learning_caltech}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_76.jpg}
+	\caption{Transfer learning outperforms dataset-specific solutions across multiple classification tasks (objects, scenes, birds, flowers, human attributes, etc.).}
+	\label{fig:chapter10_transfer_learning_tasks}
+\end{figure}
+
+The transfer learning approach is effective across a wide range of image classification tasks. This simple fine-tuning strategy significantly outperforms tailored solutions designed for specific datasets, as demonstrated across multiple datasets, including object recognition, scene classification, fine-grained tasks such as bird and flower classification, and human attribute recognition \ref{fig:chapter10_transfer_learning_tasks}.
+
+Transfer learning has also demonstrated its effectiveness in \textbf{image retrieval} tasks. By applying simple nearest-neighbor search on top of the extracted CNN features, deep learning-based methods outperformed previous solutions in tasks such as Paris Buildings, Oxford Buildings, etc.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_77.jpg}
+	\caption{Transfer learning applied to image retrieval tasks, surpassing tailored solutions for tasks like Paris Buildings, Oxford Buildings, and Sculpture retrieval.}
+	\label{fig:chapter10_transfer_learning_retrieval}
+\end{figure}
+
+For \textbf{larger datasets}, a more advanced transfer learning approach, known as \textbf{fine-tuning}, can yield even better results. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_79.jpg}
+	\caption{Fine-tuning a pretrained model: freezing early layers, training a classifier, then gradually unfreezing later layers while lowering the learning rate.}
+	\label{fig:chapter10_transfer_learning_finetuning}
+\end{figure}
+
+\noindent Rather than freezing all layers except the last, we can allow some of the later layers to continue training while keeping the earlier layers fixed. The reasoning behind this approach is:
+\begin{itemize}
+	\item Early layers learn general low-level features (edges, textures) that remain useful across datasets.
+	\item Later layers capture more fine-grained details that can be adapted to the new task.
+\end{itemize}
+
+\noindent To fine-tune effectively, we typically:
+\begin{itemize}
+	\item Train a classifier on top of the CNN while keeping the lower layers frozen.
+	\item Once the classifier is trained, gradually unfreeze higher layers and train with a lower learning rate (typically \textasciitilde $1/10$ of the original learning rate).
+	\item Optionally, freeze early layers entirely while fine-tuning only the last few layers.
+\end{itemize}
+
+Fine-tuning has been shown to provide a substantial performance boost over feature extraction alone. For example, object detection on the VOC 2007 dataset improved from \textbf{44.7\% to 54.2\%}, while performance on ILSVRC 2013 increased from \textbf{24.1\% to 29.7\%} when fine-tuning was applied.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_80.jpg}
+	\caption{Fine-tuning provides significant performance improvements on multiple object detection tasks (VOC 2007 and ILSVRC 2013).}
+	\label{fig:chapter10_transfer_learning_boost}
+\end{figure}
+
+Typically, models chosen for transfer learning are those that perform well on ImageNet. Over the years, simply switching to better pretrained models on ImageNet has significantly improved downstream tasks, such as object detection on COCO.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_82.jpg}
+	\caption{Advancements in ImageNet models over the years have led to significant improvements in object detection performance on COCO.}
+	\label{fig:chapter10_transfer_learning_coco}
+\end{figure}
+
+Transfer learning remains one of the most powerful techniques in deep learning, enabling high-performance models even in data-scarce scenarios and reducing the need for expensive training from scratch. By utilizing pretrained models and fine-tuning them effectively, researchers and practitioners can achieve state-of-the-art results across a wide variety of vision tasks.
+
+\subsection{How to Perform Transfer Learning with CNNs?}
+\label{subsec:how_to_transfer_learning}
+
+While transfer learning is a powerful technique, the question remains: how should we apply it effectively when working with CNNs? The optimal transfer learning strategy depends on two main factors:
+\begin{itemize}
+	\item \textbf{Similarity to ImageNet}: How closely the new dataset resembles ImageNet in terms of image distribution and task.
+	\item \textbf{Dataset Size}: Whether the dataset is large or small.
+\end{itemize}
+
+A practical guideline for choosing a transfer learning strategy is summarized in the following 2x2 table:
+\begin{enumerate}
+	\item \textbf{Small dataset, similar to ImageNet}: Use a \textbf{linear classifier} on top of the frozen CNN features.
+	\item \textbf{Large dataset, similar to ImageNet}: Fine-tune only a few of the later layers while keeping early layers frozen.
+	\item \textbf{Large dataset, different from ImageNet}: Fine-tune a larger portion of the CNN, allowing it to adapt to the new domain.
+	\item \textbf{Small dataset, different from ImageNet}: This is the most challenging scenario. One can attempt either a linear classifier or fine-tuning, but success is not guaranteed.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_86.jpg}
+	\caption{Guidelines for performing transfer learning based on dataset size and similarity to ImageNet.}
+	\label{fig:chapter10_transfer_learning_table}
+\end{figure}
+
+\subsection{Transfer Learning Beyond Classification}
+\label{subsec:transfer_learning_beyond}
+
+Transfer learning is \textbf{pervasive}—it has become the norm rather than the exception. Beyond standard image classification, it is widely used in tasks such as \textbf{object detection} and \textbf{image captioning}. Researchers even experiment with pretraining different parts of a model on separate datasets before integrating them into a unified model, fine-tuning it for specific tasks.
+
+One such example is presented in \cite{zhou2019_unifiedvqa}, where transfer learning is applied in a multi-stage manner:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_90.jpg}
+	\caption{Multi-stage transfer learning applied to vision-language tasks \cite{zhou2019_unifiedvqa}.}
+	\label{fig:chapter10_transfer_learning_vqa}
+\end{figure}
+
+\begin{enumerate}
+	\item Train a CNN on ImageNet for feature extraction.
+	\item Fine-tune the CNN on Visual Genome for object detection.
+	\item Train a BERT-based language model on large-scale text corpora.
+	\item Combine the fine-tuned CNN and BERT model for joint image-language modeling.
+	\item Fine-tune the resulting model for tasks such as image captioning and visual question answering (VQA).
+\end{enumerate}
+
+\subsection{Does Transfer Learning Always Win?}
+\label{subsec:transfer_learning_vs_scratch}
+
+While transfer learning is highly effective, recent research suggests that training from scratch can sometimes be competitive. In \cite{he2018_rethinkingimagenet}, researchers examined whether ImageNet pretraining is necessary for object detection and found that training from scratch can work well but requires approximately \textbf{three times} the training time to match performance achieved by pretraining.
+
+Despite this, pretraining followed by fine-tuning remains superior when datasets are small (e.g., only tens of samples per class). This result is intuitive—having access to pretrained features provides a strong starting point in cases where the available data is insufficient to learn meaningful representations from scratch. Moreover, the efficiency of transfer learning makes it practically useful even for large-scale datasets. Hence, it is always recommended to try transfer learning when we aim to solve CV tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_93.jpg}
+	\caption{Comparison of training from scratch (orange) vs. pretraining + fine-tuning (blue) on COCO object detection \cite{he2018_rethinkingimagenet}.}
+	\label{fig:chapter10_transfer_learning_vs_scratch}
+\end{figure}
+
+\noindent Ultimately, while collecting more data remains the best way to improve model performance, transfer learning provides a practical, efficient, and effective solution for adapting pretrained models to new tasks.
+
 

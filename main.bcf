@@ -2559,6 +2559,18 @@
     <bcf:citekey order="175" intorder="1">huang2016_stochasticdepth</bcf:citekey>
     <bcf:citekey order="176" intorder="1">devries2017_cutout</bcf:citekey>
     <bcf:citekey order="177" intorder="1">zhang2018_mixup</bcf:citekey>
+    <bcf:citekey order="178" intorder="1">devlin2019_bert</bcf:citekey>
+    <bcf:citekey order="179" intorder="1">liu2019_roberta</bcf:citekey>
+    <bcf:citekey order="180" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="181" intorder="1">bergstra2012_randomsearch</bcf:citekey>
+    <bcf:citekey order="182" intorder="1">polyak1992_averagegradient</bcf:citekey>
+    <bcf:citekey order="183" intorder="1">ioffe2015_batchnorm</bcf:citekey>
+    <bcf:citekey order="184" intorder="1">zhou2019_unifiedvqa</bcf:citekey>
+    <bcf:citekey order="185" intorder="1">zhou2019_unifiedvqa</bcf:citekey>
+    <bcf:citekey order="186" intorder="1">zhou2019_unifiedvqa</bcf:citekey>
+    <bcf:citekey order="187" intorder="1">he2018_rethinkingimagenet</bcf:citekey>
+    <bcf:citekey order="188" intorder="1">he2018_rethinkingimagenet</bcf:citekey>
+    <bcf:citekey order="189" intorder="1">he2018_rethinkingimagenet</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
