@@ -227,17 +227,17 @@ Linear classifiers exhibit a key property: their output scores scale linearly wi
 f(\mathbf{x}', \mathbf{W}) = \mathbf{W}(c\mathbf{x}) = c \cdot f(\mathbf{x}, \mathbf{W}).
 \]
 
+This means that scaling the input by a constant \(c\) directly scales the output scores by \(c\). Slide \ref{fig:chapter3_scaling_bias_trick} illustrates this with a practical example. A grayscale image of a cat, when uniformly brightened or darkened (scaling all pixel values by \(c\)), results in scaled class scores. Humans can still easily recognize the cat, but the classifier’s output scores are proportionally reduced. For instance:
+\[
+f(\mathbf{x}, \mathbf{W}) = [2.0, -1.0, 0.5], \quad f(c\mathbf{x}, \mathbf{W}) = [1.0, -0.5, 0.25] \quad \text{(for \(c = 0.5\))}.
+\]
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_3/Slide_18.jpg}
 	\caption{Scaling effect in linear classifiers: uniform scaling of inputs leads to proportional scaling of output scores, as shown in this cat image example.}
 	\label{fig:chapter3_scaling_bias_trick}
 \end{figure}
-
-This means that scaling the input by a constant \(c\) directly scales the output scores by \(c\). Slide \ref{fig:chapter3_scaling_bias_trick} illustrates this with a practical example. A grayscale image of a cat, when uniformly brightened or darkened (scaling all pixel values by \(c\)), results in scaled class scores. Humans can still easily recognize the cat, but the classifier’s output scores are proportionally reduced. For instance:
-\[
-f(\mathbf{x}, \mathbf{W}) = [2.0, -1.0, 0.5], \quad f(c\mathbf{x}, \mathbf{W}) = [1.0, -0.5, 0.25] \quad \text{(for \(c = 0.5\))}.
-\]
 
 This feature of linear classifiers may or may not be desirable, depending on the choice of loss function:
 \begin{itemize}
@@ -403,6 +403,7 @@ Although this viewpoint provides valuable insights, it has limitations:
 
 Despite these challenges, the geometric viewpoint lays the foundation for understanding why more advanced models, such as neural networks, are necessary. Neural networks overcome these issues by learning non-linear decision boundaries, a topic we will explore later.
 
+\newpage
 \section{Summary: Shortcomings of Linear Classifiers}
 
 Linear classifiers, while foundational, exhibit several limitations that are evident through different viewpoints (Figure \ref{fig:chapter3_viewpoint_failures}).

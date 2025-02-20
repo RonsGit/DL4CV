@@ -121,7 +121,7 @@ The process continues for the other FC layers, culminating in a final output of 
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_46.jpg}
 	\caption{The AlexNet architecture, including a table summarizing memory, parameters, and FLOPs per layer.}
-	\label{fig:alexnet_architecture}
+	\label{fig:chapter8_alexnet_architecture}
 \end{figure}
 
 \subsection{Key Takeaways from AlexNet}
@@ -135,7 +135,7 @@ The process continues for the other FC layers, culminating in a final output of 
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_49.jpg}
 	\caption{Trends in AlexNet: memory usage in early conv layers, parameter-heavy FC layers, and computational cost concentrated in convolutions.}
-	\label{fig:alexnet_trends}
+	\label{fig:chapter8_alexnet_trends}
 \end{figure}
 
 \subsection{ZFNet: An Improvement on AlexNet}
@@ -146,7 +146,7 @@ In 2013, most competitors in the ImageNet challenge used CNNs following AlexNet�
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_52.jpg}
 	\caption{The ZFNet architecture and its improvements over AlexNet.}
-	\label{fig:zfnet_architecture}
+	\label{fig:chapter8_zfnet_architecture}
 \end{figure}
 
 \subsubsection{Key Modifications in ZFNet}
@@ -167,7 +167,7 @@ Proposed in the 2014 ImageNet challenge by Oxford’s \emph{Visual Geometry Grou
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/Chapter_8/slide_63.jpg}
 	\caption{Comparison of AlexNet vs.\ VGG: model size, parameter count, and FLOPs.}
-	\label{fig:slide_63_vgg_alexnet}
+	\label{fig:chapter7_vgg_alexnet}
 \end{figure}
 
 \paragraph{Core Design Principles.}
@@ -194,8 +194,8 @@ Popular variants are:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/Chapter_8/slide_56.jpg}
-	\caption{AlexNet vs.\ VGG-16 and VGG-19, highlighting VGG’s deeper, more uniform design. (Slide~\ref{fig:slide_56_vgg_alexnet})}
-	\label{fig:slide_56_vgg_alexnet}
+	\caption{AlexNet vs.\ VGG-16 and VGG-19, highlighting VGG’s deeper, more uniform design. (Slide~\ref{fig:chapter7_vgg_alexnet})}
+	\label{fig:chapter7_vgg_alexnet_compare}
 \end{figure}
 
 \subsection{Key Architectural Insights}
@@ -241,4 +241,345 @@ ResNet, DenseNet, and other modern CNNs commonly adopt the \emph{“halve spatia
 \noindent
 Despite higher resource usage, VGG’s straightforward, principled design pioneered deeper networks and influenced countless subsequent CNN architectures (e.g., \emph{ResNet}, \emph{EfficientNet}) that build on its core ideas and refine efficiency.
 
+\subsection{Training Very Deep Networks: The VGG Approach}
+\label{subsec:vgg_training}
+
+The VGG architecture, introduced by Simonyan and Zisserman in their 2014 paper \cite{simonyan2014_vgg}, demonstrated that increasing network depth significantly improves image classification performance. However, training very deep networks posed major challenges, particularly due to vanishing gradients and optimization difficulties. To address these issues, the authors employed an \textbf{incremental training methodology}, gradually increasing network depth rather than training a very deep model from scratch.
+
+\subsubsection{Incremental Training Strategy}
+
+Training deep networks directly can lead to convergence issues and unstable optimization. Instead of initializing a deep model from scratch, the authors adopted a progressive approach:
+
+\begin{enumerate}
+	\item \textbf{Starting with a Shallow Network:} Training began with an 11-weight-layer model (\textbf{VGG-11}), which had a manageable depth and was easier to optimize.
+	\item \textbf{Gradual Depth Expansion:} Once the shallower network was successfully trained, additional layers were introduced incrementally, leading to deeper configurations (\textbf{VGG-13}, \textbf{VGG-16}, and \textbf{VGG-19}).
+	\item \textbf{Weight Initialization from Pretrained Networks:} Instead of random initialization, each deeper model inherited the trained weights from the previous, shallower model, allowing training to start from a well-optimized state.
+\end{enumerate}
+
+This approach mitigated the effects of vanishing gradients, as earlier layers received meaningful gradient updates at every stage of training. Additionally, it allowed the optimization process to adapt gradually to increased depth, ensuring better convergence.
+
+\subsubsection{Optimization and Training Details}
+The VGG networks were trained using \textbf{stochastic gradient descent (SGD)} with the following hyperparameters:
+
+\begin{itemize}
+	\item \textbf{Batch size:} 256
+	\item \textbf{Momentum:} 0.9
+	\item \textbf{Weight decay:} \( 5 \times 10^{-4} \)
+	\item \textbf{Initial learning rate:} 0.01, reduced by a factor of 10 when validation accuracy plateaued.
+\end{itemize}
+
+This careful hyperparameter tuning, coupled with the incremental training approach, allowed the authors to successfully train very deep networks without the extreme instability seen in naive deep model training.
+
+\subsubsection{Effectiveness of the Approach}
+
+The results demonstrated that \textbf{depth improves performance}, provided that training is managed correctly. The VGG-16 and VGG-19 models achieved \emph{almost} state-of-the-art performance on the ImageNet dataset, proving that deeper architectures can learn richer feature representations when properly optimized.
+
+This method of progressively increasing network depth became a foundational approach in training deep networks at that time, and influenced later architectures such as \textbf{ResNet}, which further addressed optimization challenges through residual connections (more on these later). 
+
+\section{GoogLeNet: Efficiency and Parallelism}
+\label{sec:googlenet}
+
+\noindent
+In the 2014 ImageNet challenge, \textbf{GoogLeNet} by Szegedy et al.\ \cite{szegedy2015_googlenet} introduced an efficiency-focused architecture that significantly reduced computational cost while improving performance.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/Chapter_8/slide_65.jpg}
+	\caption{Comparison of AlexNet, VGG, and GoogLeNet, highlighting the architectural evolution toward efficiency.}
+	\label{fig:chpater8_googlenet_vgg_comparison}
+\end{figure}
+
+Unlike VGG, which relied on deep stacks of \(3 \times 3\) convolutions, GoogLeNet employed \emph{parallelized computation} within \textbf{Inception modules}, along with aggressive downsampling at the early stages of the network, and replaced the large MLP at the end of the CNN with Global Average Pooling (GAP) and a single FC layer. These innovations made it more suitable for real-world deployment, aligning with Google’s need for efficient, large-scale model inference. We'll now review each important aspect regarding the architecture and how it helped shaped future architectures.
+
+\subsection{Stem Network: Efficient Early Downsampling}
+A key challenge in convolutional networks is the high computational cost at early layers, where feature maps still have large spatial dimensions. GoogLeNet tackled this by incorporating an aggressive \textbf{stem network} to downsample the input as early as possible.
+
+\textbf{Key properties of the stem network:}
+\begin{itemize}
+	\item \textbf{Early Downsampling:} Reduces the input resolution from \(224 \times 224\) to \(28 \times 28\) in just a few layers.
+	\item \textbf{Efficient Convolution-Pooling Sequence:} Uses a combination of \(7\times7\) and \(3\times3\) convolutions with max pooling, minimizing computation while retaining spatial information.
+	\item \textbf{Comparison to VGG-16:} The same spatial downsampling in VGG-16 is \emph{significantly} more expensive:
+	\begin{itemize}
+		\item \textbf{Memory Usage:} GoogLeNet requires only \textbf{7.5MB}, whereas VGG-16 requires \textbf{42.9MB} (\(5.7\times\) more).
+		\item \textbf{Learnable Parameters:} GoogLeNet has only \textbf{124k parameters}, compared to VGG-16’s \textbf{1.1M} (\(8.9\times\) more).
+		\item \textbf{Computational Cost:} GoogLeNet performs \textbf{418M MACs}, while VGG-16 requires \textbf{7.5B MACs} (\(17.8\times\) more).
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/Chapter_8/slide_69.jpg}
+	\caption{The stem network in GoogLeNet, highlighting its efficient early downsampling.}
+	\label{fig:chpater8_googlenet_stem}
+\end{figure}
+
+\subsection{The Inception Module: Parallel Feature Extraction}
+One of the key innovations of GoogLeNet is the \textbf{Inception module}, a computational unit designed to process feature maps at multiple scales in parallel. By introducing parallel branches with different receptive fields, this module enables efficient feature extraction while allowing the network to scale in depth without excessive computational overhead.
+
+\textbf{Key Advantages of the Inception Module:}
+\begin{itemize}
+	\item \textbf{Multi-Scale Feature Extraction:} Different kernel sizes capture patterns ranging from fine-grained details to high-level structures.
+	\item \textbf{Parallel Computation:} Instead of stacking convolutions sequentially, multiple paths operate simultaneously, enhancing representation capacity.
+	\item \textbf{Computational Efficiency:} \(1\times1\) convolutions act as bottlenecks, reducing feature map dimensionality before expensive operations, minimizing FLOPs.
+	\item \textbf{Enhanced Gradient Flow:} The presence of multiple paths mitigates the risk of vanishing gradients as it is more likely that at least some branches provide strong error signals during backpropagation.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/Chapter_8/slide_70.jpg}
+	\caption{The Inception module visualized, with the first occurrence in the network highlighted.}
+	\label{fig:chapter8_inception_module}
+\end{figure}
+
+\subsubsection{Why Does the Inception Module Improve Gradient Flow?}
+Deep networks often suffer from \textbf{vanishing gradients}, where early layers receive increasingly weaker updates during backpropagation. The Inception module alleviates this issue through its parallel structure, which improves gradient propagation in three key ways:
+
+\begin{itemize}
+	\item \textbf{Independent Gradient Paths:} Each branch processes activations separately and maintains its own set of parameters. This reduces the likelihood that all branches simultaneously produce near-zero gradients. If one path contributes weak updates, another—operating at a different scale—can still carry strong signals.
+	
+	\newpage
+	\item \textbf{Summation of Gradients:} The outputs of all branches are concatenated before passing to the next layer. Consequently, during backpropagation, their gradient contributions are aggregated:
+	\[
+	\frac{\partial L}{\partial x} = \sum_{i=1}^{k} \frac{\partial L}{\partial o_i} \frac{\partial o_i}{\partial x}
+	\]
+	where \( o_i \) is the output from branch \( i \), and \( x \) represents the input feature maps. Since multiple gradient paths are combined, the total error signal is less likely to diminish unless all branches saturate simultaneously.
+	
+	\item \textbf{Redundancy and Robustness:} Different branches specialize in different spatial contexts—some capturing fine textures (\(1\times1\)), while others focus on larger structures (\(3\times3\), \(5\times5\)). This diversity prevents any single failure from critically weakening gradient propagation, ensuring stable training dynamics.
+\end{itemize}
+
+\paragraph{Structure of the Inception Module}
+Each Inception module consists of four parallel branches, designed to extract diverse features efficiently:
+\begin{itemize}
+	\item \textbf{\(1\times1\) Convolution:} Reduces channel dimensions before expensive operations, improving computational efficiency while selecting relevant features.
+	\item \textbf{\(3\times3\) Convolution:} Captures mid-scale features, often preceded by a \(1\times1\) compression layer.
+	\item \textbf{\(5\times5\) Convolution:} Extracts large-scale patterns, again typically following \(1\times1\) convolution, acting as a feature selection mechanism, reducing the computational complexity of the convolution operation.
+	\item \textbf{Max Pooling \(+\) \(1\times1\) Convolution:} Downsamples features while preserving dominant activations, with a subsequent \(1\times1\) layer for additional refinement.
+\end{itemize}
+
+By combining these diverse pathways, the Inception module enables deep architectures with improved gradient propagation, computational efficiency, and strong feature representation.
+
+\subsection{Global Average Pooling (GAP)}
+Unlike previous architectures like AlexNet and VGG, which relied on fully connected layers (\textbf{MLP head}) at the end, GoogLeNet introduced \textbf{Global Average Pooling (GAP)} as a more efficient alternative.
+
+\textbf{Key benefits:}
+\begin{itemize}
+	\item \textbf{Parameter Reduction:} VGG’s fully connected layers contained most of the network’s parameters. Replacing them with GAP \textbf{dramatically reduces learnable parameters}.
+	\item \textbf{Lower Computational Cost:} GAP minimizes the number of floating-point operations (FLOPs), making inference faster.
+	\item \textbf{Prevents Overfitting:} Large fully connected layers tend to overfit; GAP forces the network to use global spatial information instead.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/Chapter_8/slide_73.jpg}
+	\caption{GoogLeNet replaces fully connected layers with Global Average Pooling (GAP), drastically reducing parameters and FLOPs.}
+	\label{fig:chapter8_googlenet_gap}
+\end{figure}
+
+\subsection{Auxiliary Classifiers: A Workaround for Vanishing Gradients}
+Before \textbf{Batch Normalization (BN)}, training deep networks suffered from the \emph{vanishing gradient problem}, where early layers received weak updates, slowing convergence. To counter this, GoogLeNet introduced \textbf{Auxiliary Classifiers}—intermediate classification heads that reinforced gradient signals and stabilized training. These weren't used in the inference stage post training though, and were only introduced to enable the training of this relatively deep architecture. 
+
+\paragraph{Why Were Auxiliary Classifiers Needed?}
+\begin{itemize}
+	\item \textbf{Gradient Weakening in Deep Models:} As depth increased, gradients from the final classification loss diminished, making weight updates of earlier layers ineffective.
+	\item \textbf{Optimization Instability:} Weak gradients led to poor convergence, requiring extensive tuning to make training work. 
+\end{itemize}
+
+\paragraph{How Do They Help?}
+\begin{itemize}
+	\item \textbf{Stronger Gradient Flow:} Intermediate classification losses inject useful gradients into early layers, preventing stagnation.
+	\item \textbf{Implicit Regularization:} Mid-layer features must be discriminative, reducing reliance on final layers.
+	\item \textbf{Faster Convergence:} Reinforcing useful patterns at multiple depths speeds up learning.
+\end{itemize}
+
+\paragraph{Auxiliary Classifier Design}
+Each auxiliary head mimics the final classifier but is placed at an intermediate layer:
+\begin{itemize}
+	\item \(5\times5\) average pooling (stride=3) for spatial reduction.
+	\item \(1\times1\) convolution (128 filters) for channel compression.
+	\item Two fully connected layers (1024, then 1000 outputs).
+	\item Softmax classifier.
+\end{itemize}
+\newpage \noindent
+During training, their losses contribute to the total objective (typically weighted by 0.3), ensuring they guide learning without dominating.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/Chapter_8/slide_74.jpg}
+	\caption{Auxiliary classifiers in GoogLeNet, placed at intermediate layers to aid gradient flow.}
+	\label{fig:chapter8_googlenet_auxiliary}
+\end{figure}
+
+\paragraph{Gradient Flow and Regularization}
+\begin{itemize}
+	\item \textbf{Improved Gradient Propagation:}
+	\begin{itemize}
+		\item \emph{Gradient Shortcuts:} Auxiliary classifiers provide alternative paths for gradients, reducing their decay over depth.
+		\item \emph{Early Feature Learning:} Mid-network supervision ensures meaningful representations emerge sooner.
+	\end{itemize}
+	\item \textbf{Implicit Regularization:}
+	\begin{itemize}
+		\item \emph{Encouraging Early Discrimination:} Forces mid-level features to be useful on their own.
+		\item \emph{Multi-Task Effect:} Training on intermediate classifications improves generalization.
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Relevance Today}
+With the introduction of \textbf{Batch Normalization} and \textbf{Residual Connections}, auxiliary classifiers have become obsolete. However, they played a crucial role in pioneering deep architectures before these stabilizing techniques were developed.
+
+\paragraph{Conclusion}
+Auxiliary classifiers were an essential workaround for training deep networks before BN. By injecting intermediate supervision, they improved gradient flow, acted as implicit regularizers, and accelerated convergence. While no longer common, they highlight the importance of effective gradient propagation in deep learning design.
+
+\newpage
+\section{The Rise of Residual Networks (ResNets)}
+
+\subsection{Challenges in Training Deep Neural Networks}
+
+As we have seen with VGG and GoogLeNet, training deep neural networks in 2014 required numerous training tricks. Even with these techniques, increasing the network depth often led to degraded performance. However, in 2015, a breakthrough came with the introduction of \textbf{Residual Networks (ResNets)} by He et al. \cite{he2016_resnet}. 
+
+One of the key research discoveries that preceded ResNets was \textbf{Batch Normalization}, which we previously covered. BatchNorm allowed deeper models such as VGG and GoogLeNet to be trained without additional tricks. However, the introduction of residual connections in ResNets was another crucial innovation that enabled much deeper networks to train successfully.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_76.jpg}
+	\caption{ResNets in 2015 compared to previous top-performing models in the ImageNet classification challenge. The error rate dropped significantly ( $\approx 0.5$ error of previous year) while the number of layers increased (x $7$).}
+	\label{fig:chapter8_resnet_performance}
+\end{figure}
+
+\subsection{The Need for Residual Connections}
+
+The number of layers in top-performing ImageNet models increased dramatically with ResNets, from 19 layers in VGG-19 and 22 layers in GoogLeNet to 152 layers in ResNet-152. This increase in depth was only possible due to residual connections, which allowed deeper models to be optimized effectively. The introduction of ResNets led to a significant drop in classification error rates, from 6.7\% in 2014 with GoogLeNet to 3.6\% with ResNets.
+
+However, why weren’t batch normalization and other techniques sufficient? Before the introduction of residual connections, deeper models often performed worse than shallower models. Initially, researchers hypothesized that this degradation was due to overfitting. However, when examining the training performance of smaller and larger networks, they found that the deeper models were actually \emph{underfitting} rather than overfitting, suggesting an optimization problem.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_79.jpg}
+	\caption{A comparison of a 56-layer network and a 20-layer network. The 20-layer model performs better on the test set, while the 56-layer model underfits on the training set, indicating optimization difficulties.}
+	\label{fig:chapter8_deeper_networks_underfit}
+\end{figure}
+
+This observation was counterintuitive—deeper models should, in theory, be able to mimic shallower models by copying their layers and learning identity mappings. However, in practice, deeper models struggled to approximate the identity function where needed.
+
+\subsection{Introducing Residual Blocks}
+\label{sec:residual_blocks}
+
+Deep networks often suffer from the vanishing gradient problem, making it difficult for early layers to learn meaningful features. Residual connections were introduced to alleviate this issue by reformulating the mapping that a block of layers must learn. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_83.jpg}
+	\caption{A comparison between a plain block (left) and a residual block (right). The shortcut connection enables direct gradient flow and allows layers to learn an identity mapping if needed.}
+	\label{fig:chapter8_residual_block}
+\end{figure}
+
+Rather than forcing layers to learn a direct mapping \(H(\mathbf{x})\), a residual block is designed to learn a residual function \(\mathcal{F}(\mathbf{x})\) such that:
+\[
+H(\mathbf{x}) = \mathcal{F}(\mathbf{x}) + \mathbf{x}.
+\]
+Here, \(\mathbf{x}\) is the input to the block and \(\mathcal{F}(\mathbf{x})\) is typically the output of a series of convolutional layers. The shortcut connection directly adds \(\mathbf{x}\) to the output of the residual branch.
+
+\paragraph{Intuition Behind Residual Connections}
+\begin{itemize}
+	\item \textbf{Easier Learning of the Identity:} If the optimal transformation is close to the identity, the residual branch can learn to output zeros, so that the block’s overall function is nearly \(\mathbf{x}\). This makes it much easier to train very deep networks.The shortcut thus provides an alternate path for the gradient to flow directly from later layers to earlier ones. 
+	\item \textbf{Flexible Feature Refinement:} Even if the residual branch is not perfectly optimized, the network can still rely on the shortcut to preserve useful information. The extra non-linearity introduced in the residual branch adds expressiveness without forcing the entire block to deviate dramatically from the identity.
+\end{itemize}
+
+By enabling layers to essentially “skip” learning complex transformations when unnecessary, residual blocks allow very deep networks to be trained more efficiently and reliably.
+
+\subsection{Architectural Design of ResNets}
+
+ResNets combine the best aspects of both VGG and GoogLeNet:
+
+\begin{itemize}
+	\item \textbf{VGG-style regularity:} ResNets are structured into stages, where each residual block consists of two 3x3 convolutional layers.
+	\item \textbf{Stage-wise downsampling:} The first block in each stage reduces the spatial resolution (via stride-2 convolutions) while doubling the number of channels, like in VGG. 
+	\item \textbf{GoogLeNet-inspired efficiency:} ResNets incorporate a \textbf{stem network} at the beginning and use \textbf{global average pooling} at the end, eliminating fully connected layers.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_84.jpg}
+	\caption{ResNet structure: A stack of residual blocks, where each block consists of two 3x3 convolutional layers with a shortcut connection.}
+	\label{fig:chapter8_resnet_structure}
+\end{figure}
+
+\subsection{Bottleneck Blocks for Deeper Networks}
+
+ResNets also introduced an improved residual block design called the \textbf{bottleneck block}, inspired by GoogLeNet’s inception module. Instead of using two 3x3 convolutions per block, the bottleneck block includes:
+
+\begin{itemize}
+	\item A \( 1 \times 1 \) convolution to reduce dimensionality (\( 4C \to C \))
+	\item A \( 3 \times 3 \) convolution for feature extraction (\( C \to C \))
+	\item A \( 1 \times 1 \) convolution to restore dimensionality (\( C \to 4C \))
+\end{itemize}
+
+This change enables deeper networks with slightly reduced computational costs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_93.jpg}
+	\caption{Bottleneck residual block: Using 1x1 convolutions before and after the main 3x3 convolution reduces computational costs while increasing depth.}
+	\label{fig:chapter8_bottleneck_block}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_96.jpg}
+	\caption{Switching to bottleneck blocks allowed a smooth transition from ResNet-34 to deeper models like ResNet-50, ResNet-101, and ResNet-152, while improving efficiency.}
+	\label{fig:chapter8_resnet_deeper_models}
+\end{figure}
+
+\subsection{ResNet Winning Streak and Continued Influence}
+
+The introduction of \textbf{ResNets} in 2015 revolutionized deep learning, particularly in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). ResNets dominated the competition, securing \textbf{first place in all five main tracks}, including image classification, object detection, and segmentation. Their ability to scale to depths previously considered untrainable led to a significant reduction in classification error rates, with ResNet-152 achieving a top-5 error rate of just \textbf{3.6\%}, far outperforming previous state-of-the-art architectures.
+
+Beyond ImageNet, ResNets proved highly effective in broader computer vision tasks. They became a fundamental backbone for models tackling object detection and segmentation, leading to state-of-the-art performance on the \textbf{COCO (Common Objects in Context)} dataset \cite{lin2014microsoft}. COCO is a large-scale dataset designed for object detection, segmentation, and captioning, featuring over 200,000 labeled images across 80 object categories. The dataset’s diversity and complexity make it a critical benchmark for evaluating model generalization beyond classification.
+
+ResNets' impact extended to COCO challenges, where they enabled significant improvements in object detection frameworks such as Faster R-CNN and Mask R-CNN (which we'll cover extensively later). Their superior feature extraction capabilities provided more robust representations, leading to more precise bounding box localization and segmentation masks. These results solidified ResNets as the dominant architecture for both classification and detection tasks, influencing deep learning research for years to come.
+
+Even today, ResNets remain a cornerstone of deep learning. Variants like ResNeXt, Wide ResNets, and ResNet-D have refined the architecture further, while modern Transformer-based vision models still incorporate residual connections inspired by ResNets' fundamental design. 
+
+\subsection{Further Improvements: Pre-Activation Blocks}
+
+A later study found that switching the order of operations within residual blocks—from Conv-BN-ReLU to BN-ReLU-Conv—further improved accuracy. These \textbf{pre-activation blocks} help refine gradient flow and boost network performance \cite{he2016identity}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_8/slide_99.jpg}
+	\caption{Pre-activation residual block, which improves accuracy by reordering the batch normalization and activation functions.}
+	\label{fig:chapter8_pre_activation_resnet}
+\end{figure}
+
+\subsection{Architectural Comparisons and Evolution Beyond ResNet}
+
+\subsubsection{The 2016 ImageNet Challenge: Lack of Novelty}
+The 2016 ImageNet competition saw no major architectural breakthroughs. Instead, the winning team employed an \textbf{ensemble of multiple models}, leveraging the strengths of different architectures to achieve superior accuracy. While effective in practice, this approach did not introduce fundamental innovations or new design principles for deep networks.
+
+\subsubsection{Comparing Model Complexity and Efficiency}
+By 2017, several architectures had competed for dominance in computer vision, each offering a trade-off between accuracy, computational cost, and memory efficiency.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_8/slide_105.jpg}
+	\caption{Comparison of ResNets with other architectures such as VGG, GoogLeNet, Inception, and others in terms of accuracy, model complexity, and computational cost.}
+	\label{fig:chapter8_architecture_comparison}
+\end{figure}
+
+Figure~\ref{fig:chapter8_architecture_comparison} provides a comparative analysis of top-performing models across these dimensions. Key observations from this comparison:
+\begin{itemize}
+	\item \textbf{Inception Models:} Google’s Inception series, culminating in \textbf{Inception-v4 (2017)}, consistently achieved top-tier accuracy. However, these models were computationally expensive and had a high memory footprint due to their complex multi-branch structures.
+	\item \textbf{VGG Networks:} Although instrumental in the transition to deeper CNNs, VGG models were no longer competitive in accuracy and remained highly inefficient in both computation and memory usage.
+	\item \textbf{GoogLeNet (Inception-v1):} Despite being more parameter-efficient than VGG, GoogLeNet did not perform as well as the best models in terms of accuracy.
+	\item \textbf{AlexNet:} The first breakthrough deep CNN in 2012, AlexNet was now vastly outperformed by newer architectures. While it had many learnable parameters, it was not computationally expensive but significantly lagged in accuracy.
+	\item \textbf{ResNets:} Residual Networks remained among the top architectures, striking a balance between \textbf{accuracy, simplicity, and efficiency}. They provided strong generalization with moderate computational demands compared to Inception-based models.
+\end{itemize}
+
+\subsubsection{Beyond ResNets: Refinements and Lightweight Models}
+While ResNets set a new standard for deep learning architectures, further refinements and specialized models emerged in later years. Some notable advancements include:
+\begin{itemize}
+	\item \textbf{ResNeXt:} A modular extension of ResNet, ResNeXt introduced a \textbf{grouped convolution} strategy, inspired by Inception’s parallel paths, achieving better accuracy without significantly increasing computational cost.
+	\item \textbf{MobileNets and ShuffleNets:} Recognizing the need for efficient models suitable for edge devices, researchers developed lightweight architectures such as MobileNets and ShuffleNets. These models used \textbf{depthwise separable convolutions} and \textbf{grouped convolutions} to reduce computational complexity while maintaining competitive performance. We will cover these extensively in later sections.
+\end{itemize}
+
+The landscape of CNN architectures continued evolving post-ResNets, with a focus on improving computational efficiency and extending deep learning capabilities beyond high-performance GPUs to mobile and embedded platforms.
 

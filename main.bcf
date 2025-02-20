@@ -2522,6 +2522,43 @@
     <bcf:citekey order="138" intorder="1">krizhevsky2012_alexnet</bcf:citekey>
     <bcf:citekey order="139" intorder="1">zeiler2014_visualizing</bcf:citekey>
     <bcf:citekey order="140" intorder="1">simonyan2014_vgg</bcf:citekey>
+    <bcf:citekey order="141" intorder="1">simonyan2014_vgg</bcf:citekey>
+    <bcf:citekey order="142" intorder="1">szegedy2015_googlenet</bcf:citekey>
+    <bcf:citekey order="143" intorder="1">he2016_resnet</bcf:citekey>
+    <bcf:citekey order="144" intorder="1">lin2014microsoft</bcf:citekey>
+    <bcf:citekey order="145" intorder="1">he2016identity</bcf:citekey>
+    <bcf:citekey order="146" intorder="1">he2015_delving</bcf:citekey>
+    <bcf:citekey order="147" intorder="1">clevert2015_fast</bcf:citekey>
+    <bcf:citekey order="148" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="149" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="150" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="151" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="152" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="153" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="154" intorder="1">klambauer2017_selu</bcf:citekey>
+    <bcf:citekey order="155" intorder="1">hendrycks2016_gelu</bcf:citekey>
+    <bcf:citekey order="156" intorder="1">ramachandran2017_swish</bcf:citekey>
+    <bcf:citekey order="157" intorder="1">tan2019_efficientnet</bcf:citekey>
+    <bcf:citekey order="158" intorder="1">ramachandran2017_searching</bcf:citekey>
+    <bcf:citekey order="159" intorder="1">ramachandran2017_searching</bcf:citekey>
+    <bcf:citekey order="160" intorder="1">glorot2010_understanding</bcf:citekey>
+    <bcf:citekey order="161" intorder="1">hlav2023_xavier</bcf:citekey>
+    <bcf:citekey order="162" intorder="1">he2015_delving</bcf:citekey>
+    <bcf:citekey order="163" intorder="1">he2015_delving</bcf:citekey>
+    <bcf:citekey order="164" intorder="1">hlav2023_kaiming</bcf:citekey>
+    <bcf:citekey order="165" intorder="1">he2015_delving</bcf:citekey>
+    <bcf:citekey order="166" intorder="1">zhang2019_fixup</bcf:citekey>
+    <bcf:citekey order="167" intorder="1">glorot2010_understanding</bcf:citekey>
+    <bcf:citekey order="168" intorder="1">he2015_delving</bcf:citekey>
+    <bcf:citekey order="169" intorder="1">zhang2019_fixup</bcf:citekey>
+    <bcf:citekey order="170" intorder="1">huang2020_tfixup</bcf:citekey>
+    <bcf:citekey order="171" intorder="1">brock2021_highperformance</bcf:citekey>
+    <bcf:citekey order="172" intorder="1">srivastava2014_dropout</bcf:citekey>
+    <bcf:citekey order="173" intorder="1">wan2013_dropconnect</bcf:citekey>
+    <bcf:citekey order="174" intorder="1">graham2015_fractionalmaxpool</bcf:citekey>
+    <bcf:citekey order="175" intorder="1">huang2016_stochasticdepth</bcf:citekey>
+    <bcf:citekey order="176" intorder="1">devries2017_cutout</bcf:citekey>
+    <bcf:citekey order="177" intorder="1">zhang2018_mixup</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

@@ -272,7 +272,7 @@ Each filter produces a single activation map, and stacking multiple filters resu
 	
 \end{enrichment}
 
-\begin{enrichment}[Convolutional Layers with Multi-Channel Filters][subsection]
+\begin{enrichment}[Convolutional Layers with Multi-Channel Filters][section]
 	Previously, in \ref{enr:conv_sobel}, we explored how convolution operates using a single \(3 \times 3\) 2D filter. Now, we extend this concept to multi-channel inputs, such as RGB images, which contain multiple color channels. Convolutional layers typically consist of multiple multi-dimensional filters, each spanning all input channels. Additionally, each filter has an associated bias term in the bias vector \(\mathbf{b}\), which is added to the convolution result to introduce additional flexibility.
 	
 	\begin{figure}[H]
@@ -285,7 +285,8 @@ Each filter produces a single activation map, and stacking multiple filters resu
 	To illustrate this extension, we consider an RGB image of a Lotus flower. 
 	Unlike grayscale images, which contain a single intensity channel, RGB images have three channels—red, green, and blue—each containing spatial information about the corresponding color component.
 	
-	\subsection*{Extending Convolution to Multi-Channel Inputs}
+	\newpage
+	\begin{enrichment}[Extending Convolution to Multi-Channel Inputs][subsection]
 	To demonstrate multi-channel convolution, consider a randomly selected \(5 \times 5\) patch from the image along with a single randomly initialized \(3\)-channel filter. 
 	
 	\begin{figure}[H]
@@ -350,9 +351,10 @@ Unlike fixed edge detection filters (e.g., Sobel), the values in convolutional k
 Standard image pixels range from \(0\) to \(255\), but convolution outputs can have negative values or exceed this range. This is not an issue because convolutional layers produce \emph{feature maps}, not direct images. Although this isn't an issue, neural networks sometimes keep these values in check through usage of techniques such as 'Batch Normalization' that stabilize activations, greatly improving training efficiency.
 
 In the rest of this lecture, we will explore these topics in depth, ensuring a complete understanding of how convolutional layers operate in modern neural networks.
-
 \end{enrichment}
 
+\end{enrichment}
+\newpage
 \subsection{Multiple Filters and Output Channels}
 \label{subsec:conv_multiple_filters}
 
@@ -368,8 +370,6 @@ A convolutional layer can apply multiple filters, where each filter extracts a d
 \noindent
 For example, if we apply 6 filters, each of size \( 3 \times 5 \times 5 \), to a \( 3 \times 32 \times 32 \) input image, the output consists of 6 activation maps, each of size \( 1 \times 28 \times 28 \). These maps can be stacked to form an output tensor of shape:
 $ 6 \times 28 \times 28.$
-
-\newpage
 
 \subsection{Two Interpretations of Convolutional Outputs}
 \label{subsec:conv_output_interpretation}
@@ -757,7 +757,7 @@ Even though convolutional networks use fewer parameters than fully connected net
 	
 	Full details and visual examples can be found in \cite{solai2023_backpropconv}, which provide additional insights into the math and coding approach for convolutional backprop.
 \end{enrichment}
-
+\newpage
 \section{Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}
 \label{sec:special_convs}
 
@@ -1700,6 +1700,235 @@ Designing a modern CNN involves balancing multiple factors:
 \end{itemize}
 
 \newpage
+\begin{enrichment}[Vanishing \& Exploding Gradients: A Barrier to DL][section]
+	\label{enrichment:vanishing_exploding_gradients}
+	
+	\paragraph{Context}
+	As deep learning evolved, researchers encountered fundamental challenges in training deep neural networks (DNNs), particularly the \textbf{vanishing} and \textbf{exploding} gradient problems. These issues severely limited the depth of trainable models, preventing effective learning in deep architectures. It wasn’t until methods like \textbf{Batch Normalization (BN)} and \textbf{Residual Connections} emerged that training very deep networks became feasible.
+	
+	Throughout the next chapters of this summary, we'll address these modern solutions and others. Nevertheless, it's important to begin by defining and analyzing these gradient-related challenges, which is the goal of this enrichment.
+	
+	\begin{enrichment}[Understanding the Problem][subsection]
+		\subsubsection{The Role of Gradients in Deep Networks}
+		\label{subsubsec:gradient_flow}
+		
+		Training deep neural networks relies on backpropagation, where gradients propagate backward through the network to update weights. However, in deep architectures, this process often suffers from two critical issues:
+		
+		\begin{itemize}
+			\item \textbf{Vanishing Gradients:} If gradients shrink exponentially, earlier layers receive near-zero updates, making learning inefficient.
+			\item \textbf{Exploding Gradients:} If gradients grow exponentially, updates become excessively large, leading to instability and divergence.
+		\end{itemize}
+		
+		\subsubsection{Gradient Computation in Deep Networks}
+		Backpropagation updates network parameters by computing gradients recursively using the chain rule. For a weight \( w^{(i)} \) in layer \( i \), the gradient of the loss function \( \mathcal{L} \) with respect to \( w^{(i)} \) is given by:
+		
+		\begin{equation} 
+			\begin{aligned}
+				\frac{\partial \mathcal{L}}{\partial w^{(i)}} &= \frac{\partial \mathcal{L}}{\partial a^{(L)}} 
+				\frac{\partial a^{(L)}}{\partial z^{(L)}} \frac{\partial z^{(L)}}{\partial a^{(L-1)}} 
+				\cdots 
+				\frac{\partial z^{(i+1)}}{\partial a^{(i)}} 
+				\frac{\partial a^{(i)}}{\partial z^{(i)}} 
+				\frac{\partial z^{(i)}}{\partial w^{(i)}} \\
+				&= \frac{\partial \mathcal{L}}{\partial a^{(L)}} 
+				\underbrace{\prod_{j=i+1}^{L} \frac{\partial z^{(j)}}{\partial a^{(j-1)}}}_{\text{Accumulated Weight Multiplication}}
+				\cdot
+				\frac{\partial z^{(i)}}{\partial w^{(i)}}
+				\cdot
+				\underbrace{\prod_{j=i}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}}}_{\text{Accumulated Activation Derivatives}}
+			\end{aligned}
+			\label{eq:gradient_general}
+		\end{equation}
+		
+		This equation explicitly shows how gradients propagate through the network and accumulate a product of derivatives.
+		
+		\paragraph{Key Components of Gradient Propagation}
+		Each term in the equation plays a crucial role in determining how gradients behave during backpropagation:
+		\begin{itemize}
+			\item \( z^{(j)} \) represents the \emph{pre-activation} output at layer \( j \), computed as the weighted sum of activations from the previous layer:
+			\[
+			z^{(j)} = W^{(j)} a^{(j-1)}
+			\]
+			where \( W^{(j)} \) is the weight matrix and \( a^{(j-1)} \) is the activation from the previous layer.
+			
+			\item \( a^{(j)} \) represents the \emph{activation output} at layer \( j \), obtained by applying the activation function \( \phi \) to \( z^{(j)} \):
+			\[
+			a^{(j)} = \phi(z^{(j)})
+			\]
+			
+			\item The term \( \frac{\partial a^{(j)}}{\partial z^{(j)}} \) is the derivative of the activation function, which directly influences whether gradients vanish or explode. This term appears as:
+			\[
+			\underbrace{\prod_{j=i}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}}}_{\text{Activation Gradients Accumulation}}
+			\]
+			If most activation derivatives satisfy \( \left| \frac{\partial a^{(j)}}{\partial z^{(j)}} \right| < 1 \), their repeated multiplication can result in an exponentially small value, leading to \emph{vanishing gradients}. Not only that, if one of the derivatives turns out to be 0, the entire gradient gets nullified. Conversely, if \( \left| \frac{\partial a^{(j)}}{\partial z^{(j)}} \right| > 1 \), their product rapidly grows, potentially causing \emph{exploding gradients}.   
+			
+			\item The term \( \frac{\partial z^{(j)}}{\partial a^{(j-1)}} \) represents the weight multiplication before applying activation:
+			\[
+			\frac{\partial z^{(j)}}{\partial a^{(j-1)}} = W^{(j)}
+			\]
+			This term accumulates as:
+			\[
+			\underbrace{\prod_{j=i+1}^{L} \frac{\partial z^{(j)}}{\partial a^{(j-1)}}}_{\text{Weight Matrices Accumulation}}
+			\]
+			If the weight matrices \( W^{(j)} \) have large values, their product amplifies the gradient magnitude, potentially leading to \emph{exploding gradients}. If they are too small, the gradient shrinks, exacerbating \emph{vanishing gradients}. Not only that, if one of the weight matrices turns out to be 0, the entire gradient gets nullified as well. 
+		\end{itemize}
+		
+		\subsubsection{Impact of Depth in Neural Networks}
+		\label{subsubsec:impact_of_depth}
+		
+		Deep neural networks (DNNs) contain many layers, making them powerful feature extractors but also susceptible to gradient instability. During backpropagation, the gradient of the loss function with respect to early-layer parameters is computed as a product of many local derivatives. Specifically, for a weight \( w^{(1)} \) in the first layer, we observe:
+		
+		\[
+		\frac{\partial \mathcal{L}}{\partial w^{(1)}}
+		\propto \prod_{j=1}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}},
+		\]
+		
+		where \( \frac{\partial a^{(j)}}{\partial z^{(j)}} \) represents the local activation derivative at each layer. Since modern deep networks are built with large \( L \), this product accumulates a large number of terms, amplifying either vanishing or exploding gradients.
+		
+		\begin{itemize}
+			\item \textbf{Vanishing Gradients:} If most activation derivatives satisfy 
+			\[
+			\left|\frac{\partial a^{(j)}}{\partial z^{(j)}}\right| < 1,
+			\]
+			then their repeated multiplication causes the gradient to shrink exponentially:
+			\[
+			\prod_{j=1}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}} \approx \left( \frac{\partial a}{\partial z} \right)^{L}.
+			\]
+			As \( L \) grows larger, this product approaches zero, preventing effective weight updates in earlier layers. Consequently, these layers fail to learn meaningful representations, leading to slow or stalled training. A similar effect occurs when weight matrices contain very small values, further diminishing the gradient:
+			
+			\[
+			\prod_{j=2}^{L} W^{(j)} \approx \left(W\right)^{L}.
+			\]
+			
+			If most \( W^{(j)} \) values are small (\( |W| < 1 \)), then the gradient rapidly decreases across layers, compounding the vanishing gradient problem.
+			
+			\item \textbf{Exploding Gradients:} Conversely, if most activation derivatives satisfy 
+			\[
+			\left|\frac{\partial a^{(j)}}{\partial z^{(j)}}\right| > 1,
+			\]
+			their product grows exponentially:
+			\[
+			\prod_{j=1}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}} \approx \left( \frac{\partial a}{\partial z} \right)^{L}.
+			\]
+			As \( L \) increases, this product grows indefinitely, leading to excessively large gradients that destabilize training. Similarly, if most weight matrices have large values (\( |W| > 1 \)), then their product amplifies gradients:
+			
+			\[
+			\prod_{j=2}^{L} W^{(j)} \approx \left(W\right)^{L}.
+			\]
+			
+			In this case, updates become erratic, causing weight oscillations and divergence during training.
+		\end{itemize}
+		
+		Thus, both the choice of activation functions (which determine local derivatives) and the scale of weight matrices are crucial in maintaining a stable gradient flow. A proper balance prevents gradients from vanishing or exploding, ensuring effective training in deep networks.
+
+	\newpage
+	\subsubsection{Practical Example: Vanishing Gradients with Sigmoid Activation}
+	
+	To illustrate the vanishing gradient problem, consider a deep neural network with \( L = 10 \) layers, where each layer uses the sigmoid activation function:
+	
+	\[
+	\sigma(z) = \frac{1}{1+e^{-z}}
+	\]
+	
+	The derivative of the sigmoid function is:
+	
+	\[
+	\sigma'(z) = \sigma(z) (1 - \sigma(z))
+	\]
+	
+	Since \( \sigma(z) \) outputs values in the range \( (0,1) \), its derivative satisfies:
+	
+	\[
+	0 < \sigma'(z) \leq 0.25, \quad \text{with maximum at } \sigma(0) = 0.5.
+	\]
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/sigmoid_and_derivative.png}
+		\caption{Shows the sigmoid function and its derivative. As we can see, the \emph{area of significance} is quite small, spanning between $-4 to 4$, and even in it, the derivative value is at most $0.25$}
+		\label{fig:chapter7_sigmoid_derivative}
+	\end{figure}
+	
+	Using this activation function, we analyze the gradient of the loss function \( \mathcal{L} \) with respect to the weight \( w^{(1)} \) in the first layer:
+	
+	\begin{equation} 
+		\begin{aligned}
+			\frac{\partial \mathcal{L}}{\partial w^{(1)}} &= \frac{\partial \mathcal{L}}{\partial a^{(L)}} 
+			\underbrace{\prod_{j=2}^{L} \frac{\partial z^{(j)}}{\partial a^{(j-1)}}}_{\text{Weight Multiplications}}
+			\cdot
+			\frac{\partial z^{(1)}}{\partial w^{(1)}}
+			\cdot
+			\underbrace{\prod_{j=1}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}}}_{\text{Activation Gradients}}.
+		\end{aligned}
+		\label{eq:gradient_first_layer_example}
+	\end{equation}
+	
+	\subsubsection{Effect of Activation Gradients}
+	Focusing on the activation gradient term:
+	
+	\[
+	\prod_{j=1}^{L} \frac{\partial a^{(j)}}{\partial z^{(j)}}
+	\]
+	
+	Since we assumed a sigmoid activation where each derivative satisfies \( \frac{\partial a^{(j)}}{\partial z^{(j)}} \leq 0.25 \), this product behaves as:
+	
+	\[
+	\prod_{j=1}^{10} \frac{\partial a^{(j)}}{\partial z^{(j)}} \leq 0.25^{10}.
+	\]
+	
+	Computing this numerically:
+	
+	\[
+	0.25^{10} = \left( \frac{1}{4} \right)^{10} = \frac{1}{1048576} \approx 9.5 \times 10^{-7}.
+	\]
+	
+	This shows that the gradient contribution from activation derivatives shrinks exponentially, leading to near-zero updates for the first layer.
+	
+	\subsubsection{Effect of Weight Multiplications}
+	Now, consider the weight multiplication term:
+	
+	\[
+	\prod_{j=2}^{L} \frac{\partial z^{(j)}}{\partial a^{(j-1)}} = \prod_{j=2}^{10} W^{(j)}.
+	\]
+	
+	The weight matrices \( W^{(j)} \) determine how activations are transformed before passing through activation functions. If these weights are small (e.g., \( |W^{(j)}| < 1 \)), their product further reduces the gradient magnitude.
+	
+	For instance, assuming \( |W^{(j)}| = 0.3 \):
+	
+	\[
+	\prod_{j=2}^{10} W^{(j)} \approx (0.3)^{9} = 1.97 \times 10^{-5}.
+	\]
+	
+	This demonstrates that even with moderate weight magnitudes, the accumulated product significantly reduces the gradient. When coupled with the vanishing gradients caused by activation functions like the sigmoid, this effect becomes even more pronounced.
+	
+	\subsubsection{Conclusion: Vanishing Gradients}
+	The total gradient for the first layer’s weights is:
+	
+	\[
+	\frac{\partial \mathcal{L}}{\partial w^{(1)}} \approx (9.5 \times 10^{-7}) \times (1.97 \times 10^{-5}) \times \frac{\partial \mathcal{L}}{\partial a^{(L)}}
+	\]
+	
+	which results in an extremely small value. This means that early layers receive negligible updates, making it difficult for the network to learn meaningful features in deeper architectures.
+	
+	\newpage
+	This example highlights why deep networks struggle to train without techniques such as: 
+	
+	\begin{itemize}
+		\item \textbf{Batch Normalization}, which rescales activations to maintain stable gradients by normalizing feature distributions across mini-batches. This helps prevent activations from becoming too large or too small, stabilizing training and improving gradient propagation.
+		
+		\item \textbf{Careful Weight Initialization}, ensuring that weight magnitudes are neither too small nor too large. Proper initialization strategies, such as Xavier or He initialization, help maintain stable variance of activations across layers, reducing the risk of vanishing or exploding gradients.
+		
+		\item \textbf{Alternative Activation Functions}, such as ReLU, which mitigates vanishing gradients by maintaining nonzero derivatives for positive inputs. Unlike the sigmoid function, which saturates for large positive or negative inputs and produces near-zero gradients, ReLU retains a derivative of 1 for all positive values. This allows gradients to flow more effectively through the network. However, ReLU can suffer from the \emph{dying ReLU} problem, where neurons output zero and stop updating. Variants such as Leaky ReLU and ELU address this by allowing small negative gradients for negative inputs.
+		
+		\item \textbf{Residual Connections}, which introduce identity mappings to allow gradient flow across layers, effectively mitigating vanishing gradients in very deep networks. In standard deep architectures, gradients can become exponentially small as they propagate backward. Residual connections, used in architectures like ResNet, create shortcut pathways that allow gradients to bypass multiple layers. This ensures that earlier layers receive meaningful updates, making it possible to train networks with hundreds of layers. 
+	\end{itemize}
+	
+	\noindent
+	Each of these techniques plays a crucial role in modern deep learning architectures, and we will thoroughly investigate them in later sections of this document. Understanding their impact is essential for designing networks that can scale effectively without suffering from unstable gradient behavior.
+	\end{enrichment}
+\end{enrichment}
+
+\newpage
 \section{Batch Normalization}
 \label{sec:batchnorm}
 
@@ -1783,7 +2012,7 @@ where \( \gamma_i \) allows the network to scale the normalized values, and \( \
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_86.jpg}
 	\caption{Summary of shapes and formulas of the 'Batch Normalization' process: normalization followed by learnable scaling and shifting (de-normalization).}
-	\label{fig:batchnorm_process}
+	\label{fig:chapter7_batchnorm_process}
 \end{figure}
 
 Why is this flexibility useful? During backpropagation, the gradient of the loss with respect to \( x_i \) is given by:
@@ -1828,7 +2057,7 @@ where \( \gamma_c \) and \( \beta_c \) are channel-wise scaling and shifting par
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_92.jpg}
 	\caption{Extending Batch Normalization to CNNs by computing batch statistics across spatial dimensions (H, W) in addition to batch samples (N). Each feature map is normalized independently.}
-	\label{fig:batchnorm_cnn}
+	\label{fig:chapter7_batchnorm_cnn}
 \end{figure}
 
 \newpage
@@ -1849,7 +2078,7 @@ Surprisingly, the third setting (which artificially increased internal covariate
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/batchnorm_training_stability.jpg}
 	\caption{Training accuracy across different conditions (no BN, with BN, BN with artificially induced covariate shift). Performance differences indicate that covariate shift is not the key issue affecting training efficiency.}
-	\label{fig:batchnorm_training_stability}
+	\label{fig:chapter7_batchnorm_training_stability}
 \end{figure}
 
 \noindent
@@ -1983,7 +2212,7 @@ Since BatchNorm is typically applied directly after FC/Conv layers but before ac
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_91.jpg}
 	\caption{Batch Normalization in test time: mean and variance are fixed, computed using a running average during training.}
-	\label{fig:batchnorm_test}
+	\label{fig:chapter7_batchnorm_test}
 \end{figure}
 
 \subsubsection{Limitations of BatchNorm}
@@ -2021,7 +2250,7 @@ Layer Normalization operates \emph{per sample}, computing mean and variance acro
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_96.jpg}
 	\caption{Layer Normalization in a fully connected layer: each sample’s hidden activations are normalized independently.}
-	\label{fig:layernorm_fc}
+	\label{fig:chapter7_layernorm_fc}
 \end{figure}
 
 \paragraph{Definition}
@@ -2049,7 +2278,7 @@ Layer Normalization (LN) operates \emph{per sample}, computing mean and variance
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_96.jpg}
 	\caption{Layer Normalization in a fully connected layer: each sample’s hidden activations are normalized independently.}
-	\label{fig:layernorm_fc}
+	\label{fig:chapter7_layernorm_fc}
 \end{figure}
 
 \paragraph{Definition (Fully Connected Layers).}
@@ -2095,7 +2324,7 @@ followed by learnable scale \(\gamma\) and shift \(\beta\), maintaining the netw
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/layer_norm.jpg}
 	\caption{Visualization of Layer Normalization operation, indicating how it is applied to each input image in the batch, with its own corresponding mean and std values \cite{becominghuman2018_allaboutnorm}.}
-	\label{fig:layernorm_visual}
+	\label{fig:chapter7_layernorm_visual}
 \end{figure}
 
 \paragraph{Interpretation}
@@ -2137,7 +2366,7 @@ often followed by learnable scale and shift parameters \((\gamma_c,\,\beta_c)\).
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/instance_norm_visual.jpg}
 	\caption{Visualization of Instance Normalization operation \cite{becominghuman2018_allaboutnorm}.}
-	\label{fig:instancenorm_visual}
+	\label{fig:chapter7_instancenorm_visual}
 \end{figure}
 
 \paragraph{Interpretation}
@@ -2180,7 +2409,7 @@ followed by learnable scale and shift parameters \((\gamma_c, \beta_c)\).
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/normalizations_comparison.jpg}
 	\caption{Visualization of Group Normalization operation compared to the rest of normalization methods (BN, LN, and IN) \cite{sh-tsang2018_groupnorm}.}
-	\label{fig:groupnorm_visual}
+	\label{fig:chpater7_groupnorm_visual}
 \end{figure}
 
 \paragraph{Interpretation}

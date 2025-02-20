@@ -3,6 +3,1583 @@
 % Chapter-specific content starts here
 \chapter{Lecture 9: Training Neural Networks I}
 
-%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------
 %	CHAPTER 9 - Lecture 9: Training Neural Networks I
-%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------
+
+\section{Introduction to Training Neural Networks}
+\label{sec:chapter9_intro}
+
+Starting this lecture, we have covered nearly all the essential components required to train neural networks effectively. However, several finer details can significantly improve training efficiency, allowing practitioners to train models like experts. This chapter, along with the following one, will focus on these details to ensure a comprehensive understanding of practical deep learning techniques. This discussion is especially crucial before introducing further advancements over ResNets and new types of CNN architectures.
+
+\subsection{Categories of Practical Training Subjects}
+\label{subsec:chapter9_training_categories}
+
+We can broadly classify the subjects related to training into three categories:
+
+\begin{itemize}
+	\item \textbf{One-Time Setup:} Decisions made before starting the training process, including:
+	\begin{itemize}
+		\item Choice of activation functions
+		\item Data preprocessing
+		\item Weight initialization
+		\item Regularization techniques
+	\end{itemize}
+	
+	\item \textbf{Training Dynamics:} Strategies employed during the training process, such as:
+	\begin{itemize}
+		\item Learning rate scheduling
+		\item Large-batch training
+		\item Hyperparameter optimization
+	\end{itemize}
+	
+	\item \textbf{Post-Training Considerations:} Techniques applied after training is complete:
+	\begin{itemize}
+		\item Model ensembling
+		\item Transfer learning (e.g., reusing pretrained feature extractors while fine-tuning only the task-specific layers)
+	\end{itemize}
+\end{itemize}
+
+This chapter will primarily focus on \textbf{one-time setup}, while the next chapter will cover \textbf{training dynamics} and \textbf{post-training considerations}.
+
+\section{Activation Functions}
+\label{sec:chapter9_activation_functions}
+
+The presence of activation functions in a neural network is critical. Without them, the representational power of the network collapses dramatically, reducing to a single linear transformation. This chapter explores various activation functions, beginning with the historically significant but ultimately ineffective \textbf{sigmoid} function.
+
+\subsection{Sigmoid Activation Function}
+\label{subsec:chapter9_sigmoid}
+
+One of the earliest activation functions used in neural networks was the \textbf{sigmoid} function, defined as:
+
+\[
+\sigma(x) = \frac{1}{1 + e^{-x}}
+\]
+
+The sigmoid function is named for its characteristic \textbf{"S"-shaped} curve. Historically, it was widely used due to its probabilistic interpretation, where values range between \( [0,1] \), suggesting the presence or absence of a feature. Specifically:
+
+\begin{itemize}
+	\item \( \sigma(x) \approx 1 \Rightarrow \) Feature is strongly present
+	\item \( \sigma(x) \approx 0 \Rightarrow \) Feature is absent
+	\item \( \sigma(x) \) represents an intermediate probability
+\end{itemize}
+
+\subsubsection{Issues with the Sigmoid Function}
+\label{subsubsec:chapter9_sigmoid_issues}
+
+Despite its intuitive probabilistic interpretation, the sigmoid function suffers from three critical issues that make it unsuitable for modern deep learning:
+
+\begin{enumerate}
+	\item \textbf{Saturation and Vanishing Gradients:} 
+	The sigmoid function has \textbf{saturation regions} where gradients approach zero, significantly slowing down training. This issue occurs because the derivative of the sigmoid function is:
+	
+	\[
+	\sigma'(x) = \sigma(x)(1 - \sigma(x))
+	\]
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_11.jpg}
+		\caption{Sigmoid function visualization, highlighting gradient behavior at \( x = -10, 0, 10 \). Gradients are near zero at extreme values, causing vanishing gradients.}
+		\label{fig:chapter9_sigmoid_gradients}
+	\end{figure}
+	
+	Since \( \sigma(x) \) asymptotically approaches 0 for large negative values and 1 for large positive values, the derivative \( \sigma'(x) \) tends toward zero as well. This means that when activations reach extreme values, the network effectively stops learning due to near-zero gradients.
+	
+	This effect compounds across layers in deep networks. Since gradient backpropagation involves multiplying local gradients, the product of many small values leads to an exponentially diminishing gradient, preventing effective weight updates in earlier layers.
+	
+	\item \textbf{Non Zero-Centered Outputs and Gradient Behavior:} 
+	The sigmoid function produces only positive outputs, \( \sigma(x) \in (0,1) \), leading to an imbalance in weight updates. Consider the pre-activation computation at layer \( \ell \):
+	
+	\[
+	h_i^{(\ell)} = \sum_j w_{i,j}^{(\ell)} \sigma\left(h_j^{(\ell-1)}\right) + b_i^{(\ell)}
+	\]
+	
+	where:
+	\begin{itemize}
+		\item \( h_i^{(\ell)} \) is the pre-activation output of the \( i \)-th neuron at layer \( \ell \).
+		\item \( w^{(\ell)} \) and \( b^{(\ell)} \) are the weight matrix and bias vector at layer \( \ell \).
+	\end{itemize}
+	
+	Since \( \sigma(x) \) is always positive, the gradient of the loss with respect to the weights at layer \( \ell \) follows:
+	
+	\[
+	\frac{\partial L}{\partial w_{i,j}^{(\ell)}} = \frac{\partial L}{\partial h_i^{(\ell)}} \cdot \sigma\left(h_j^{(\ell-1)}\right)
+	\]
+	
+	The key observation here is that all weight gradients \( \frac{\partial L}{\partial w_{i,j}^{(\ell)}} \) will have the same sign as the upstream gradient \( \frac{\partial L}{\partial h_i^{(\ell)}} \), because \( \sigma(h_j^{(\ell-1)}) \) is strictly positive. This introduces a significant issue: 
+	
+	- If the upstream gradient is positive, all weight updates will increase in the same direction.
+	- If the upstream gradient is negative, all weight updates will decrease in the same direction.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_18.jpg}
+		\caption{Gradient updates when using sigmoid activation: all gradients with respect to the weights have the same sign, leading to inefficient learning dynamics and potential oscillations.}
+		\label{fig:chapter9_sigmoid_grad_dynamics}
+	\end{figure}
+
+	This behavior results in inefficient learning dynamics, where gradient descent updates are constrained in their movement, leading to oscillations and suboptimal convergence.
+	
+	While using mini-batch gradient descent alleviates this issue somewhat—since different samples may introduce varying gradient directions, it remains an unnecessary limitation on the optimization process.
+	
+	\item \textbf{Computational Cost:} 
+	The sigmoid function requires computing an exponential function, which is computationally expensive, particularly on CPUs. While when working with GPUs this increase of computation is rather insignificant, as copying things onto the GPU to perform the computation takes more time than this operation itself, the computational overhead remains unnecessary compared to simpler alternatives such as the \textbf{ReLU} function, which only requires a thresholding operation. 
+	
+	Additionally, sigmoid's computational inefficiency becomes more relevant when deploying models on edge devices or low-power hardware where efficiency is critical and GPU is not always at hand. 
+\end{enumerate}
+
+\noindent
+Among these issues, the \textbf{vanishing gradient problem} is the most critical, making sigmoid impractical for deep networks. The next section explores alternative activation functions that address these challenges.
+
+\subsubsection{The Tanh Activation Function}
+\label{subsubsec:chapter9_tanh}
+
+A closely related alternative to the sigmoid function is the \textbf{hyperbolic tangent} (\(\tanh\)) activation function, defined as:
+
+\[
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_22.jpg}
+	\caption{The \(\tanh\) activation function compared to sigmoid. While \(\tanh\) is zero-centered, it still suffers from vanishing gradients in saturation regions.}
+	\label{fig:chapter9_tanh}
+\end{figure}
+
+Unlike sigmoid, which outputs values in the range \((0,1)\), \(\tanh(x)\) squashes inputs to the range \((-1,1)\), making it \textbf{zero-centered}. This addresses one of the issues of sigmoid—the fact that its outputs are strictly positive—allowing gradient updates to have both positive and negative directions, thereby reducing inefficient learning dynamics.
+
+\noindent However, despite its advantage over sigmoid in terms of zero-centering, \(\tanh(x)\) still exhibits \textbf{saturation effects}. In the extreme positive or negative regions (\( x \gg 0 \) or \( x \ll 0 \)), \(\tanh(x)\) asymptotically approaches \(\pm 1\), causing its derivative to diminish:
+
+\[
+\tanh'(x) = 1 - \tanh^2(x)
+\]
+
+Since \(\tanh(x)\) approaches 1 or -1 in these regions, its derivative tends toward zero, leading to the \textbf{vanishing gradient problem}. This issue remains a major limitation for deep networks.
+
+\noindent Due to this problem, \(\tanh(x)\) has also become an uncommon choice in modern deep learning architectures. The next sections introduces activation functions that better preserve gradients, enabling more stable training in deep networks.
+
+\subsection{Rectified Linear Units (ReLU) and Its Variants}
+\label{sec:chapter9_relu}
+
+The \textbf{Rectified Linear Unit (ReLU)} is a widely used activation function in modern deep learning due to its simplicity and effectiveness. It is defined as:
+
+\[
+f(x) = \max(0, x)
+\]
+
+ReLU has several advantages over sigmoid and tanh:
+
+\begin{itemize}
+	\item \textbf{Computational Efficiency:} It is the cheapest activation function, requiring only a sign check.
+	\item \textbf{Non-Saturating in Positive Regime:} Unlike sigmoid and tanh, ReLU does not saturate for positive inputs, avoiding vanishing gradients when \( x > 0 \).
+	\item \textbf{Faster Convergence:} Empirical results suggest that ReLU converges significantly faster than sigmoid or tanh (e.g., up to 6x faster in some cases).
+\end{itemize}
+
+However, ReLU is not without its drawbacks.
+
+\subsubsection{Issues with ReLU}
+\label{subsubsec:chapter9_relu_issues}
+
+Despite its advantages, ReLU has two notable weaknesses:
+
+\begin{enumerate}
+	\item \textbf{Not Zero-Centered:} Like sigmoid, ReLU outputs are strictly non-negative, leading to the same gradient imbalance issue where all weight gradients share the same sign, determined by the scalar upstream gradient.
+	
+	\item \textbf{The "Dead ReLU" Problem:} If inputs to a neuron are always negative, the gradient is completely zero, preventing any updates—effectively killing the neuron. Unlike sigmoid, where the gradient is at least small in saturation regions, a dead ReLU neuron remains permanently inactive.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_28.jpg}
+		\caption{ReLU activation function and its failure cases. When inputs are negative, ReLU neurons become inactive, leading to dead ReLUs.}
+		\label{fig:chapter9_dead_relu}
+	\end{figure}
+	
+	This issue occurs when all training samples produce negative inputs for a particular neuron. If at least some samples lead to positive activations, the neuron remains active and learns normally. One common strategy to mitigate dead ReLUs is to initialize ReLU biases with small positive values (e.g., 0.01) to encourage early neuron activation.
+\end{enumerate}
+
+\subsubsection{Leaky ReLU and Parametric ReLU (PReLU)}
+\label{subsubsec:chapter9_leaky_prelu}
+
+A modification to ReLU, called \textbf{Leaky ReLU}, prevents neurons from completely dying by introducing a small negative slope for negative inputs:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_30.jpg}
+	\caption{Parametric ReLU (PReLU) and Leaky ReLU. PReLU generalizes Leaky ReLU by making \(\alpha\) a learnable parameter.}
+	\label{fig:chapter9_prelu}
+\end{figure}
+
+\[
+f(x) = \max(0.01x, x)
+\]
+
+This variant ensures that neurons never entirely deactivate, preserving gradient flow while maintaining computational efficiency. A further improvement, called \textbf{Parametric ReLU (PReLU)} \cite{he2015_delving}, makes the negative slope \(\alpha\) a learnable parameter:
+
+\[
+f(x) = \max(\alpha x, x)
+\]
+
+\noindent This means that during training, \(\alpha\) is updated alongside the other network parameters. It can be:
+\begin{itemize}
+	\item A single shared \(\alpha\) across all layers.
+	\item A unique \(\alpha\) per layer, learned independently.
+\end{itemize}
+
+\noindent
+While PReLU is an improvement over standard ReLU, it introduces a non-differentiable point at \( x = 0 \), making theoretical analysis more complex. However, in practice, this non-differentiability is rarely an issue.
+
+\subsubsection{Exponential Linear Unit (ELU)}
+\label{subsubsec:chapter9_elu}
+
+\textbf{Exponential Linear Units (ELU)} \cite{clevert2015_fast} aim to address both the zero-centered output issue and dead ReLU problem. ELU is defined as:
+
+\[
+f(x) =
+\begin{cases} 
+	x, & x > 0 \\
+	\alpha (e^x - 1), & x \leq 0
+\end{cases}
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_31.jpg}
+	\caption{ELU activation function. Unlike ReLU, ELU allows small negative values for negative inputs, which improves learning stability.}
+	\label{fig:chapter9_elu}
+\end{figure}
+
+\newpage
+\noindent ELU has several advantages:
+\begin{itemize}
+	\item \textbf{Zero-Centered Outputs:} Unlike ReLU, ELU allows negative activations, leading to a mean output closer to zero. This reduces the gradient imbalance issue present in ReLU, where all activations are strictly non-negative. Since the weight updates in gradient descent depend on the activation sign, having outputs symmetrically distributed around zero helps avoid directional bias in weight updates, leading to more stable and efficient learning.
+	
+	\item \textbf{No Dead Neurons:} The negative exponential ensures that neurons always receive a nonzero gradient, preventing dead neurons (a problem in ReLU where negative inputs always map to zero, leading to zero gradients). With ELU, even if a neuron's input is negative, it will still produce a small nonzero gradient due to the exponential term, allowing learning to continue.
+	
+	\item \textbf{Robustness to Noise:} The negative saturation regime in ELU makes it more resistant to small input perturbations compared to ReLU. This is because for highly negative inputs, the ELU function approaches a stable asymptotic value instead of continuing to decrease indefinitely. As a result, small variations in input values within the negative region cause only minimal changes in activation, reducing sensitivity to minor input noise and improving generalization.
+\end{itemize}
+
+\noindent
+\textbf{The main drawback of ELU is its computational cost}, as it requires computing \( e^x \) for negative values, making it more expensive than ReLU on some hardware.
+
+\subsubsection{Scaled Exponential Linear Unit (SELU)}
+\label{subsubsec:chapter9_selu}
+
+A special variant of ELU, called \textbf{Scaled Exponential Linear Unit (SELU)} \cite{klambauer2017_selu}, was designed to enable \textbf{self-normalizing networks}. SELU uses specially chosen constants \(\alpha\) and \(\lambda\):
+
+\[
+f(x) =
+\begin{cases} 
+	\lambda x, & x > 0 \\
+	\lambda \alpha (e^x - 1), & x \leq 0
+\end{cases}
+\]
+
+where \(\alpha \approx 1.6733\) and \(\lambda \approx 1.0507\) are carefully chosen to ensure that the activations' mean and variance remain stable as the network depth increases.
+
+\paragraph{Definition and Self-Normalization Properties}
+
+The SELU activation function is defined as:
+
+\[
+\text{SELU}(x) = \lambda \begin{cases} 
+	x & \text{if } x > 0 \\
+	\alpha e^x - \alpha & \text{if } x \leq 0
+\end{cases}
+\]
+
+where the parameters \(\alpha \approx 1.6733\) and \(\lambda \approx 1.0507\) are specifically chosen to induce self-normalizing properties. These constants ensure that when inputs to a layer have zero mean and unit variance, the outputs will also exhibit zero mean and unit variance, even as they pass through many layers. This characteristic helps prevent the issues of vanishing and exploding gradients, facilitating the training of deep networks without the need for explicit normalization techniques like Batch Normalization \cite{klambauer2017_selu}.
+
+\paragraph{Derivation of \(\alpha\) and \(\lambda\)}
+
+The constants \(\alpha\) and \(\lambda\) are derived to satisfy fixed-point conditions that enforce self-normalization. By analyzing the propagation of mean and variance through network layers and applying the Banach fixed-point theorem, these parameters are calculated to ensure that the activations converge to zero mean and unit variance during forward propagation. This theoretical foundation guarantees that, under certain conditions, the network maintains stable activation distributions as depth increases \cite{klambauer2017_selu}.
+
+\paragraph{Weight Initialization and Network Architecture Considerations}
+
+To fully leverage SELU's self-normalizing properties, specific weight initialization and network architecture guidelines should be followed:
+
+\begin{itemize}
+	\item \textbf{Weight Initialization:} Weights should be initialized using a normal distribution with mean zero and variance \(1/n\), where \(n\) is the number of input neurons to the layer. This initialization aligns with the assumptions made during the derivation of SELU's properties and is crucial for maintaining self-normalization \cite{klambauer2017_selu}.
+	
+	\item \textbf{Network Architecture:} SELU is most effective in feedforward neural networks with fully connected layers. The self-normalizing effect assumes a certain level of independence between neuron activations, which may not hold in architectures with strong inter-neuron dependencies, such as recurrent neural networks or certain convolutional setups \cite{klambauer2017_selu}.
+	
+	\item \textbf{Regularization Techniques:} Traditional dropout can disrupt the self-normalizing property by introducing additional variance. Instead, \textbf{AlphaDropout} is recommended, which maintains the mean and variance of activations, preserving the self-normalization effect \cite{klambauer2017_selu}.
+\end{itemize}
+
+\paragraph{Practical Considerations and Limitations}
+
+While SELU offers significant advantages, there are practical considerations to account for:
+
+\begin{itemize}
+	\item \textbf{Computational Complexity:} The presence of the exponential function in SELU's definition introduces additional computational overhead compared to simpler activations like ReLU. This can be a concern in resource-constrained environments \cite{klambauer2017_selu}.
+	
+	\item \textbf{Dependency on Specific Conditions:} The self-normalizing properties are contingent upon adhering to the prescribed weight initialization, network architecture, and regularization methods. Deviations from these conditions can diminish the effectiveness of SELU.
+	
+	\item \textbf{Empirical Adoption:} Despite its theoretical benefits, SELU is less commonly adopted in practice compared to functions like ReLU, possibly due to its constraints and computational demands.
+\end{itemize}
+
+\noindent In summary, SELU provides a robust framework for training deep feedforward neural networks by inherently maintaining stable activation distributions, thereby eliminating the need for explicit normalization layers under specific conditions. However, careful consideration of initialization, architecture, and computational resources is essential when opting to use SELU in practice.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_32.jpg}
+	\caption{SELU activation function. Unlike ELU, SELU has predefined $\alpha, \lambda$ values that ensure self-normalizing properties under certain conditions.}
+	\label{fig:chapter9_selu}
+\end{figure}
+
+\subsubsection{Gaussian Error Linear Unit (GELU)}
+\label{subsubsec:chapter9_gelu}
+
+The \textbf{Gaussian Error Linear Unit (GELU)} is an activation function introduced by Hendrycks and Gimpel \cite{hendrycks2016_gelu}, designed to provide smoother, more data-dependent activation compared to ReLU. Unlike standard piecewise linear activations, GELU applies a probabilistic approach, allowing smoother transitions and improved gradient flow.
+
+\paragraph{Definition}
+
+The GELU activation function is defined as:
+
+\[
+\text{GELU}(x) = x P(X \leq x) = x \cdot \frac{1}{2} \left(1 + \text{erf} \left( \frac{x}{\sqrt{2}} \right) \right),
+\]
+
+where \(\text{erf}(\cdot)\) is the Gaussian error function. This formulation can be interpreted as applying element-wise stochastic regularization, where smaller values of \( x \) are more likely to be suppressed, while larger values pass through more freely.
+
+For computational efficiency, GELU is often approximated as:
+
+\[
+\text{GELU}(x) \approx 0.5 x \left( 1 + \tanh\left( \sqrt{\frac{2}{\pi}} \left(x + 0.044715 x^3 \right) \right) \right).
+\]
+
+This approximation is commonly used in deep learning frameworks to avoid directly computing the error function, which can be expensive.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_34.jpg}
+	\caption{Visualization of GELU activation, highlighting its smoother transition compared to ReLU and its probabilistic activation mechanism.}
+	\label{fig:chapter9_gelu}
+\end{figure}
+
+\paragraph{Advantages of GELU}
+\begin{itemize}
+	\item \textbf{Smooth Activation Improves Gradient Flow}
+	Rather than a hard cutoff at zero, GELU \emph{gradually} suppresses negative inputs. This softer transition helps maintain stable gradients throughout training, mitigating “dead neurons” seen in ReLUs.
+	
+	\item \textbf{Adaptive, Data-Dependent Sparsity}
+	GELU provides a continuous relaxation of dropout: smaller inputs are more likely to be dampened, while larger inputs pass largely intact. This implicit stochasticity can enhance regularization and robustness, especially in noisy data regimes.
+	
+	\item \textbf{Richer Expressiveness}  
+	Both ELU and GELU allow negative inputs to contribute to the output, but they do so in different ways. ELU applies a fixed exponential decay to negative values, causing them to saturate toward a constant (typically \(-\alpha\)) for very low inputs. In contrast, GELU multiplies the input by a smooth probability factor, \( \Phi(x) \), derived from the Gaussian cumulative distribution. This means that GELU scales negative inputs in a continuous and data-dependent manner rather than compressing them to a fixed value. As a result, GELU can preserve subtle variations in the negative range, offering a more nuanced transformation that improves the network’s ability to model complex patterns.
+
+	\item \textbf{Empirical Performance Gains}
+	Studies report that models employing GELU frequently converge faster and generalize better, notably in NLP tasks (BERT, GPT) and vision tasks (ViT). This benefit is attributed to GELU’s smoother gradient flow and retention of meaningful negative signals.
+\end{itemize}
+
+\paragraph{Comparisons with ReLU and ELU}
+\begin{itemize}
+	\item \textbf{ReLU:}
+	Although ReLU is computationally simpler, it “zeroes out” negative inputs entirely, risking dead neurons and abrupt gradient cutoffs. In contrast, GELU keeps certain negative inputs partially active, fostering more informative gradients.
+	\item \textbf{ELU:}
+	ELU reduces saturation for negative values by an exponential term, but still imposes a \emph{fixed} shape for negative activations. GELU instead adjusts activation magnitudes continuously based on their magnitude, preserving a more natural, data-driven activation profile.
+\end{itemize}
+
+\paragraph{Computational Considerations}
+
+The primary drawback of GELU is its computational cost. The use of the \(\text{erf}(\cdot)\) function introduces additional complexity compared to simpler activations like ReLU. However, its empirical success in large-scale models, particularly in NLP and vision tasks, often justifies the added computational overhead.
+
+\noindent In summary, GELU is a powerful activation function that enhances model expressiveness and stability, particularly in architectures relying on self-attention mechanisms. Its widespread adoption in modern deep learning models, including Transformers, highlights its practical advantages over traditional activation functions.
+
+\subsection{Swish: A Self-Gated Activation Function}
+\label{sec:chapter9_swish}
+
+Swish, introduced by \cite{ramachandran2017_swish}, is a smooth, non-monotonic activation function defined as:
+
+\[
+f(x) = x \cdot \sigma(\beta x) = x \cdot \frac{1}{1 + e^{-\beta x}}
+\]
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/swish_activation.png}
+	\caption{Visualization of the Swish activation function for different values of \(\beta\). When \(\beta=0\), the sigmoid component is constant at 0.5, making \(f(x)=x\cdot0.5\) a linear function. For high values of \(\beta\) (e.g., \(\beta=10\)), the sigmoid approximates a binary step function (yielding near 0 for \(x<0\) and near 1 for \(x>0\)), so \(f(x)\) behaves like ReLU. With the standard choice \(\beta=1\), Swish smoothly interpolates between these two extremes, balancing linearity and nonlinearity for improved gradient flow and model performance.}
+	\label{fig:chapter9_swish}
+\end{figure}
+
+where \(\sigma(\beta x)\) is the standard sigmoid function, and \(\beta\) is a parameter that controls the shape of the activation. In the simplest case, \(\beta = 1\), resulting in:
+
+\[
+f(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}
+\]
+
+Unlike ReLU, Swish is \textbf{self-gated}, meaning the activation dynamically scales itself based on its input. This property leads to several advantages in deep learning.
+
+\subsubsection{Advantages of Swish}
+\label{subsec:chapter9_swish_advantages}
+
+Swish exhibits a combination of desirable properties that make it a strong alternative to ReLU-based activations:
+
+\begin{itemize}
+	\item \textbf{Smooth Activation}: Unlike ReLU, Swish is continuously differentiable, which helps maintain stable gradient flow and improves optimization dynamics.
+	\item \textbf{Non-Monotonicity}: Swish does not strictly increase or decrease across its domain. This allows it to capture more complex relationships in the data compared to monotonic functions like ReLU, potentially enhancing feature learning.
+	\item \textbf{No Dead Neurons}: Unlike ReLU, which can lead to permanently inactive neurons (when weights drive activations below zero), Swish ensures that even negative values contribute to learning, as \(\sigma(x)\) never completely zeroes them out.
+	\item \textbf{Improved Expressiveness}: The self-gating property allows the function to act as a smooth interpolation between linear and non-linear behavior, adapting dynamically across different network layers.
+	\item \textbf{State-of-the-Art Performance}: Swish has been empirically shown to outperform ReLU in large-scale models like EfficientNet, where careful architecture optimization is crucial \cite{tan2019_efficientnet}.
+\end{itemize}
+
+\subsubsection{Disadvantages of Swish}
+\label{subsec:chapter9_swish_disadvantages}
+
+Despite its strengths, Swish has some drawbacks:
+
+\begin{itemize}
+	\item \textbf{Higher Computational Cost}: The sigmoid function \(\sigma(x)\) requires computing an exponential, making Swish computationally more expensive than ReLU. This can be a limiting factor in resource-constrained environments like mobile or edge devices.
+	\item \textbf{Lack of Widespread Adoption}: Although Swish has shown improvements in performance, ReLU remains dominant due to its simplicity and efficiency, particularly in standard architectures.
+	\item \textbf{Sensitivity to \(\beta\)}: While \(\beta\) can be a learnable parameter, tuning it effectively across different architectures is not always straightforward.
+\end{itemize}
+
+\subsubsection{Comparison to Other Top-Tier Activations}
+\label{subsec:chapter9_swish_comparison}
+
+Swish competes with other top-tier activation functions like GELU, ELU, and SELU. The following comparisons highlight where Swish stands:
+
+\begin{itemize}
+	\item \textbf{Swish vs. GELU}: Both are smooth and non-monotonic, making them superior to ReLU in terms of expressiveness. GELU is particularly useful in Transformer models, while Swish has been optimized for CNNs. Swish has a learnable component (\(\beta\)), whereas GELU is entirely data-driven.
+	\item \textbf{Swish vs. ELU}: ELU is zero-centered and smooth, making it more stable than ReLU. However, it enforces a sharp exponential decay in the negative regime, while Swish allows a more gradual transition. Swish generally performs better in deep networks, especially when \(\beta\) is optimized.
+	\item \textbf{Swish vs. SELU}: SELU is explicitly designed for self-normalization and aims to remove the need for BatchNorm. While SELU works well in fully connected architectures, Swish is more versatile and better suited for CNNs and Transformers.
+	\item \textbf{Swish vs. ReLU}: ReLU remains the fastest and most commonly used activation function. Swish generally outperforms ReLU in deeper architectures, but the computational cost of the sigmoid component makes ReLU preferable in most applications.
+\end{itemize}
+
+\subsubsection{Conclusion}
+Swish is a promising activation function that builds upon ReLU’s strengths while mitigating some of its weaknesses. It has been particularly effective in CNNs such as EfficientNet and remains a viable alternative for deep learning models. However, due to its increased computational cost and lack of widespread adoption, ReLU continues to dominate in many architectures. Nevertheless, as neural networks become deeper and more complex, Swish presents a compelling option for researchers seeking improved optimization and expressiveness.
+
+\subsection{Choosing the Right Activation Function}
+\label{subsec:chapter9_activation_choice}
+
+The choice of activation function plays a crucial role in deep learning, impacting gradient flow, convergence speed, and final performance. However, in most cases, \textbf{ReLU is sufficient and a reliable default choice}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_35.jpg}
+	\caption{Performance comparison of different activation functions. Most modern activations, such as Swish, GELU, ELU, and SELU, perform similarly to ReLU in practice \cite{ramachandran2017_searching}.}
+	\label{fig:chapter9_activation_comparison}
+\end{figure}
+
+\subsubsection{General Guidelines for Choosing an Activation Function}
+\label{subsubsec:chapter9_activation_guidelines}
+
+Based on empirical findings, the following recommendations can guide activation function selection:
+
+\begin{itemize}
+	\item \textbf{ReLU is usually the best default choice:} It is computationally efficient, simple to implement, and provides strong performance across various architectures.
+	\item \textbf{Consider Leaky ReLU, ELU, SELU, GELU or Swish when seeking marginal gains:} These activations can help squeeze out small improvements, particularly in deeper networks or specific architectures.
+	\item \textbf{Avoid Sigmoid and Tanh:} These functions cause vanishing gradients, leading to poor optimization dynamics and slower convergence.
+	\item \textbf{Some recent architectures use GELU instead of ReLU, but the gains are minimal:} GELU is commonly found in Transformer-based models like BERT and GPT, but its improvements over ReLU are typically small.
+\end{itemize}
+
+\section{Data Pre-Processing}
+\label{sec:chapter9_data_preprocessing}
+
+Before feeding data into a neural network, it is crucial to perform \textbf{pre-processing} to make it more suitable for efficient training. Proper pre-processing ensures that input features are well-behaved, leading to improved optimization stability and faster convergence.
+
+\subsection{Why Pre-Processing Matters}
+\label{subsec:chapter9_why_preprocessing}
+
+Neural networks operate in high-dimensional spaces, and poorly scaled inputs can significantly hinder learning. The key goals of pre-processing are:
+
+\begin{itemize}
+	\item \textbf{Centering the Data:} Bringing the data closer to the origin by subtracting the mean.
+	\item \textbf{Rescaling Features:} Ensuring that all features have similar variance to prevent dominant features from overpowering others during training.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_38.jpg}
+	\caption{Visualization of data pre-processing. The red cloud represents raw input data, the green cloud shows the effect of mean subtraction, and the blue cloud demonstrates the effect of feature rescaling.}
+	\label{fig:chapter9_data_preprocessing}
+\end{figure}
+
+Without pre-processing, different input features may exist at vastly different scales, making optimization challenging. By ensuring that inputs have a mean of zero and similar variances, gradient updates become more consistent across all features.
+
+\subsection{Avoiding Poor Training Dynamics}
+\label{subsec:chapter9_avoid_poor_dynamics}
+
+Pre-processing also prevents inefficient learning behavior. Recall that when neuron inputs are always positive, their gradients exhibit \textbf{zig-zag dynamics}, making gradient descent inefficient. The same logic applies to poorly scaled input data—if features are skewed away from zero, gradient updates can be unstable.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_39.jpg}
+	\caption{Unnormalized data can lead to unstable training dynamics: inefficient gradient updates.}
+	\label{fig:chapter9_inefficient_gradients}
+\end{figure}
+
+\subsection{Common Pre-Processing Techniques}
+\label{subsec:chapter9_common_preprocessing}
+
+For images, a widely used technique is \textbf{Mean Subtraction and Standardization:} Compute the mean and standard deviation of pixel values across the training dataset, subtract the mean, and divide by the standard deviation.
+
+Less ideal but still very common pre-processing technique for images is simply dividing each pixel value by 255 to keep them in the range \([0,1]\).Other data types, such as low-dimensional vectors, may require more sophisticated transformations beyond simple mean subtraction and scaling. Two common techniques are:
+
+\begin{itemize}
+	\item \textbf{Decorrelation:} This process transforms the data so that its covariance matrix becomes diagonal, meaning that the features become uncorrelated with each other. Many machine learning algorithms, particularly those relying on linear operations, work more efficiently when the input features are independent. Removing correlations between features can make optimization more stable and improve convergence rates.
+	
+	\item \textbf{Whitening:} A further step beyond decorrelation, whitening transforms the data such that its covariance matrix becomes the identity matrix. This means that not only are features uncorrelated, but they also have unit variance. Whitening ensures that all features contribute equally to learning, preventing some from dominating due to larger magnitudes. A common way to achieve whitening is through \textbf{ZCA (Zero-phase Component Analysis)}, a variant of PCA that applies an orthogonal transformation to maintain the structure of the original data while normalizing its covariance.
+\end{itemize}
+
+\textbf{Why are these techniques less common for images?}  
+While decorrelation and whitening can be beneficial in feature-based learning systems, they are rarely used in deep learning for image data. This is because convolutional neural networks (CNNs) inherently learn hierarchical feature representations, making the manual decorrelation of input features less necessary. Additionally, images exhibit strong local correlations (e.g., neighboring pixels tend to have similar intensities), which CNNs are designed to exploit rather than eliminate. Whitening could disrupt these spatial patterns, potentially harming the model's ability to recognize meaningful structures.
+
+However, for structured datasets, tabular data, or domains like speech recognition, where input features may exhibit high redundancy, applying decorrelation and whitening can significantly improve model performance. 
+
+A fundamental tool in this domain is \textbf{Principal Component Analysis (PCA)}, which helps in both pre-processing and visualization of high-dimensional embeddings. PCA identifies the principal axes of variation in the data, allowing us to decorrelate features and, if desired, apply whitening. A good introduction to PCA can be found in \href{https://www.youtube.com/watch?v=fkf4IBRSeEc&ab_channel=SteveBrunton}{this video by Steve Brunton}.
+
+\subsection{Normalization for Robust Optimization}
+Another intuitive way to understand the benefits of normalization is by examining how it impacts the learning process. When input data is unnormalized:
+
+\begin{itemize}
+	\item The classification loss becomes highly sensitive to small changes in weight values.
+	\item Optimization becomes difficult due to erratic updates.
+\end{itemize}
+
+Conversely, after normalization:
+
+\begin{itemize}
+	\item Small changes in weight values produce more predictable adjustments.
+	\item The learning process becomes more stable and easier to optimize.
+\end{itemize}
+
+\label{subsec:chapter9_normalization_impact}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_42.jpg}
+	\caption{Visualizing the impact of normalization on optimization.}
+	\label{fig:chapter9_optimization_stability}
+\end{figure}
+
+\subsection{Maintaining Consistency During Inference}
+\label{subsec:chapter9_inference_consistency}
+
+A critical point in pre-processing is ensuring that \textbf{the same transformations applied during training must be applied during inference}. If the test data is not normalized in the same way as the training data, the network will fail to generalize correctly.
+
+\subsection{Pre-Processing in Well-Known Architectures}
+\label{subsec:chapter9_preprocessing_architectures}
+
+Different deep learning architectures employ various pre-processing techniques:
+
+\begin{itemize}
+	\item \textbf{AlexNet:} Subtracts the mean image computed across the dataset.
+	\item \textbf{VGG:} Normalizes each color channel separately by subtracting the mean RGB value.
+	\item \textbf{ResNet:} Normalizes pixel values using dataset-wide mean and standard deviation.
+\end{itemize}
+
+\section{Weight Initialization}
+\label{sec:weight_initialization}
+
+\noindent Choosing an appropriate weight initialization strategy is crucial for training deep neural networks effectively. Poor weight initialization can lead to problems such as \textbf{vanishing gradients}, \textbf{exploding gradients}, and \textbf{symmetry issues}, ultimately hindering optimization. In this section, we explore different initialization techniques, highlighting their advantages and limitations.
+
+\subsection{Constant Initialization}
+\label{subsec:constant_init}
+
+\noindent A naive approach to weight initialization is to set all weights to a constant value, such as zero or one. While this might seem reasonable at first, it leads to serious issues that prevent effective learning. There are two primary cases to consider: 
+(1) initializing all weights to zero, and 
+(2) initializing all weights to a nonzero constant. 
+
+\subsubsection{Zero Initialization}
+\label{subsubsec:zero_init}
+
+\noindent If all weights are initialized to \textbf{zero}, then every neuron in a given layer will compute the same output, and consequently, the backpropagated gradients will be identical. This is problematic because:
+\begin{itemize}
+	\item The network loses the ability to learn diverse features, as all neurons in each layer will behave identically.
+	\item If the activation function satisfies \( a(0) = 0 \), as in ReLU and tanh, then every neuron will output zero, leading to zero gradients throughout backpropagation.
+	\item For sigmoid activation, the derivative at zero is a constant, leading to uniform updates across neurons, severely limiting the network’s expressiveness.
+\end{itemize}
+
+\noindent To see why this happens, consider the forward pass of a neural network where all weights are initialized to zero:
+
+\[
+z_l = a_{l-1} W_l + b_l = a_{l-1} \cdot 0 + 0 = 0.
+\]
+
+Since the activation function receives an input of zero, we analyze the behavior of common activations:
+\[
+\operatorname{ReLU}(0) = 0, \quad \tanh(0) = 0, \quad \sigma(0) = 0.5.
+\]
+
+Thus, if the activation function is ReLU or tanh, all activations remain zero throughout the network, and backpropagation fails:
+
+\[
+\frac{\partial \mathcal{L}}{\partial W_l} = \frac{\partial \mathcal{L}}{\partial a_l} \frac{\partial a_l}{\partial z_l} \frac{\partial z_l}{\partial W_l}.
+\]
+
+Since \( z_l = 0 \), for ReLU we have:
+\[
+\frac{\partial a_l}{\partial z_l} = \mathbb{1}_{z_l > 0} = 0.
+\]
+Thus,
+\[
+\frac{\partial \mathcal{L}}{\partial W_l} = \frac{\partial \mathcal{L}}{\partial a_l} \cdot 0 \cdot a_{l-1} = 0.
+\]
+This shows that no learning occurs, as all weight updates are zero.
+
+\noindent Even if we use sigmoid activation:
+\[
+\sigma(0) = 0.5, \quad \sigma'(0) = 0.25.
+\]
+This means all gradients take the form:
+\[
+\frac{\partial \mathcal{L}}{\partial W_l} = \frac{\partial \mathcal{L}}{\partial a_l} \cdot \left[\begin{array}{c} 0.25 \\ \vdots \\ 0.25 \end{array}\right] \otimes \left[\begin{array}{c} 0.5 \\ \vdots \\ 0.5 \end{array}\right] = \frac{\partial \mathcal{L}}{\partial a_l} \cdot \left[\begin{array}{c} 0.125 \\ \vdots \\ 0.125 \end{array}\right].
+\]
+All neurons in a given layer receive the same gradient, meaning their updates are identical. The network behaves as if each layer were a single neuron, reducing its capacity significantly.
+
+\noindent \textbf{Conclusion:} Zero initialization leads to the \textbf{symmetry problem}, where all neurons in a layer learn the same function. This prevents the network from learning meaningful representations. \textbf{Thus, we must never initialize weights to zero.}
+
+\subsubsection{Nonzero Constant Initialization}
+\label{subsubsec:constant_nonzero_init}
+
+\noindent While zero initialization prevents learning due to zero gradients (in ReLU) or identical gradients across neurons (in Sigmoid), initializing weights to a \textbf{nonzero constant} (e.g., all weights set to 1) leads to a similar issue known as the \textbf{symmetry problem}. This prevents neurons in the same layer from learning distinct features, severely restricting the network's capacity.
+
+\paragraph{Forward Pass Analysis} 
+Suppose each weight and bias in a layer is initialized to a constant \( c \):
+
+\[
+W_l^{(i, j)} = c, \quad b_l^{(i)} = c.
+\]
+
+Then, for any neuron \( i \) in layer \( l \):
+
+\[
+z_l^{(i)} = \sum_j a_{l-1}^{(j)} c + c.
+\]
+
+Since this holds for all neurons, they receive the same pre-activation \( z_l \), leading to identical activations after applying any activation function \( g(z) \):
+
+\[
+a_l^{(i)} = g(z_l), \quad \forall i.
+\]
+
+Thus, all neurons in the layer produce the same output.
+
+\paragraph{Backpropagation and Gradient Symmetry}
+The weight update follows:
+
+\[
+\frac{\partial \mathcal{L}}{\partial W_l} = \frac{\partial \mathcal{L}}{\partial a_l} \frac{\partial a_l}{\partial z_l} \frac{\partial z_l}{\partial W_l}.
+\]
+
+Since \( z_l^{(i)} \) is identical across neurons, the activation derivative is the same for all:
+
+\[
+\frac{\partial a_l}{\partial z_l} = g'(z_l),
+\]
+
+resulting in identical gradient updates:
+
+\[
+W_l^{(t+1)} = W_l^{(t)} - \alpha \frac{\partial \mathcal{L}}{\partial a_l} \cdot g'(z_l) \cdot a_{l-1}.
+\]
+
+Because all weights update identically, the symmetry persists across layers, making each layer behave as a single neuron.
+
+\paragraph{Implications and Conclusion}
+Constant initialization leads to:
+\begin{itemize}
+	\item Identical neuron outputs within each layer.
+	\item Uniform gradient updates, preventing diverse feature learning.
+	\item A network that effectively reduces to a single neuron per layer.
+\end{itemize}
+
+\noindent \textbf{To prevent this, weights must be initialized randomly.} In the next section, we explore methods ensuring meaningful diversity in weight updates.
+
+
+\subsection{Breaking Symmetry: Random Initialization}
+\label{subsec:random_init}
+
+\noindent To prevent the symmetry problem, weights must be initialized with randomness. A simple approach is to sample them from a uniform or normal distribution:
+
+\[
+w_{i,j} \sim U\left(-\frac{1}{\sqrt{n}}, \frac{1}{\sqrt{n}}\right) \quad \text{or} \quad w_{i,j} \sim N(0, \sigma^2),
+\]
+
+where \( n \) is the number of inputs to the neuron (in case of FC networks, the number of neurons in the previous layer). This ensures slight variations between neurons, allowing them to learn different features.
+
+\noindent However, naive random initialization is not sufficient. Without controlling variance, deep networks may suffer from:
+
+\begin{itemize}
+	\item \textbf{Vanishing Gradients:} Small weights lead to progressively smaller activations, causing gradients to shrink during backpropagation.
+	\item \textbf{Exploding Gradients:} Large weights amplify activations, leading to unstable updates and divergence.
+	\item \textbf{Inefficient Optimization:} Poor initialization can make optimization highly sensitive to learning rate selection.
+\end{itemize}
+
+\noindent These issues arise because errors accumulate across layers, affecting gradient flow and optimization stability.
+
+\subsection{Variance-Based Initialization: Ensuring Stable Information Flow}
+\label{subsec:variance_init}
+
+\noindent A well-designed weight initialization strategy should ensure that signals propagate efficiently through the network without suffering from instability. The primary objective of variance-based initialization is to maintain a consistent flow of information in both the forward and backward passes.
+
+\paragraph{Key Requirements for Stable Propagation}
+For a deep network to learn effectively, we aim to maintain the variance of pre-activations and gradients at a stable level across layers. Mathematically, this can be expressed as:
+
+\[
+\forall i, \operatorname{Var}\left[z^i\right]=\operatorname{Var}\left[z^{i+1}\right], \quad
+\forall i, \operatorname{Var}\left(\frac{\partial \mathcal{L}}{\partial W^i}\right)=\operatorname{Var}\left(\frac{\partial \mathcal{L}}{\partial W^{i+1}}\right).
+\]
+
+where:
+
+\begin{itemize}
+	\item \( z^i \) represents the pre-activation values (the weighted sum of inputs before applying a nonlinearity) at layer \( i \).
+	\item \( \mathcal{L} \) is the loss function.
+	\item \( \frac{\partial \mathcal{L}}{\partial W^i} \) represents the gradient of the loss with respect to the weights at layer \( i \), which determines the updates during backpropagation.
+\end{itemize}
+
+\paragraph{Forward Pass Analysis} 
+Suppose each weight and bias in a layer is initialized to a constant \( c \):
+
+\[
+W_l^{(i, j)} = c, \quad b_l^{(i)} = c.
+\]
+
+Then, for any neuron \( i \) in layer \( l \):
+
+\[
+z_l^{(i)} = \sum_j a_{l-1}^{(j)} c + c.
+\]
+
+Since this holds for all neurons, they receive the same pre-activation \( z_l \), leading to identical activations after applying any activation function \( g(z) \):
+
+\[
+a_l^{(i)} = g(z_l), \quad \forall i.
+\]
+
+Thus, all neurons in the layer produce the same output.
+
+\paragraph{Why Is This Important?} 
+Ensuring stable variance in both forward and backward passes prevents two major problems:
+
+\begin{itemize}
+	\item Exploding Gradients: If the variance of activations increases across layers, the gradients will also grow exponentially during backpropagation, causing instability in updates and potentially leading to numerical overflow (e.g., NaN values).
+	\item Vanishing Gradients: If the variance of activations decreases across layers, gradients will shrink exponentially as they are propagated backward. This results in the early layers receiving negligible updates, making learning extremely slow or even ineffective.
+\end{itemize}
+
+\paragraph{Why Does Forward Signal Variance Also Matter?}
+One might assume that only the gradient variance needs to be preserved, but controlling forward signal variance is equally important. Here's why:
+
+\begin{enumerate}
+	\item Stable Representations: If pre-activations have highly varying magnitudes across layers, some layers may receive disproportionately large or small inputs. This can distort learning dynamics and slow convergence.
+	\item Avoiding Saturation in Activation Functions: Many activation functions (e.g., sigmoid, tanh) have saturation regions where the gradient becomes near zero. If the forward pre-activations are not properly scaled, a significant portion of neurons may become saturated, further exacerbating the vanishing gradient problem.
+	\item Gradient Magnitude Control: Since gradients are computed based on pre-activations, keeping pre-activation variance stable indirectly helps in stabilizing gradient variance.
+\end{enumerate}
+
+\paragraph{Challenges in Achieving Stable Variance} 
+While maintaining a constant variance throughout the network is an ideal goal, achieving it in practice is nontrivial. Many initialization schemes attempt to balance this tradeoff, but often require additional assumptions:
+
+\begin{itemize}
+	\item Some techniques assume all layers have the same number of neurons, which is not always practical.
+	\item Certain initialization strategies impose constraints on activation function choices, limiting flexibility.
+	\item Theoretical assumptions may not hold perfectly in very deep networks due to compounding effects across layers.
+\end{itemize}
+
+\noindent Despite these challenges, variance-based initialization techniques provide a structured approach to weight initialization, reducing the likelihood of signal degradation. The next sections explore methods such as Xavier and Kaiming initialization, which are specifically designed to address these stability issues under certain assumptions.
+
+\subsection{Xavier Initialization}
+\label{sec:xavier_init}
+
+\noindent One of the most widely used weight initialization techniques in deep learning is \textbf{Xavier Initialization} (also known as \textbf{Glorot Initialization}), proposed by Glorot and Bengio in \cite{glorot2010_understanding}. It is a \textbf{variance-based} initialization method designed to ensure stable signal propagation through deep networks. The technique is particularly effective when using symmetric activation functions such as sigmoid or tanh but is not well-suited for ReLU-based networks, which require a different approach.
+
+\subsubsection{Motivation}
+\label{subsec:xavier_motivation}
+
+\noindent The primary goal of weight initialization is to prevent the two fundamental issues encountered during deep network training:
+\begin{itemize}
+	\item \textbf{Vanishing gradients:} If the gradients shrink as they propagate backward, early layers receive tiny updates, leading to slow or stalled learning.
+	\item \textbf{Exploding gradients:} If the gradients grow uncontrollably, the optimization process becomes unstable, and parameters diverge.
+\end{itemize}
+
+\noindent To mitigate these issues, variance-based initialization aims to maintain a balanced flow of signals across layers. Specifically, we want to ensure:
+\begin{equation}
+	\forall i, \operatorname{Var}\left[z^i\right] = \operatorname{Var}\left[z^{i+1}\right], \quad \text{(constant forward variance)}
+\end{equation}
+\begin{equation}
+	\forall i, \operatorname{Var}\left(\frac{\partial \operatorname{Cost}}{\partial s^i}\right) = \operatorname{Var}\left(\frac{\partial \operatorname{Cost}}{\partial s^{i+1}}\right), \quad \text{(constant backward variance)}
+\end{equation}
+where:
+\begin{itemize}
+	\item \( z^i \) represents the activations at layer \( i \).
+	\item \( s^i \) is the pre-activation input before applying the nonlinearity.
+	\item \( \operatorname{Cost} \) is the loss function.
+\end{itemize}
+
+\noindent Achieving both properties ensures a signal gain of exactly 1, meaning that neither vanishing nor exploding gradients occur.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_57.jpg}
+	\caption{Xavier initialization: activations are nicely scaled for all the layers.}
+	\label{fig:chapter9_xavier_init}
+\end{figure}
+
+\subsubsection{Mathematical Formulation}
+\label{subsec:xavier_math}
+
+\noindent Consider a fully connected layer in a neural network, where each layer has a corresponding weight matrix \( W^i \) and bias vector \( b^i \). The layer undergoes the following transformations:
+
+\begin{equation}
+	s^i = z^{i-1} W^i + b^i,
+\end{equation}
+
+\begin{equation}
+	z^i = f(s^i).
+\end{equation}
+
+\noindent Here:
+\begin{itemize}
+	\item \( z^{i-1} \in \mathbb{R}^{n^{i-1}} \) represents the activations from the previous layer.
+	\item \( W^i \in \mathbb{R}^{n^{i-1} \times n^i} \) is the weight matrix.
+	\item \( b^i \in \mathbb{R}^{n^i} \) is the bias vector.
+	\item \( f(\cdot) \) is an activation function applied element-wise.
+\end{itemize}
+
+\noindent Our goal is to determine a suitable initialization for \( W^i \) that maintains a constant variance across layers.
+
+\subsubsection{Assumptions}
+\label{subsec:xavier_assumptions}
+
+\noindent The derivation of Xavier initialization relies on the following key assumptions:
+
+\begin{itemize}
+	\item \textbf{Assumption 1: The activation function is odd with a unit derivative at 0.} This means that:
+	\begin{equation}
+		f^{\prime}(0) = 1, \quad f(-x) = -f(x).
+	\end{equation}
+	This assumption is satisfied by the tanh function but not by ReLU, which does not have a well-defined derivative at 0.
+	
+	\item \textbf{Assumption 2: Inputs, weights, and biases at initialization are independently and identically distributed (iid).} This ensures that no correlation skews the variance calculations.
+	
+	\item \textbf{Assumption 3: Inputs are normalized to have zero mean, and the weights and biases are initialized from a distribution centered at 0.} This implies:
+	\begin{equation}
+		\mathbb{E}\left[z^0\right] = \mathbb{E}\left[W^i\right] = \mathbb{E}\left[b^i\right] = 0.
+	\end{equation}
+\end{itemize}
+
+\noindent Given these assumptions, we proceed to derive the initialization method.
+
+\subsubsection{Derivation of Xavier Initialization}
+\label{subsec:xavier_derivation}
+
+\noindent The derivation of Xavier initialization is based on analyzing how variance propagates through both the forward and backward passes of a neural network. The goal is to ensure that the variance of activations and gradients remains stable across layers, preventing vanishing or exploding signals during training. A more detailed step-by-step derivation can be found in \cite{hlav2023_xavier}. Here, we summarize the key results.
+
+\paragraph{Forward Pass: Maintaining Activation Variance}
+\label{subsubsec:xavier_forward}
+
+\noindent In the forward pass, the activations at layer \( i \) are computed as:
+\begin{equation}
+	s^i = z^{i-1} W^i + b^i.
+\end{equation}
+Applying the activation function \( f(\cdot) \), we obtain:
+\begin{equation}
+	z^i = f(s^i).
+\end{equation}
+
+\noindent Our objective is to ensure that the variance of activations remains constant across layers:
+\begin{equation}
+	\operatorname{Var}[z^i] = \operatorname{Var}[z^{i-1}].
+\end{equation}
+To analyze this, we assume that \( z^{i-1} \) and \( W^i \) are independent and zero-centered, giving:
+\begin{equation}
+	\operatorname{Var}[s^i] = \operatorname{Var}[z^{i-1} W^i] = n^{i-1} \operatorname{Var}[W^i] \operatorname{Var}[z^{i-1}].
+\end{equation}
+
+\noindent Setting \( \operatorname{Var}[z^i] = \operatorname{Var}[z^{i-1}] \), we solve for \( \operatorname{Var}[W^i] \):
+
+\begin{equation}
+	\operatorname{Var}[W^i] = \frac{1}{n^{i-1}}.
+\end{equation}
+
+\noindent This means that choosing weights with this variance (depending on the number of neurons in the previous layer $n^{i-1}$, for each layer $i$) ensures that the activations do not shrink or explode as they propagate through the network.
+
+\paragraph{Backward Pass: Maintaining Gradient Variance}
+\label{subsubsec:xavier_backward}
+
+\noindent During backpropagation, the gradient of the loss function with respect to the pre-activation \( s^i \) at layer \( i \) is given by:
+\begin{equation}
+	\frac{\partial \operatorname{Cost}}{\partial s^i} = \frac{\partial \operatorname{Cost}}{\partial z^i} f'(s^i).
+\end{equation}
+The gradients are then propagated backward using:
+\begin{equation}
+	\frac{\partial \operatorname{Cost}}{\partial z^{i-1}} = W^i \frac{\partial \operatorname{Cost}}{\partial s^i}.
+\end{equation}
+
+\noindent To ensure stable gradient flow, we want to maintain constant variance across layers:
+\begin{equation}
+	\operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^i} \right) = \operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^{i+1}} \right).
+\end{equation}
+
+\noindent Since \( W^i \) and \( \frac{\partial \operatorname{Cost}}{\partial s^i} \) are independent and zero-centered, we get:
+
+\begin{equation}
+	\operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^i} \right) = n^i \operatorname{Var}[W^i] \operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^{i+1}} \right).
+\end{equation}
+
+\noindent Setting \( \operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^i} \right) = \operatorname{Var} \left( \frac{\partial \operatorname{Cost}}{\partial s^{i+1}} \right) \), we solve for \( \operatorname{Var}[W^i] \):
+
+\begin{equation}
+	\operatorname{Var}[W^i] = \frac{1}{n^i}.
+\end{equation}
+
+\noindent This ensures that the gradients do not shrink or explode as they propagate backward.
+
+\paragraph{Balancing Forward and Backward Variance}
+\label{subsubsec:xavier_balancing}
+
+\noindent The variance conditions obtained from the forward and backward pass derivations are:
+\begin{equation}
+	\operatorname{Var}[W^i] = \frac{1}{n^{i-1}}, \quad \text{(from forward pass)}
+\end{equation}
+\begin{equation}
+	\operatorname{Var}[W^i] = \frac{1}{n^i}, \quad \text{(from backward pass)}
+\end{equation}
+
+\noindent These two conditions are equal only when \( n^{i-1} = n^i \), meaning all layers have the same number of neurons. However, in most architectures, layers do not have identical sizes, making it impossible to satisfy both conditions simultaneously.
+
+\noindent To resolve this, Glorot and Bengio proposed taking the average of the two results:
+
+\begin{equation}
+	\operatorname{Var}[W^i] = \frac{2}{n^{i-1} + n^i}.
+\end{equation}
+
+\noindent This balances the variance of activations and gradients across layers. Although it isn't proven/guaranteed that this initialization will work, in practice it appears to usually work, making this a common weight initialization approach. 
+
+\subsubsection{Final Xavier Initialization Formulation}
+\label{subsubsec:xavier_final}
+
+\noindent The final Xavier initialization scheme follows the computed variance. The weights are sampled from either:
+
+\begin{itemize}
+	\item A normal distribution:
+	\begin{equation}
+		W^i \sim \mathcal{N} \left( 0, \frac{2}{n^{i-1} + n^i} \right).
+	\end{equation}
+	\item A uniform distribution:
+	\begin{equation}
+		W^i \sim U \left( -\sqrt{\frac{6}{n^{i-1} + n^i}}, \sqrt{\frac{6}{n^{i-1} + n^i}} \right).
+	\end{equation}
+\end{itemize}
+
+\noindent These choices ensure stable propagation of activations and gradients, improving the convergence of deep networks.
+
+\subsubsection{Limitations of Xavier Initialization}
+\label{subsec:xavier_limitations}
+
+\noindent While Xavier initialization improves stability in training deep networks, it is primarily suited for activations like sigmoid and tanh. However, for ReLU-based networks, which are more common nowadays as ReLU and its variants are more suitable activation functions for deep learning, as they do not satisfy the odd symmetry assumption, a different method—\textbf{Kaiming He Initialization} is more appropriate \cite{he2015_delving}.
+
+\newpage
+\subsection{Kaiming He Initialization} 
+\label{subsec:kaiming_init}
+
+\noindent Xavier initialization was derived assuming symmetric activation functions such as tanh and sigmoid. However, modern deep networks frequently use \textbf{ReLU} and its variants, which introduce asymmetry due to their non-negative outputs. To address this, \textbf{Kaiming He initialization} \cite{he2015_delving} was designed specifically for ReLU-based networks.
+
+\noindent A more detailed mathematical derivation can be found in \cite{hlav2023_kaiming}. Here, we summarize the key results.
+
+\subsubsection{Motivation}
+\noindent The ReLU function is defined as:
+\begin{equation}
+	\operatorname{ReLU}(x) = \max(0, x).
+\end{equation}
+Unlike tanh or sigmoid, ReLU has a \textbf{zero-negative} property, meaning half of the activations become zero. This effectively reduces the variance of activations by a factor of \( 2 \), requiring an adjustment in the weight initialization.
+
+\noindent Similar to Xavier initialization, the goal is to ensure stable variance across both forward and backward passes while considering ReLU's characteristics.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_64.jpg}
+	\caption{Xavier initialization applied with ReLU: activations collapse to zero due to the mismatch between the initialization assumptions and the activation function properties. This prevents effective learning.}
+	\label{fig:chapter9_xavier_relu_fail}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_65.jpg}
+	\caption{Kaiming initialization: activations are well-scaled across layers, preserving variance and enabling stable learning with ReLU.}
+	\label{fig:chapter9_kaiming_init}
+\end{figure}
+
+\paragraph{Mathematical Notation}
+\noindent We define a neural network layer with the following variables:
+\begin{itemize}
+	\item Weight matrix: \( W_k \in \mathbb{R}^{n_k \times n_{k+1}} \)
+	\item Bias vector: \( b_k \in \mathbb{R}^{n_{k+1}} \)
+	\item Input activations: \( x_k \in \mathbb{R}^{n_k} \)
+	\item Pre-activation outputs: \( y_k = x_k W_k + b_k \)
+	\item Post-activation outputs: \( x_{k+1} = f(y_k) \), where \( f(x) \) is the ReLU activation function.
+	\item The network’s loss function is denoted by \( L \).
+	\item Gradients of the loss function w.r.t. activations: \( \Delta x_k = \frac{\partial L}{\partial x_k} \).
+\end{itemize}
+
+\subsubsection{Assumptions}
+\noindent The derivation relies on the following key assumptions:
+\begin{enumerate}
+	\item \textbf{ReLU activation:} Defined as:
+	\begin{equation}
+		f(x) = \operatorname{ReLU}(x) = \max(0, x),
+	\end{equation}
+	with its derivative:
+	\begin{equation}
+		f'(x) =
+		\begin{cases}
+			1, & x > 0 \\
+			0, & x \leq 0.
+		\end{cases}
+	\end{equation}
+	This means that, on average, only half of the inputs contribute to the signal.
+	
+	\item \textbf{Independent and identically distributed (iid) initialization:} Inputs, weights, and gradients are assumed to be iid at initialization.
+	
+	\item \textbf{Zero-mean initialization:} Inputs and weights are drawn from a zero-centered distribution:
+	\begin{equation}
+		\mathbb{E}[x_0] = \mathbb{E}[W_k] = \mathbb{E}[b_k] = 0.
+	\end{equation}
+\end{enumerate}
+
+\subsubsection{Forward and Backward Pass Derivation}
+\noindent To determine an appropriate variance for weight initialization, we ensure that variance remains stable across layers during both forward and backward propagation. If the variance is too high, activations and gradients explode, leading to instability. If it is too low, activations and gradients vanish, slowing down learning.
+
+\noindent The challenge with ReLU is that it sets all negative inputs to zero, effectively discarding half of the activation values. This requires adjusting the variance to prevent it from shrinking as it propagates through layers.
+
+\paragraph{Forward Pass Analysis}
+\noindent The goal is to determine the weight variance that maintains constant variance across layers during forward propagation:
+\begin{equation}
+	\operatorname{Var}[y_k] = \operatorname{Var}[y_{k-1}].
+\end{equation}
+
+\noindent Since the transformation follows:
+\begin{equation}
+	y_k = x_k W_k + b_k,
+\end{equation}
+applying the variance operator:
+
+\begin{equation}
+	\operatorname{Var}[y_k] = \operatorname{Var}[x_k W_k] + \operatorname{Var}[b_k].
+\end{equation}
+
+\noindent Assuming \( b_k = 0 \) at initialization:
+\begin{equation}
+	\operatorname{Var}[y_k] = \operatorname{Var}[x_k W_k].
+\end{equation}
+
+\noindent Given independence between \( x_k \) and \( W_k \):
+\begin{equation}
+	\operatorname{Var}[y_k] = n_k \operatorname{Var}[W_k] \operatorname{Var}[x_k].
+\end{equation}
+
+\noindent Since ReLU eliminates half the activations, the expected variance is:
+\begin{equation}
+	\operatorname{Var}[x_k] = \frac{1}{2} \operatorname{Var}[y_{k-1}].
+\end{equation}
+
+\noindent Substituting this:
+\begin{equation}
+	\operatorname{Var}[y_k] = n_k \operatorname{Var}[W_k] \frac{1}{2} \operatorname{Var}[y_{k-1}].
+\end{equation}
+
+\noindent Setting \( \operatorname{Var}[y_k] = \operatorname{Var}[y_{k-1}] \):
+\begin{equation}
+	\operatorname{Var}[W_k] = \frac{2}{n_k}.
+\end{equation}
+
+\paragraph{Backward Pass Analysis}
+\noindent Similar reasoning applies to backpropagation, ensuring that gradient variance remains stable:
+\begin{equation}
+	\operatorname{Var}[\Delta x_k] = \operatorname{Var}[\Delta x_{k+1}].
+\end{equation}
+
+\noindent The gradient follows:
+\begin{equation}
+	\Delta x_k = \Delta y_k W_k^T.
+\end{equation}
+
+\noindent Applying the variance operator:
+\begin{equation}
+	\operatorname{Var}[\Delta x_k] = \operatorname{Var}[\Delta y_k W_k^T].
+\end{equation}
+
+\noindent Using independence:
+\begin{equation}
+	\operatorname{Var}[\Delta x_k] = n_k \operatorname{Var}[W_k] \operatorname{Var}[\Delta y_k].
+\end{equation}
+
+\noindent ReLU's gradient is 1 for positive inputs and 0 otherwise:
+\begin{equation}
+	\operatorname{Var}[\Delta y_k] = \frac{1}{2} \operatorname{Var}[\Delta x_{k+1}].
+\end{equation}
+
+\noindent Substituting:
+\begin{equation}
+	\operatorname{Var}[\Delta x_k] = n_k \operatorname{Var}[W_k] \frac{1}{2} \operatorname{Var}[\Delta x_{k+1}].
+\end{equation}
+
+\noindent Setting \( \operatorname{Var}[\Delta x_k] = \operatorname{Var}[\Delta x_{k+1}] \):
+\begin{equation}
+	\operatorname{Var}[W_k] = \frac{2}{n_k}.
+\end{equation}
+
+\subsubsection{Final Kaiming Initialization Formulation}
+\noindent Unlike Xavier initialization, which averages forward and backward variance conditions, Kaiming He initialization naturally satisfies both simultaneously due to the ReLU-specific factor of \( 2 \). The final weight initialization is:
+
+\begin{itemize}
+	\item \textbf{Normal distribution:}
+	\begin{equation}
+		W_k \sim \mathcal{N} \left( 0, \frac{2}{n_k} \right).
+	\end{equation}
+	\item \textbf{Uniform distribution:}
+	\begin{equation}
+		W_k \sim U \left( -\sqrt{\frac{6}{n_k}}, \sqrt{\frac{6}{n_k}} \right).
+	\end{equation}
+\end{itemize}
+
+\subsubsection{Implementation in Deep Learning Frameworks}
+\noindent Kaiming He initialization is widely supported in deep learning libraries such as PyTorch:
+
+\begin{verbatim}
+	import torch.nn as nn
+	nn.init.kaiming_uniform_(layer.weight, mode='fan_in', nonlinearity='relu')
+\end{verbatim}
+
+\noindent For normal distribution:
+
+\begin{verbatim}
+	nn.init.kaiming_normal_(layer.weight, mode='fan_in', nonlinearity='relu')
+\end{verbatim}
+
+\noindent This method ensures stable variance and effective training for ReLU-based deep networks.
+
+\subsubsection{Initialization in Residual Networks (ResNets)}
+\label{subsubsec:resnet_init}
+
+\noindent Residual Networks (ResNets) introduce \textbf{skip connections}, which allow the network to learn residual functions instead of direct mappings. While this architectural design helps address vanishing gradients, it also \textbf{violates the assumptions} of Kaiming (MSRA) initialization \cite{he2015_delving}.
+
+\paragraph{Why Doesn't Kaiming Initialization Work for ResNets?}
+\noindent In standard Kaiming initialization, the goal is to maintain a stable variance across layers, ensuring that:
+\begin{equation}
+	\operatorname{Var}[F(x)] = \operatorname{Var}[x].
+\end{equation}
+However, in ResNets, the output of each block is computed as:
+\begin{equation}
+	x_{l+1} = x_l + F(x_l),
+\end{equation}
+where \( F(x_l) \) is the residual mapping.
+
+\noindent If we apply Kaiming initialization naively, we get:
+\begin{equation}
+	\operatorname{Var}[x_{l+1}] = \operatorname{Var}[x_l] + \operatorname{Var}[F(x_l)].
+\end{equation}
+Since \( \operatorname{Var}[F(x_l)] = \operatorname{Var}[x_l] \), this leads to:
+\begin{equation}
+	\operatorname{Var}[x_{l+1}] = 2 \operatorname{Var}[x_l].
+\end{equation}
+\noindent This causes the variance to grow with each residual block, leading to \textbf{exploding activations and gradients}, which disrupts training.
+
+\paragraph{Fixup Initialization}
+\noindent To address this issue, \textbf{Fixup Initialization} \cite{zhang2019_fixup} proposes a modification to the initialization strategy:
+\begin{itemize}
+	\item The \textbf{first convolutional layer} in each residual block is initialized using Kaiming (MSRA) initialization.
+	\item The \textbf{second convolutional layer} in the residual block is initialized to zero.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_67.jpg}
+	\caption{Fixup Initialization: The first convolution is initialized using Kaiming, while the second convolution is initialized to zero, ensuring stable variance across layers in ResNets.}
+	\label{fig:chapter9_fixup_init}
+\end{figure}
+
+\noindent This ensures that at initialization:
+\begin{equation}
+	\operatorname{Var}[x_{l+1}] = \operatorname{Var}[x_l],
+\end{equation}
+meaning the variance remains stable across layers at the start of training.
+
+\noindent This simple adjustment ensures that deep ResNets can be trained effectively without batch normalization or layer normalization, making Fixup particularly useful in certain settings.
+
+\subsection{Conclusion: Choosing the Right Initialization Strategy}
+\label{subsec:initialization_conclusion}
+
+\noindent Weight initialization plays a critical role in stabilizing training dynamics, preventing vanishing or exploding gradients, and improving optimization efficiency in deep neural networks. The choice of initialization depends on the network architecture and the activation functions used. Below, we summarize the most widely adopted initialization strategies and their appropriate use cases:
+
+\begin{itemize}
+	\item \textbf{Xavier (Glorot) Initialization} \cite{glorot2010_understanding}: Best suited for networks using symmetric activation functions such as tanh or sigmoid, where maintaining equal variance across layers is crucial.
+	
+	\item \textbf{Kaiming (He) Initialization} \cite{he2015_delving}: Specifically designed for ReLU and its variants (Leaky ReLU, PReLU, etc.), accounting for their asymmetric nature by scaling variance accordingly to prevent dying neurons.
+	
+	\item \textbf{Fixup Initialization} \cite{zhang2019_fixup}: Designed for Residual Networks (ResNets), where skip connections alter the variance accumulation dynamics, requiring an adaptation of Kaiming initialization to prevent activation and gradient explosion.
+	
+	\item \textbf{T-Fixup Initialization} \cite{huang2020_tfixup}: Developed for Transformer models, which do not use batch normalization and suffer from unstable training due to layer normalization effects. T-Fixup provides an alternative scaling strategy that allows deep Transformers to be trained without learning rate warm-up.
+\end{itemize}
+
+\subsubsection{Ongoing Research and Open Questions}
+
+\noindent While the above techniques are widely used, weight initialization remains an active area of research due to several challenges:
+
+\begin{itemize}
+	\item \textbf{Deeper Architectures}: As networks grow deeper, traditional initialization methods may become insufficient. Methods such as Scaled Initialization \cite{brock2021_highperformance} and Dynamically Normalized Initialization are being explored.
+	
+	\item \textbf{Transformers and Non-Convolutional Architectures}: Transformers and other architectures differ significantly from CNN-based models, requiring specialized initialization strategies such as T-Fixup.
+	
+	\item \textbf{Self-Supervised Learning and Sparse Networks}: Recent advances in sparse training and self-supervised learning suggest that certain initialization methods may benefit from adjustments tailored to these paradigms.
+	
+	\item \textbf{Adaptive Initialization}: Some research explores dynamically adjusting initialization during training instead of relying on fixed heuristics.
+\end{itemize}
+
+\noindent Weight initialization remains a crucial component of deep learning optimization. While methods like Kaiming and Fixup work well for standard deep networks, ongoing research continues to refine initialization strategies for emerging architectures. The field is evolving toward more specialized and adaptive initialization schemes to address challenges posed by depth, architecture type, and optimization dynamics.
+
+\section{Regularization Techniques}
+\label{sec:regularization}
+
+\noindent We have previously discussed L1/L2 regularization (weight decay) and how batch normalization (BN) can act as an implicit regularizer. However, in some cases (usually with less modern architectures, like VGG or AlexNet), these methods are insufficient to prevent overfitting. In such cases, even when a model successfully fits the training data, it may generalize poorly to unseen test samples (hence, over-fitting). This issue is typically observed when the validation loss increases while the training loss continues to decrease during training.
+
+\subsection{Dropout}
+\label{subsec:dropout}
+
+\noindent A widely used regularization technique to combat overfitting is \textbf{dropout} \cite{srivastava2014_dropout}. The key idea behind dropout is to randomly set some neurons in each layer to zero during the forward pass, with a probability \( p \) (commonly set to \( 0.5 \)). This stochastic behavior forces the network to learn redundant representations, improving generalization.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_71.jpg}
+	\caption{Visualization of dropout: neurons are randomly dropped during training.}
+	\label{fig:chapter9_dropout}
+\end{figure}
+
+\noindent Dropout is simple to implement and has proven to be an effective regularization method in deep networks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_72.jpg}
+	\caption{Python implementation of dropout in a few lines of code.}
+	\label{fig:chapter9_dropout_code}
+\end{figure}
+
+\subsubsection{Why Does Dropout Work?}
+\label{subsubsec:dropout_interpretation}
+
+\noindent One way to understand the effectiveness of dropout is by considering its impact on feature representation learning. By forcing the network to function even when certain neurons are randomly deactivated, dropout encourages the learning of multiple redundant representations, reducing the reliance on specific neurons or sets of neurons. This helps prevent co-adaptation of features, resulting in more robust and generalizable representations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_73.jpg}
+	\caption{Dropout prevents co-adaptation by enforcing redundant feature representations.}
+	\label{fig:chapter9_dropout_coadaptation}
+\end{figure}
+
+\noindent Consider a classification network trained to recognize cats. Without dropout, the network may learn to identify a cat based on a small, specific set of neurons that respond to features such as "has whiskers" or "has pointy ears." If these neurons fail to activate (e.g., due to occlusion in an image), the model may fail to classify the image correctly.
+
+\noindent With dropout, the network is forced to distribute its learned representations across multiple neurons. For instance, one subset of neurons may respond to features such as "has a tail" and "is furry," while another may respond to "has whiskers" and "has claws." Because dropout randomly deactivates neurons during training, the network learns to rely on multiple sets of features instead of a single subset. This redundancy ensures that even if some neurons are missing at test time, the network still has enough information to classify the image correctly.
+
+\noindent In essence, dropout forces the model to learn diverse and distributed feature representations, making it more robust to missing or occluded features in unseen images.
+
+\subsubsection{Dropout at Test Time}
+\label{subsubsec:dropout_test}
+
+\noindent During training, dropout introduces randomness into the network, which is beneficial for regularization. However, at test time, we require a \textbf{deterministic model} to ensure consistent and reliable predictions. If we were to apply dropout at test time, different subsets of neurons would be randomly deactivated on each forward pass, making the model’s output highly inconsistent.
+
+\noindent \textbf{Why is a stochastic model at inference problematic?}  
+Consider an autonomous vehicle that uses a neural network to recognize traffic signs. If dropout were applied at test time, different neurons could be randomly dropped with each forward pass. As a result, the model might predict "Stop Sign" on one pass and "Speed Limit 60" on another, leading to highly inconsistent and potentially dangerous decisions.
+
+\noindent Another example is medical diagnosis. Suppose a deep learning model is used to analyze medical images for detecting tumors. If dropout were applied at test time, the model's prediction for the presence of a tumor might vary between different forward passes. A doctor using the model would see conflicting results, making it impossible to rely on the system for accurate medical diagnoses.
+
+\noindent To prevent this, we rewrite the network as a function of two inputs: the input tensor \( x \) and a random binary mask \( z \), drawn from a predefined probability distribution:
+
+\begin{equation}
+	y = f(x, z).
+\end{equation}
+
+\noindent To obtain a stable output at test time, we seek the expected value of \( y \), marginalized over all possible values of \( z \):
+
+\begin{equation}
+	\mathbb{E}_z[f(x, z)] = \int p(z) f(x, z) dz.
+\end{equation}
+
+\noindent However, computing this integral analytically is infeasible in practice, requiring an approximation.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_75.jpg}
+	\caption{Mathematical formulation of dropout and the difficulty of marginalizing out the random variable.}
+	\label{fig:chapter9_dropout_expectation}
+\end{figure}
+
+\noindent Consider a single neuron receiving two inputs \( x \) and \( y \) with corresponding weights \( w_1 \) and \( w_2 \). During training, with dropout probability \( p = 0.5 \), the expected activation is:
+
+\begin{equation}
+	\mathbb{E}[a] = \frac{1}{4} (w_1 x + w_2 y) + \frac{1}{4} (w_1 x + 0y) + \frac{1}{4} (0x + 0y) + \frac{1}{4} (0x + w_2 y).
+\end{equation}
+
+\noindent Simplifying, we obtain:
+
+\begin{equation}
+	\mathbb{E}[a] = \frac{1}{2} (w_1 x + w_2 y).
+\end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_78.jpg}
+	\caption{Approximation of the expected activation for a single neuron, motivating test-time scaling.}
+	\label{fig:chapter9_dropout_scaling}
+\end{figure}
+
+\noindent Generalizing this result, at test time, we compensate for the randomness introduced during training by scaling each output by the dropout probability \( p \). That is, at test time, all neurons are active, but their activations are scaled by \( p \) to match the expected output seen during training.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_79.jpg}
+	\caption{Test-time dropout implementation: scaling activations by the dropout probability.}
+	\label{fig:chapter9_dropout_testtime}
+\end{figure}
+
+\subsubsection{Inverted Dropout}
+\label{subsubsec:inverted_dropout}
+
+\noindent A more common implementation of dropout, known as \textbf{inverted dropout}, simplifies the test-time scaling process by incorporating it into training. Instead of scaling activations at test time, we scale them during training. This is achieved by dividing the retained activations by \( p \) during training, ensuring that the expected activations at test time remain the same without any need for post-processing.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_81.jpg}
+	\caption{Python implementation of inverted dropout, where scaling occurs during training.}
+	\label{fig:chapter9_inverted_dropout}
+\end{figure}
+\newpage
+\noindent Formally, during training:
+
+\begin{equation}
+	a' = \frac{a}{p}.
+\end{equation}
+
+\noindent At test time, all neurons remain active, and no additional scaling is required.
+
+\subsubsection{Where is Dropout Used in CNNs?}
+\label{subsubsec:dropout_cnn_usage}
+
+\noindent In early CNN architectures such as \textbf{AlexNet} and \textbf{VGG16}, fully connected layers (MLPs) were stacked at the end of the network. Dropout was commonly applied to these layers to prevent overfitting. However, in modern architectures, fully connected layers have been largely replaced by \textbf{global average pooling (GAP)} followed by a single fully connected layer. This transition has made dropout less commonly used in CNNs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_83.jpg}
+	\caption{Dropout usage in AlexNet and VGG16: applied to fully connected layers at the end of the architecture.}
+	\label{fig:chapter9_dropout_cnn}
+\end{figure}
+
+\noindent Back in 2014, Dropout was an essential component for training neural networks, often succeeding in reducing overfitting, allowing deeper models to train and provide improved results over shallower ones. While dropout remains a useful technique in some deep networks, its necessity has diminished in architectures that rely less on FC layers, or ones incorporating other alternative regularization mechanisms. 
+
+\subsection{Other Regularization Techniques}
+\label{subsec:other_regularization}
+
+\noindent The idea behind dropout introduces a common pattern seen in various regularization techniques:
+
+\begin{itemize}
+	\item \textbf{Training:} Introduce some form of randomness (e.g., Dropout with a random binary mask \( z \), where \( y = f_W(x, z) \)).
+	\item \textbf{Testing:} Average out the randomness (sometimes approximately), ensuring stable deterministic predictions: 
+	\[
+	y = f(x) = E_z[f_W(x, z)] = \int p(z) f_W(x, z) \, dz.
+	\]
+\end{itemize}
+
+\noindent Batch Normalization (BN) also follows this trend. During training, BN normalizes activations using statistics computed from the mini-batch, making the output of each sample dependent on others in the batch (which are chosen randomly). At test time, BN uses fixed statistics to remove the randomness. Thus, BN also fits into this broader category of techniques that introduce randomness during training but stabilize at test time.
+
+\noindent Interestingly, with modern architectures like ResNets and their variants, explicit regularization techniques such as Dropout are often unnecessary. Instead, regularization is typically achieved through weight decay (L2 regularization) and BN.
+
+\subsubsection{Data Augmentation as Implicit Regularization}
+\label{subsubsec:data_augmentation}
+
+\noindent Another form of regularization, often not explicitly classified as such, is \textbf{data augmentation}. It introduces controlled randomness into training data by applying transformations that should not alter the desired output (e.g., for classification, shouldn't change the class identity). These augmentations expand the effective training set size and help improve generalization.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_88.jpg}
+	\caption{Data augmentation: random transformations applied before training.}
+	\label{fig:chapter9_data_augmentation}
+\end{figure}
+
+\noindent Common augmentation techniques for images include:
+
+\begin{itemize}
+	\item \textbf{Horizontal flipping} (mirroring an image).
+	\item \textbf{Color jittering} (adjusting brightness, contrast, and saturation).
+	\item \textbf{Random cropping and scaling}.
+\end{itemize}
+
+\noindent Since augmentations introduce randomness at training time, test-time predictions must be stabilized. One approach is to apply a fixed set of augmentations during inference and average the results.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_91.jpg}
+	\caption{Test-time augmentation in ResNet: multiple fixed crops and scales are used to marginalize out randomness.}
+	\label{fig:chapter9_test_time_augmentation}
+\end{figure}
+
+\noindent Augmentation strategies depend on the task and dataset. For example:
+
+\begin{itemize}
+	\item \textbf{Translation, rotation, shearing, and stretching} are useful for robust feature learning.
+	\item \textbf{Lens distortions} may help models adapt to different camera setups.
+	\item \textbf{Domain-specific augmentations:} Some augmentations are only useful for certain tasks. For example:
+	\begin{itemize}
+		\item If distinguishing between left and right hands, horizontal flipping should not be applied.
+		\item For classifying cats vs. dogs, flipping is reasonable since a flipped cat/dog is still a cat/dog (class doesn't change).
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_92.jpg}
+	\caption{Color jittering as an example of augmentation used in AlexNet and ResNet.}
+	\label{fig:chapter9_color_jitter}
+\end{figure}
+
+\noindent In summary, augmentation is a powerful regularization tool that introduces structured randomness, forcing models to learn robust representations.
+
+\subsubsection{DropConnect}
+\label{subsubsec:dropconnect}
+
+\noindent \textbf{DropConnect} \cite{wan2013_dropconnect} is a regularization technique similar to \textbf{Dropout}, but instead of randomly setting activations to zero, it \textbf{randomly drops connections} (weights) during the forward pass. This means that rather than deactivating entire neurons, individual weights are set to zero, producing a sparser and more dynamic network during training.
+
+\noindent The key equation for DropConnect is:
+
+\begin{equation}
+	y = f((W \odot M) x + b),
+\end{equation}
+
+where \( M \) is a binary mask with the same shape as \( W \), with entries sampled from a Bernoulli distribution.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_97.jpg}
+	\caption{DropConnect: Instead of zeroing out neurons like in Dropout, DropConnect randomly removes weights.}
+	\label{fig:chapter9_dropconnect}
+\end{figure}
+
+\paragraph{Comparison Between Dropout and DropConnect}
+Both Dropout and DropConnect introduce randomness during training to help prevent overfitting, but they do so at different granularities:
+
+\begin{itemize}
+	\item \textbf{Dropout:} This technique randomly disables (drops) the entire output of certain neurons in a layer. By doing so, the network is forced to develop redundant representations and avoid relying too much on any single neuron. Dropout is particularly effective in fully connected layers where neurons can easily co-adapt.
+	
+	\item \textbf{DropConnect:} Instead of dropping whole neuron outputs, DropConnect randomly sets individual weights to zero. This “fine-grained” regularization perturbs the connections between neurons, allowing each neuron to still contribute partially while forcing the network to learn more robust and distributed representations. This can be especially useful in architectures with large weight matrices or in layers where preserving some output—even if slightly altered—is beneficial.
+\end{itemize}
+
+\paragraph{Effectiveness and Use Cases}
+\begin{itemize}
+	\item \textbf{When to Use Dropout:} Dropout is generally favored in fully connected layers (e.g., classification heads) where completely removing neuron outputs helps reduce overfitting and encourages the network to learn robust features.
+	
+	\item \textbf{When to Use DropConnect:} DropConnect offers a subtler form of regularization by targeting individual weights rather than whole activations. This fine-grained approach is useful in very deep or highly parameterized models where preserving partial activations is important for maintaining rich feature representations.
+	
+	\item \textbf{Inference Adjustments:} At test time, both methods remove the randomness. For Dropout, activations are scaled by the dropout retention probability, and for DropConnect, the weights are similarly scaled to approximate the expected output.
+\end{itemize}
+
+\paragraph{Summary}
+In summary, while both Dropout and DropConnect aim to improve generalization by reducing over-reliance on specific neurons or connections, Dropout works by completely deactivating neurons, whereas DropConnect selectively drops individual weights. This finer-grained regularization in DropConnect can be advantageous in models where subtle differences in connection strengths are critical for learning complex features.
+
+\subsubsection{Fractional Max Pooling}
+\label{subsubsec:fractional_max_pooling}
+
+\noindent Traditional max pooling operations in CNNs use fixed receptive field sizes (e.g., \(2 \times 2\) or \(3 \times 3\)) to downsample feature maps. \textbf{Fractional Max Pooling} \cite{graham2015_fractionalmaxpool} introduces \textbf{randomized pooling regions}, where the size of the pooling regions varies across different neurons and different forward passes.
+
+\noindent Instead of a fixed pooling size, each neuron is assigned a pooling region that is sampled randomly. For example, some neurons may have a \(2 \times 2\) region, while others may have a \(1 \times 1\) region. On average, each neuron receives a fractional pooling region (e.g., \(1.35\) receptive field size on average).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_98.jpg}
+	\caption{Fractional Max Pooling: randomized pooling regions varying in size across forward passes.}
+	\label{fig:chapter9_fractional_max_pooling}
+\end{figure}
+
+\noindent \textbf{Effectiveness and Test-Time Strategy:}  
+\begin{itemize}
+	\item This technique increases robustness to slight spatial distortions in input images by introducing controlled randomness in pooling.
+	\item At test time, instead of using randomized pooling, we take the average of multiple forward passes to remove randomness while preserving the learned representations.
+\end{itemize}
+
+\subsubsection{Stochastic Depth}
+\label{subsubsec:stochastic_depth}
+
+\noindent \textbf{Stochastic Depth} \cite{huang2016_stochasticdepth} is a regularization technique designed for very deep networks, such as ResNets with hundreds of layers. Instead of using all layers during every forward pass, it randomly skips certain layers during training.
+
+\noindent \textbf{Why is this useful?}  
+\begin{itemize}
+	\item It prevents deep networks from overfitting by creating an implicit ensemble of models.
+	\item It allows gradients to flow more easily during backpropagation, reducing the vanishing gradient problem in extremely deep networks.
+\end{itemize}
+
+\noindent During training, each residual block is kept active with probability \( p_l \), meaning that the network effectively learns multiple sub-networks. At test time, all blocks are used, but each block’s contribution is scaled by its probability of survival \( p_l \), ensuring consistent behavior across training and inference.
+
+\noindent The forward pass update rule for stochastic depth is:
+
+\begin{equation}
+	H^{\text{test}}_l = \text{ReLU}(p_l f(H^{\text{test}}_{l-1}; W_l) + H^{\text{test}}_{l-1}).
+\end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_100.jpg}
+	\caption{Stochastic Depth: at each forward pass, only a subset of layers is used. At test time, all layers are utilized.}
+	\label{fig:chapter9_stochastic_depth}
+\end{figure}
+
+\subsubsection{CutOut}
+\label{subsubsec:cutout}
+
+\noindent \textbf{CutOut} \cite{devries2017_cutout} is a data augmentation technique that \textbf{removes contiguous sections} of input images. Unlike dropout, which randomly removes activations in intermediate layers, CutOut modifies the input space directly by masking out regions.
+
+\begin{itemize}
+	\item It forces the network to learn robust representations by making it focus on the remaining visible parts of the image.
+	\item This improves generalization, especially for small datasets, by preventing reliance on specific visual features.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_101.jpg}
+	\caption{CutOut: parts of the image are occluded to prevent over-reliance on specific features.}
+	\label{fig:chapter9_cutout}
+\end{figure}
+
+\noindent CutOut is closely related to denoising autoencoders and context encoders, as it forces the network to understand images in a global rather than local sense.
+
+\subsubsection{MixUp}
+\label{subsubsec:mixup}
+
+\noindent \textbf{MixUp} \cite{zhang2018_mixup} is a technique that improves generalization by training a network on \textbf{convex combinations} of input images and their labels. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/slide_103.jpg}
+	\caption{MixUp: blending two images and their labels to create intermediate samples.}
+	\label{fig:chapter9_mixup}
+\end{figure}
+
+Instead of feeding original training samples, the model is trained with blended inputs:
+
+\begin{equation}
+	x' = \lambda x_i + (1 - \lambda) x_j,
+\end{equation}
+
+\begin{equation}
+	y' = \lambda y_i + (1 - \lambda) y_j.
+\end{equation}
+
+where \( \lambda \) is drawn from a Beta distribution \( \text{Beta}(a, b) \).
+Usually $a=b\approx 0$, making the weights close to 0/1 (e.g., 0.9cat, 0.1dog). This improves the results of using this regularization technique, in comparison with normal distribution (we are less likely to encounter situations of 0.5cat, 0.5dog, which can make it too hard for the model to learn sometimes). 
+
+\noindent \textbf{Why does MixUp work?}  
+\begin{itemize}
+	\item Encourages linear behavior between samples, reducing sharp decision boundaries that can lead to overfitting.
+	\item Forces the model to learn representations that interpolate well between classes.
+	\item Particularly effective for small datasets, where augmenting the diversity of training samples significantly improves generalization.
+\end{itemize}
+
+\subsubsection{Summary and Regularization Guidelines}
+\label{subsubsec:regularization_guidelines}
+
+\noindent To summarize, different regularization techniques are useful in different scenarios:
+
+\begin{itemize}
+	\item \textbf{Use dropout} in fully connected layers of deep networks.
+	\item \textbf{Batch normalization and augmentations} (e.g., flips, color jittering) are almost always useful if appropriate for the task.
+	\item \textbf{CutOut and MixUp} are particularly effective for small datasets, improving generalization.
+	\item \textbf{Stochastic depth} is valuable for extremely deep architectures, such as ResNets with over 100 layers.
+\end{itemize}
+

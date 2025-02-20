@@ -179,6 +179,17 @@
 	year = {2009}
 }
 
+@inproceedings{glorot2010_understanding,
+	author    = {Xavier Glorot and Yoshua Bengio},
+	title     = {Understanding the difficulty of training deep feedforward neural networks},
+	booktitle = {Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics},
+	series    = {Proceedings of Machine Learning Research},
+	volume    = {9},
+	pages     = {249--256},
+	year      = {2010},
+	publisher = {PMLR}
+}
+
 
 @article{pascal2010_visualchallenge,
 	title={The PASCAL visual object classes (VOC) challenge},
@@ -198,6 +209,24 @@
 	year={2012},
 	volume={25},
 	pages={1097--1105}
+}
+
+
+@inproceedings{wan2013_dropconnect,
+	title = 	 {Regularization of Neural Networks using DropConnect},
+	author = 	 {Wan, Li and Zeiler, Matthew and Zhang, Sixin and Le Cun, Yann and Fergus, Rob},
+	booktitle = 	 {Proceedings of the 30th International Conference on Machine Learning},
+	pages = 	 {1058--1066},
+	year = 	 {2013},
+	editor = 	 {Dasgupta, Sanjoy and McAllester, David},
+	volume = 	 {28},
+	number =       {3},
+	series = 	 {Proceedings of Machine Learning Research},
+	address = 	 {Atlanta, Georgia, USA},
+	publisher =    {PMLR},
+	pdf = 	 {http://proceedings.mlr.press/v28/wan13.pdf},
+	url = 	 {https://proceedings.mlr.press/v28/wan13.html},
+	abstract = 	 {We introduce DropConnect, a generalization of DropOut, for regularizing large fully-connected layers within neural networks. When training with Dropout, a randomly selected subset of activations are set to zero within each layer. DropConnect instead sets a randomly selected subset of weights within the network to zero. Each unit thus receives input from a random subset of units in the previous layer. We derive a bound on the generalization performance of both Dropout and DropConnect. We then evaluate DropConnect on a range of datasets, comparing to Dropout, and show state-of-the-art results on several image recoginition benchmarks can be obtained by aggregating multiple DropConnect-trained models.}
 }
 
 @inproceedings{zeiler2014_visualizing,
@@ -249,6 +278,24 @@
 	year      = {2014}
 }
 
+@article{srivastava2014_dropout,
+	title={Dropout: a simple way to prevent neural networks from overfitting},
+	author={Srivastava, Nitish and Hinton, Geoffrey and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
+	journal={The journal of machine learning research},
+	volume={15},
+	number={1},
+	pages={1929--1958},
+	year={2014},
+	publisher={JMLR. org}
+}
+
+@article{lin2014microsoft,
+	title={Microsoft COCO: Common objects in context},
+	author={Lin, Tsung-Yi and Maire, Michael and Belongie, Serge and others},
+	journal={European Conference on Computer Vision (ECCV)},
+	year={2014}
+}
+
 @article{goodfellow2014_adversarial,
 	title={Explaining and harnessing adversarial examples},
 	author={Goodfellow, Ian J and Shlens, Jonathon and Szegedy, Christian},
@@ -256,11 +303,31 @@
 	year={2014}
 }
 
+@misc{graham2015_fractional,
+	title={Fractional Max-Pooling}, 
+	author={Benjamin Graham},
+	year={2015},
+	eprint={1412.6071},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1412.6071}, 
+}
+
 @article{devlin2015_imagetocaption,
 	title={Exploring Nearest Neighbor Approaches for Image Captioning},
 	author={Devlin, Jacob and Gupta, Bharath and Girshick, Ross},
 	journal={arXiv preprint arXiv:1505.02044},
 	year={2015}
+}
+
+@misc{graham2015_fractionalmaxpool,
+	title={Fractional Max-Pooling}, 
+	author={Benjamin Graham},
+	year={2015},
+	eprint={1412.6071},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1412.6071}, 
 }
 
 @article{lake2015_human,
@@ -294,6 +361,14 @@
 	year      = {2015}
 }
 
+@inproceedings{szegedy2015_googlenet,
+	title={Going deeper with convolutions},
+	author={Szegedy, Christian and Liu, Wei and Jia, Yangqing and Sermanet, Pierre and Reed, Scott and Anguelov, Dragomir and Erhan, Dumitru and Vanhoucke, Vincent and Rabinovich, Andrew},
+	booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages={1--9},
+	year={2015}
+}
+
 @article{donahue2015_ltrcnn,
 	author    = {Jeff Donahue and Lisa Anne Hendricks and Sergio Guadarrama and Marcus Rohrbach and Subhashini Venugopalan and Kate Saenko and Trevor Darrell},
 	title     = {Long-Term Recurrent Convolutional Networks for Visual Recognition and Description},
@@ -312,11 +387,43 @@
 	url       = {http://proceedings.mlr.press/v37/ioffe15.html}
 }
 
+@inproceedings{he2015_delving,
+	title={Delving deep into rectifiers: Surpassing human-level performance on imagenet classification},
+	author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+	booktitle={Proceedings of the IEEE international conference on computer vision},
+	pages={1026--1034},
+	year={2015}
+}
+
+@article{clevert2015_fast,
+	title={Fast and accurate deep network learning by exponential linear units (elus)},
+	author={Clevert, Djork-Arn{\'e}},
+	journal={arXiv preprint arXiv:1511.07289},
+	year={2015}
+}
+
+@misc{huang2016_stochasticdepth,
+	title={Deep Networks with Stochastic Depth}, 
+	author={Gao Huang and Yu Sun and Zhuang Liu and Daniel Sedra and Kilian Weinberger},
+	year={2016},
+	eprint={1603.09382},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/1603.09382}, 
+}
+
 @article{levy2016_medicalimaging,
 	author    = {Doron Levy, et al.},
 	title     = {Deep Learning in Medical Imaging: Revolutionizing Radiology},
 	journal   = {Nature Medicine},
 	year      = {2016}
+}
+
+@article{he2016identity,
+	title={Identity mappings in deep residual networks},
+	author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+	journal={arXiv preprint arXiv:1603.05027},
+	year={2016}
 }
 
 @article{he2016_resnet,
@@ -332,6 +439,49 @@
 	title     = {Understanding Batch Normalization Backpropagation},
 	year      = {2016},
 	url       = {https://kevinzakka.github.io/2016/09/14/batch_normalization/}
+}
+
+@article{hendrycks2016_gelu,
+	title={Gaussian error linear units (gelus)},
+	author={Hendrycks, Dan and Gimpel, Kevin},
+	journal={arXiv preprint arXiv:1606.08415},
+	year={2016}
+}
+
+@article{ramachandran2017_swish,
+	title={Swish: a self-gated activation function},
+	author={Ramachandran, Prajit and Zoph, Barret and Le, Quoc V},
+	journal={arXiv preprint arXiv:1710.05941},
+	volume={7},
+	number={1},
+	pages={5},
+	year={2017},
+	publisher={Technical report}
+}
+
+@misc{devries2017_cutout,
+	title={Improved Regularization of Convolutional Neural Networks with Cutout}, 
+	author={Terrance DeVries and Graham W. Taylor},
+	year={2017},
+	eprint={1708.04552},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1708.04552}, 
+}
+
+@article{ramachandran2017_searching,
+	title={Searching for activation functions},
+	author={Ramachandran, Prajit and Zoph, Barret and Le, Quoc V},
+	journal={arXiv preprint arXiv:1710.05941},
+	year={2017}
+}
+
+@article{klambauer2017_selu,
+	title={Self-normalizing neural networks},
+	author={Klambauer, G{\"u}nter and Unterthiner, Thomas and Mayr, Andreas and Hochreiter, Sepp},
+	journal={Advances in neural information processing systems},
+	volume={30},
+	year={2017}
 }
 
 @article{zhou2017_places,
@@ -393,6 +543,16 @@
 	year = {2017},
 	pages = {1251--1258},
 	doi = {10.1109/CVPR.2017.195}
+}
+
+@misc{zhang2018_mixup,
+	title={mixup: Beyond Empirical Risk Minimization}, 
+	author={Hongyi Zhang and Moustapha Cisse and Yann N. Dauphin and David Lopez-Paz},
+	year={2018},
+	eprint={1710.09412},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/1710.09412}, 
 }
 
 @article{santurkar2018_howdoesbatchnormhelp,
@@ -472,6 +632,23 @@
 	doi = {10.1109/ICCV.2019.00140}
 }
 
+@misc{zhang2019_fixup,
+	title={Fixup Initialization: Residual Learning Without Normalization}, 
+	author={Hongyi Zhang and Yann N. Dauphin and Tengyu Ma},
+	year={2019},
+	eprint={1901.09321},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/1901.09321}, 
+}
+
+@book{alger2019_data,
+	title={Data-scalable Hessian preconditioning for distributed parameter PDE-constrained inverse problems},
+	author={Alger, Nicholas Vieau},
+	year={2019},
+	publisher={The University of Texas at Austin}
+}
+
 @article{janestreet_l2_bn,
 	author    = {Jane Street},
 	title     = {L2 Regularization and Batch Normalization: How They Interact},
@@ -486,6 +663,23 @@
 	journal   = {arXiv preprint arXiv:2010.11929},
 	year      = {2020}
 }
+
+
+@InProceedings{huang2020_tfixup,
+	title = 	 {Improving Transformer Optimization Through Better Initialization},
+	author =       {Huang, Xiao Shi and Perez, Felipe and Ba, Jimmy and Volkovs, Maksims},
+	booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+	pages = 	 {4475--4483},
+	year = 	 {2020},
+	editor = 	 {III, Hal Daumé and Singh, Aarti},
+	volume = 	 {119},
+	series = 	 {Proceedings of Machine Learning Research},
+	publisher =    {PMLR},
+	pdf = 	 {http://proceedings.mlr.press/v119/huang20f/huang20f.pdf},
+	url = 	 {https://proceedings.mlr.press/v119/huang20f.html},
+	abstract = 	 {The Transformer architecture has achieved considerable success recently; the key component of the Transformer is the attention layer that enables the model to focus on important regions within an input sequence. Gradient optimization with attention layers can be notoriously difficult requiring tricks such as learning rate warmup to prevent divergence. As Transformer models are becoming larger and more expensive to train, recent research has focused on understanding and improving optimization in these architectures. In this work our contributions are two-fold: we first investigate and empirically validate the source of optimization problems in the encoder-decoder Transformer architecture; we then propose a new weight initialization scheme with theoretical justification, that enables training without warmup or layer normalization. Empirical results on public machine translation benchmarks show that our approach achieves leading accuracy, allowing to train deep Transformer models with 200 layers in both encoder and decoder (over 1000 attention/MLP blocks) without difficulty. Code for this work is available here:&nbsp;\url{https://github.com/layer6ai-labs/T-Fixup}.}
+}
+
 
 @article{clip2021_multimodal,
 	author    = {Alec Radford and Jong Wook Kim and Chris Hallacy and Aditya Ramesh and Gabriel Goh and Sandhini Agarwal and Girish Sastry and Amanda Askell and Pamela Mishkin and Jack Clark and Gretchen Krueger and Ilya Sutskever},
@@ -511,6 +705,15 @@
 	url = {https://openai.com/dall-e}
 }
 
+@misc{brock2021_highperformance,
+	title={High-Performance Large-Scale Image Recognition Without Normalization}, 
+	author={Andrew Brock and Soham De and Samuel L. Smith and Karen Simonyan},
+	year={2021},
+	eprint={2102.06171},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2102.06171}, 
+}
 
 @article{mamba2023_selective,
 	author    = {Albert Gu and Tri Dao and Ankit Gupta and Stefano Ermon and Christopher R{\'{e}}},
@@ -550,6 +753,23 @@
 	url          = {https://pavisj.medium.com/convolutions-and-backpropagations-46026a8f5d2c}
 }
 
+
+@article{hlav2023_xavier,
+	author    = {Ester Hlav},
+	title     = {Xavier Glorot Initialization in Neural Networks: Math Proof},
+	journal   = {Medium},
+	year      = {2023},
+	note      = {\url{https://medium.com/towards-data-science/xavier-glorot-initialization-in-neural-networks-math-proof-4682bf5c6ec3}}
+}
+
+@article{hlav2023_kaiming,
+	author    = {Ester Hlav},
+	title     = {Kaiming He Initialization in Neural Networks — Math Proof},
+	journal   = {Medium},
+	year      = {2023},
+	note      = {\url{https://medium.com/towards-data-science/kaiming-he-initialization-in-neural-networks-math-proof-73b9a0d845c4}}
+}
+
 @online{appen_road_annotation,
     author = {Appen},
     title = {Computer Vision vs Machine Vision: What's the Difference?},
@@ -563,9 +783,3 @@
 	note = {AI Mind}
 }
 
-@book{alger2019_data,
-	title={Data-scalable Hessian preconditioning for distributed parameter PDE-constrained inverse problems},
-	author={Alger, Nicholas Vieau},
-	year={2019},
-	publisher={The University of Texas at Austin}
-}

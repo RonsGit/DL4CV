@@ -392,132 +392,65 @@ innerbottommargin=5pt]{cBox}
 \usepackage{graphicx}
 \usepackage{float}
 
-\usepackage{xparse} % for custom environment arguments, if not already loaded
-\usepackage{mdframed}
+\usepackage{xcolor}           % For colors
+\usepackage{xparse}           % For NewDocumentEnvironment
+\usepackage{ifthen}           % For \ifthenelse
 
-%--------------------------------------
-% TOGGLE TO SHOW/HIDE ENRICHMENTS
-%--------------------------------------
+% Toggle for showing/hiding enrichments
 \newif\ifenrichment
-\enrichmenttrue
-%  ^ change to \enrichmentfalse to hide them entirely (including TOC entries)
+\enrichmenttrue  
+%  ^ Switch to \enrichmentfalse to hide them (and remove TOC entries).
 
-%--------------------------------------
-% COUNTERS FOR HIERARCHICAL NUMBERING
-%--------------------------------------
-% 1) Section-level Enrichment => "1,2,3..."
-\newcounter{enSec}
-\renewcommand{\theenSec}{\arabic{enSec}}
-
-% 2) Subsection-level => "1.1,1.2..."
-\newcounter{enSubSec}[enSec]
-\renewcommand{\theenSubSec}{\theenSec.\arabic{enSubSec}}
-
-% 3) Subsubsection-level => "1.1.1..."
-\newcounter{enSubSubSec}[enSubSec]
-\renewcommand{\theenSubSubSec}{\theenSubSec.\arabic{enSubSubSec}}
-
-%--------------------------------------
-% TRACK IF WE ARE IN NESTED ENRICHMENT
-%--------------------------------------
-% If enrichOpenDepth=1 => top-level environment => show left boundary
-% If enrichOpenDepth>1 => nested => no boundary
+% Track nesting depth (top-level vs. nested) if you still want some distinction:
 \newcounter{enrichOpenDepth}
 
-%--------------------------------------
-% SINGLE "ENRICHMENT" ENVIRONMENT
-%--------------------------------------
 \NewDocumentEnvironment{enrichment}{ O{} O{subsection} }{%
 	\ifenrichment
-	\stepcounter{enrichOpenDepth}  % Increase nesting depth
-	\begingroup
+	% Increase nesting depth
+	\stepcounter{enrichOpenDepth}
 	
-	% Decide which counter to increment (section, subsection, subsubsection)
+	% Determine which LaTeX counter to increment:
 	\ifthenelse{\equal{#2}{section}}{%
-		\stepcounter{enSec}
-		\def\theLabel{\theenSec}
-		\def\theHeadingLevel{section}
+		\refstepcounter{section}%
+		\def\theLabel{\thesection}%
+		\def\theTOClevel{section}%
+		\def\theHeading{\section*{\color{ocre}Enrichment \thesection: #1}}
 	}{%
 		\ifthenelse{\equal{#2}{subsection}}{%
-			\stepcounter{enSubSec}
-			\def\theLabel{\theenSubSec}
-			\def\theHeadingLevel{subsection}
+			\refstepcounter{subsection}%
+			\def\theLabel{\thesubsection}%
+			\def\theTOClevel{subsection}%
+			\def\theHeading{\subsection*{\color{ocre}Enrichment \thesubsection: #1}}
 		}{%
 			% Default => subsubsection
-			\stepcounter{enSubSubSec}
-			\def\theLabel{\theenSubSubSec}
-			\def\theHeadingLevel{subsubsection}
+			\refstepcounter{subsubsection}%
+			\def\theLabel{\thesubsubsection}%
+			\def\theTOClevel{subsubsection}%
+			\def\theHeading{\subsubsection*{\color{ocre}Enrichment \thesubsubsection: #1}}
 		}%
 	}%
 	
-	% Add an entry to the TOC
+	% Manually add a TOC entry (since we're using star headings)
 	\ifx\empty#1\empty
-	\addcontentsline{toc}{\theHeadingLevel}{Enrichment \theLabel}
+	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel}
 	\else
-	\addcontentsline{toc}{\theHeadingLevel}{Enrichment \theLabel: #1}
+	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel: #1}
 	\fi
 	
-	%--------------------------------------
-	% START OUR MDFRAMED BLOCK
-	%--------------------------------------
-	\ifnum\value{enrichOpenDepth}=1
-	% TOP-LEVEL => Show ONLY a left boundary
-	\begin{mdframed}[
-		skipabove=10pt,
-		skipbelow=10pt,
-		linecolor=ocre,
-		linewidth=4pt,
-		leftline=true,
-		rightline=false,
-		topline=false,
-		bottomline=false,
-		backgroundcolor=white,
-		innerleftmargin=10pt,
-		innerrightmargin=10pt,
-		innertopmargin=5pt,
-		innerbottommargin=5pt
-		]
-		\else
-		% NESTED => No boundary or shading
-		\begin{mdframed}[
-			linecolor=white,
-			linewidth=0pt,
-			leftline=false,
-			rightline=false,
-			topline=false,
-			bottomline=false,
-			backgroundcolor=white,
-			innertopmargin=0pt,
-			innerbottommargin=0pt,
-			innerleftmargin=0pt,
-			innerrightmargin=0pt,
-			skipabove=5pt,
-			skipbelow=5pt
-			]
-			\fi
-			
-			%--------------------------------------
-			% PRINT THE HEADING
-			%--------------------------------------
-			\ifthenelse{\equal{\theHeadingLevel}{section}}{%
-				\section*{\color{ocre}Enrichment \theLabel: #1}
-			}{%
-				\ifthenelse{\equal{\theHeadingLevel}{subsection}}{%
-					\subsection*{\color{ocre}Enrichment \theLabel: #1}
-				}{%
-					\subsubsection*{\color{ocre}Enrichment \theLabel: #1}
-				}%
-			}%
-			\par\vspace{5pt}
-			
-			\fi
-		}{%
-			\ifenrichment
-		\end{mdframed}
-		\endgroup
-		\addtocounter{enrichOpenDepth}{-1}  % Decrease nesting depth
-		\fi
-	}
+	% Print the heading
+	\theHeading
+	\par\vspace{5pt}
+	
+	% Optionally discourage a page break right after heading:
+	\nopagebreak[4]
+	
+	\fi
+}{%
+	\ifenrichment
+	% End of environment
+	\addtocounter{enrichOpenDepth}{-1}
+	\fi
+}
 
 \usepackage{tcolorbox}
 \tcbuselibrary{minted,breakable,skins}
@@ -557,6 +490,4 @@ innerbottommargin=5pt]{cBox}
 	overlay={%
 		\begin{tcbclipinterior}
 			\fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
-	\end{tcbclipinterior}},
-	#3}
-	
+	\end{tcbclipinterior}}}
