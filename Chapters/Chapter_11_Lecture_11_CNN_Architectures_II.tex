@@ -1199,10 +1199,10 @@ However, scaling any single dimension in isolation often leads to suboptimal res
 To address this challenge, \textbf{EfficientNet} \cite{tan2019_efficientnet} was proposed, leveraging a \textbf{compound scaling} approach that jointly optimizes depth, width, and resolution in a balanced way. By using a carefully tuned scaling coefficient, EfficientNet ensures that all three dimensions grow in harmony, yielding models that maximize accuracy while minimizing computational cost.
 
 \newpage
-\subsection{EfficientNet Compound Model Scaling}
+\section{EfficientNet Compound Model Scaling}
 \label{subsec:efficientnet}
 
-\subsubsection{How Should We Scale a Model}
+\subsection{How Should We Scale a Model}
 \label{subsubsec:efficientnet_scaling}
 
 Given a well-designed baseline architecture, a fundamental question arises:
@@ -1242,7 +1242,7 @@ Furthermore, the different scaling dimensions are not independent:
 	\label{fig:chapter11_scaling_diminishing_returns}
 \end{figure}
 
-\subsubsection{How EfficientNet Works}
+\subsection{How EfficientNet Works}
 \label{subsubsec:efficientnet_method}
 
 EfficientNet introduces a \emph{compound scaling} approach, which systematically scales width, depth, and resolution together. Instead of arbitrary scaling, EfficientNet determines the best scaling ratios using an optimization process.
@@ -1308,7 +1308,7 @@ By applying these scaling factors to EfficientNet-B0 with different values of \(
 	\item This systematic scaling approach maintains computational efficiency while improving accuracy.
 \end{itemize}
 
-\subsubsection{Why is EfficientNet More Effective}
+\subsection{Why is EfficientNet More Effective}
 \label{subsubsec:efficientnet_advantages}
 
 \paragraph{Balanced Scaling Improves Efficiency}
@@ -1336,7 +1336,7 @@ EfficientNet builds upon MobileNetV3’s NAS-based design but differs in:
 	\label{fig:chapter11_efficientnet_efficiency}
 \end{figure}
 
-\subsubsection{Limitations of EfficientNet}
+\subsection{Limitations of EfficientNet}
 \label{subsubsec:efficientnet_limitations}
 
 Despite its efficiency in FLOPs, EfficientNet faces a major real-world issue: \emph{FLOPs do not directly translate to actual speed}. Several factors impact real-world performance:
@@ -1362,17 +1362,17 @@ While EfficientNet represents a significant step forward in model scaling, its r
 
 Next, we explore \textbf{EfficientNet-Lite, EfficientNetV2}, which build upon EfficientNet’s strengths while improving real-world efficiency.
 
-\subsection{EfficientNet-Lite Optimizing EfficientNet for Edge Devices}
+\section{EfficientNet-Lite Optimizing EfficientNet for Edge Devices}
 \label{subsec:efficientnet_lite}
 
-\subsubsection{Motivation for EfficientNet-Lite}
+\subsection{Motivation for EfficientNet-Lite}
 \label{subsubsec:efficientnet_lite_motivation}
 
 While EfficientNet achieves an excellent balance between accuracy and computational cost, its deployment on edge devices (such as mobile phones and embedded systems) presents challenges. Many hardware accelerators used in mobile and IoT devices have limited support for certain EfficientNet components, leading to inefficiencies in real-world inference.
 
 To address these limitations, EfficientNet-Lite \cite{tensorflow2020_efficientnetlite} was introduced. It modifies EfficientNet’s architecture to improve execution speed on mobile and embedded hardware while maintaining high accuracy.
 
-\subsubsection{EfficientNet-Lite Architecture}
+\subsection{EfficientNet-Lite Architecture}
 \label{subsubsec:efficientnet_lite_arch}
 
 EfficientNet-Lite is based on the original EfficientNet family but introduces several key modifications to enhance performance on edge devices:
@@ -1385,7 +1385,7 @@ EfficientNet-Lite is based on the original EfficientNet family but introduces se
 
 These optimizations result in five EfficientNet-Lite models, ranging in size from 5M to 13M parameters, offering various accuracy-speed trade-offs.
 
-\subsubsection{Performance and Comparison with Other Models}
+\subsection{Performance and Comparison with Other Models}
 \label{subsubsec:efficientnet_lite_comparison}
 
 EfficientNet-Lite is designed to be a superior alternative to MobileNetV2 for edge devices, offering higher accuracy while maintaining efficiency. In comparison to ResNet, it achieves substantially faster inference times, making it more practical for real-world mobile applications.
@@ -1408,10 +1408,10 @@ EfficientNet-Lite models are designed to balance accuracy and efficiency better 
 \end{figure}
 
 \newpage
-\subsection{EfficientNetV2: Faster Training and Improved Efficiency}
+\section{EfficientNetV2: Faster Training and Improved Efficiency}
 \label{subsec:efficientnetv2}
 
-\subsubsection{Motivation for EfficientNetV2}
+\subsection{Motivation for EfficientNetV2}
 \label{subsubsec:efficientnetv2_motivation}
 
 EfficientNetV1 introduced a highly parameter-efficient scaling approach, but it still had key inefficiencies:
@@ -1428,7 +1428,7 @@ EfficientNetV1 introduced a highly parameter-efficient scaling approach, but it 
 	\item \textbf{Non-uniform scaling} to selectively increase depth in later network stages rather than scaling all layers equally.
 \end{itemize}
 
-\subsubsection{Fused-MBConv: Improving Early Layers}
+\subsection{Fused-MBConv: Improving Early Layers}
 \label{subsubsec:fused_mbconv}
 
 A major efficiency bottleneck in EfficientNetV1 was the extensive use of depthwise convolutions, especially in early layers. While depthwise convolutions reduce parameters and FLOPs, they struggle to efficiently utilize hardware accelerators. EfficientNetV2 replaces depthwise convolutions in early layers with \textbf{Fused-MBConv} blocks. 
@@ -1446,7 +1446,7 @@ A major efficiency bottleneck in EfficientNetV1 was the extensive use of depthwi
 	\item Slightly higher FLOPs, but significantly reduced training time.
 \end{itemize}
 
-\subsubsection{Progressive Learning: Efficient Training with Smaller Images}
+\subsection{Progressive Learning: Efficient Training with Smaller Images}
 \label{subsubsec:progressive_learning}
 
 Training with large image sizes increases memory usage, forcing smaller batch sizes and slowing down training. EfficientNetV2 introduces \textbf{progressive learning}, where:
@@ -1461,7 +1461,7 @@ This approach:
 	\item Speeds up training by up to $2.2\times$ while maintaining or even improving accuracy.
 \end{itemize}
 
-\subsubsection{FixRes: Addressing Train-Test Resolution Discrepancy}
+\subsection{FixRes: Addressing Train-Test Resolution Discrepancy}
 \label{subsubsec:fixres}
 
 One key challenge in CNN training is the mismatch between the way images are processed during training and inference. EfficientNetV2 incorporates insights from \textbf{FixRes} \cite{touvron2019_fixres} to mitigate this issue.
@@ -1493,7 +1493,7 @@ FixRes proposes two techniques to align train-test distributions:
 	\item Unlike the FixRes paper, EfficientNetV2 does \emph{not} explicitly fine-tune post-training but incorporates similar resolution adjustments during training.
 \end{itemize}
 
-\subsubsection{Non-Uniform Scaling for Improved Efficiency}
+\subsection{Non-Uniform Scaling for Improved Efficiency}
 \label{subsubsec:nonuniform_scaling}
 
 EfficientNetV1 scaled width, depth, and resolution uniformly across all stages. However, different stages contribute differently to accuracy and efficiency.
@@ -1505,7 +1505,7 @@ EfficientNetV2 uses a \textbf{non-uniform scaling strategy}:
 	\item \textbf{The NAS search objective was updated} to optimize for both accuracy and training efficiency, improving real-world execution.
 \end{itemize}
 
-\subsubsection{EfficientNetV2 Architecture}
+\subsection{EfficientNetV2 Architecture}
 \label{subsubsec:efficientnetv2_architecture}
 
 EfficientNetV2 introduces three main model variants:
@@ -1535,7 +1535,7 @@ EfficientNetV2 introduces three main model variants:
 	\label{tab:chapter11_efficientnetv2_architecture}
 \end{table}
 
-\subsubsection{EfficientNetV2 vs. EfficientNetV1}
+\subsection{EfficientNetV2 vs. EfficientNetV1}
 \label{subsubsec:efficientnetv2_vs_v1}
 
 EfficientNetV2 improves upon EfficientNetV1 in several ways:
@@ -1545,7 +1545,7 @@ EfficientNetV2 improves upon EfficientNetV1 in several ways:
 	\item \textbf{Improved Scaling:} Non-uniform scaling provides better efficiency than EfficientNetV1's uniform scaling.
 \end{itemize}
 
-\subsubsection{EfficientNetV2 vs. Other Models}
+\subsection{EfficientNetV2 vs. Other Models}
 \label{subsubsec:efficientnetv2_comparison}
 
 EfficientNetV2 was designed to enhance \textbf{training speed, parameter efficiency, and real-world inference performance}. While it improves over EfficientNetV1, it is essential to compare it fairly against other architectures, including CNN-based and transformer-based models.
@@ -1618,10 +1618,10 @@ EfficientNetV2 significantly reduces training time compared to EfficientNetV1, a
 \end{itemize}
 
 \newpage
-\subsection{NFNets: Normalizer-Free ResNets}
+\section{NFNets: Normalizer-Free ResNets}
 \label{subsec:nfnets}
 
-\subsubsection{Motivation: Why Do We Need NFNets?}
+\subsection{Motivation: Why Do We Need NFNets?}
 \label{subsubsec:nfnets_motivation}
 
 Deep networks like ResNets rely heavily on \textbf{Batch Normalization (BN)} to stabilize training. BN is effective because it:
@@ -1641,7 +1641,7 @@ However, BN also has major drawbacks:
 
 To address these issues, NFNets \cite{brock2021_nfnet} remove BN entirely while preserving training stability. However, removing BN introduces another challenge: \textbf{variance explosion in residual networks}.
 
-\subsubsection{Variance Explosion Without BatchNorm}
+\subsection{Variance Explosion Without BatchNorm}
 \label{subsubsec:nfnets_no_bn_variance}
 
 \paragraph{Variance Scaling in Residual Networks}
@@ -1658,7 +1658,7 @@ In deep architectures, repeated accumulation can cause a \emph{variance explosio
 \paragraph{Role of Weight Initialization}
 Careful initialization is a common strategy to keep activations in check at the start of training. As we've seen, \textbf{Fixup Initialization}~\cite{zhang2019_fixup} modifies weight scaling and learning rates in residual blocks. However, while Fixup prevents variance from exploding early on, it does not guarantee stability throughout the entire training if the network is very deep. Thus, batch normalization historically enabled deeper ResNets by continuously regulating activation variance during training, not just at initialization.
 
-\subsubsection{Why Not Rescale the Residual Branch?}
+\subsection{Why Not Rescale the Residual Branch?}
 \label{subsubsec:residual_reparameterization}
 
 One idea to tame variance is to explicitly rescale the residual output:
@@ -1683,7 +1683,7 @@ In practice, however, this approach faces two major hurdles:
 	Even with rescaling at each layer, subtle interactions over many layers can still lead to drift in variance.
 \end{itemize}
 
-\subsubsection{NFNets: Weight Normalization Instead of BN}
+\subsection{NFNets: Weight Normalization Instead of BN}
 \label{subsubsec:nfnets_weight_normalization}
 
 To avoid using batch-dependent statistics, \textbf{NFNets} employ a \emph{weight normalization} procedure at every training step. Rather than normalizing layer outputs (as in BN), NFNets normalize convolutional filters directly. Concretely, for each convolutional weight tensor \(\mathbf{W}\) of shape \(\text{(out\_channels)} \times \text{(in\_channels)} \times K \times K\), they compute:
@@ -1714,7 +1714,7 @@ By standardizing each filter to have zero mean and unit variance (up to a fixed 
 \paragraph{Relation to Earlier Weight Standardization}
 NFNets’ approach is reminiscent of “Weight Standardization” and other filter-centric normalization methods, yet NFNets further incorporate factors like \(\gamma\) to preserve proper variance for ReLU (or other activations). This synergy helps to match or exceed the performance of BN-equipped networks, while obviating the need for large batch sizes or running-mean tracking.
 
-\subsubsection{NFNets Architecture and ResNet-D}
+\subsection{NFNets Architecture and ResNet-D}
 \label{subsubsec:nfnets_resnetd}
 
 NFNets build upon a modified ResNet architecture known as \textbf{ResNet-D} \cite{he2018_resnetd}. This includes:
@@ -1730,7 +1730,7 @@ NFNets further introduce:
 	\item \textbf{Stronger regularization:} Includes \textbf{MixUp, RandAugment, CutMix, DropOut, and Stochastic Depth} to enhance generalization.
 \end{itemize}
 
-\subsubsection{Comparison Across Diverse Architectures}
+\subsection{Comparison Across Diverse Architectures}
 \label{subsubsec:nfnets_comparison_more}
 
 To contextualize \textbf{NFNets} among other leading models—spanning RegNets, efficient CNNs, and Transformers. The following table presents key metrics such as FLOPs, parameter counts, training and inference times, and top-1 accuracy on ImageNet. The data is aggregated from publicly reported benchmarks in \cite{tan2021_efficientnetv2,brock2021_nfnet,radosavovic2020_regnet,zhang2020_resnest,vit2020_transformers,touvron2021_deit}, among others. Where possible, all inference times are measured under the same setup (NVIDIA V100 GPU, FP16 precision, batch size 16) unless explicitly noted.
@@ -1778,7 +1778,7 @@ To contextualize \textbf{NFNets} among other leading models—spanning RegNets, 
 	\item \textbf{Higher resolutions increase FLOPs and accuracy.} Many NFNet and EfficientNet variants are trained at larger resolutions ($256\times256$ or higher), leading to improved accuracy but increased computational cost.
 \end{itemize}
 
-\subsubsection{Further Reading and Resources}
+\subsection{Further Reading and Resources}
 \label{subsubsec:nfnets_further_reading}
 
 For a more intuitive explanation of \textbf{NFNets}, including their theoretical foundations and practical implications, I recommend watching \emph{Yannic Kilcher's} breakdown of the NFNet architecture. His video provides insights into variance scaling, weight normalization, and why NFNets achieve competitive results without batch normalization.
@@ -1790,12 +1790,12 @@ For a more intuitive explanation of \textbf{NFNets}, including their theoretical
 This video complements the material covered in this section by offering an accessible and engaging perspective on the core concepts behind the architecture.
 
 \newpage
-\subsection{Revisiting ResNets: Improved Training and Scaling Strategies}
+\section{Revisiting ResNets: Improved Training and Scaling Strategies}
 \label{subsec:revisiting_resnets}
 
 \textbf{Bello et al. (2021)} \cite{bello2021_revisitingresnets} revisit the ResNet architecture and propose a series of improvements that significantly boost performance through better training strategies and scaling methodologies. Their approach demonstrates that \textbf{ResNets can match or surpass EfficientNets} when trained effectively.
 
-\subsubsection{Training Enhancements for ResNets}
+\subsection{Training Enhancements for ResNets}
 \label{subsubsec:resnet_training_improvements}
 
 Starting from a baseline \textbf{ResNet-200}, the authors apply several training improvements. The following table summarizes how each change contributes to accuracy gains:
@@ -1834,7 +1834,7 @@ Starting from a baseline \textbf{ResNet-200}, the authors apply several training
 	\item \textbf{ResNet-D Modifications:} Includes better downsampling strategies to improve feature representation.
 \end{itemize}
 
-\subsubsection{Scaling ResNets for Efficient Training}
+\subsection{Scaling ResNets for Efficient Training}
 \label{subsubsec:resnet_scaling}
 
 Beyond training strategies, the study explores \textbf{scaling ResNets effectively}, optimizing width, depth, and input resolution to generate networks of various sizes. Instead of using an expensive NAS-based search, the authors \textbf{brute-force search over}:
@@ -1845,7 +1845,7 @@ Beyond training strategies, the study explores \textbf{scaling ResNets effective
 	\item \textbf{Input Resolution:} Tested at 128, 160, 224, 320, and 448 pixels.
 \end{itemize}
 
-\subsubsection{ResNet-RS vs. EfficientNet: A Re-Evaluation}
+\subsection{ResNet-RS vs. EfficientNet: A Re-Evaluation}
 \label{subsubsec:chapter11_resnetrs_vs_efficientnet}
 
 \noindent
@@ -1888,14 +1888,14 @@ Although EfficientNets minimize FLOPs while maintaining high accuracy, ResNet-RS
 \paragraph{Conclusion}
 While EfficientNets have been widely adopted due to their optimized scaling, \cite{bello2021_revisitingresnets} demonstrates that \textbf{properly scaled and trained ResNets can remain highly competitive}. These findings suggest that ResNets can achieve state-of-the-art results with faster training and inference, making them a \textbf{strong alternative to NAS-based architectures like EfficientNet}.
 
-\subsection{RegNets: Network Design Spaces}
+\section{RegNets: Network Design Spaces}
 \label{subsec:regnets}
 
 \noindent
 \textbf{Motivation: Designing Scalable Architectures}\\
 While models like improved ResNets and EfficientNets have demonstrated strong performance, they rely on either manual design or costly NAS-based searches. \textbf{RegNets} \cite{radosavovic2020_regnet} propose a structured approach to network design by defining a parameterized \emph{design space} that enables automatic discovery of efficient architectures.
 
-\subsubsection{RegNet Architecture}
+\subsection{RegNet Architecture}
 \label{subsubsec:regnet_architecture}
 
 RegNets follow a simple architectural structure:
@@ -1930,7 +1930,7 @@ This flexible parameterization generalizes ResNeXt, allowing for a controlled ex
 	\label{fig:chapter11_regnet_block}
 \end{figure}
 
-\subsubsection{Optimizing the Design Space}
+\subsection{Optimizing the Design Space}
 \label{subsubsec:regnet_optimization}
 
 \noindent
@@ -1989,7 +1989,7 @@ By simplifying the search space, RegNets maintain \textbf{flexibility while redu
 \paragraph{Conclusion}
 Through a structured reduction of the design space, \textbf{RegNets provide a systematic approach to architecture search}, yielding high-performing models without the inefficiencies of exhaustive NAS.
 
-\subsubsection{Performance and Applications}
+\subsection{Performance and Applications}
 \label{subsubsec:regnet_performance}
 
 RegNets yield highly competitive architectures:
@@ -2026,7 +2026,7 @@ RegNets yield highly competitive architectures:
 RegNets present an \textbf{automated yet efficient approach to neural architecture search}, demonstrating that careful design-space refinement can lead to highly competitive architectures. By leveraging structured scaling rules, RegNets achieve strong accuracy-FLOP trade-offs while being significantly faster to train than EfficientNets.
 
 \newpage
-\subsection{Summary of Efficient Network Architectures}
+\section{Summary of Efficient Network Architectures}
 \label{subsec:chapter11_summary}
 
 We have surveyed a wide range of architectural innovations aimed at improving \emph{both} theoretical and real-world efficiency in deep learning. Below is an overarching summary of the progression and the main lessons learned.

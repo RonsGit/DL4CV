@@ -2721,99 +2721,108 @@
 \@writefile{toc}{\contentsline {paragraph}{Beyond Hand-Designed and NAS-Optimized Models}{363}{section*.731}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Introducing EfficientNet}{363}{section*.732}\protected@file@percent }
 \abx@aux@backref{211}{tan2019_efficientnet}{0}{363}{363}
-\BKM@entry{id=405,dest={73756273656374696F6E2E31312E352E35},srcline={1202}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C303030435C3030306F5C3030306D5C303030705C3030306F5C303030755C3030306E5C303030645C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030535C303030635C303030615C3030306C5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.5}EfficientNet Compound Model Scaling}{364}{subsection.11.5.5}\protected@file@percent }
-\newlabel{subsec:efficientnet}{{11.5.5}{364}{EfficientNet Compound Model Scaling}{subsection.11.5.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{How Should We Scale a Model}{364}{section*.733}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_scaling}{{11.5.5}{364}{How Should We Scale a Model}{section*.733}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.30}{\ignorespaces Different ways to scale a model: width, depth, resolution, or all jointly (compound scaling).}}{364}{figure.caption.734}\protected@file@percent }
-\newlabel{fig:chapter11_model_scaling}{{11.30}{364}{Different ways to scale a model: width, depth, resolution, or all jointly (compound scaling)}{figure.caption.734}{}}
-\@writefile{toc}{\contentsline {paragraph}{The Problem with Independent Scaling}{364}{section*.735}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.31}{\ignorespaces Scaling only one dimension leads to diminishing returns; scaling all dimensions jointly yields better results.}}{365}{figure.caption.736}\protected@file@percent }
-\newlabel{fig:chapter11_scaling_diminishing_returns}{{11.31}{365}{Scaling only one dimension leads to diminishing returns; scaling all dimensions jointly yields better results}{figure.caption.736}{}}
-\@writefile{toc}{\contentsline {subsubsection}{How EfficientNet Works}{365}{section*.737}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_method}{{11.5.5}{365}{How EfficientNet Works}{section*.737}{}}
-\@writefile{toc}{\contentsline {paragraph}{Step 1: Designing a Baseline Architecture}{365}{section*.738}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{EfficientNet-B0 Architecture}{366}{section*.739}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11.7}{\ignorespaces EfficientNet-B0 baseline architecture. MBConv blocks are used throughout. These are the MobileNetV2 inverted bottleneck blocks.}}{366}{table.caption.740}\protected@file@percent }
-\newlabel{tab:chapter11_efficientnet_b0_arch}{{11.7}{366}{EfficientNet-B0 baseline architecture. MBConv blocks are used throughout. These are the MobileNetV2 inverted bottleneck blocks}{table.caption.740}{}}
-\@writefile{toc}{\contentsline {paragraph}{Step 2: Finding Optimal Scaling Factors}{366}{section*.741}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Step 3: Scaling to Different Model Sizes}{366}{section*.742}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Why is EfficientNet More Effective}{366}{section*.743}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_advantages}{{11.5.5}{366}{Why is EfficientNet More Effective}{section*.743}{}}
-\@writefile{toc}{\contentsline {paragraph}{Balanced Scaling Improves Efficiency}{366}{section*.744}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Comparison with MobileNetV3}{367}{section*.745}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Comparison with Other Networks}{367}{section*.746}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.32}{\ignorespaces EfficientNet achieves superior accuracy with fewer FLOPs and parameters compared to previous models.}}{367}{figure.caption.747}\protected@file@percent }
-\newlabel{fig:chapter11_efficientnet_efficiency}{{11.32}{367}{EfficientNet achieves superior accuracy with fewer FLOPs and parameters compared to previous models}{figure.caption.747}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Limitations of EfficientNet}{367}{section*.748}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_limitations}{{11.5.5}{367}{Limitations of EfficientNet}{section*.748}{}}
-\BKM@entry{id=406,dest={73756273656374696F6E2E31312E352E36},srcline={1365}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030302D5C3030304C5C303030695C303030745C303030655C3030305C3034305C3030304F5C303030705C303030745C303030695C3030306D5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030645C303030675C303030655C3030305C3034305C303030445C303030655C303030765C303030695C303030635C303030655C30303073}
+\BKM@entry{id=405,dest={73656374696F6E2E31312E36},srcline={1202}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C303030435C3030306F5C3030306D5C303030705C3030306F5C303030755C3030306E5C303030645C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030535C303030635C303030615C3030306C5C303030695C3030306E5C30303067}
+\BKM@entry{id=406,dest={73756273656374696F6E2E31312E362E31},srcline={1205}}{5C3337365C3337375C303030485C3030306F5C303030775C3030305C3034305C303030535C303030685C3030306F5C303030755C3030306C5C303030645C3030305C3034305C303030575C303030655C3030305C3034305C303030535C303030635C303030615C3030306C5C303030655C3030305C3034305C303030615C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C}
+\@writefile{toc}{\contentsline {section}{\numberline {11.6}EfficientNet Compound Model Scaling}{364}{section.11.6}\protected@file@percent }
+\newlabel{subsec:efficientnet}{{11.6}{364}{EfficientNet Compound Model Scaling}{section.11.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.6.1}How Should We Scale a Model}{364}{subsection.11.6.1}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_scaling}{{11.6.1}{364}{How Should We Scale a Model}{subsection.11.6.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.30}{\ignorespaces Different ways to scale a model: width, depth, resolution, or all jointly (compound scaling).}}{364}{figure.caption.733}\protected@file@percent }
+\newlabel{fig:chapter11_model_scaling}{{11.30}{364}{Different ways to scale a model: width, depth, resolution, or all jointly (compound scaling)}{figure.caption.733}{}}
+\@writefile{toc}{\contentsline {paragraph}{The Problem with Independent Scaling}{364}{section*.734}\protected@file@percent }
+\BKM@entry{id=407,dest={73756273656374696F6E2E31312E362E32},srcline={1245}}{5C3337365C3337375C303030485C3030306F5C303030775C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C303030575C3030306F5C303030725C3030306B5C30303073}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.31}{\ignorespaces Scaling only one dimension leads to diminishing returns; scaling all dimensions jointly yields better results.}}{365}{figure.caption.735}\protected@file@percent }
+\newlabel{fig:chapter11_scaling_diminishing_returns}{{11.31}{365}{Scaling only one dimension leads to diminishing returns; scaling all dimensions jointly yields better results}{figure.caption.735}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.6.2}How EfficientNet Works}{365}{subsection.11.6.2}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_method}{{11.6.2}{365}{How EfficientNet Works}{subsection.11.6.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Step 1: Designing a Baseline Architecture}{365}{section*.736}\protected@file@percent }
+\BKM@entry{id=408,dest={73756273656374696F6E2E31312E362E33},srcline={1311}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030695C303030735C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C3030304D5C3030306F5C303030725C303030655C3030305C3034305C303030455C303030665C303030665C303030655C303030635C303030745C303030695C303030765C30303065}
+\@writefile{toc}{\contentsline {paragraph}{EfficientNet-B0 Architecture}{366}{section*.737}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11.7}{\ignorespaces EfficientNet-B0 baseline architecture. MBConv blocks are used throughout. These are the MobileNetV2 inverted bottleneck blocks.}}{366}{table.caption.738}\protected@file@percent }
+\newlabel{tab:chapter11_efficientnet_b0_arch}{{11.7}{366}{EfficientNet-B0 baseline architecture. MBConv blocks are used throughout. These are the MobileNetV2 inverted bottleneck blocks}{table.caption.738}{}}
+\@writefile{toc}{\contentsline {paragraph}{Step 2: Finding Optimal Scaling Factors}{366}{section*.739}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Step 3: Scaling to Different Model Sizes}{366}{section*.740}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.6.3}Why is EfficientNet More Effective}{366}{subsection.11.6.3}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_advantages}{{11.6.3}{366}{Why is EfficientNet More Effective}{subsection.11.6.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Balanced Scaling Improves Efficiency}{366}{section*.741}\protected@file@percent }
+\BKM@entry{id=409,dest={73756273656374696F6E2E31312E362E34},srcline={1339}}{5C3337365C3337375C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C30303074}
+\@writefile{toc}{\contentsline {paragraph}{Comparison with MobileNetV3}{367}{section*.742}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Comparison with Other Networks}{367}{section*.743}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.32}{\ignorespaces EfficientNet achieves superior accuracy with fewer FLOPs and parameters compared to previous models.}}{367}{figure.caption.744}\protected@file@percent }
+\newlabel{fig:chapter11_efficientnet_efficiency}{{11.32}{367}{EfficientNet achieves superior accuracy with fewer FLOPs and parameters compared to previous models}{figure.caption.744}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.6.4}Limitations of EfficientNet}{367}{subsection.11.6.4}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_limitations}{{11.6.4}{367}{Limitations of EfficientNet}{subsection.11.6.4}{}}
+\BKM@entry{id=410,dest={73656374696F6E2E31312E37},srcline={1365}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030302D5C3030304C5C303030695C303030745C303030655C3030305C3034305C3030304F5C303030705C303030745C303030695C3030306D5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030645C303030675C303030655C3030305C3034305C303030445C303030655C303030765C303030695C303030635C303030655C30303073}
+\BKM@entry{id=411,dest={73756273656374696F6E2E31312E372E31},srcline={1368}}{5C3337365C3337375C3030304D5C3030306F5C303030745C303030695C303030765C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030302D5C3030304C5C303030695C303030745C30303065}
+\abx@aux@cite{0}{tensorflow2020_efficientnetlite}
+\abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
+\BKM@entry{id=412,dest={73756273656374696F6E2E31312E372E32},srcline={1375}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030302D5C3030304C5C303030695C303030745C303030655C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C30303065}
+\BKM@entry{id=413,dest={73756273656374696F6E2E31312E372E33},srcline={1388}}{5C3337365C3337375C303030505C303030655C303030725C303030665C3030306F5C303030725C3030306D5C303030615C3030306E5C303030635C303030655C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030615C303030725C303030695C303030735C3030306F5C3030306E5C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C3030304F5C303030745C303030685C303030655C303030725C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C30303073}
 \abx@aux@cite{0}{tensorflow2020_efficientnetlite}
 \abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
 \abx@aux@cite{0}{tensorflow2020_efficientnetlite}
 \abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
-\abx@aux@cite{0}{tensorflow2020_efficientnetlite}
-\abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
-\@writefile{toc}{\contentsline {paragraph}{What’s Next? EfficientNetV2 and Beyond}{368}{section*.749}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{368}{section*.750}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.6}EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{368}{subsection.11.5.6}\protected@file@percent }
-\newlabel{subsec:efficientnet_lite}{{11.5.6}{368}{EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{subsection.11.5.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Motivation for EfficientNet-Lite}{368}{section*.751}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_lite_motivation}{{11.5.6}{368}{Motivation for EfficientNet-Lite}{section*.751}{}}
+\@writefile{toc}{\contentsline {paragraph}{What’s Next? EfficientNetV2 and Beyond}{368}{section*.745}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{368}{section*.746}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11.7}EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{368}{section.11.7}\protected@file@percent }
+\newlabel{subsec:efficientnet_lite}{{11.7}{368}{EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{section.11.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.7.1}Motivation for EfficientNet-Lite}{368}{subsection.11.7.1}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_lite_motivation}{{11.7.1}{368}{Motivation for EfficientNet-Lite}{subsection.11.7.1}{}}
 \abx@aux@backref{212}{tensorflow2020_efficientnetlite}{0}{368}{368}
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNet-Lite Architecture}{368}{section*.752}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_lite_arch}{{11.5.6}{368}{EfficientNet-Lite Architecture}{section*.752}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Performance and Comparison with Other Models}{368}{section*.753}\protected@file@percent }
-\newlabel{subsubsec:efficientnet_lite_comparison}{{11.5.6}{368}{Performance and Comparison with Other Models}{section*.753}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.7.2}EfficientNet-Lite Architecture}{368}{subsection.11.7.2}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_lite_arch}{{11.7.2}{368}{EfficientNet-Lite Architecture}{subsection.11.7.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.7.3}Performance and Comparison with Other Models}{368}{subsection.11.7.3}\protected@file@percent }
+\newlabel{subsubsec:efficientnet_lite_comparison}{{11.7.3}{368}{Performance and Comparison with Other Models}{subsection.11.7.3}{}}
 \abx@aux@cite{0}{tensorflow2020_efficientnetlite}
 \abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
 \abx@aux@cite{0}{tensorflow2020_efficientnetlite}
 \abx@aux@segm{0}{0}{tensorflow2020_efficientnetlite}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.33}{\ignorespaces EfficientNet-Lite significantly outperforms MobileNetV2 in accuracy while maintaining competitive inference speed. It also runs much faster than ResNet on edge devices. Image credit TensorFlow Blog \blx@tocontentsinit {0}\cite {tensorflow2020_efficientnetlite}.}}{369}{figure.caption.754}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.33}{\ignorespaces EfficientNet-Lite significantly outperforms MobileNetV2 in accuracy while maintaining competitive inference speed. It also runs much faster than ResNet on edge devices. Image credit TensorFlow Blog \blx@tocontentsinit {0}\cite {tensorflow2020_efficientnetlite}.}}{369}{figure.caption.747}\protected@file@percent }
 \abx@aux@backref{214}{tensorflow2020_efficientnetlite}{0}{369}{369}
-\newlabel{fig:chapter11_efficientnet_lite_latency_accuracy}{{11.33}{369}{EfficientNet-Lite significantly outperforms MobileNetV2 in accuracy while maintaining competitive inference speed. It also runs much faster than ResNet on edge devices. Image credit TensorFlow Blog \cite {tensorflow2020_efficientnetlite}}{figure.caption.754}{}}
-\@writefile{toc}{\contentsline {paragraph}{Model Size vs. Accuracy Trade-off}{369}{section*.755}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.34}{\ignorespaces EfficientNet-Lite achieves better accuracy than MobileNetV2 at similar model sizes and outperforms ResNet in edge inference efficiency. Image credit TensorFlow Blog \blx@tocontentsinit {0}\cite {tensorflow2020_efficientnetlite}.}}{369}{figure.caption.756}\protected@file@percent }
+\newlabel{fig:chapter11_efficientnet_lite_latency_accuracy}{{11.33}{369}{EfficientNet-Lite significantly outperforms MobileNetV2 in accuracy while maintaining competitive inference speed. It also runs much faster than ResNet on edge devices. Image credit TensorFlow Blog \cite {tensorflow2020_efficientnetlite}}{figure.caption.747}{}}
+\@writefile{toc}{\contentsline {paragraph}{Model Size vs. Accuracy Trade-off}{369}{section*.748}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.34}{\ignorespaces EfficientNet-Lite achieves better accuracy than MobileNetV2 at similar model sizes and outperforms ResNet in edge inference efficiency. Image credit TensorFlow Blog \blx@tocontentsinit {0}\cite {tensorflow2020_efficientnetlite}.}}{369}{figure.caption.749}\protected@file@percent }
 \abx@aux@backref{216}{tensorflow2020_efficientnetlite}{0}{369}{369}
-\newlabel{fig:chapter11_efficientnet_lite_model_size_accuracy}{{11.34}{369}{EfficientNet-Lite achieves better accuracy than MobileNetV2 at similar model sizes and outperforms ResNet in edge inference efficiency. Image credit TensorFlow Blog \cite {tensorflow2020_efficientnetlite}}{figure.caption.756}{}}
-\BKM@entry{id=407,dest={73756273656374696F6E2E31312E352E37},srcline={1411}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C303030325C3030303A5C3030305C3034305C303030465C303030615C303030735C303030745C303030655C303030725C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030655C303030645C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C30303079}
+\newlabel{fig:chapter11_efficientnet_lite_model_size_accuracy}{{11.34}{369}{EfficientNet-Lite achieves better accuracy than MobileNetV2 at similar model sizes and outperforms ResNet in edge inference efficiency. Image credit TensorFlow Blog \cite {tensorflow2020_efficientnetlite}}{figure.caption.749}{}}
+\BKM@entry{id=414,dest={73656374696F6E2E31312E38},srcline={1411}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C303030325C3030303A5C3030305C3034305C303030465C303030615C303030735C303030745C303030655C303030725C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030655C303030645C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C30303079}
+\BKM@entry{id=415,dest={73756273656374696F6E2E31312E382E31},srcline={1414}}{5C3337365C3337375C3030304D5C3030306F5C303030745C303030695C303030765C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C30303032}
 \abx@aux@cite{0}{tan2021_efficientnetv2}
 \abx@aux@segm{0}{0}{tan2021_efficientnetv2}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.7}EfficientNetV2: Faster Training and Improved Efficiency}{370}{subsection.11.5.7}\protected@file@percent }
-\newlabel{subsec:efficientnetv2}{{11.5.7}{370}{EfficientNetV2: Faster Training and Improved Efficiency}{subsection.11.5.7}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Motivation for EfficientNetV2}{370}{section*.757}\protected@file@percent }
-\newlabel{subsubsec:efficientnetv2_motivation}{{11.5.7}{370}{Motivation for EfficientNetV2}{section*.757}{}}
+\BKM@entry{id=416,dest={73756273656374696F6E2E31312E382E32},srcline={1431}}{5C3337365C3337375C303030465C303030755C303030735C303030655C303030645C3030302D5C3030304D5C303030425C303030435C3030306F5C3030306E5C303030765C3030303A5C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030695C3030306E5C303030675C3030305C3034305C303030455C303030615C303030725C3030306C5C303030795C3030305C3034305C3030304C5C303030615C303030795C303030655C303030725C30303073}
+\@writefile{toc}{\contentsline {section}{\numberline {11.8}EfficientNetV2: Faster Training and Improved Efficiency}{370}{section.11.8}\protected@file@percent }
+\newlabel{subsec:efficientnetv2}{{11.8}{370}{EfficientNetV2: Faster Training and Improved Efficiency}{section.11.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.1}Motivation for EfficientNetV2}{370}{subsection.11.8.1}\protected@file@percent }
+\newlabel{subsubsec:efficientnetv2_motivation}{{11.8.1}{370}{Motivation for EfficientNetV2}{subsection.11.8.1}{}}
 \abx@aux@backref{217}{tan2021_efficientnetv2}{0}{370}{370}
-\@writefile{toc}{\contentsline {subsubsection}{Fused-MBConv: Improving Early Layers}{370}{section*.758}\protected@file@percent }
-\newlabel{subsubsec:fused_mbconv}{{11.5.7}{370}{Fused-MBConv: Improving Early Layers}{section*.758}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.35}{\ignorespaces Comparison of MBConv (left) and Fused-MBConv (right). Fused-MBConv replaces the separate expansion and depthwise convolution layers with a single $3\times 3$ convolution, improving efficiency in early layers.}}{370}{figure.caption.759}\protected@file@percent }
-\newlabel{fig:chapter11_fused_mbconv}{{11.35}{370}{Comparison of MBConv (left) and Fused-MBConv (right). Fused-MBConv replaces the separate expansion and depthwise convolution layers with a single $3\times 3$ convolution, improving efficiency in early layers}{figure.caption.759}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.2}Fused-MBConv: Improving Early Layers}{370}{subsection.11.8.2}\protected@file@percent }
+\newlabel{subsubsec:fused_mbconv}{{11.8.2}{370}{Fused-MBConv: Improving Early Layers}{subsection.11.8.2}{}}
+\BKM@entry{id=417,dest={73756273656374696F6E2E31312E382E33},srcline={1449}}{5C3337365C3337375C303030505C303030725C3030306F5C303030675C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C303030675C3030303A5C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C303030535C3030306D5C303030615C3030306C5C3030306C5C303030655C303030725C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
+\BKM@entry{id=418,dest={73756273656374696F6E2E31312E382E34},srcline={1464}}{5C3337365C3337375C303030465C303030695C303030785C303030525C303030655C303030735C3030303A5C3030305C3034305C303030415C303030645C303030645C303030725C303030655C303030735C303030735C303030695C3030306E5C303030675C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C3030302D5C303030545C303030655C303030735C303030745C3030305C3034305C303030525C303030655C303030735C3030306F5C3030306C5C303030755C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030445C303030695C303030735C303030635C303030725C303030655C303030705C303030615C3030306E5C303030635C30303079}
 \abx@aux@cite{0}{touvron2019_fixres}
 \abx@aux@segm{0}{0}{touvron2019_fixres}
-\abx@aux@cite{0}{touvron2019_fixres}
-\abx@aux@segm{0}{0}{touvron2019_fixres}
-\abx@aux@cite{0}{touvron2019_fixres}
-\abx@aux@segm{0}{0}{touvron2019_fixres}
-\@writefile{toc}{\contentsline {subsubsection}{Progressive Learning: Efficient Training with Smaller Images}{371}{section*.760}\protected@file@percent }
-\newlabel{subsubsec:progressive_learning}{{11.5.7}{371}{Progressive Learning: Efficient Training with Smaller Images}{section*.760}{}}
-\@writefile{toc}{\contentsline {subsubsection}{FixRes: Addressing Train-Test Resolution Discrepancy}{371}{section*.761}\protected@file@percent }
-\newlabel{subsubsec:fixres}{{11.5.7}{371}{FixRes: Addressing Train-Test Resolution Discrepancy}{section*.761}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.35}{\ignorespaces Comparison of MBConv (left) and Fused-MBConv (right). Fused-MBConv replaces the separate expansion and depthwise convolution layers with a single $3\times 3$ convolution, improving efficiency in early layers.}}{371}{figure.caption.750}\protected@file@percent }
+\newlabel{fig:chapter11_fused_mbconv}{{11.35}{371}{Comparison of MBConv (left) and Fused-MBConv (right). Fused-MBConv replaces the separate expansion and depthwise convolution layers with a single $3\times 3$ convolution, improving efficiency in early layers}{figure.caption.750}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.3}Progressive Learning: Efficient Training with Smaller Images}{371}{subsection.11.8.3}\protected@file@percent }
+\newlabel{subsubsec:progressive_learning}{{11.8.3}{371}{Progressive Learning: Efficient Training with Smaller Images}{subsection.11.8.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.4}FixRes: Addressing Train-Test Resolution Discrepancy}{371}{subsection.11.8.4}\protected@file@percent }
+\newlabel{subsubsec:fixres}{{11.8.4}{371}{FixRes: Addressing Train-Test Resolution Discrepancy}{subsection.11.8.4}{}}
 \abx@aux@backref{218}{touvron2019_fixres}{0}{371}{371}
-\@writefile{toc}{\contentsline {paragraph}{The Problem: Region of Classification (RoC) Mismatch}{371}{section*.762}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{FixRes Solution}{371}{section*.763}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.36}{\ignorespaces FixRes visualization \blx@tocontentsinit {0}\cite {touvron2019_fixres}. The red classification region is resampled as a crop fed to the neural network. Standard augmentations can make objects larger at training time than at test time (second column). FixRes mitigates this by either reducing the train-time resolution or increasing the test-time resolution (third and fourth columns), ensuring objects appear at similar sizes in both phases.}}{371}{figure.caption.764}\protected@file@percent }
-\abx@aux@backref{220}{touvron2019_fixres}{0}{371}{371}
-\newlabel{fig:chapter11_fixres_visualized}{{11.36}{371}{FixRes visualization \cite {touvron2019_fixres}. The red classification region is resampled as a crop fed to the neural network. Standard augmentations can make objects larger at training time than at test time (second column). FixRes mitigates this by either reducing the train-time resolution or increasing the test-time resolution (third and fourth columns), ensuring objects appear at similar sizes in both phases}{figure.caption.764}{}}
-\@writefile{toc}{\contentsline {paragraph}{Implementation in EfficientNetV2}{372}{section*.765}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Non-Uniform Scaling for Improved Efficiency}{372}{section*.766}\protected@file@percent }
-\newlabel{subsubsec:nonuniform_scaling}{{11.5.7}{372}{Non-Uniform Scaling for Improved Efficiency}{section*.766}{}}
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNetV2 Architecture}{372}{section*.767}\protected@file@percent }
-\newlabel{subsubsec:efficientnetv2_architecture}{{11.5.7}{372}{EfficientNetV2 Architecture}{section*.767}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {11.8}{\ignorespaces EfficientNetV2-S architecture. Early layers use Fused-MBConv for faster training, while later layers retain MBConv for efficiency.}}{372}{table.caption.768}\protected@file@percent }
-\newlabel{tab:chapter11_efficientnetv2_architecture}{{11.8}{372}{EfficientNetV2-S architecture. Early layers use Fused-MBConv for faster training, while later layers retain MBConv for efficiency}{table.caption.768}{}}
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNetV2 vs. EfficientNetV1}{372}{section*.769}\protected@file@percent }
-\newlabel{subsubsec:efficientnetv2_vs_v1}{{11.5.7}{372}{EfficientNetV2 vs. EfficientNetV1}{section*.769}{}}
+\@writefile{toc}{\contentsline {paragraph}{The Problem: Region of Classification (RoC) Mismatch}{371}{section*.751}\protected@file@percent }
+\abx@aux@cite{0}{touvron2019_fixres}
+\abx@aux@segm{0}{0}{touvron2019_fixres}
+\abx@aux@cite{0}{touvron2019_fixres}
+\abx@aux@segm{0}{0}{touvron2019_fixres}
+\BKM@entry{id=419,dest={73756273656374696F6E2E31312E382E35},srcline={1496}}{5C3337365C3337375C3030304E5C3030306F5C3030306E5C3030302D5C303030555C3030306E5C303030695C303030665C3030306F5C303030725C3030306D5C3030305C3034305C303030535C303030635C303030615C3030306C5C303030695C3030306E5C303030675C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030655C303030645C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C30303079}
+\BKM@entry{id=420,dest={73756273656374696F6E2E31312E382E36},srcline={1508}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C303030325C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C30303065}
+\@writefile{toc}{\contentsline {paragraph}{FixRes Solution}{372}{section*.752}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.36}{\ignorespaces FixRes visualization \blx@tocontentsinit {0}\cite {touvron2019_fixres}. The red classification region is resampled as a crop fed to the neural network. Standard augmentations can make objects larger at training time than at test time (second column). FixRes mitigates this by either reducing the train-time resolution or increasing the test-time resolution (third and fourth columns), ensuring objects appear at similar sizes in both phases.}}{372}{figure.caption.753}\protected@file@percent }
+\abx@aux@backref{220}{touvron2019_fixres}{0}{372}{372}
+\newlabel{fig:chapter11_fixres_visualized}{{11.36}{372}{FixRes visualization \cite {touvron2019_fixres}. The red classification region is resampled as a crop fed to the neural network. Standard augmentations can make objects larger at training time than at test time (second column). FixRes mitigates this by either reducing the train-time resolution or increasing the test-time resolution (third and fourth columns), ensuring objects appear at similar sizes in both phases}{figure.caption.753}{}}
+\@writefile{toc}{\contentsline {paragraph}{Implementation in EfficientNetV2}{372}{section*.754}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.5}Non-Uniform Scaling for Improved Efficiency}{372}{subsection.11.8.5}\protected@file@percent }
+\newlabel{subsubsec:nonuniform_scaling}{{11.8.5}{372}{Non-Uniform Scaling for Improved Efficiency}{subsection.11.8.5}{}}
+\BKM@entry{id=421,dest={73756273656374696F6E2E31312E382E37},srcline={1538}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C303030325C3030305C3034305C303030765C303030735C3030302E5C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C30303031}
+\BKM@entry{id=422,dest={73756273656374696F6E2E31312E382E38},srcline={1548}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C303030565C303030325C3030305C3034305C303030765C303030735C3030302E5C3030305C3034305C3030304F5C303030745C303030685C303030655C303030725C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C30303073}
 \abx@aux@cite{0}{he2016_resnet}
 \abx@aux@segm{0}{0}{he2016_resnet}
 \abx@aux@cite{0}{he2016_resnet}
@@ -2850,55 +2859,67 @@
 \abx@aux@segm{0}{0}{tan2021_efficientnetv2}
 \abx@aux@cite{0}{tan2021_efficientnetv2}
 \abx@aux@segm{0}{0}{tan2021_efficientnetv2}
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNetV2 vs. Other Models}{373}{section*.770}\protected@file@percent }
-\newlabel{subsubsec:efficientnetv2_comparison}{{11.5.7}{373}{EfficientNetV2 vs. Other Models}{section*.770}{}}
-\@writefile{toc}{\contentsline {paragraph}{Comparison in Accuracy, FLOPs, and Parameters}{373}{section*.771}\protected@file@percent }
-\abx@aux@backref{221}{he2016_resnet}{0}{373}{373}
-\abx@aux@backref{222}{he2016_resnet}{0}{373}{373}
-\abx@aux@backref{223}{touvron2021_deit}{0}{373}{373}
-\abx@aux@backref{224}{howard2017_mobilenets}{0}{373}{373}
-\abx@aux@backref{225}{sandler2018_mobilenetv2}{0}{373}{373}
-\abx@aux@backref{226}{howard2019_mobilenetv3}{0}{373}{373}
-\abx@aux@backref{227}{zhang2018_shufflenet}{0}{373}{373}
-\abx@aux@backref{228}{ma2018_shufflenetv2}{0}{373}{373}
-\abx@aux@backref{229}{radosavovic2020_regnet}{0}{373}{373}
-\abx@aux@backref{230}{radosavovic2020_regnet}{0}{373}{373}
-\abx@aux@backref{231}{tan2019_efficientnet}{0}{373}{373}
-\abx@aux@backref{232}{tan2019_efficientnet}{0}{373}{373}
-\abx@aux@backref{233}{tan2019_efficientnet}{0}{373}{373}
-\abx@aux@backref{234}{tan2021_efficientnetv2}{0}{373}{373}
-\abx@aux@backref{235}{tan2021_efficientnetv2}{0}{373}{373}
-\abx@aux@backref{236}{tan2021_efficientnetv2}{0}{373}{373}
-\@writefile{lot}{\contentsline {table}{\numberline {11.9}{\ignorespaces Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \blx@tocontentsinit {0}\cite {tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models.}}{373}{table.caption.772}\protected@file@percent }
-\abx@aux@backref{238}{tan2021_efficientnetv2}{0}{373}{373}
-\newlabel{tab:model_comparison}{{11.9}{373}{Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \cite {tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models}{table.caption.772}{}}
-\@writefile{toc}{\contentsline {paragraph}{Training Speed and Efficiency}{374}{section*.773}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11.10}{\ignorespaces Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf  {11× faster} while requiring fewer epochs.}}{374}{table.caption.774}\protected@file@percent }
-\newlabel{tab:chapter11_efficientnetv2_training}{{11.10}{374}{Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf {11× faster} while requiring fewer epochs}{table.caption.774}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{374}{section*.775}\protected@file@percent }
-\BKM@entry{id=408,dest={73756273656374696F6E2E31312E352E38},srcline={1621}}{5C3337365C3337375C3030304E5C303030465C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C3030304E5C3030306F5C303030725C3030306D5C303030615C3030306C5C303030695C3030307A5C303030655C303030725C3030302D5C303030465C303030725C303030655C303030655C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.6}EfficientNetV2 Architecture}{373}{subsection.11.8.6}\protected@file@percent }
+\newlabel{subsubsec:efficientnetv2_architecture}{{11.8.6}{373}{EfficientNetV2 Architecture}{subsection.11.8.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11.8}{\ignorespaces EfficientNetV2-S architecture. Early layers use Fused-MBConv for faster training, while later layers retain MBConv for efficiency.}}{373}{table.caption.755}\protected@file@percent }
+\newlabel{tab:chapter11_efficientnetv2_architecture}{{11.8}{373}{EfficientNetV2-S architecture. Early layers use Fused-MBConv for faster training, while later layers retain MBConv for efficiency}{table.caption.755}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.7}EfficientNetV2 vs. EfficientNetV1}{373}{subsection.11.8.7}\protected@file@percent }
+\newlabel{subsubsec:efficientnetv2_vs_v1}{{11.8.7}{373}{EfficientNetV2 vs. EfficientNetV1}{subsection.11.8.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.8.8}EfficientNetV2 vs. Other Models}{373}{subsection.11.8.8}\protected@file@percent }
+\newlabel{subsubsec:efficientnetv2_comparison}{{11.8.8}{373}{EfficientNetV2 vs. Other Models}{subsection.11.8.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Comparison in Accuracy, FLOPs, and Parameters}{374}{section*.756}\protected@file@percent }
+\abx@aux@backref{221}{he2016_resnet}{0}{374}{374}
+\abx@aux@backref{222}{he2016_resnet}{0}{374}{374}
+\abx@aux@backref{223}{touvron2021_deit}{0}{374}{374}
+\abx@aux@backref{224}{howard2017_mobilenets}{0}{374}{374}
+\abx@aux@backref{225}{sandler2018_mobilenetv2}{0}{374}{374}
+\abx@aux@backref{226}{howard2019_mobilenetv3}{0}{374}{374}
+\abx@aux@backref{227}{zhang2018_shufflenet}{0}{374}{374}
+\abx@aux@backref{228}{ma2018_shufflenetv2}{0}{374}{374}
+\abx@aux@backref{229}{radosavovic2020_regnet}{0}{374}{374}
+\abx@aux@backref{230}{radosavovic2020_regnet}{0}{374}{374}
+\abx@aux@backref{231}{tan2019_efficientnet}{0}{374}{374}
+\abx@aux@backref{232}{tan2019_efficientnet}{0}{374}{374}
+\abx@aux@backref{233}{tan2019_efficientnet}{0}{374}{374}
+\abx@aux@backref{234}{tan2021_efficientnetv2}{0}{374}{374}
+\abx@aux@backref{235}{tan2021_efficientnetv2}{0}{374}{374}
+\abx@aux@backref{236}{tan2021_efficientnetv2}{0}{374}{374}
+\@writefile{lot}{\contentsline {table}{\numberline {11.9}{\ignorespaces Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \blx@tocontentsinit {0}\cite {tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models.}}{374}{table.caption.757}\protected@file@percent }
+\abx@aux@backref{238}{tan2021_efficientnetv2}{0}{374}{374}
+\newlabel{tab:model_comparison}{{11.9}{374}{Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \cite {tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models}{table.caption.757}{}}
+\@writefile{toc}{\contentsline {paragraph}{Training Speed and Efficiency}{375}{section*.758}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11.10}{\ignorespaces Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf  {11× faster} while requiring fewer epochs.}}{375}{table.caption.759}\protected@file@percent }
+\newlabel{tab:chapter11_efficientnetv2_training}{{11.10}{375}{Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf {11× faster} while requiring fewer epochs}{table.caption.759}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{375}{section*.760}\protected@file@percent }
+\BKM@entry{id=423,dest={73656374696F6E2E31312E39},srcline={1621}}{5C3337365C3337375C3030304E5C303030465C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C3030304E5C3030306F5C303030725C3030306D5C303030615C3030306C5C303030695C3030307A5C303030655C303030725C3030302D5C303030465C303030725C303030655C303030655C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C30303073}
+\BKM@entry{id=424,dest={73756273656374696F6E2E31312E392E31},srcline={1624}}{5C3337365C3337375C3030304D5C3030306F5C303030745C303030695C303030765C303030615C303030745C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030575C303030685C303030795C3030305C3034305C303030445C3030306F5C3030305C3034305C303030575C303030655C3030305C3034305C3030304E5C303030655C303030655C303030645C3030305C3034305C3030304E5C303030465C3030304E5C303030655C303030745C303030735C3030303F}
 \abx@aux@cite{0}{brock2021_nfnet}
 \abx@aux@segm{0}{0}{brock2021_nfnet}
+\BKM@entry{id=425,dest={73756273656374696F6E2E31312E392E32},srcline={1644}}{5C3337365C3337375C303030565C303030615C303030725C303030695C303030615C3030306E5C303030635C303030655C3030305C3034305C303030455C303030785C303030705C3030306C5C3030306F5C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030575C303030695C303030745C303030685C3030306F5C303030755C303030745C3030305C3034305C303030425C303030615C303030745C303030635C303030685C3030304E5C3030306F5C303030725C3030306D}
 \abx@aux@cite{0}{zhang2019_fixup}
 \abx@aux@segm{0}{0}{zhang2019_fixup}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.8}NFNets: Normalizer-Free ResNets}{375}{subsection.11.5.8}\protected@file@percent }
-\newlabel{subsec:nfnets}{{11.5.8}{375}{NFNets: Normalizer-Free ResNets}{subsection.11.5.8}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Motivation: Why Do We Need NFNets?}{375}{section*.776}\protected@file@percent }
-\newlabel{subsubsec:nfnets_motivation}{{11.5.8}{375}{Motivation: Why Do We Need NFNets?}{section*.776}{}}
-\abx@aux@backref{239}{brock2021_nfnet}{0}{375}{375}
-\@writefile{toc}{\contentsline {subsubsection}{Variance Explosion Without BatchNorm}{375}{section*.777}\protected@file@percent }
-\newlabel{subsubsec:nfnets_no_bn_variance}{{11.5.8}{375}{Variance Explosion Without BatchNorm}{section*.777}{}}
-\@writefile{toc}{\contentsline {paragraph}{Variance Scaling in Residual Networks}{375}{section*.778}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Role of Weight Initialization}{375}{section*.779}\protected@file@percent }
-\abx@aux@backref{240}{zhang2019_fixup}{0}{375}{375}
-\@writefile{toc}{\contentsline {subsubsection}{Why Not Rescale the Residual Branch?}{375}{section*.780}\protected@file@percent }
-\newlabel{subsubsec:residual_reparameterization}{{11.5.8}{375}{Why Not Rescale the Residual Branch?}{section*.780}{}}
+\BKM@entry{id=426,dest={73756273656374696F6E2E31312E392E33},srcline={1661}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C3030304E5C3030306F5C303030745C3030305C3034305C303030525C303030655C303030735C303030635C303030615C3030306C5C303030655C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030525C303030655C303030735C303030695C303030645C303030755C303030615C3030306C5C3030305C3034305C303030425C303030725C303030615C3030306E5C303030635C303030685C3030303F}
+\@writefile{toc}{\contentsline {section}{\numberline {11.9}NFNets: Normalizer-Free ResNets}{376}{section.11.9}\protected@file@percent }
+\newlabel{subsec:nfnets}{{11.9}{376}{NFNets: Normalizer-Free ResNets}{section.11.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.1}Motivation: Why Do We Need NFNets?}{376}{subsection.11.9.1}\protected@file@percent }
+\newlabel{subsubsec:nfnets_motivation}{{11.9.1}{376}{Motivation: Why Do We Need NFNets?}{subsection.11.9.1}{}}
+\abx@aux@backref{239}{brock2021_nfnet}{0}{376}{376}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.2}Variance Explosion Without BatchNorm}{376}{subsection.11.9.2}\protected@file@percent }
+\newlabel{subsubsec:nfnets_no_bn_variance}{{11.9.2}{376}{Variance Explosion Without BatchNorm}{subsection.11.9.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Variance Scaling in Residual Networks}{376}{section*.761}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Role of Weight Initialization}{376}{section*.762}\protected@file@percent }
+\abx@aux@backref{240}{zhang2019_fixup}{0}{376}{376}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.3}Why Not Rescale the Residual Branch?}{376}{subsection.11.9.3}\protected@file@percent }
+\newlabel{subsubsec:residual_reparameterization}{{11.9.3}{376}{Why Not Rescale the Residual Branch?}{subsection.11.9.3}{}}
+\BKM@entry{id=427,dest={73756273656374696F6E2E31312E392E34},srcline={1686}}{5C3337365C3337375C3030304E5C303030465C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C303030575C303030655C303030695C303030675C303030685C303030745C3030305C3034305C3030304E5C3030306F5C303030725C3030306D5C303030615C3030306C5C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030495C3030306E5C303030735C303030745C303030655C303030615C303030645C3030305C3034305C3030306F5C303030665C3030305C3034305C303030425C3030304E}
+\BKM@entry{id=428,dest={73756273656374696F6E2E31312E392E35},srcline={1717}}{5C3337365C3337375C3030304E5C303030465C3030304E5C303030655C303030745C303030735C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C3030302D5C30303044}
 \abx@aux@cite{0}{he2018_resnetd}
 \abx@aux@segm{0}{0}{he2018_resnetd}
-\@writefile{toc}{\contentsline {subsubsection}{NFNets: Weight Normalization Instead of BN}{376}{section*.781}\protected@file@percent }
-\newlabel{subsubsec:nfnets_weight_normalization}{{11.5.8}{376}{NFNets: Weight Normalization Instead of BN}{section*.781}{}}
-\@writefile{toc}{\contentsline {paragraph}{Why This Works}{376}{section*.782}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Relation to Earlier Weight Standardization}{376}{section*.783}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.4}NFNets: Weight Normalization Instead of BN}{377}{subsection.11.9.4}\protected@file@percent }
+\newlabel{subsubsec:nfnets_weight_normalization}{{11.9.4}{377}{NFNets: Weight Normalization Instead of BN}{subsection.11.9.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why This Works}{377}{section*.763}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Relation to Earlier Weight Standardization}{377}{section*.764}\protected@file@percent }
+\BKM@entry{id=429,dest={73756273656374696F6E2E31312E392E36},srcline={1733}}{5C3337365C3337375C303030435C3030306F5C3030306D5C303030705C303030615C303030725C303030695C303030735C3030306F5C3030306E5C3030305C3034305C303030415C303030635C303030725C3030306F5C303030735C303030735C3030305C3034305C303030445C303030695C303030765C303030655C303030725C303030735C303030655C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
 \abx@aux@cite{0}{tan2021_efficientnetv2}
 \abx@aux@segm{0}{0}{tan2021_efficientnetv2}
 \abx@aux@cite{0}{brock2021_nfnet}
@@ -2943,246 +2964,253 @@
 \abx@aux@segm{0}{0}{tan2021_efficientnetv2}
 \abx@aux@cite{0}{brock2021_nfnet}
 \abx@aux@segm{0}{0}{brock2021_nfnet}
-\@writefile{toc}{\contentsline {subsubsection}{NFNets Architecture and ResNet-D}{377}{section*.784}\protected@file@percent }
-\newlabel{subsubsec:nfnets_resnetd}{{11.5.8}{377}{NFNets Architecture and ResNet-D}{section*.784}{}}
-\abx@aux@backref{241}{he2018_resnetd}{0}{377}{377}
-\@writefile{toc}{\contentsline {subsubsection}{Comparison Across Diverse Architectures}{377}{section*.785}\protected@file@percent }
-\newlabel{subsubsec:nfnets_comparison_more}{{11.5.8}{377}{Comparison Across Diverse Architectures}{section*.785}{}}
-\abx@aux@backref{242}{brock2021_nfnet}{0}{377}{377}
-\abx@aux@backref{243}{vit2020_transformers}{0}{377}{377}
-\abx@aux@backref{244}{radosavovic2020_regnet}{0}{377}{377}
-\abx@aux@backref{245}{tan2021_efficientnetv2}{0}{377}{377}
-\abx@aux@backref{246}{touvron2021_deit}{0}{377}{377}
-\abx@aux@backref{247}{zhang2020_resnest}{0}{377}{377}
-\abx@aux@backref{248}{he2016_resnet}{0}{377}{377}
-\abx@aux@backref{249}{radosavovic2020_regnet}{0}{377}{377}
-\abx@aux@backref{250}{brock2021_nfnet}{0}{377}{377}
-\abx@aux@backref{251}{brock2021_nfnet}{0}{377}{377}
-\abx@aux@backref{252}{tan2019_efficientnet}{0}{377}{377}
-\abx@aux@backref{253}{tan2019_efficientnet}{0}{377}{377}
-\abx@aux@backref{254}{tan2021_efficientnetv2}{0}{377}{377}
-\abx@aux@backref{255}{tan2021_efficientnetv2}{0}{377}{377}
-\abx@aux@backref{256}{tan2021_efficientnetv2}{0}{377}{377}
-\abx@aux@backref{257}{vit2020_transformers}{0}{377}{377}
-\abx@aux@backref{258}{touvron2021_deit}{0}{377}{377}
-\abx@aux@backref{259}{touvron2021_deit}{0}{377}{377}
-\@writefile{lot}{\contentsline {table}{\numberline {11.11}{\ignorespaces \textbf  {Comparison of NFNets with leading architectures}, including RegNet, EfficientNetV2, and Vision Transformers on ImageNet. \textbf  {All models were pre-trained on ImageNet.} The \textit  {inference time} refers to single-batch inference on an NVIDIA V100 GPU in FP16 precision with batch size 16, as reported in \blx@tocontentsinit {0}\cite {tan2021_efficientnetv2,brock2021_nfnet}. The \textit  {train time} (hrs) assumes a standard TPUv3 configuration (32–64 cores). $^\dagger $ViT-B/16 at 384 input can vary in accuracy (77--79\%) depending on hyperparameters.}}{377}{table.caption.786}\protected@file@percent }
-\abx@aux@backref{262}{brock2021_nfnet}{0}{377}{377}
-\abx@aux@backref{263}{tan2021_efficientnetv2}{0}{377}{377}
-\newlabel{tab:compare_effnetv2_main}{{11.11}{377}{\textbf {Comparison of NFNets with leading architectures}, including RegNet, EfficientNetV2, and Vision Transformers on ImageNet. \textbf {All models were pre-trained on ImageNet.} The \textit {inference time} refers to single-batch inference on an NVIDIA V100 GPU in FP16 precision with batch size 16, as reported in \cite {tan2021_efficientnetv2,brock2021_nfnet}. The \textit {train time} (hrs) assumes a standard TPUv3 configuration (32–64 cores). $^\dagger $ViT-B/16 at 384 input can vary in accuracy (77--79\%) depending on hyperparameters}{table.caption.786}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{377}{section*.787}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Further Reading and Resources}{378}{section*.788}\protected@file@percent }
-\newlabel{subsubsec:nfnets_further_reading}{{11.5.8}{378}{Further Reading and Resources}{section*.788}{}}
-\BKM@entry{id=409,dest={73756273656374696F6E2E31312E352E39},srcline={1793}}{5C3337365C3337375C303030525C303030655C303030765C303030695C303030735C303030695C303030745C303030695C3030306E5C303030675C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030655C303030645C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030535C303030635C303030615C3030306C5C303030695C3030306E5C303030675C3030305C3034305C303030535C303030745C303030725C303030615C303030745C303030655C303030675C303030695C303030655C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.5}NFNets Architecture and ResNet-D}{378}{subsection.11.9.5}\protected@file@percent }
+\newlabel{subsubsec:nfnets_resnetd}{{11.9.5}{378}{NFNets Architecture and ResNet-D}{subsection.11.9.5}{}}
+\abx@aux@backref{241}{he2018_resnetd}{0}{378}{378}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.6}Comparison Across Diverse Architectures}{378}{subsection.11.9.6}\protected@file@percent }
+\newlabel{subsubsec:nfnets_comparison_more}{{11.9.6}{378}{Comparison Across Diverse Architectures}{subsection.11.9.6}{}}
+\abx@aux@backref{242}{brock2021_nfnet}{0}{378}{378}
+\abx@aux@backref{243}{vit2020_transformers}{0}{378}{378}
+\abx@aux@backref{244}{radosavovic2020_regnet}{0}{378}{378}
+\abx@aux@backref{245}{tan2021_efficientnetv2}{0}{378}{378}
+\abx@aux@backref{246}{touvron2021_deit}{0}{378}{378}
+\abx@aux@backref{247}{zhang2020_resnest}{0}{378}{378}
+\abx@aux@backref{248}{he2016_resnet}{0}{378}{378}
+\abx@aux@backref{249}{radosavovic2020_regnet}{0}{378}{378}
+\abx@aux@backref{250}{brock2021_nfnet}{0}{378}{378}
+\abx@aux@backref{251}{brock2021_nfnet}{0}{378}{378}
+\abx@aux@backref{252}{tan2019_efficientnet}{0}{378}{378}
+\abx@aux@backref{253}{tan2019_efficientnet}{0}{378}{378}
+\abx@aux@backref{254}{tan2021_efficientnetv2}{0}{378}{378}
+\abx@aux@backref{255}{tan2021_efficientnetv2}{0}{378}{378}
+\abx@aux@backref{256}{tan2021_efficientnetv2}{0}{378}{378}
+\abx@aux@backref{257}{vit2020_transformers}{0}{378}{378}
+\abx@aux@backref{258}{touvron2021_deit}{0}{378}{378}
+\abx@aux@backref{259}{touvron2021_deit}{0}{378}{378}
+\@writefile{lot}{\contentsline {table}{\numberline {11.11}{\ignorespaces \textbf  {Comparison of NFNets with leading architectures}, including RegNet, EfficientNetV2, and Vision Transformers on ImageNet. \textbf  {All models were pre-trained on ImageNet.} The \textit  {inference time} refers to single-batch inference on an NVIDIA V100 GPU in FP16 precision with batch size 16, as reported in \blx@tocontentsinit {0}\cite {tan2021_efficientnetv2,brock2021_nfnet}. The \textit  {train time} (hrs) assumes a standard TPUv3 configuration (32–64 cores). $^\dagger $ViT-B/16 at 384 input can vary in accuracy (77--79\%) depending on hyperparameters.}}{378}{table.caption.765}\protected@file@percent }
+\abx@aux@backref{262}{brock2021_nfnet}{0}{378}{378}
+\abx@aux@backref{263}{tan2021_efficientnetv2}{0}{378}{378}
+\newlabel{tab:compare_effnetv2_main}{{11.11}{378}{\textbf {Comparison of NFNets with leading architectures}, including RegNet, EfficientNetV2, and Vision Transformers on ImageNet. \textbf {All models were pre-trained on ImageNet.} The \textit {inference time} refers to single-batch inference on an NVIDIA V100 GPU in FP16 precision with batch size 16, as reported in \cite {tan2021_efficientnetv2,brock2021_nfnet}. The \textit {train time} (hrs) assumes a standard TPUv3 configuration (32–64 cores). $^\dagger $ViT-B/16 at 384 input can vary in accuracy (77--79\%) depending on hyperparameters}{table.caption.765}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{378}{section*.766}\protected@file@percent }
+\BKM@entry{id=430,dest={73756273656374696F6E2E31312E392E37},srcline={1781}}{5C3337365C3337375C303030465C303030755C303030725C303030745C303030685C303030655C303030725C3030305C3034305C303030525C303030655C303030615C303030645C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030306F5C303030755C303030725C303030635C303030655C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.9.7}Further Reading and Resources}{379}{subsection.11.9.7}\protected@file@percent }
+\newlabel{subsubsec:nfnets_further_reading}{{11.9.7}{379}{Further Reading and Resources}{subsection.11.9.7}{}}
+\BKM@entry{id=431,dest={73656374696F6E2E31312E3130},srcline={1793}}{5C3337365C3337375C303030525C303030655C303030765C303030695C303030735C303030695C303030745C303030695C3030306E5C303030675C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C303030495C3030306D5C303030705C303030725C3030306F5C303030765C303030655C303030645C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030535C303030635C303030615C3030306C5C303030695C3030306E5C303030675C3030305C3034305C303030535C303030745C303030725C303030615C303030745C303030655C303030675C303030695C303030655C30303073}
+\abx@aux@cite{0}{bello2021_revisitingresnets}
+\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
+\BKM@entry{id=432,dest={73756273656374696F6E2E31312E31302E31},srcline={1798}}{5C3337365C3337375C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030455C3030306E5C303030685C303030615C3030306E5C303030635C303030655C3030306D5C303030655C3030306E5C303030745C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C30303073}
+\abx@aux@cite{0}{bello2021_revisitingresnets}
+\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
+\abx@aux@cite{0}{bello2021_revisitingresnets}
+\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
+\BKM@entry{id=433,dest={73756273656374696F6E2E31312E31302E32},srcline={1837}}{5C3337365C3337375C303030535C303030635C303030615C3030306C5C303030695C3030306E5C303030675C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030305C3034305C303030545C303030725C303030615C303030695C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {section}{\numberline {11.10}Revisiting ResNets: Improved Training and Scaling Strategies}{380}{section.11.10}\protected@file@percent }
+\newlabel{subsec:revisiting_resnets}{{11.10}{380}{Revisiting ResNets: Improved Training and Scaling Strategies}{section.11.10}{}}
+\abx@aux@backref{264}{bello2021_revisitingresnets}{0}{380}{380}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.10.1}Training Enhancements for ResNets}{380}{subsection.11.10.1}\protected@file@percent }
+\newlabel{subsubsec:resnet_training_improvements}{{11.10.1}{380}{Training Enhancements for ResNets}{subsection.11.10.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11.12}{\ignorespaces \textbf  {Training improvements for ResNet-200} \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}. Applying these modifications systematically increases accuracy, demonstrating the potential of ResNet-style architectures when trained properly.}}{380}{table.caption.767}\protected@file@percent }
+\abx@aux@backref{266}{bello2021_revisitingresnets}{0}{380}{380}
+\newlabel{tab:resnet_training_improvements}{{11.12}{380}{\textbf {Training improvements for ResNet-200} \cite {bello2021_revisitingresnets}. Applying these modifications systematically increases accuracy, demonstrating the potential of ResNet-style architectures when trained properly}{table.caption.767}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Enhancements}{380}{section*.768}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.10.2}Scaling ResNets for Efficient Training}{380}{subsection.11.10.2}\protected@file@percent }
+\newlabel{subsubsec:resnet_scaling}{{11.10.2}{380}{Scaling ResNets for Efficient Training}{subsection.11.10.2}{}}
+\BKM@entry{id=434,dest={73756273656374696F6E2E31312E31302E33},srcline={1848}}{5C3337365C3337375C303030525C303030655C303030735C3030304E5C303030655C303030745C3030302D5C303030525C303030535C3030305C3034305C303030765C303030735C3030302E5C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030304E5C303030655C303030745C3030303A5C3030305C3034305C303030415C3030305C3034305C303030525C303030655C3030302D5C303030455C303030765C303030615C3030306C5C303030755C303030615C303030745C303030695C3030306F5C3030306E}
 \abx@aux@cite{0}{bello2021_revisitingresnets}
 \abx@aux@segm{0}{0}{bello2021_revisitingresnets}
 \abx@aux@cite{0}{bello2021_revisitingresnets}
 \abx@aux@segm{0}{0}{bello2021_revisitingresnets}
 \abx@aux@cite{0}{bello2021_revisitingresnets}
 \abx@aux@segm{0}{0}{bello2021_revisitingresnets}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.9}Revisiting ResNets: Improved Training and Scaling Strategies}{379}{subsection.11.5.9}\protected@file@percent }
-\newlabel{subsec:revisiting_resnets}{{11.5.9}{379}{Revisiting ResNets: Improved Training and Scaling Strategies}{subsection.11.5.9}{}}
-\abx@aux@backref{264}{bello2021_revisitingresnets}{0}{379}{379}
-\@writefile{toc}{\contentsline {subsubsection}{Training Enhancements for ResNets}{379}{section*.789}\protected@file@percent }
-\newlabel{subsubsec:resnet_training_improvements}{{11.5.9}{379}{Training Enhancements for ResNets}{section*.789}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {11.12}{\ignorespaces \textbf  {Training improvements for ResNet-200} \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}. Applying these modifications systematically increases accuracy, demonstrating the potential of ResNet-style architectures when trained properly.}}{379}{table.caption.790}\protected@file@percent }
-\abx@aux@backref{266}{bello2021_revisitingresnets}{0}{379}{379}
-\newlabel{tab:resnet_training_improvements}{{11.12}{379}{\textbf {Training improvements for ResNet-200} \cite {bello2021_revisitingresnets}. Applying these modifications systematically increases accuracy, demonstrating the potential of ResNet-style architectures when trained properly}{table.caption.790}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Enhancements}{379}{section*.791}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Scaling ResNets for Efficient Training}{379}{section*.792}\protected@file@percent }
-\newlabel{subsubsec:resnet_scaling}{{11.5.9}{379}{Scaling ResNets for Efficient Training}{section*.792}{}}
 \abx@aux@cite{0}{bello2021_revisitingresnets}
 \abx@aux@segm{0}{0}{bello2021_revisitingresnets}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.10.3}ResNet-RS vs. EfficientNet: A Re-Evaluation}{381}{subsection.11.10.3}\protected@file@percent }
+\newlabel{subsubsec:chapter11_resnetrs_vs_efficientnet}{{11.10.3}{381}{ResNet-RS vs. EfficientNet: A Re-Evaluation}{subsection.11.10.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.37}{\ignorespaces \textbf  {Training time comparison:} Optimized ResNets train significantly faster than EfficientNets at the same accuracy level \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}.}}{381}{figure.caption.769}\protected@file@percent }
+\abx@aux@backref{268}{bello2021_revisitingresnets}{0}{381}{381}
+\newlabel{fig:chapter11_resnet_vs_efficientnet}{{11.37}{381}{\textbf {Training time comparison:} Optimized ResNets train significantly faster than EfficientNets at the same accuracy level \cite {bello2021_revisitingresnets}}{figure.caption.769}{}}
+\@writefile{toc}{\contentsline {paragraph}{Comparison of ResNet-RS and EfficientNet}{381}{section*.770}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11.13}{\ignorespaces \textbf  {Comparison of ResNet-RS and EfficientNet} \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}. Despite having more parameters and FLOPs, ResNet-RS models are significantly faster in both training and inference. TPU latency is measured per training step for 1024 images on 8 TPUv3 cores, while memory usage is reported for 32 images per core, using bfloat16 precision without fusion or rematerialization.}}{381}{table.caption.771}\protected@file@percent }
+\abx@aux@backref{270}{bello2021_revisitingresnets}{0}{381}{381}
+\newlabel{tab:chapter11_resnetrs_vs_efficientnet}{{11.13}{381}{\textbf {Comparison of ResNet-RS and EfficientNet} \cite {bello2021_revisitingresnets}. Despite having more parameters and FLOPs, ResNet-RS models are significantly faster in both training and inference. TPU latency is measured per training step for 1024 images on 8 TPUv3 cores, while memory usage is reported for 32 images per core, using bfloat16 precision without fusion or rematerialization}{table.caption.771}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Observations}{381}{section*.772}\protected@file@percent }
 \abx@aux@cite{0}{bello2021_revisitingresnets}
 \abx@aux@segm{0}{0}{bello2021_revisitingresnets}
-\abx@aux@cite{0}{bello2021_revisitingresnets}
-\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
-\abx@aux@cite{0}{bello2021_revisitingresnets}
-\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
-\@writefile{toc}{\contentsline {subsubsection}{ResNet-RS vs. EfficientNet: A Re-Evaluation}{380}{section*.793}\protected@file@percent }
-\newlabel{subsubsec:chapter11_resnetrs_vs_efficientnet}{{11.5.9}{380}{ResNet-RS vs. EfficientNet: A Re-Evaluation}{section*.793}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.37}{\ignorespaces \textbf  {Training time comparison:} Optimized ResNets train significantly faster than EfficientNets at the same accuracy level \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}.}}{380}{figure.caption.794}\protected@file@percent }
-\abx@aux@backref{268}{bello2021_revisitingresnets}{0}{380}{380}
-\newlabel{fig:chapter11_resnet_vs_efficientnet}{{11.37}{380}{\textbf {Training time comparison:} Optimized ResNets train significantly faster than EfficientNets at the same accuracy level \cite {bello2021_revisitingresnets}}{figure.caption.794}{}}
-\@writefile{toc}{\contentsline {paragraph}{Comparison of ResNet-RS and EfficientNet}{380}{section*.795}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11.13}{\ignorespaces \textbf  {Comparison of ResNet-RS and EfficientNet} \blx@tocontentsinit {0}\cite {bello2021_revisitingresnets}. Despite having more parameters and FLOPs, ResNet-RS models are significantly faster in both training and inference. TPU latency is measured per training step for 1024 images on 8 TPUv3 cores, while memory usage is reported for 32 images per core, using bfloat16 precision without fusion or rematerialization.}}{380}{table.caption.796}\protected@file@percent }
-\abx@aux@backref{270}{bello2021_revisitingresnets}{0}{380}{380}
-\newlabel{tab:chapter11_resnetrs_vs_efficientnet}{{11.13}{380}{\textbf {Comparison of ResNet-RS and EfficientNet} \cite {bello2021_revisitingresnets}. Despite having more parameters and FLOPs, ResNet-RS models are significantly faster in both training and inference. TPU latency is measured per training step for 1024 images on 8 TPUv3 cores, while memory usage is reported for 32 images per core, using bfloat16 precision without fusion or rematerialization}{table.caption.796}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Observations}{380}{section*.797}\protected@file@percent }
-\abx@aux@cite{0}{bello2021_revisitingresnets}
-\abx@aux@segm{0}{0}{bello2021_revisitingresnets}
-\BKM@entry{id=410,dest={73756273656374696F6E2E31312E352E3130},srcline={1891}}{5C3337365C3337375C303030525C303030655C303030675C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C3030305C3034305C303030445C303030655C303030735C303030695C303030675C3030306E5C3030305C3034305C303030535C303030705C303030615C303030635C303030655C30303073}
+\BKM@entry{id=435,dest={73656374696F6E2E31312E3131},srcline={1891}}{5C3337365C3337375C303030525C303030655C303030675C3030304E5C303030655C303030745C303030735C3030303A5C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C3030305C3034305C303030445C303030655C303030735C303030695C303030675C3030306E5C3030305C3034305C303030535C303030705C303030615C303030635C303030655C30303073}
 \abx@aux@cite{0}{radosavovic2020_regnet}
 \abx@aux@segm{0}{0}{radosavovic2020_regnet}
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{381}{section*.798}\protected@file@percent }
-\abx@aux@backref{271}{bello2021_revisitingresnets}{0}{381}{381}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.10}RegNets: Network Design Spaces}{381}{subsection.11.5.10}\protected@file@percent }
-\newlabel{subsec:regnets}{{11.5.10}{381}{RegNets: Network Design Spaces}{subsection.11.5.10}{}}
-\abx@aux@backref{272}{radosavovic2020_regnet}{0}{381}{381}
-\@writefile{toc}{\contentsline {subsubsection}{RegNet Architecture}{381}{section*.799}\protected@file@percent }
-\newlabel{subsubsec:regnet_architecture}{{11.5.10}{381}{RegNet Architecture}{section*.799}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.38}{\ignorespaces \textbf  {RegNet architecture}: A simple backbone with a stem, four-stage body, and head. Each stage consists of multiple blocks with defined parameters. These building blocks will allows us to construct architectures at different sizes that are quite efficient, while producing competitive accuracy.}}{381}{figure.caption.800}\protected@file@percent }
-\newlabel{fig:chapter11_regnet_architecture}{{11.38}{381}{\textbf {RegNet architecture}: A simple backbone with a stem, four-stage body, and head. Each stage consists of multiple blocks with defined parameters. These building blocks will allows us to construct architectures at different sizes that are quite efficient, while producing competitive accuracy}{figure.caption.800}{}}
+\BKM@entry{id=436,dest={73756273656374696F6E2E31312E31312E31},srcline={1898}}{5C3337365C3337375C303030525C303030655C303030675C3030304E5C303030655C303030745C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C30303065}
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{382}{section*.773}\protected@file@percent }
+\abx@aux@backref{271}{bello2021_revisitingresnets}{0}{382}{382}
+\@writefile{toc}{\contentsline {section}{\numberline {11.11}RegNets: Network Design Spaces}{382}{section.11.11}\protected@file@percent }
+\newlabel{subsec:regnets}{{11.11}{382}{RegNets: Network Design Spaces}{section.11.11}{}}
+\abx@aux@backref{272}{radosavovic2020_regnet}{0}{382}{382}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.11.1}RegNet Architecture}{382}{subsection.11.11.1}\protected@file@percent }
+\newlabel{subsubsec:regnet_architecture}{{11.11.1}{382}{RegNet Architecture}{subsection.11.11.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.38}{\ignorespaces \textbf  {RegNet architecture}: A simple backbone with a stem, four-stage body, and head. Each stage consists of multiple blocks with defined parameters. These building blocks will allows us to construct architectures at different sizes that are quite efficient, while producing competitive accuracy.}}{383}{figure.caption.774}\protected@file@percent }
+\newlabel{fig:chapter11_regnet_architecture}{{11.38}{383}{\textbf {RegNet architecture}: A simple backbone with a stem, four-stage body, and head. Each stage consists of multiple blocks with defined parameters. These building blocks will allows us to construct architectures at different sizes that are quite efficient, while producing competitive accuracy}{figure.caption.774}{}}
+\@writefile{toc}{\contentsline {paragraph}{Block Design: Generalizing ResNeXt}{383}{section*.775}\protected@file@percent }
+\BKM@entry{id=437,dest={73756273656374696F6E2E31312E31312E32},srcline={1933}}{5C3337365C3337375C3030304F5C303030705C303030745C303030695C3030306D5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030445C303030655C303030735C303030695C303030675C3030306E5C3030305C3034305C303030535C303030705C303030615C303030635C30303065}
 \abx@aux@cite{0}{radosavovic2020_regnet}
 \abx@aux@segm{0}{0}{radosavovic2020_regnet}
-\@writefile{toc}{\contentsline {paragraph}{Block Design: Generalizing ResNeXt}{382}{section*.801}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.39}{\ignorespaces \textbf  {RegNet block structure}: A generalization of ResNeXt, where each stage is defined by four parameters only.}}{382}{figure.caption.802}\protected@file@percent }
-\newlabel{fig:chapter11_regnet_block}{{11.39}{382}{\textbf {RegNet block structure}: A generalization of ResNeXt, where each stage is defined by four parameters only}{figure.caption.802}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Optimizing the Design Space}{382}{section*.803}\protected@file@percent }
-\newlabel{subsubsec:regnet_optimization}{{11.5.10}{382}{Optimizing the Design Space}{section*.803}{}}
-\@writefile{toc}{\contentsline {paragraph}{Random Sampling and Performance Trends}{382}{section*.804}\protected@file@percent }
-\abx@aux@backref{273}{radosavovic2020_regnet}{0}{382}{382}
-\@writefile{toc}{\contentsline {paragraph}{Reducing the Design Space}{383}{section*.805}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Final Six Parameters}{383}{section*.806}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11.40}{\ignorespaces \textbf  {RegNet design space optimization}: The initial 16 parameters were reduced to 6, enabling efficient architecture search.}}{383}{figure.caption.807}\protected@file@percent }
-\newlabel{fig:chapter11_regnet_design_space}{{11.40}{383}{\textbf {RegNet design space optimization}: The initial 16 parameters were reduced to 6, enabling efficient architecture search}{figure.caption.807}{}}
-\@writefile{toc}{\contentsline {paragraph}{Why This Works}{383}{section*.808}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{383}{section*.809}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Performance and Applications}{384}{section*.810}\protected@file@percent }
-\newlabel{subsubsec:regnet_performance}{{11.5.10}{384}{Performance and Applications}{section*.810}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.41}{\ignorespaces RegNet models match EfficientNet accuracy but train up to 5$\times $ faster per iteration.}}{384}{figure.caption.811}\protected@file@percent }
-\newlabel{fig:chapter11_regnet_vs_efficientnet}{{11.41}{384}{RegNet models match EfficientNet accuracy but train up to 5$\times $ faster per iteration}{figure.caption.811}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11.42}{\ignorespaces \textbf  {RegNet in real-world deployment}: Tesla uses RegNet-based architectures for processing inputs from multiple cameras.}}{384}{figure.caption.812}\protected@file@percent }
-\newlabel{fig:chapter11_regnet_tesla}{{11.42}{384}{\textbf {RegNet in real-world deployment}: Tesla uses RegNet-based architectures for processing inputs from multiple cameras}{figure.caption.812}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{385}{section*.813}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{385}{section*.814}\protected@file@percent }
-\BKM@entry{id=411,dest={73756273656374696F6E2E31312E352E3131},srcline={2029}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.5.11}Summary of Efficient Network Architectures}{386}{subsection.11.5.11}\protected@file@percent }
-\newlabel{subsec:chapter11_summary}{{11.5.11}{386}{Summary of Efficient Network Architectures}{subsection.11.5.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Grouped Convolution and ResNeXt}{386}{section*.815}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{386}{section*.816}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{MobileNet: Depthwise Separable Convolutions}{386}{section*.817}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2 and the Inverted Residual Block}{386}{section*.818}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{386}{section*.819}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNet: Compound Scaling}{386}{section*.820}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{386}{section*.821}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{NFNets and BN-Free Training}{386}{section*.822}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Revisiting ResNets and Scaling}{387}{section*.823}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{RegNets: Optimizing Design Spaces}{387}{section*.824}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Key Takeaways}{387}{section*.825}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{387}{section*.826}\protected@file@percent }
-\BKM@entry{id=412,dest={636861707465722E3132},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030325C3030303A5C3030305C3034305C303030445C303030655C303030655C303030705C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030535C3030306F5C303030665C303030745C303030775C303030615C303030725C30303065}
-\@writefile{toc}{\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{388}{chapter.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.39}{\ignorespaces \textbf  {RegNet block structure}: A generalization of ResNeXt, where each stage is defined by four parameters only.}}{384}{figure.caption.776}\protected@file@percent }
+\newlabel{fig:chapter11_regnet_block}{{11.39}{384}{\textbf {RegNet block structure}: A generalization of ResNeXt, where each stage is defined by four parameters only}{figure.caption.776}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.11.2}Optimizing the Design Space}{384}{subsection.11.11.2}\protected@file@percent }
+\newlabel{subsubsec:regnet_optimization}{{11.11.2}{384}{Optimizing the Design Space}{subsection.11.11.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Random Sampling and Performance Trends}{384}{section*.777}\protected@file@percent }
+\abx@aux@backref{273}{radosavovic2020_regnet}{0}{384}{384}
+\@writefile{toc}{\contentsline {paragraph}{Reducing the Design Space}{384}{section*.778}\protected@file@percent }
+\BKM@entry{id=438,dest={73756273656374696F6E2E31312E31312E33},srcline={1992}}{5C3337365C3337375C303030505C303030655C303030725C303030665C3030306F5C303030725C3030306D5C303030615C3030306E5C303030635C303030655C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030415C303030705C303030705C3030306C5C303030695C303030635C303030615C303030745C303030695C3030306F5C3030306E5C30303073}
+\@writefile{toc}{\contentsline {paragraph}{Final Six Parameters}{385}{section*.779}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11.40}{\ignorespaces \textbf  {RegNet design space optimization}: The initial 16 parameters were reduced to 6, enabling efficient architecture search.}}{385}{figure.caption.780}\protected@file@percent }
+\newlabel{fig:chapter11_regnet_design_space}{{11.40}{385}{\textbf {RegNet design space optimization}: The initial 16 parameters were reduced to 6, enabling efficient architecture search}{figure.caption.780}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why This Works}{385}{section*.781}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{385}{section*.782}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.11.3}Performance and Applications}{385}{subsection.11.11.3}\protected@file@percent }
+\newlabel{subsubsec:regnet_performance}{{11.11.3}{385}{Performance and Applications}{subsection.11.11.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.41}{\ignorespaces RegNet models match EfficientNet accuracy but train up to 5$\times $ faster per iteration.}}{386}{figure.caption.783}\protected@file@percent }
+\newlabel{fig:chapter11_regnet_vs_efficientnet}{{11.41}{386}{RegNet models match EfficientNet accuracy but train up to 5$\times $ faster per iteration}{figure.caption.783}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11.42}{\ignorespaces \textbf  {RegNet in real-world deployment}: Tesla uses RegNet-based architectures for processing inputs from multiple cameras.}}{386}{figure.caption.784}\protected@file@percent }
+\newlabel{fig:chapter11_regnet_tesla}{{11.42}{386}{\textbf {RegNet in real-world deployment}: Tesla uses RegNet-based architectures for processing inputs from multiple cameras}{figure.caption.784}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Takeaways}{386}{section*.785}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{387}{section*.786}\protected@file@percent }
+\BKM@entry{id=439,dest={73656374696F6E2E31312E3132},srcline={2029}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
+\@writefile{toc}{\contentsline {section}{\numberline {11.12}Summary of Efficient Network Architectures}{388}{section.11.12}\protected@file@percent }
+\newlabel{subsec:chapter11_summary}{{11.12}{388}{Summary of Efficient Network Architectures}{section.11.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Grouped Convolution and ResNeXt}{388}{section*.787}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{388}{section*.788}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MobileNet: Depthwise Separable Convolutions}{388}{section*.789}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2 and the Inverted Residual Block}{388}{section*.790}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{388}{section*.791}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{EfficientNet: Compound Scaling}{388}{section*.792}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{388}{section*.793}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{NFNets and BN-Free Training}{388}{section*.794}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Revisiting ResNets and Scaling}{389}{section*.795}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{RegNets: Optimizing Design Spaces}{389}{section*.796}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Key Takeaways}{389}{section*.797}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{389}{section*.798}\protected@file@percent }
+\BKM@entry{id=440,dest={636861707465722E3132},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030325C3030303A5C3030305C3034305C303030445C303030655C303030655C303030705C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030535C3030306F5C303030665C303030745C303030775C303030615C303030725C30303065}
+\@writefile{toc}{\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{390}{chapter.12}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@11}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@12}}
 \pgfsyspdfmark {pgfid32}{0}{52099153}
 \pgfsyspdfmark {pgfid31}{5966969}{45620378}
-\BKM@entry{id=413,dest={636861707465722E3133},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030335C3030303A5C3030305C3034305C3030304F5C303030625C3030306A5C303030655C303030635C303030745C3030305C3034305C303030445C303030655C303030745C303030655C303030635C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{389}{chapter.13}\protected@file@percent }
+\BKM@entry{id=441,dest={636861707465722E3133},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030335C3030303A5C3030305C3034305C3030304F5C303030625C3030306A5C303030655C303030635C303030745C3030305C3034305C303030445C303030655C303030745C303030655C303030635C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{391}{chapter.13}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@12}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@13}}
 \pgfsyspdfmark {pgfid34}{0}{52099153}
 \pgfsyspdfmark {pgfid33}{5966969}{45620378}
-\BKM@entry{id=414,dest={636861707465722E3134},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030345C3030303A5C3030305C3034305C3030304F5C303030625C3030306A5C303030655C303030635C303030745C3030305C3034305C303030445C303030655C303030745C303030655C303030635C303030745C3030306F5C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{390}{chapter.14}\protected@file@percent }
+\BKM@entry{id=442,dest={636861707465722E3134},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030345C3030303A5C3030305C3034305C3030304F5C303030625C3030306A5C303030655C303030635C303030745C3030305C3034305C303030445C303030655C303030745C303030655C303030635C303030745C3030306F5C303030725C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{392}{chapter.14}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@13}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@14}}
 \pgfsyspdfmark {pgfid36}{0}{52099153}
 \pgfsyspdfmark {pgfid35}{5966969}{45620378}
-\BKM@entry{id=415,dest={636861707465722E3135},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030355C3030303A5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030535C303030655C303030675C3030306D5C303030655C3030306E5C303030745C303030615C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{391}{chapter.15}\protected@file@percent }
+\BKM@entry{id=443,dest={636861707465722E3135},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030355C3030303A5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030535C303030655C303030675C3030306D5C303030655C3030306E5C303030745C303030615C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{393}{chapter.15}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@14}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@15}}
 \pgfsyspdfmark {pgfid38}{0}{52099153}
 \pgfsyspdfmark {pgfid37}{5966969}{45620378}
-\BKM@entry{id=416,dest={636861707465722E3136},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030365C3030303A5C3030305C3034305C303030525C303030655C303030635C303030755C303030725C303030725C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{392}{chapter.16}\protected@file@percent }
+\BKM@entry{id=444,dest={636861707465722E3136},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030365C3030303A5C3030305C3034305C303030525C303030655C303030635C303030755C303030725C303030725C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{394}{chapter.16}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@15}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@16}}
 \pgfsyspdfmark {pgfid40}{0}{52099153}
 \pgfsyspdfmark {pgfid39}{5966969}{45620378}
-\BKM@entry{id=417,dest={636861707465722E3137},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030375C3030303A5C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{393}{chapter.17}\protected@file@percent }
+\BKM@entry{id=445,dest={636861707465722E3137},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030375C3030303A5C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{395}{chapter.17}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@16}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@17}}
 \pgfsyspdfmark {pgfid42}{0}{52099153}
 \pgfsyspdfmark {pgfid41}{5966969}{45620378}
-\BKM@entry{id=418,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{394}{chapter.18}\protected@file@percent }
+\BKM@entry{id=446,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{396}{chapter.18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@17}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@18}}
 \pgfsyspdfmark {pgfid44}{0}{52099153}
 \pgfsyspdfmark {pgfid43}{5966969}{45620378}
-\BKM@entry{id=419,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{395}{chapter.19}\protected@file@percent }
+\BKM@entry{id=447,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{397}{chapter.19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@18}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@19}}
 \pgfsyspdfmark {pgfid46}{0}{52099153}
 \pgfsyspdfmark {pgfid45}{5966969}{45620378}
-\BKM@entry{id=420,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{396}{chapter.20}\protected@file@percent }
+\BKM@entry{id=448,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{398}{chapter.20}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@19}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@20}}
 \pgfsyspdfmark {pgfid48}{0}{52099153}
 \pgfsyspdfmark {pgfid47}{5966969}{45620378}
-\BKM@entry{id=421,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{397}{chapter.21}\protected@file@percent }
+\BKM@entry{id=449,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{399}{chapter.21}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@20}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@21}}
 \pgfsyspdfmark {pgfid50}{0}{52099153}
 \pgfsyspdfmark {pgfid49}{5966969}{45620378}
-\BKM@entry{id=422,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{398}{chapter.22}\protected@file@percent }
+\BKM@entry{id=450,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{400}{chapter.22}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@21}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@22}}
 \pgfsyspdfmark {pgfid52}{0}{52099153}
 \pgfsyspdfmark {pgfid51}{5966969}{45620378}
-\BKM@entry{id=423,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{399}{chapter.23}\protected@file@percent }
+\BKM@entry{id=451,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{401}{chapter.23}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@22}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@23}}
 \pgfsyspdfmark {pgfid54}{0}{52099153}
 \pgfsyspdfmark {pgfid53}{5966969}{45620378}
-\BKM@entry{id=424,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{400}{chapter.24}\protected@file@percent }
+\BKM@entry{id=452,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{402}{chapter.24}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@23}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@24}}
 \pgfsyspdfmark {pgfid56}{0}{52099153}
 \pgfsyspdfmark {pgfid55}{5966969}{45620378}
-\BKM@entry{id=425,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{401}{chapter.25}\protected@file@percent }
+\BKM@entry{id=453,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{403}{chapter.25}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@24}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@25}}
 \pgfsyspdfmark {pgfid58}{0}{52099153}
 \pgfsyspdfmark {pgfid57}{5966969}{45620378}
-\BKM@entry{id=426,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{402}{chapter.26}\protected@file@percent }
+\BKM@entry{id=454,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{404}{chapter.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@25}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@26}}
 \pgfsyspdfmark {pgfid60}{0}{52099153}
 \pgfsyspdfmark {pgfid59}{5966969}{45620378}
-\BKM@entry{id=427,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{403}{chapter.27}\protected@file@percent }
+\BKM@entry{id=455,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{405}{chapter.27}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@26}}
@@ -3302,4 +3330,4 @@
 \abx@aux@defaultrefcontext{0}{zoph2017_nas}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2018_learning}{nty/global//global/global/global}
 \xdef \mintedoldcachechecksum{\detokenize{E484F37EF2C31B980524F53D89ACA4A3:4}}
-\gdef \@abspage@last{411}
+\gdef \@abspage@last{413}

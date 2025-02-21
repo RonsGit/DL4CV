@@ -816,133 +816,133 @@
 \contentsline {subsubsection}{The Need for Model Scaling and EfficientNets}{363}{section*.730}%
 \contentsline {paragraph}{Beyond Hand-Designed and NAS-Optimized Models}{363}{section*.731}%
 \contentsline {paragraph}{Introducing EfficientNet}{363}{section*.732}%
-\contentsline {subsection}{\numberline {11.5.5}EfficientNet Compound Model Scaling}{364}{subsection.11.5.5}%
-\contentsline {subsubsection}{How Should We Scale a Model}{364}{section*.733}%
-\contentsline {paragraph}{The Problem with Independent Scaling}{364}{section*.735}%
-\contentsline {subsubsection}{How EfficientNet Works}{365}{section*.737}%
-\contentsline {paragraph}{Step 1: Designing a Baseline Architecture}{365}{section*.738}%
-\contentsline {paragraph}{EfficientNet-B0 Architecture}{366}{section*.739}%
-\contentsline {paragraph}{Step 2: Finding Optimal Scaling Factors}{366}{section*.741}%
-\contentsline {paragraph}{Step 3: Scaling to Different Model Sizes}{366}{section*.742}%
-\contentsline {subsubsection}{Why is EfficientNet More Effective}{366}{section*.743}%
-\contentsline {paragraph}{Balanced Scaling Improves Efficiency}{366}{section*.744}%
-\contentsline {paragraph}{Comparison with MobileNetV3}{367}{section*.745}%
-\contentsline {paragraph}{Comparison with Other Networks}{367}{section*.746}%
-\contentsline {subsubsection}{Limitations of EfficientNet}{367}{section*.748}%
-\contentsline {paragraph}{What’s Next? EfficientNetV2 and Beyond}{368}{section*.749}%
-\contentsline {paragraph}{Conclusion}{368}{section*.750}%
-\contentsline {subsection}{\numberline {11.5.6}EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{368}{subsection.11.5.6}%
-\contentsline {subsubsection}{Motivation for EfficientNet-Lite}{368}{section*.751}%
-\contentsline {subsubsection}{EfficientNet-Lite Architecture}{368}{section*.752}%
-\contentsline {subsubsection}{Performance and Comparison with Other Models}{368}{section*.753}%
-\contentsline {paragraph}{Model Size vs. Accuracy Trade-off}{369}{section*.755}%
-\contentsline {subsection}{\numberline {11.5.7}EfficientNetV2: Faster Training and Improved Efficiency}{370}{subsection.11.5.7}%
-\contentsline {subsubsection}{Motivation for EfficientNetV2}{370}{section*.757}%
-\contentsline {subsubsection}{Fused-MBConv: Improving Early Layers}{370}{section*.758}%
-\contentsline {subsubsection}{Progressive Learning: Efficient Training with Smaller Images}{371}{section*.760}%
-\contentsline {subsubsection}{FixRes: Addressing Train-Test Resolution Discrepancy}{371}{section*.761}%
-\contentsline {paragraph}{The Problem: Region of Classification (RoC) Mismatch}{371}{section*.762}%
-\contentsline {paragraph}{FixRes Solution}{371}{section*.763}%
-\contentsline {paragraph}{Implementation in EfficientNetV2}{372}{section*.765}%
-\contentsline {subsubsection}{Non-Uniform Scaling for Improved Efficiency}{372}{section*.766}%
-\contentsline {subsubsection}{EfficientNetV2 Architecture}{372}{section*.767}%
-\contentsline {subsubsection}{EfficientNetV2 vs. EfficientNetV1}{372}{section*.769}%
-\contentsline {subsubsection}{EfficientNetV2 vs. Other Models}{373}{section*.770}%
-\contentsline {paragraph}{Comparison in Accuracy, FLOPs, and Parameters}{373}{section*.771}%
-\contentsline {paragraph}{Training Speed and Efficiency}{374}{section*.773}%
-\contentsline {paragraph}{Key Takeaways}{374}{section*.775}%
-\contentsline {subsection}{\numberline {11.5.8}NFNets: Normalizer-Free ResNets}{375}{subsection.11.5.8}%
-\contentsline {subsubsection}{Motivation: Why Do We Need NFNets?}{375}{section*.776}%
-\contentsline {subsubsection}{Variance Explosion Without BatchNorm}{375}{section*.777}%
-\contentsline {paragraph}{Variance Scaling in Residual Networks}{375}{section*.778}%
-\contentsline {paragraph}{Role of Weight Initialization}{375}{section*.779}%
-\contentsline {subsubsection}{Why Not Rescale the Residual Branch?}{375}{section*.780}%
-\contentsline {subsubsection}{NFNets: Weight Normalization Instead of BN}{376}{section*.781}%
-\contentsline {paragraph}{Why This Works}{376}{section*.782}%
-\contentsline {paragraph}{Relation to Earlier Weight Standardization}{376}{section*.783}%
-\contentsline {subsubsection}{NFNets Architecture and ResNet-D}{377}{section*.784}%
-\contentsline {subsubsection}{Comparison Across Diverse Architectures}{377}{section*.785}%
-\contentsline {paragraph}{Key Takeaways}{377}{section*.787}%
-\contentsline {subsubsection}{Further Reading and Resources}{378}{section*.788}%
-\contentsline {subsection}{\numberline {11.5.9}Revisiting ResNets: Improved Training and Scaling Strategies}{379}{subsection.11.5.9}%
-\contentsline {subsubsection}{Training Enhancements for ResNets}{379}{section*.789}%
-\contentsline {paragraph}{Key Enhancements}{379}{section*.791}%
-\contentsline {subsubsection}{Scaling ResNets for Efficient Training}{379}{section*.792}%
-\contentsline {subsubsection}{ResNet-RS vs. EfficientNet: A Re-Evaluation}{380}{section*.793}%
-\contentsline {paragraph}{Comparison of ResNet-RS and EfficientNet}{380}{section*.795}%
-\contentsline {paragraph}{Key Observations}{380}{section*.797}%
-\contentsline {paragraph}{Conclusion}{381}{section*.798}%
-\contentsline {subsection}{\numberline {11.5.10}RegNets: Network Design Spaces}{381}{subsection.11.5.10}%
-\contentsline {subsubsection}{RegNet Architecture}{381}{section*.799}%
-\contentsline {paragraph}{Block Design: Generalizing ResNeXt}{382}{section*.801}%
-\contentsline {subsubsection}{Optimizing the Design Space}{382}{section*.803}%
-\contentsline {paragraph}{Random Sampling and Performance Trends}{382}{section*.804}%
-\contentsline {paragraph}{Reducing the Design Space}{383}{section*.805}%
-\contentsline {paragraph}{Final Six Parameters}{383}{section*.806}%
-\contentsline {paragraph}{Why This Works}{383}{section*.808}%
-\contentsline {paragraph}{Conclusion}{383}{section*.809}%
-\contentsline {subsubsection}{Performance and Applications}{384}{section*.810}%
-\contentsline {paragraph}{Key Takeaways}{385}{section*.813}%
-\contentsline {paragraph}{Conclusion}{385}{section*.814}%
-\contentsline {subsection}{\numberline {11.5.11}Summary of Efficient Network Architectures}{386}{subsection.11.5.11}%
-\contentsline {subsubsection}{Grouped Convolution and ResNeXt}{386}{section*.815}%
-\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{386}{section*.816}%
-\contentsline {subsubsection}{MobileNet: Depthwise Separable Convolutions}{386}{section*.817}%
-\contentsline {subsubsection}{MobileNetV2 and the Inverted Residual Block}{386}{section*.818}%
-\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{386}{section*.819}%
-\contentsline {subsubsection}{EfficientNet: Compound Scaling}{386}{section*.820}%
-\contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{386}{section*.821}%
-\contentsline {subsubsection}{NFNets and BN-Free Training}{386}{section*.822}%
-\contentsline {subsubsection}{Revisiting ResNets and Scaling}{387}{section*.823}%
-\contentsline {subsubsection}{RegNets: Optimizing Design Spaces}{387}{section*.824}%
-\contentsline {subsubsection}{Key Takeaways}{387}{section*.825}%
-\contentsline {paragraph}{Conclusion}{387}{section*.826}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{388}{chapter.12}%
+\contentsline {section}{\numberline {11.6}EfficientNet Compound Model Scaling}{364}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}How Should We Scale a Model}{364}{subsection.11.6.1}%
+\contentsline {paragraph}{The Problem with Independent Scaling}{364}{section*.734}%
+\contentsline {subsection}{\numberline {11.6.2}How EfficientNet Works}{365}{subsection.11.6.2}%
+\contentsline {paragraph}{Step 1: Designing a Baseline Architecture}{365}{section*.736}%
+\contentsline {paragraph}{EfficientNet-B0 Architecture}{366}{section*.737}%
+\contentsline {paragraph}{Step 2: Finding Optimal Scaling Factors}{366}{section*.739}%
+\contentsline {paragraph}{Step 3: Scaling to Different Model Sizes}{366}{section*.740}%
+\contentsline {subsection}{\numberline {11.6.3}Why is EfficientNet More Effective}{366}{subsection.11.6.3}%
+\contentsline {paragraph}{Balanced Scaling Improves Efficiency}{366}{section*.741}%
+\contentsline {paragraph}{Comparison with MobileNetV3}{367}{section*.742}%
+\contentsline {paragraph}{Comparison with Other Networks}{367}{section*.743}%
+\contentsline {subsection}{\numberline {11.6.4}Limitations of EfficientNet}{367}{subsection.11.6.4}%
+\contentsline {paragraph}{What’s Next? EfficientNetV2 and Beyond}{368}{section*.745}%
+\contentsline {paragraph}{Conclusion}{368}{section*.746}%
+\contentsline {section}{\numberline {11.7}EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{368}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}Motivation for EfficientNet-Lite}{368}{subsection.11.7.1}%
+\contentsline {subsection}{\numberline {11.7.2}EfficientNet-Lite Architecture}{368}{subsection.11.7.2}%
+\contentsline {subsection}{\numberline {11.7.3}Performance and Comparison with Other Models}{368}{subsection.11.7.3}%
+\contentsline {paragraph}{Model Size vs. Accuracy Trade-off}{369}{section*.748}%
+\contentsline {section}{\numberline {11.8}EfficientNetV2: Faster Training and Improved Efficiency}{370}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}Motivation for EfficientNetV2}{370}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}Fused-MBConv: Improving Early Layers}{370}{subsection.11.8.2}%
+\contentsline {subsection}{\numberline {11.8.3}Progressive Learning: Efficient Training with Smaller Images}{371}{subsection.11.8.3}%
+\contentsline {subsection}{\numberline {11.8.4}FixRes: Addressing Train-Test Resolution Discrepancy}{371}{subsection.11.8.4}%
+\contentsline {paragraph}{The Problem: Region of Classification (RoC) Mismatch}{371}{section*.751}%
+\contentsline {paragraph}{FixRes Solution}{372}{section*.752}%
+\contentsline {paragraph}{Implementation in EfficientNetV2}{372}{section*.754}%
+\contentsline {subsection}{\numberline {11.8.5}Non-Uniform Scaling for Improved Efficiency}{372}{subsection.11.8.5}%
+\contentsline {subsection}{\numberline {11.8.6}EfficientNetV2 Architecture}{373}{subsection.11.8.6}%
+\contentsline {subsection}{\numberline {11.8.7}EfficientNetV2 vs. EfficientNetV1}{373}{subsection.11.8.7}%
+\contentsline {subsection}{\numberline {11.8.8}EfficientNetV2 vs. Other Models}{373}{subsection.11.8.8}%
+\contentsline {paragraph}{Comparison in Accuracy, FLOPs, and Parameters}{374}{section*.756}%
+\contentsline {paragraph}{Training Speed and Efficiency}{375}{section*.758}%
+\contentsline {paragraph}{Key Takeaways}{375}{section*.760}%
+\contentsline {section}{\numberline {11.9}NFNets: Normalizer-Free ResNets}{376}{section.11.9}%
+\contentsline {subsection}{\numberline {11.9.1}Motivation: Why Do We Need NFNets?}{376}{subsection.11.9.1}%
+\contentsline {subsection}{\numberline {11.9.2}Variance Explosion Without BatchNorm}{376}{subsection.11.9.2}%
+\contentsline {paragraph}{Variance Scaling in Residual Networks}{376}{section*.761}%
+\contentsline {paragraph}{Role of Weight Initialization}{376}{section*.762}%
+\contentsline {subsection}{\numberline {11.9.3}Why Not Rescale the Residual Branch?}{376}{subsection.11.9.3}%
+\contentsline {subsection}{\numberline {11.9.4}NFNets: Weight Normalization Instead of BN}{377}{subsection.11.9.4}%
+\contentsline {paragraph}{Why This Works}{377}{section*.763}%
+\contentsline {paragraph}{Relation to Earlier Weight Standardization}{377}{section*.764}%
+\contentsline {subsection}{\numberline {11.9.5}NFNets Architecture and ResNet-D}{378}{subsection.11.9.5}%
+\contentsline {subsection}{\numberline {11.9.6}Comparison Across Diverse Architectures}{378}{subsection.11.9.6}%
+\contentsline {paragraph}{Key Takeaways}{378}{section*.766}%
+\contentsline {subsection}{\numberline {11.9.7}Further Reading and Resources}{379}{subsection.11.9.7}%
+\contentsline {section}{\numberline {11.10}Revisiting ResNets: Improved Training and Scaling Strategies}{380}{section.11.10}%
+\contentsline {subsection}{\numberline {11.10.1}Training Enhancements for ResNets}{380}{subsection.11.10.1}%
+\contentsline {paragraph}{Key Enhancements}{380}{section*.768}%
+\contentsline {subsection}{\numberline {11.10.2}Scaling ResNets for Efficient Training}{380}{subsection.11.10.2}%
+\contentsline {subsection}{\numberline {11.10.3}ResNet-RS vs. EfficientNet: A Re-Evaluation}{381}{subsection.11.10.3}%
+\contentsline {paragraph}{Comparison of ResNet-RS and EfficientNet}{381}{section*.770}%
+\contentsline {paragraph}{Key Observations}{381}{section*.772}%
+\contentsline {paragraph}{Conclusion}{382}{section*.773}%
+\contentsline {section}{\numberline {11.11}RegNets: Network Design Spaces}{382}{section.11.11}%
+\contentsline {subsection}{\numberline {11.11.1}RegNet Architecture}{382}{subsection.11.11.1}%
+\contentsline {paragraph}{Block Design: Generalizing ResNeXt}{383}{section*.775}%
+\contentsline {subsection}{\numberline {11.11.2}Optimizing the Design Space}{384}{subsection.11.11.2}%
+\contentsline {paragraph}{Random Sampling and Performance Trends}{384}{section*.777}%
+\contentsline {paragraph}{Reducing the Design Space}{384}{section*.778}%
+\contentsline {paragraph}{Final Six Parameters}{385}{section*.779}%
+\contentsline {paragraph}{Why This Works}{385}{section*.781}%
+\contentsline {paragraph}{Conclusion}{385}{section*.782}%
+\contentsline {subsection}{\numberline {11.11.3}Performance and Applications}{385}{subsection.11.11.3}%
+\contentsline {paragraph}{Key Takeaways}{386}{section*.785}%
+\contentsline {paragraph}{Conclusion}{387}{section*.786}%
+\contentsline {section}{\numberline {11.12}Summary of Efficient Network Architectures}{388}{section.11.12}%
+\contentsline {subsubsection}{Grouped Convolution and ResNeXt}{388}{section*.787}%
+\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{388}{section*.788}%
+\contentsline {subsubsection}{MobileNet: Depthwise Separable Convolutions}{388}{section*.789}%
+\contentsline {subsubsection}{MobileNetV2 and the Inverted Residual Block}{388}{section*.790}%
+\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{388}{section*.791}%
+\contentsline {subsubsection}{EfficientNet: Compound Scaling}{388}{section*.792}%
+\contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{388}{section*.793}%
+\contentsline {subsubsection}{NFNets and BN-Free Training}{388}{section*.794}%
+\contentsline {subsubsection}{Revisiting ResNets and Scaling}{389}{section*.795}%
+\contentsline {subsubsection}{RegNets: Optimizing Design Spaces}{389}{section*.796}%
+\contentsline {subsubsection}{Key Takeaways}{389}{section*.797}%
+\contentsline {paragraph}{Conclusion}{389}{section*.798}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{390}{chapter.12}%
 \ttl@stoptoc {default@11}
 \ttl@starttoc {default@12}
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{389}{chapter.13}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{391}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{390}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{392}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{391}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{393}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{392}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{394}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{393}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{395}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{394}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{396}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{395}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{397}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{396}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{398}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{397}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{399}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{398}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{400}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{399}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{401}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{400}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{402}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{401}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{403}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{402}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{404}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{403}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{405}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 
