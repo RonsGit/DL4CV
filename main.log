@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  20 FEB 2025 21:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  22 FEB 2025 01:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1434,6 +1434,9 @@ LaTeX Warning: Label `subsubsec:layer_norm' multiply defined.
 
 LaTeX Warning: Label `fig:chapter7_layernorm_fc' multiply defined.
 
+
+LaTeX Warning: Label `fig:chapter11_grouped_convs_step3' multiply defined.
+
 )
 \openout1 = `main.aux'.
 
@@ -1694,20 +1697,22 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 
 
 [13]
+
+[14]
 File: Pictures/head1.png Graphic file (type png)
 <use Pictures/head1.png>
 Package pdftex.def Info: Pictures/head1.png  used on input line 96.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[14
+[15
 
 ] (./Chapters/Chapter_1_Lecture_1_Course_Introduction.tex
 
-[15]
+[16]
 Chapter 1.
 \c@ttl@toc@default=\count537
-<Pictures/head2.png, id=1317, 1027.6794pt x 514.0806pt>
+<Pictures/head2.png, id=1394, 1027.6794pt x 514.0806pt>
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
@@ -1728,7 +1733,7 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 2
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 
-[16
+[17
 
  <./Pictures/head2.png>]
 Package mdframed Info: mdframed works in twoside mode on input line 35.
@@ -1737,12 +1742,12 @@ Package mdframed Info: mdframed detected package amsthm
 (mdframed)              on input line 35.
 
 
-[17]
+[18]
 Package mdframed Info: mdframed works in twoside mode on input line 42.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
 (mdframed)              on input line 42.
-<Figures/Chapter_1/Slide_13.jpg, id=1331, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_13.jpg, id=1408, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_13.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_13.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_13.jpg  used on input line 57.
@@ -1750,8 +1755,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_13.jpg  used on input line 57.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[18 <./Figures/Chapter_1/Slide_13.jpg>]
-<Figures/Chapter_1/Appen_road_image_annotation.jpeg, id=1339, 1146.2825pt x 613
+[19 <./Figures/Chapter_1/Slide_13.jpg>]
+<Figures/Chapter_1/Appen_road_image_annotation.jpeg, id=1416, 1146.2825pt x 613
 .29124pt>
 File: Figures/Chapter_1/Appen_road_image_annotation.jpeg Graphic file (type jpg
 )
@@ -1761,14 +1766,14 @@ ed on input line 72.
 (pdftex.def)             Requested size: 345.75935pt x 184.9901pt.
 
 
-[19 <./Figures/Chapter_1/Appen_road_image_annotation.jpeg>]
-<Figures/Chapter_1/Slide_16.jpg, id=1350, 963.6pt x 542.025pt>
+[20 <./Figures/Chapter_1/Appen_road_image_annotation.jpeg>]
+<Figures/Chapter_1/Slide_16.jpg, id=1426, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_16.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_16.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_16.jpg  used on input line 90.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_17.jpg, id=1354, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_17.jpg, id=1430, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_17.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_17.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_17.jpg  used on input line 100
@@ -1776,8 +1781,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_17.jpg  used on input line 100
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[20 <./Figures/Chapter_1/Slide_16.jpg>]
-<Figures/Chapter_1/Slide_19.jpg, id=1365, 963.6pt x 542.025pt>
+[21 <./Figures/Chapter_1/Slide_16.jpg>]
+<Figures/Chapter_1/Slide_19.jpg, id=1441, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_19.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_19.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_19.jpg  used on input line 118
@@ -1785,8 +1790,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_19.jpg  used on input line 118
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[21 <./Figures/Chapter_1/Slide_17.jpg>]
-<Figures/Chapter_1/Slide_20.jpg, id=1376, 963.6pt x 542.025pt>
+[22 <./Figures/Chapter_1/Slide_17.jpg>]
+<Figures/Chapter_1/Slide_20.jpg, id=1452, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_20.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_20.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_20.jpg  used on input line 133
@@ -1794,8 +1799,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_20.jpg  used on input line 133
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[22 <./Figures/Chapter_1/Slide_19.jpg>]
-<Figures/Chapter_1/Slide_21.jpg, id=1390, 963.6pt x 542.025pt>
+[23 <./Figures/Chapter_1/Slide_19.jpg>]
+<Figures/Chapter_1/Slide_21.jpg, id=1466, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_21.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_21.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_21.jpg  used on input line 152
@@ -1803,8 +1808,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_21.jpg  used on input line 152
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[23 <./Figures/Chapter_1/Slide_20.jpg>]
-<Figures/Chapter_1/Slide_22.jpg, id=1403, 963.6pt x 542.025pt>
+[24 <./Figures/Chapter_1/Slide_20.jpg>]
+<Figures/Chapter_1/Slide_22.jpg, id=1479, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_22.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_22.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_22.jpg  used on input line 173
@@ -1812,8 +1817,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_22.jpg  used on input line 173
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[24 <./Figures/Chapter_1/Slide_21.jpg>]
-<Figures/Chapter_1/Slide_23.jpg, id=1413, 963.6pt x 542.025pt>
+[25 <./Figures/Chapter_1/Slide_21.jpg>]
+<Figures/Chapter_1/Slide_23.jpg, id=1490, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_23.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_23.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_23.jpg  used on input line 191
@@ -1821,14 +1826,14 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_23.jpg  used on input line 191
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[25 <./Figures/Chapter_1/Slide_22.jpg>]
-<Figures/Chapter_1/Slide_24.jpg, id=1424, 963.6pt x 542.025pt>
+[26 <./Figures/Chapter_1/Slide_22.jpg>]
+<Figures/Chapter_1/Slide_24.jpg, id=1500, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_24.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_24.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_24.jpg  used on input line 200
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_25.jpg, id=1428, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_25.jpg, id=1504, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_25.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_25.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_25.jpg  used on input line 209
@@ -1836,8 +1841,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_25.jpg  used on input line 209
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[26 <./Figures/Chapter_1/Slide_23.jpg> <./Figures/Chapter_1/Slide_24.jpg>]
-<Figures/Chapter_1/Slide_27.jpg, id=1441, 963.6pt x 542.025pt>
+[27 <./Figures/Chapter_1/Slide_23.jpg> <./Figures/Chapter_1/Slide_24.jpg>]
+<Figures/Chapter_1/Slide_27.jpg, id=1517, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_27.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_27.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_27.jpg  used on input line 225
@@ -1845,8 +1850,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_27.jpg  used on input line 225
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[27 <./Figures/Chapter_1/Slide_25.jpg>]
-<Figures/Chapter_1/Slide_28.jpg, id=1454, 963.6pt x 542.025pt>
+[28 <./Figures/Chapter_1/Slide_25.jpg>]
+<Figures/Chapter_1/Slide_28.jpg, id=1531, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_28.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_28.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_28.jpg  used on input line 246
@@ -1854,12 +1859,12 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_28.jpg  used on input line 246
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[28 <./Figures/Chapter_1/Slide_27.jpg>]
+[29 <./Figures/Chapter_1/Slide_27.jpg>]
 
-[29 <./Figures/Chapter_1/Slide_28.jpg>]
+[30 <./Figures/Chapter_1/Slide_28.jpg>]
 
-[30]
-<Figures/Chapter_1/Slide_29.jpg, id=1494, 963.6pt x 542.025pt>
+[31]
+<Figures/Chapter_1/Slide_29.jpg, id=1571, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_29.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_29.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_29.jpg  used on input line 327
@@ -1867,14 +1872,14 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_29.jpg  used on input line 327
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[31 <./Figures/Chapter_1/Slide_29.jpg>]
-<Figures/Chapter_1/Slide_30.jpg, id=1509, 963.6pt x 542.025pt>
+[32 <./Figures/Chapter_1/Slide_29.jpg>]
+<Figures/Chapter_1/Slide_30.jpg, id=1585, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_30.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_30.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_30.jpg  used on input line 337
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_32.jpg, id=1513, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_32.jpg, id=1589, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_32.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_32.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_32.jpg  used on input line 347
@@ -1882,8 +1887,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_32.jpg  used on input line 347
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[32 <./Figures/Chapter_1/Slide_30.jpg>]
-<Figures/Chapter_1/Slide_33.jpg, id=1523, 963.6pt x 542.025pt>
+[33 <./Figures/Chapter_1/Slide_30.jpg>]
+<Figures/Chapter_1/Slide_33.jpg, id=1599, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_33.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_33.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_33.jpg  used on input line 357
@@ -1891,14 +1896,14 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_33.jpg  used on input line 357
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[33 <./Figures/Chapter_1/Slide_32.jpg> <./Figures/Chapter_1/Slide_33.jpg>]
-<Figures/Chapter_1/Slide_34.jpg, id=1533, 963.6pt x 542.025pt>
+[34 <./Figures/Chapter_1/Slide_32.jpg> <./Figures/Chapter_1/Slide_33.jpg>]
+<Figures/Chapter_1/Slide_34.jpg, id=1609, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_34.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_34.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_34.jpg  used on input line 367
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_35.jpg, id=1536, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_35.jpg, id=1612, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_35.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_35.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_35.jpg  used on input line 377
@@ -1906,8 +1911,8 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_35.jpg  used on input line 377
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[34 <./Figures/Chapter_1/Slide_34.jpg> <./Figures/Chapter_1/Slide_35.jpg>]
-<Figures/Chapter_1/Slide_36.jpg, id=1546, 963.6pt x 542.025pt>
+[35 <./Figures/Chapter_1/Slide_34.jpg> <./Figures/Chapter_1/Slide_35.jpg>]
+<Figures/Chapter_1/Slide_36.jpg, id=1622, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_36.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_36.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_36.jpg  used on input line 387
@@ -1915,16 +1920,16 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_36.jpg  used on input line 387
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[35 <./Figures/Chapter_1/Slide_36.jpg>]
+[36 <./Figures/Chapter_1/Slide_36.jpg>]
 
-[36]
-<Figures/Chapter_1/Slide_45.jpg, id=1590, 963.6pt x 542.025pt>
+[37]
+<Figures/Chapter_1/Slide_45.jpg, id=1668, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_45.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_45.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_45.jpg  used on input line 439
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_46.jpg, id=1593, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_46.jpg, id=1671, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_46.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_46.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_46.jpg  used on input line 446
@@ -1932,14 +1937,14 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_46.jpg  used on input line 446
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[37 <./Figures/Chapter_1/Slide_45.jpg> <./Figures/Chapter_1/Slide_46.jpg>]
-<Figures/Chapter_1/Slide_48.jpg, id=1604, 963.6pt x 542.025pt>
+[38 <./Figures/Chapter_1/Slide_45.jpg> <./Figures/Chapter_1/Slide_46.jpg>]
+<Figures/Chapter_1/Slide_48.jpg, id=1681, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_48.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_48.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_48.jpg  used on input line 457
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/Slide_49.jpg, id=1605, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_49.jpg, id=1682, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_49.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_49.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_49.jpg  used on input line 464
@@ -1947,20 +1952,20 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_49.jpg  used on input line 464
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[38 <./Figures/Chapter_1/Slide_48.jpg> <./Figures/Chapter_1/Slide_49.jpg>]
-<Figures/Chapter_1/Slide_52.jpg, id=1613, 963.6pt x 542.025pt>
+[39 <./Figures/Chapter_1/Slide_48.jpg> <./Figures/Chapter_1/Slide_49.jpg>]
+<Figures/Chapter_1/Slide_52.jpg, id=1690, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_52.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_52.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_52.jpg  used on input line 479
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_1/adversarial_img_1.jpg, id=1617, 1204.5pt x 477.785pt>
+<Figures/Chapter_1/adversarial_img_1.jpg, id=1694, 1204.5pt x 477.785pt>
 File: Figures/Chapter_1/adversarial_img_1.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/adversarial_img_1.jpg>
 Package pdftex.def Info: Figures/Chapter_1/adversarial_img_1.jpg  used on input
  line 487.
 (pdftex.def)             Requested size: 345.75935pt x 137.15434pt.
-<Figures/Chapter_1/Slide_53.jpg, id=1621, 963.6pt x 542.025pt>
+<Figures/Chapter_1/Slide_53.jpg, id=1698, 963.6pt x 542.025pt>
 File: Figures/Chapter_1/Slide_53.jpg Graphic file (type jpg)
 <use Figures/Chapter_1/Slide_53.jpg>
 Package pdftex.def Info: Figures/Chapter_1/Slide_53.jpg  used on input line 497
@@ -1968,10 +1973,10 @@ Package pdftex.def Info: Figures/Chapter_1/Slide_53.jpg  used on input line 497
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[39 <./Figures/Chapter_1/Slide_52.jpg> <./Figures/Chapter_1/adversarial_img_1.j
+[40 <./Figures/Chapter_1/Slide_52.jpg> <./Figures/Chapter_1/adversarial_img_1.j
 pg>]) (./Chapters/Chapter_2_Lecture_2_Image_Classification.tex
 
-[40 <./Figures/Chapter_1/Slide_53.jpg>]
+[41 <./Figures/Chapter_1/Slide_53.jpg>]
 Chapter 2.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -1979,16 +1984,16 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 3.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[41
+[42
 
 ]
-<Figures/Chapter_2/Slide_10.jpg, id=1641, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_10.jpg, id=1717, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_10.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_10.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_10.jpg  used on input line 32.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_11.jpg, id=1642, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_11.jpg, id=1718, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_11.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_11.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_11.jpg  used on input line 42.
@@ -1996,14 +2001,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_11.jpg  used on input line 42.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[42 <./Figures/Chapter_2/Slide_10.jpg>]
-<Figures/Chapter_2/Slide_12.jpg, id=1649, 963.6pt x 542.025pt>
+[43 <./Figures/Chapter_2/Slide_10.jpg>]
+<Figures/Chapter_2/Slide_12.jpg, id=1726, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_12.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_12.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_12.jpg  used on input line 52.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_13.jpg, id=1650, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_13.jpg, id=1727, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_13.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_13.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_13.jpg  used on input line 62.
@@ -2011,14 +2016,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_13.jpg  used on input line 62.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[43 <./Figures/Chapter_2/Slide_11.jpg> <./Figures/Chapter_2/Slide_12.jpg>]
-<Figures/Chapter_2/Slide_14.jpg, id=1658, 963.6pt x 542.025pt>
+[44 <./Figures/Chapter_2/Slide_11.jpg> <./Figures/Chapter_2/Slide_12.jpg>]
+<Figures/Chapter_2/Slide_14.jpg, id=1734, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_14.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_14.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_14.jpg  used on input line 72.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_15.jpg, id=1659, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_15.jpg, id=1735, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_15.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_15.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_15.jpg  used on input line 82.
@@ -2026,14 +2031,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_15.jpg  used on input line 82.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[44 <./Figures/Chapter_2/Slide_13.jpg> <./Figures/Chapter_2/Slide_14.jpg>]
-<Figures/Chapter_2/Slide_16.jpg, id=1666, 963.6pt x 542.025pt>
+[45 <./Figures/Chapter_2/Slide_13.jpg> <./Figures/Chapter_2/Slide_14.jpg>]
+<Figures/Chapter_2/Slide_16.jpg, id=1742, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_16.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_16.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_16.jpg  used on input line 92.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_17.jpg, id=1667, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_17.jpg, id=1743, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_17.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_17.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_17.jpg  used on input line 102
@@ -2041,16 +2046,16 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_17.jpg  used on input line 102
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[45 <./Figures/Chapter_2/Slide_15.jpg> <./Figures/Chapter_2/Slide_16.jpg>]
+[46 <./Figures/Chapter_2/Slide_15.jpg> <./Figures/Chapter_2/Slide_16.jpg>]
 
-[46 <./Figures/Chapter_2/Slide_17.jpg>]
-<Figures/Chapter_2/Slide_20.jpg, id=1679, 963.6pt x 542.025pt>
+[47 <./Figures/Chapter_2/Slide_17.jpg>]
+<Figures/Chapter_2/Slide_20.jpg, id=1755, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_20.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_20.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_20.jpg  used on input line 129
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_21.jpg, id=1680, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_21.jpg, id=1756, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_21.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_21.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_21.jpg  used on input line 136
@@ -2058,14 +2063,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_21.jpg  used on input line 136
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[47 <./Figures/Chapter_2/Slide_20.jpg>]
-<Figures/Chapter_2/Slide_22.jpg, id=1686, 963.6pt x 542.025pt>
+[48 <./Figures/Chapter_2/Slide_20.jpg>]
+<Figures/Chapter_2/Slide_22.jpg, id=1762, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_22.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_22.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_22.jpg  used on input line 149
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_23.jpg, id=1687, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_23.jpg, id=1763, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_23.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_23.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_23.jpg  used on input line 156
@@ -2073,14 +2078,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_23.jpg  used on input line 156
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[48 <./Figures/Chapter_2/Slide_21.jpg> <./Figures/Chapter_2/Slide_22.jpg>]
-<Figures/Chapter_2/Slide_25.jpg, id=1694, 963.6pt x 542.025pt>
+[49 <./Figures/Chapter_2/Slide_21.jpg> <./Figures/Chapter_2/Slide_22.jpg>]
+<Figures/Chapter_2/Slide_25.jpg, id=1771, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_25.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_25.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_25.jpg  used on input line 163
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_26.jpg, id=1695, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_26.jpg, id=1772, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_26.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_26.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_26.jpg  used on input line 174
@@ -2088,22 +2093,22 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_26.jpg  used on input line 174
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[49 <./Figures/Chapter_2/Slide_23.jpg> <./Figures/Chapter_2/Slide_25.jpg>]
+[50 <./Figures/Chapter_2/Slide_23.jpg> <./Figures/Chapter_2/Slide_25.jpg>]
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
 
-[50{c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./Fig
+[51{c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./Fig
 ures/Chapter_2/Slide_26.jpg>]
-<Figures/Chapter_2/Slide_27.jpg, id=1712, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_27.jpg, id=1788, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_27.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_27.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_27.jpg  used on input line 206
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_28.jpg, id=1713, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_28.jpg, id=1789, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_28.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_28.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_28.jpg  used on input line 213
@@ -2111,8 +2116,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_28.jpg  used on input line 213
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[51 <./Figures/Chapter_2/Slide_27.jpg> <./Figures/Chapter_2/Slide_28.jpg>]
-<Figures/Chapter_2/Slide_29.jpg, id=1721, 963.6pt x 542.025pt>
+[52 <./Figures/Chapter_2/Slide_27.jpg> <./Figures/Chapter_2/Slide_28.jpg>]
+<Figures/Chapter_2/Slide_29.jpg, id=1798, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_29.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_29.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_29.jpg  used on input line 232
@@ -2120,8 +2125,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_29.jpg  used on input line 232
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[52 <./Figures/Chapter_2/Slide_29.jpg>]
-<Figures/Chapter_2/Slide_31.jpg, id=1731, 963.6pt x 542.025pt>
+[53 <./Figures/Chapter_2/Slide_29.jpg>]
+<Figures/Chapter_2/Slide_31.jpg, id=1808, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_31.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_31.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_31.jpg  used on input line 276
@@ -2129,14 +2134,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_31.jpg  used on input line 276
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[53 <./Figures/Chapter_2/Slide_31.jpg>]
-<Figures/Chapter_2/Slide_32.jpg, id=1738, 963.6pt x 542.025pt>
+[54 <./Figures/Chapter_2/Slide_31.jpg>]
+<Figures/Chapter_2/Slide_32.jpg, id=1815, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_32.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_32.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_32.jpg  used on input line 289
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_33.jpg, id=1739, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_33.jpg, id=1816, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_33.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_33.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_33.jpg  used on input line 296
@@ -2144,14 +2149,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_33.jpg  used on input line 296
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[54 <./Figures/Chapter_2/Slide_32.jpg> <./Figures/Chapter_2/Slide_33.jpg>]
-<Figures/Chapter_2/Slide_34.jpg, id=1748, 963.6pt x 542.025pt>
+[55 <./Figures/Chapter_2/Slide_32.jpg> <./Figures/Chapter_2/Slide_33.jpg>]
+<Figures/Chapter_2/Slide_34.jpg, id=1826, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_34.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_34.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_34.jpg  used on input line 309
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_35.jpg, id=1749, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_35.jpg, id=1827, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_35.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_35.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_35.jpg  used on input line 318
@@ -2159,14 +2164,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_35.jpg  used on input line 318
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[55 <./Figures/Chapter_2/Slide_34.jpg> <./Figures/Chapter_2/Slide_35.jpg>]
-<Figures/Chapter_2/Slide_36.jpg, id=1759, 963.6pt x 542.025pt>
+[56 <./Figures/Chapter_2/Slide_34.jpg> <./Figures/Chapter_2/Slide_35.jpg>]
+<Figures/Chapter_2/Slide_36.jpg, id=1835, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_36.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_36.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_36.jpg  used on input line 330
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_37.jpg, id=1761, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_37.jpg, id=1837, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_37.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_37.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_37.jpg  used on input line 349
@@ -2174,8 +2179,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_37.jpg  used on input line 349
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[56 <./Figures/Chapter_2/Slide_36.jpg>]
-<Figures/Chapter_2/Slide_38.jpg, id=1770, 963.6pt x 542.025pt>
+[57 <./Figures/Chapter_2/Slide_36.jpg>]
+<Figures/Chapter_2/Slide_38.jpg, id=1846, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_38.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_38.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_38.jpg  used on input line 360
@@ -2183,10 +2188,10 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_38.jpg  used on input line 360
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[57 <./Figures/Chapter_2/Slide_37.jpg> <./Figures/Chapter_2/Slide_38.jpg>]
+[58 <./Figures/Chapter_2/Slide_37.jpg> <./Figures/Chapter_2/Slide_38.jpg>]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 398.
-<Figures/Chapter_2/Slide_39.jpg, id=1777, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_39.jpg, id=1853, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_39.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_39.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_39.jpg  used on input line 404
@@ -2194,8 +2199,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_39.jpg  used on input line 404
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[58]
-<Figures/Chapter_2/Slide_40.jpg, id=1782, 963.6pt x 542.025pt>
+[59]
+<Figures/Chapter_2/Slide_40.jpg, id=1858, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_40.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_40.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_40.jpg  used on input line 420
@@ -2203,20 +2208,20 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_40.jpg  used on input line 420
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[59 <./Figures/Chapter_2/Slide_39.jpg> <./Figures/Chapter_2/Slide_40.jpg>]
-<Figures/Chapter_2/Slide_63.jpg, id=1790, 963.6pt x 542.025pt>
+[60 <./Figures/Chapter_2/Slide_39.jpg> <./Figures/Chapter_2/Slide_40.jpg>]
+<Figures/Chapter_2/Slide_63.jpg, id=1866, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_63.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_63.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_63.jpg  used on input line 432
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_64.jpg, id=1791, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_64.jpg, id=1867, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_64.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_64.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_64.jpg  used on input line 440
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_51.jpg, id=1792, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_51.jpg, id=1868, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_51.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_51.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_51.jpg  used on input line 455
@@ -2224,8 +2229,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_51.jpg  used on input line 455
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[60 <./Figures/Chapter_2/Slide_63.jpg> <./Figures/Chapter_2/Slide_64.jpg>]
-<Figures/Chapter_2/Slide_67.jpg, id=1802, 963.6pt x 542.025pt>
+[61 <./Figures/Chapter_2/Slide_63.jpg> <./Figures/Chapter_2/Slide_64.jpg>]
+<Figures/Chapter_2/Slide_67.jpg, id=1879, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_67.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_67.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_67.jpg  used on input line 480
@@ -2233,16 +2238,16 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_67.jpg  used on input line 480
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[61 <./Figures/Chapter_2/Slide_51.jpg>]
+[62 <./Figures/Chapter_2/Slide_51.jpg>]
 
-[62 <./Figures/Chapter_2/Slide_67.jpg>]
-<Figures/Chapter_2/Slide_75.jpg, id=1819, 963.6pt x 542.025pt>
+[63 <./Figures/Chapter_2/Slide_67.jpg>]
+<Figures/Chapter_2/Slide_75.jpg, id=1895, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_75.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_75.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_75.jpg  used on input line 526
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_77.jpg, id=1821, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_77.jpg, id=1897, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_77.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_77.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_77.jpg  used on input line 537
@@ -2250,14 +2255,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_77.jpg  used on input line 537
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[63 <./Figures/Chapter_2/Slide_75.jpg>]
-<Figures/Chapter_2/Slide_42.jpg, id=1831, 963.6pt x 542.025pt>
+[64 <./Figures/Chapter_2/Slide_75.jpg>]
+<Figures/Chapter_2/Slide_42.jpg, id=1907, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_42.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_42.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_42.jpg  used on input line 550
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_43.jpg, id=1832, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_43.jpg, id=1908, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_43.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_43.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_43.jpg  used on input line 557
@@ -2265,14 +2270,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_43.jpg  used on input line 557
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[64 <./Figures/Chapter_2/Slide_77.jpg> <./Figures/Chapter_2/Slide_42.jpg>]
-<Figures/Chapter_2/Slide_52.jpg, id=1838, 963.6pt x 542.025pt>
+[65 <./Figures/Chapter_2/Slide_77.jpg> <./Figures/Chapter_2/Slide_42.jpg>]
+<Figures/Chapter_2/Slide_52.jpg, id=1914, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_52.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_52.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_52.jpg  used on input line 576
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_58.jpg, id=1840, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_58.jpg, id=1916, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_58.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_58.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_58.jpg  used on input line 585
@@ -2280,8 +2285,8 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_58.jpg  used on input line 585
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[65 <./Figures/Chapter_2/Slide_43.jpg> <./Figures/Chapter_2/Slide_52.jpg>]
-<Figures/Chapter_2/Slide_61.jpg, id=1848, 963.6pt x 542.025pt>
+[66 <./Figures/Chapter_2/Slide_43.jpg> <./Figures/Chapter_2/Slide_52.jpg>]
+<Figures/Chapter_2/Slide_61.jpg, id=1925, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_61.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_61.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_61.jpg  used on input line 596
@@ -2289,14 +2294,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_61.jpg  used on input line 596
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[66 <./Figures/Chapter_2/Slide_58.jpg> <./Figures/Chapter_2/Slide_61.jpg>]
-<Figures/Chapter_2/Slide_81.jpg, id=1854, 963.6pt x 542.025pt>
+[67 <./Figures/Chapter_2/Slide_58.jpg> <./Figures/Chapter_2/Slide_61.jpg>]
+<Figures/Chapter_2/Slide_81.jpg, id=1932, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_81.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_81.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_81.jpg  used on input line 609
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_85.jpg, id=1855, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_85.jpg, id=1933, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_85.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_85.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_85.jpg  used on input line 623
@@ -2304,14 +2309,14 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_85.jpg  used on input line 623
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[67 <./Figures/Chapter_2/Slide_81.jpg> <./Figures/Chapter_2/Slide_85.jpg>]
-<Figures/Chapter_2/Slide_87.jpg, id=1865, 963.6pt x 542.025pt>
+[68 <./Figures/Chapter_2/Slide_81.jpg> <./Figures/Chapter_2/Slide_85.jpg>]
+<Figures/Chapter_2/Slide_87.jpg, id=1942, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_87.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_87.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_87.jpg  used on input line 638
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_2/Slide_88.jpg, id=1868, 963.6pt x 542.025pt>
+<Figures/Chapter_2/Slide_88.jpg, id=1945, 963.6pt x 542.025pt>
 File: Figures/Chapter_2/Slide_88.jpg Graphic file (type jpg)
 <use Figures/Chapter_2/Slide_88.jpg>
 Package pdftex.def Info: Figures/Chapter_2/Slide_88.jpg  used on input line 649
@@ -2319,26 +2324,26 @@ Package pdftex.def Info: Figures/Chapter_2/Slide_88.jpg  used on input line 649
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[68 <./Figures/Chapter_2/Slide_87.jpg>])
+[69 <./Figures/Chapter_2/Slide_87.jpg>])
 (./Chapters/Chapter_3_Lecture_3_Linear_Classifiers.tex
 
-[69 <./Figures/Chapter_2/Slide_88.jpg>]
+[70 <./Figures/Chapter_2/Slide_88.jpg>]
 Chapter 3.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 3.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-<Figures/Chapter_3/Slide_7.jpg, id=1881, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_7.jpg, id=1957, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_7.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_7.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_7.jpg  used on input line 15.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[70
+[71
 
  <./Figures/Chapter_3/Slide_7.jpg>]
-<Figures/Chapter_3/Slide_12.jpg, id=1888, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_12.jpg, id=1964, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_12.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_12.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_12.jpg  used on input line 41.
@@ -2346,14 +2351,14 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_12.jpg  used on input line 41.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[71 <./Figures/Chapter_3/Slide_12.jpg>]
+[72 <./Figures/Chapter_3/Slide_12.jpg>]
 
-[72]
+[73]
 LaTeX Font Info:    Font shape `T1/pag/b/n' in size <6> not available
 (Font)              Font shape `T1/pag/db/n' tried instead on input line 69.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 69.
-<Figures/Chapter_3/bias_importance.jpg, id=1899, 520.94624pt x 358.33875pt>
+<Figures/Chapter_3/bias_importance.jpg, id=1976, 520.94624pt x 358.33875pt>
 File: Figures/Chapter_3/bias_importance.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/bias_importance.jpg>
 Package pdftex.def Info: Figures/Chapter_3/bias_importance.jpg  used on input l
@@ -2361,16 +2366,16 @@ ine 121.
 (pdftex.def)             Requested size: 345.75935pt x 237.83298pt.
 
 
-[73]
+[74]
 
-[74 <./Figures/Chapter_3/bias_importance.jpg>]
-<Figures/Chapter_3/Slide_14.jpg, id=1915, 963.6pt x 542.025pt>
+[75 <./Figures/Chapter_3/bias_importance.jpg>]
+<Figures/Chapter_3/Slide_14.jpg, id=1991, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_14.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_14.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_14.jpg  used on input line 154
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_3/Slide_16.jpg, id=1916, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_16.jpg, id=1992, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_16.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_16.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_16.jpg  used on input line 168
@@ -2378,10 +2383,10 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_16.jpg  used on input line 168
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[75 <./Figures/Chapter_3/Slide_14.jpg>]
+[76 <./Figures/Chapter_3/Slide_14.jpg>]
 
-[76 <./Figures/Chapter_3/Slide_16.jpg>]
-<Figures/Chapter_3/Slide_18.jpg, id=1930, 963.6pt x 542.025pt>
+[77 <./Figures/Chapter_3/Slide_16.jpg>]
+<Figures/Chapter_3/Slide_18.jpg, id=2006, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_18.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_18.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_18.jpg  used on input line 237
@@ -2389,10 +2394,10 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_18.jpg  used on input line 237
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[77]
+[78]
 
-[78 <./Figures/Chapter_3/Slide_18.jpg>]
-<Figures/Chapter_3/Slide_22.jpg, id=1940, 963.6pt x 542.025pt>
+[79 <./Figures/Chapter_3/Slide_18.jpg>]
+<Figures/Chapter_3/Slide_22.jpg, id=2017, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_22.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_22.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_22.jpg  used on input line 271
@@ -2400,19 +2405,19 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_22.jpg  used on input line 271
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[79 <./Figures/Chapter_3/Slide_22.jpg>]
+[80 <./Figures/Chapter_3/Slide_22.jpg>]
 \g__tcobox_out_iow=\write7
 \openout7 = `main.listing'.
 
 \pydata@fh@_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted=\write8
 \openout8 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250220213707 FAD58DE7366495DB4650CF
+runsystem(latexminted config  --timestamp 20250222012124 FAD58DE7366495DB4650CF
 EFAC2FCD61)...executed safely (allowed).
 
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250220213707 FAD58DE7366495DB4
+runsystem(latexminted cleanconfig  --timestamp 20250222012124 FAD58DE7366495DB4
 650CFEFAC2FCD61)...executed safely (allowed).
 
 
@@ -2425,7 +2430,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 9.
 )
-<Figures/Chapter_3/class_templates.jpg, id=1948, 539.01375pt x 249.93375pt>
+<Figures/Chapter_3/class_templates.jpg, id=2024, 539.01375pt x 249.93375pt>
 File: Figures/Chapter_3/class_templates.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/class_templates.jpg>
 Package pdftex.def Info: Figures/Chapter_3/class_templates.jpg  used on input l
@@ -2433,15 +2438,15 @@ ine 321.
 (pdftex.def)             Requested size: 345.75935pt x 160.32698pt.
 
 
-[80{c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./Fi
+[81{c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./Fi
 gures/Chapter_3/class_templates.jpg>]
-<Figures/Chapter_3/Slide_23.jpg, id=1957, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_23.jpg, id=2033, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_23.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_23.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_23.jpg  used on input line 335
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_3/Slide_30.jpg, id=1958, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_30.jpg, id=2034, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_30.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_30.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_30.jpg  used on input line 356
@@ -2449,8 +2454,8 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_30.jpg  used on input line 356
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[81 <./Figures/Chapter_3/Slide_23.jpg>]
-<Figures/Chapter_3/Slide_31.jpg, id=1965, 963.6pt x 542.025pt>
+[82 <./Figures/Chapter_3/Slide_23.jpg>]
+<Figures/Chapter_3/Slide_31.jpg, id=2042, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_31.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_31.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_31.jpg  used on input line 369
@@ -2458,8 +2463,8 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_31.jpg  used on input line 369
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[82 <./Figures/Chapter_3/Slide_30.jpg> <./Figures/Chapter_3/Slide_31.jpg>]
-<Figures/Chapter_3/Slide_32.jpg, id=1972, 963.6pt x 542.025pt>
+[83 <./Figures/Chapter_3/Slide_30.jpg> <./Figures/Chapter_3/Slide_31.jpg>]
+<Figures/Chapter_3/Slide_32.jpg, id=2049, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_32.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_32.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_32.jpg  used on input line 389
@@ -2467,10 +2472,10 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_32.jpg  used on input line 389
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[83 <./Figures/Chapter_3/Slide_32.jpg>]
+[84 <./Figures/Chapter_3/Slide_32.jpg>]
 
-[84]
-<Figures/Chapter_3/Slide_50.jpg, id=1985, 963.6pt x 542.025pt>
+[85]
+<Figures/Chapter_3/Slide_50.jpg, id=2062, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_50.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_50.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_50.jpg  used on input line 501
@@ -2478,10 +2483,10 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_50.jpg  used on input line 501
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[85]
+[86]
 
-[86 <./Figures/Chapter_3/Slide_50.jpg>]
-<Figures/Chapter_3/Slide_61.jpg, id=2005, 963.6pt x 542.025pt>
+[87 <./Figures/Chapter_3/Slide_50.jpg>]
+<Figures/Chapter_3/Slide_61.jpg, id=2081, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_61.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_61.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_61.jpg  used on input line 575
@@ -2489,14 +2494,14 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_61.jpg  used on input line 575
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[87 <./Figures/Chapter_3/Slide_61.jpg>]
-<Figures/Chapter_3/Slide_62.jpg, id=2014, 963.6pt x 542.025pt>
+[88 <./Figures/Chapter_3/Slide_61.jpg>]
+<Figures/Chapter_3/Slide_62.jpg, id=2090, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_62.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_62.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_62.jpg  used on input line 594
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_3/Slide_63.jpg, id=2015, 963.6pt x 542.025pt>
+<Figures/Chapter_3/Slide_63.jpg, id=2091, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_63.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_63.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_63.jpg  used on input line 613
@@ -2504,8 +2509,8 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_63.jpg  used on input line 613
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[88 <./Figures/Chapter_3/Slide_62.jpg>]
-<Figures/Chapter_3/Slide_64.jpg, id=2023, 963.6pt x 542.025pt>
+[89 <./Figures/Chapter_3/Slide_62.jpg>]
+<Figures/Chapter_3/Slide_64.jpg, id=2099, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_64.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_64.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_64.jpg  used on input line 623
@@ -2513,8 +2518,8 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_64.jpg  used on input line 623
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[89 <./Figures/Chapter_3/Slide_63.jpg> <./Figures/Chapter_3/Slide_64.jpg>]
-<Figures/Chapter_3/Slide_76.jpg, id=2032, 963.6pt x 542.025pt>
+[90 <./Figures/Chapter_3/Slide_63.jpg> <./Figures/Chapter_3/Slide_64.jpg>]
+<Figures/Chapter_3/Slide_76.jpg, id=2108, 963.6pt x 542.025pt>
 File: Figures/Chapter_3/Slide_76.jpg Graphic file (type jpg)
 <use Figures/Chapter_3/Slide_76.jpg>
 Package pdftex.def Info: Figures/Chapter_3/Slide_76.jpg  used on input line 648
@@ -2523,13 +2528,13 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_76.jpg  used on input line 648
 )
 (./Chapters/Chapter_4_Lecture_4_Regularization__Optimization.tex
 
-[90 <./Figures/Chapter_3/Slide_76.jpg>]
+[91 <./Figures/Chapter_3/Slide_76.jpg>]
 Chapter 4.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-<Figures/Chapter_4/overfitting_underfitting.jpg, id=2039, 1405.25pt x 698.61pt>
+<Figures/Chapter_4/overfitting_underfitting.jpg, id=2116, 1405.25pt x 698.61pt>
 
 File: Figures/Chapter_4/overfitting_underfitting.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/overfitting_underfitting.jpg>
@@ -2538,18 +2543,18 @@ n input line 14.
 (pdftex.def)             Requested size: 345.75935pt x 171.89114pt.
 
 
-[91
+[92
 
  <./Figures/Chapter_4/overfitting_underfitting.jpg>]
-
-[92]
 
 [93]
 
 [94]
 
 [95]
-<Figures/Chapter_4/Slide_21.jpg, id=2071, 963.6pt x 542.025pt>
+
+[96]
+<Figures/Chapter_4/Slide_21.jpg, id=2148, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_21.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_21.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_21.jpg  used on input line 221
@@ -2557,8 +2562,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_21.jpg  used on input line 221
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[96 <./Figures/Chapter_4/Slide_21.jpg>]
-<Figures/Chapter_4/Slide_22.jpg, id=2077, 963.6pt x 542.025pt>
+[97 <./Figures/Chapter_4/Slide_21.jpg>]
+<Figures/Chapter_4/Slide_22.jpg, id=2155, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_22.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_22.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_22.jpg  used on input line 237
@@ -2566,8 +2571,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_22.jpg  used on input line 237
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[97 <./Figures/Chapter_4/Slide_22.jpg>]
-<Figures/Chapter_4/Slide_23.jpg, id=2091, 963.6pt x 542.025pt>
+[98 <./Figures/Chapter_4/Slide_22.jpg>]
+<Figures/Chapter_4/Slide_23.jpg, id=2167, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_23.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_23.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_23.jpg  used on input line 278
@@ -2575,8 +2580,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_23.jpg  used on input line 278
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[98]
-<Figures/Chapter_4/Slide_26.jpg, id=2102, 963.6pt x 542.025pt>
+[99]
+<Figures/Chapter_4/Slide_26.jpg, id=2178, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_26.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_26.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_26.jpg  used on input line 290
@@ -2584,10 +2589,10 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_26.jpg  used on input line 290
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[99 <./Figures/Chapter_4/Slide_23.jpg> <./Figures/Chapter_4/Slide_26.jpg>]
+[100 <./Figures/Chapter_4/Slide_23.jpg> <./Figures/Chapter_4/Slide_26.jpg>]
 
-[100]
-<Figures/Chapter_4/Slide_28.jpg, id=2114, 963.6pt x 542.025pt>
+[101]
+<Figures/Chapter_4/Slide_28.jpg, id=2190, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_28.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_28.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_28.jpg  used on input line 368
@@ -2595,8 +2600,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_28.jpg  used on input line 368
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[101 <./Figures/Chapter_4/Slide_28.jpg>]
-<Figures/Chapter_4/Slide_29.jpg, id=2121, 963.6pt x 542.025pt>
+[102 <./Figures/Chapter_4/Slide_28.jpg>]
+<Figures/Chapter_4/Slide_29.jpg, id=2197, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_29.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_29.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_29.jpg  used on input line 403
@@ -2604,8 +2609,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_29.jpg  used on input line 403
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[102 <./Figures/Chapter_4/Slide_29.jpg>]
-<Figures/Chapter_4/Slide_38.jpg, id=2129, 963.6pt x 542.025pt>
+[103 <./Figures/Chapter_4/Slide_29.jpg>]
+<Figures/Chapter_4/Slide_38.jpg, id=2206, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_38.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_38.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_38.jpg  used on input line 427
@@ -2613,8 +2618,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_38.jpg  used on input line 427
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[103 <./Figures/Chapter_4/Slide_38.jpg>]
-<Figures/Chapter_4/Slide_47.jpg, id=2142, 963.6pt x 542.025pt>
+[104 <./Figures/Chapter_4/Slide_38.jpg>]
+<Figures/Chapter_4/Slide_47.jpg, id=2218, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_47.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_47.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_47.jpg  used on input line 463
@@ -2622,8 +2627,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_47.jpg  used on input line 463
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[104 <./Figures/Chapter_4/Slide_47.jpg>]
-<Figures/Chapter_4/Slide_48.jpg, id=2157, 963.6pt x 542.025pt>
+[105 <./Figures/Chapter_4/Slide_47.jpg>]
+<Figures/Chapter_4/Slide_48.jpg, id=2233, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_48.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_48.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_48.jpg  used on input line 500
@@ -2631,8 +2636,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_48.jpg  used on input line 500
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[105 <./Figures/Chapter_4/Slide_48.jpg>]
-<Figures/Chapter_4/Slide_50.jpg, id=2166, 963.6pt x 542.025pt>
+[106 <./Figures/Chapter_4/Slide_48.jpg>]
+<Figures/Chapter_4/Slide_50.jpg, id=2242, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_50.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_50.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_50.jpg  used on input line 552
@@ -2640,8 +2645,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_50.jpg  used on input line 552
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[106]
-<Figures/Chapter_4/Slide_52.jpg, id=2173, 963.6pt x 542.025pt>
+[107]
+<Figures/Chapter_4/Slide_52.jpg, id=2250, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_52.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_52.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_52.jpg  used on input line 568
@@ -2649,8 +2654,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_52.jpg  used on input line 568
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[107 <./Figures/Chapter_4/Slide_50.jpg> <./Figures/Chapter_4/Slide_52.jpg>]
-<Figures/Chapter_4/Slide_55.jpg, id=2183, 963.6pt x 542.025pt>
+[108 <./Figures/Chapter_4/Slide_50.jpg> <./Figures/Chapter_4/Slide_52.jpg>]
+<Figures/Chapter_4/Slide_55.jpg, id=2260, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_55.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_55.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_55.jpg  used on input line 599
@@ -2658,14 +2663,14 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_55.jpg  used on input line 599
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[108 <./Figures/Chapter_4/Slide_55.jpg>]
-<Figures/Chapter_4/Slide_57.jpg, id=2194, 963.6pt x 542.025pt>
+[109 <./Figures/Chapter_4/Slide_55.jpg>]
+<Figures/Chapter_4/Slide_57.jpg, id=2272, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_57.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_57.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_57.jpg  used on input line 613
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_4/Slide_58.jpg, id=2195, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_58.jpg, id=2273, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_58.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_58.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_58.jpg  used on input line 627
@@ -2673,8 +2678,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_58.jpg  used on input line 627
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[109 <./Figures/Chapter_4/Slide_57.jpg> <./Figures/Chapter_4/Slide_58.jpg>]
-<Figures/Chapter_4/Slide_60.jpg, id=2204, 963.6pt x 542.025pt>
+[110 <./Figures/Chapter_4/Slide_57.jpg> <./Figures/Chapter_4/Slide_58.jpg>]
+<Figures/Chapter_4/Slide_60.jpg, id=2281, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_60.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_60.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_60.jpg  used on input line 657
@@ -2682,14 +2687,14 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_60.jpg  used on input line 657
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[110 <./Figures/Chapter_4/Slide_60.jpg>]
-<Figures/Chapter_4/Slide_62.jpg, id=2212, 963.6pt x 542.025pt>
+[111 <./Figures/Chapter_4/Slide_60.jpg>]
+<Figures/Chapter_4/Slide_62.jpg, id=2288, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_62.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_62.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_62.jpg  used on input line 673
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_4/Slide_63.jpg, id=2213, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_63.jpg, id=2289, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_63.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_63.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_63.jpg  used on input line 688
@@ -2697,8 +2702,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_63.jpg  used on input line 688
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[111 <./Figures/Chapter_4/Slide_62.jpg>]
-<Figures/Chapter_4/Slide_65.jpg, id=2219, 963.6pt x 542.025pt>
+[112 <./Figures/Chapter_4/Slide_62.jpg>]
+<Figures/Chapter_4/Slide_65.jpg, id=2295, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_65.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_65.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_65.jpg  used on input line 722
@@ -2706,12 +2711,12 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_65.jpg  used on input line 722
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[112 <./Figures/Chapter_4/Slide_63.jpg>]
+[113 <./Figures/Chapter_4/Slide_63.jpg>]
 
-[113 <./Figures/Chapter_4/Slide_65.jpg>]
+[114 <./Figures/Chapter_4/Slide_65.jpg>]
 
-[114]
-<Figures/Chapter_4/Slide_73.jpg, id=2240, 963.6pt x 542.025pt>
+[115]
+<Figures/Chapter_4/Slide_73.jpg, id=2317, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_73.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_73.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_73.jpg  used on input line 816
@@ -2719,10 +2724,10 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_73.jpg  used on input line 816
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[115 <./Figures/Chapter_4/Slide_73.jpg>]
+[116 <./Figures/Chapter_4/Slide_73.jpg>]
 
-[116]
-<Figures/Chapter_4/Slide_74.jpg, id=2255, 963.6pt x 542.025pt>
+[117]
+<Figures/Chapter_4/Slide_74.jpg, id=2331, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_74.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_74.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_74.jpg  used on input line 927
@@ -2730,12 +2735,12 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_74.jpg  used on input line 927
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[117]
+[118]
 
-[118 <./Figures/Chapter_4/Slide_74.jpg>]
+[119 <./Figures/Chapter_4/Slide_74.jpg>]
 
-[119]
-<Figures/Chapter_4/Slide_78.jpg, id=2272, 963.6pt x 542.025pt>
+[120]
+<Figures/Chapter_4/Slide_78.jpg, id=2348, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_78.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_78.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_78.jpg  used on input line 105
@@ -2743,8 +2748,8 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_78.jpg  used on input line 105
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[120]
-<Figures/Chapter_4/Slide_81.jpg, id=2277, 963.6pt x 542.025pt>
+[121]
+<Figures/Chapter_4/Slide_81.jpg, id=2355, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_81.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_81.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_81.jpg  used on input line 107
@@ -2752,14 +2757,14 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_81.jpg  used on input line 107
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[121 <./Figures/Chapter_4/Slide_78.jpg>]
-<Figures/Chapter_4/Slide_82.jpg, id=2284, 963.6pt x 542.025pt>
+[122 <./Figures/Chapter_4/Slide_78.jpg>]
+<Figures/Chapter_4/Slide_82.jpg, id=2361, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_82.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_82.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_82.jpg  used on input line 108
 1.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_4/Slide_83.jpg, id=2286, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_83.jpg, id=2363, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_83.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_83.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_83.jpg  used on input line 109
@@ -2767,16 +2772,16 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_83.jpg  used on input line 109
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[122 <./Figures/Chapter_4/Slide_81.jpg> <./Figures/Chapter_4/Slide_82.jpg>]
+[123 <./Figures/Chapter_4/Slide_81.jpg> <./Figures/Chapter_4/Slide_82.jpg>]
 
-[123 <./Figures/Chapter_4/Slide_83.jpg>]
-<Figures/Chapter_4/Slide_89.jpg, id=2300, 963.6pt x 542.025pt>
+[124 <./Figures/Chapter_4/Slide_83.jpg>]
+<Figures/Chapter_4/Slide_89.jpg, id=2377, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_89.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_89.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_89.jpg  used on input line 113
 0.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_4/Slide_90.jpg, id=2301, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_90.jpg, id=2378, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_90.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_90.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_90.jpg  used on input line 115
@@ -2784,15 +2789,15 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_90.jpg  used on input line 115
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[124 <./Figures/Chapter_4/Slide_89.jpg>]
+[125 <./Figures/Chapter_4/Slide_89.jpg>]
 
-[125 <./Figures/Chapter_4/Slide_90.jpg>]
+[126 <./Figures/Chapter_4/Slide_90.jpg>]
 Overfull \hbox (24.05519pt too wide) in paragraph at lines 1192--1193
 []\T1/ptm/m/n/10.95 (-20) Yields mod-els that gen-er-al-ize sig-nif-i-cantly be
 t-ter, com-pa-ra-ble to those trained with SGD+Momentum. 
  []
 
-<Figures/Chapter_4/Slide_95.jpg, id=2313, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_95.jpg, id=2389, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_95.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_95.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_95.jpg  used on input line 122
@@ -2800,16 +2805,16 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_95.jpg  used on input line 122
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[126]
+[127]
 
-[127 <./Figures/Chapter_4/Slide_95.jpg>]
-<Figures/Chapter_4/Slide_98.jpg, id=2326, 963.6pt x 542.025pt>
+[128 <./Figures/Chapter_4/Slide_95.jpg>]
+<Figures/Chapter_4/Slide_98.jpg, id=2402, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_98.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_98.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_98.jpg  used on input line 126
 1.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_4/Slide_99.jpg, id=2327, 963.6pt x 542.025pt>
+<Figures/Chapter_4/Slide_99.jpg, id=2403, 963.6pt x 542.025pt>
 File: Figures/Chapter_4/Slide_99.jpg Graphic file (type jpg)
 <use Figures/Chapter_4/Slide_99.jpg>
 Package pdftex.def Info: Figures/Chapter_4/Slide_99.jpg  used on input line 128
@@ -2817,12 +2822,12 @@ Package pdftex.def Info: Figures/Chapter_4/Slide_99.jpg  used on input line 128
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[128 <./Figures/Chapter_4/Slide_98.jpg>]
+[129 <./Figures/Chapter_4/Slide_98.jpg>]
 
-[129 <./Figures/Chapter_4/Slide_99.jpg>])
+[130 <./Figures/Chapter_4/Slide_99.jpg>])
 (./Chapters/Chapter_5_Lecture_5_Neural_Networks.tex
 
-[130]
+[131]
 Chapter 5.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -2830,29 +2835,29 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[131
+[132
 
 ]
-<Figures/Chapter_5/slide_8.jpg, id=2353, 963.6pt x 542.025pt>
+<Figures/Chapter_5/slide_8.jpg, id=2429, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_8.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_8.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_8.jpg  used on input line 33.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_5/slide_9.jpg, id=2354, 963.6pt x 542.025pt>
+<Figures/Chapter_5/slide_9.jpg, id=2430, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_9.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_9.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_9.jpg  used on input line 42.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[132 <./Figures/Chapter_5/Slide_8.jpg> <./Figures/Chapter_5/Slide_9.jpg>]
-<Figures/Chapter_5/slide_13.jpg, id=2362, 963.6pt x 542.025pt>
+[133 <./Figures/Chapter_5/Slide_8.jpg> <./Figures/Chapter_5/Slide_9.jpg>]
+<Figures/Chapter_5/slide_13.jpg, id=2439, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_13.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_13.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_13.jpg  used on input line 54.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_5/slide_15.jpg, id=2363, 963.6pt x 542.025pt>
+<Figures/Chapter_5/slide_15.jpg, id=2440, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_15.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_15.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_15.jpg  used on input line 79.
@@ -2860,14 +2865,14 @@ Package pdftex.def Info: Figures/Chapter_5/slide_15.jpg  used on input line 79.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[133 <./Figures/Chapter_5/Slide_13.jpg>]
-<Figures/Chapter_5/slide_16.jpg, id=2370, 963.6pt x 542.025pt>
+[134 <./Figures/Chapter_5/Slide_13.jpg>]
+<Figures/Chapter_5/slide_16.jpg, id=2446, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_16.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_16.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_16.jpg  used on input line 90.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_5/slide_17.jpg, id=2371, 963.6pt x 542.025pt>
+<Figures/Chapter_5/slide_17.jpg, id=2447, 963.6pt x 542.025pt>
 File: Figures/Chapter_5/slide_17.jpg Graphic file (type jpg)
 <use Figures/Chapter_5/slide_17.jpg>
 Package pdftex.def Info: Figures/Chapter_5/slide_17.jpg  used on input line 100
@@ -2875,8 +2880,8 @@ Package pdftex.def Info: Figures/Chapter_5/slide_17.jpg  used on input line 100
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[134 <./Figures/Chapter_5/Slide_15.jpg> <./Figures/Chapter_5/Slide_16.jpg>]
-<figures/Chapter_5/slide_19.jpg, id=2378, 963.6pt x 542.025pt>
+[135 <./Figures/Chapter_5/Slide_15.jpg> <./Figures/Chapter_5/Slide_16.jpg>]
+<figures/Chapter_5/slide_19.jpg, id=2454, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_19.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_19.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_19.jpg  used on input line 124
@@ -2884,8 +2889,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_19.jpg  used on input line 124
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[135 <./Figures/Chapter_5/Slide_17.jpg>]
-<figures/Chapter_5/slide_23.jpg, id=2388, 963.6pt x 542.025pt>
+[136 <./Figures/Chapter_5/Slide_17.jpg>]
+<figures/Chapter_5/slide_23.jpg, id=2465, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_23.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_23.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_23.jpg  used on input line 132
@@ -2893,14 +2898,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_23.jpg  used on input line 132
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[136 <./Figures/Chapter_5/Slide_19.jpg> <./Figures/Chapter_5/Slide_23.jpg>]
-<figures/Chapter_5/slide_27.jpg, id=2395, 963.6pt x 542.025pt>
+[137 <./Figures/Chapter_5/Slide_19.jpg> <./Figures/Chapter_5/Slide_23.jpg>]
+<figures/Chapter_5/slide_27.jpg, id=2472, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_27.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_27.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_27.jpg  used on input line 142
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_30.jpg, id=2396, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_30.jpg, id=2473, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_30.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_30.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_30.jpg  used on input line 156
@@ -2908,8 +2913,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_30.jpg  used on input line 156
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[137 <./Figures/Chapter_5/Slide_27.jpg>]
-<figures/Chapter_5/slide_32.jpg, id=2402, 963.6pt x 542.025pt>
+[138 <./Figures/Chapter_5/Slide_27.jpg>]
+<figures/Chapter_5/slide_32.jpg, id=2479, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_32.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_32.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_32.jpg  used on input line 169
@@ -2917,14 +2922,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_32.jpg  used on input line 169
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[138 <./Figures/Chapter_5/Slide_30.jpg> <./Figures/Chapter_5/Slide_32.jpg>]
-<figures/Chapter_5/slide_35.jpg, id=2410, 963.6pt x 542.025pt>
+[139 <./Figures/Chapter_5/Slide_30.jpg> <./Figures/Chapter_5/Slide_32.jpg>]
+<figures/Chapter_5/slide_35.jpg, id=2488, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_35.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_35.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_35.jpg  used on input line 185
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_37.jpg, id=2411, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_37.jpg, id=2489, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_37.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_37.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_37.jpg  used on input line 202
@@ -2932,8 +2937,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_37.jpg  used on input line 202
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[139 <./Figures/Chapter_5/Slide_35.jpg>]
-<figures/Chapter_5/slide_42.jpg, id=2420, 963.6pt x 542.025pt>
+[140 <./Figures/Chapter_5/Slide_35.jpg>]
+<figures/Chapter_5/slide_42.jpg, id=2496, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_42.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_42.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_42.jpg  used on input line 219
@@ -2941,14 +2946,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_42.jpg  used on input line 219
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[140 <./Figures/Chapter_5/Slide_37.jpg> <./Figures/Chapter_5/Slide_42.jpg>]
-<figures/Chapter_5/slide_47.jpg, id=2427, 963.6pt x 542.025pt>
+[141 <./Figures/Chapter_5/Slide_37.jpg> <./Figures/Chapter_5/Slide_42.jpg>]
+<figures/Chapter_5/slide_47.jpg, id=2503, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_47.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_47.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_47.jpg  used on input line 237
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_48.jpg, id=2428, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_48.jpg, id=2504, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_48.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_48.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_48.jpg  used on input line 244
@@ -2956,14 +2961,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_48.jpg  used on input line 244
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[141 <./Figures/Chapter_5/Slide_47.jpg> <./Figures/Chapter_5/Slide_48.jpg>]
-<figures/Chapter_5/slide_53.jpg, id=2435, 963.6pt x 542.025pt>
+[142 <./Figures/Chapter_5/Slide_47.jpg> <./Figures/Chapter_5/Slide_48.jpg>]
+<figures/Chapter_5/slide_53.jpg, id=2511, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_53.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_53.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_53.jpg  used on input line 266
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_54.jpg, id=2436, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_54.jpg, id=2512, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_54.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_54.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_54.jpg  used on input line 276
@@ -2971,8 +2976,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_54.jpg  used on input line 276
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[142 <./Figures/Chapter_5/Slide_53.jpg>]
-<figures/Chapter_5/slide_61.jpg, id=2442, 963.6pt x 542.025pt>
+[143 <./Figures/Chapter_5/Slide_53.jpg>]
+<figures/Chapter_5/slide_61.jpg, id=2518, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_61.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_61.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_61.jpg  used on input line 292
@@ -2980,14 +2985,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_61.jpg  used on input line 292
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[143 <./Figures/Chapter_5/Slide_54.jpg> <./Figures/Chapter_5/Slide_61.jpg>]
-<figures/Chapter_5/slide_65.jpg, id=2449, 963.6pt x 542.025pt>
+[144 <./Figures/Chapter_5/Slide_54.jpg> <./Figures/Chapter_5/Slide_61.jpg>]
+<figures/Chapter_5/slide_65.jpg, id=2525, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_65.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_65.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_65.jpg  used on input line 308
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_66.jpg, id=2450, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_66.jpg, id=2526, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_66.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_66.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_66.jpg  used on input line 316
@@ -2995,8 +3000,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_66.jpg  used on input line 316
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[144 <./Figures/Chapter_5/Slide_65.jpg> <./Figures/Chapter_5/Slide_66.jpg>]
-<figures/Chapter_5/slide_67.jpg, id=2457, 963.6pt x 542.025pt>
+[145 <./Figures/Chapter_5/Slide_65.jpg> <./Figures/Chapter_5/Slide_66.jpg>]
+<figures/Chapter_5/slide_67.jpg, id=2534, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_67.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_67.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_67.jpg  used on input line 328
@@ -3004,8 +3009,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_67.jpg  used on input line 328
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[145 <./Figures/Chapter_5/Slide_67.jpg>]
-<figures/Chapter_5/slide_79.jpg, id=2464, 963.6pt x 542.025pt>
+[146 <./Figures/Chapter_5/Slide_67.jpg>]
+<figures/Chapter_5/slide_79.jpg, id=2540, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_79.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_79.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_79.jpg  used on input line 354
@@ -3015,7 +3020,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 368.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 368.
-<figures/Chapter_5/slide_84.jpg, id=2467, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_84.jpg, id=2543, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_84.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_84.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_84.jpg  used on input line 375
@@ -3023,8 +3028,8 @@ Package pdftex.def Info: figures/Chapter_5/slide_84.jpg  used on input line 375
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[146 <./Figures/Chapter_5/Slide_79.jpg>]
-<figures/Chapter_5/slide_89.jpg, id=2476, 963.6pt x 542.025pt>
+[147 <./Figures/Chapter_5/Slide_79.jpg>]
+<figures/Chapter_5/slide_89.jpg, id=2552, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_89.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_89.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_89.jpg  used on input line 394
@@ -3032,14 +3037,14 @@ Package pdftex.def Info: figures/Chapter_5/slide_89.jpg  used on input line 394
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[147 <./Figures/Chapter_5/Slide_84.jpg> <./Figures/Chapter_5/Slide_89.jpg>]
-<figures/Chapter_5/slide_90.jpg, id=2483, 963.6pt x 542.025pt>
+[148 <./Figures/Chapter_5/Slide_84.jpg> <./Figures/Chapter_5/Slide_89.jpg>]
+<figures/Chapter_5/slide_90.jpg, id=2559, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_90.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_90.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_90.jpg  used on input line 415
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_5/slide_93.jpg, id=2484, 963.6pt x 542.025pt>
+<figures/Chapter_5/slide_93.jpg, id=2560, 963.6pt x 542.025pt>
 File: figures/Chapter_5/slide_93.jpg Graphic file (type jpg)
 <use figures/Chapter_5/slide_93.jpg>
 Package pdftex.def Info: figures/Chapter_5/slide_93.jpg  used on input line 437
@@ -3047,36 +3052,36 @@ Package pdftex.def Info: figures/Chapter_5/slide_93.jpg  used on input line 437
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[148 <./Figures/Chapter_5/Slide_90.jpg>])
+[149 <./Figures/Chapter_5/Slide_90.jpg>])
 (./Chapters/Chapter_6_Lecture_6_Backpropagation.tex
 
-[149 <./Figures/Chapter_5/Slide_93.jpg>]
+[150 <./Figures/Chapter_5/Slide_93.jpg>]
 Chapter 6.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-<figures/Chapter_6/slide_5.jpg, id=2495, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_5.jpg, id=2571, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_5.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_5.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_5.jpg  used on input line 29.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[150
+[151
 
 ]
-<figures/Chapter_6/slide_6.jpg, id=2501, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_6.jpg, id=2579, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_6.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_6.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_6.jpg  used on input line 40.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[151 <./Figures/Chapter_6/Slide_5.jpg> <./Figures/Chapter_6/Slide_6.jpg>]
+[152 <./Figures/Chapter_6/Slide_5.jpg> <./Figures/Chapter_6/Slide_6.jpg>]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 61.
-<figures/Chapter_6/slide_26.jpg, id=2509, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_26.jpg, id=2586, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_26.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_26.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_26.jpg  used on input line 65.
@@ -3084,8 +3089,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_26.jpg  used on input line 65.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[152 <./Figures/Chapter_6/Slide_26.jpg>]
-<figures/Chapter_6/slide_35.jpg, id=2516, 963.6pt x 542.025pt>
+[153 <./Figures/Chapter_6/Slide_26.jpg>]
+<figures/Chapter_6/slide_35.jpg, id=2593, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_35.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_35.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_35.jpg  used on input line 99.
@@ -3093,8 +3098,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_35.jpg  used on input line 99.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[153 <./Figures/Chapter_6/Slide_35.jpg>]
-<figures/Chapter_6/slide_31.jpg, id=2523, 963.6pt x 542.025pt>
+[154 <./Figures/Chapter_6/Slide_35.jpg>]
+<figures/Chapter_6/slide_31.jpg, id=2600, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_31.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_31.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_31.jpg  used on input line 121
@@ -3102,8 +3107,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_31.jpg  used on input line 121
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[154 <./Figures/Chapter_6/Slide_31.jpg>]
-<figures/Chapter_6/slide_45.jpg, id=2530, 963.6pt x 542.025pt>
+[155 <./Figures/Chapter_6/Slide_31.jpg>]
+<figures/Chapter_6/slide_45.jpg, id=2606, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_45.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_45.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_45.jpg  used on input line 145
@@ -3111,8 +3116,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_45.jpg  used on input line 145
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[155 <./Figures/Chapter_6/Slide_45.jpg>]
-<figures/Chapter_6/slide_49.jpg, id=2536, 963.6pt x 542.025pt>
+[156 <./Figures/Chapter_6/Slide_45.jpg>]
+<figures/Chapter_6/slide_49.jpg, id=2612, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_49.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_49.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_49.jpg  used on input line 202
@@ -3120,8 +3125,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_49.jpg  used on input line 202
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[156]
-<figures/Chapter_6/slide_52.jpg, id=2541, 963.6pt x 542.025pt>
+[157]
+<figures/Chapter_6/slide_52.jpg, id=2618, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_52.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_52.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_52.jpg  used on input line 215
@@ -3129,8 +3134,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_52.jpg  used on input line 215
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[157 <./Figures/Chapter_6/Slide_49.jpg> <./Figures/Chapter_6/Slide_52.jpg>]
-<figures/Chapter_6/slide_60.jpg, id=2549, 963.6pt x 542.025pt>
+[158 <./Figures/Chapter_6/Slide_49.jpg> <./Figures/Chapter_6/Slide_52.jpg>]
+<figures/Chapter_6/slide_60.jpg, id=2625, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_60.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_60.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_60.jpg  used on input line 262
@@ -3138,7 +3143,7 @@ Package pdftex.def Info: figures/Chapter_6/slide_60.jpg  used on input line 262
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[158]
+[159]
 Overfull \hbox (40.29076pt too wide) in paragraph at lines 297--299
 \T1/ptm/m/n/10.95 (-20) en-gine. In Py-Torch, func-tions that sup-port au-to-ma
 tic dif-fer-en-ti-a-tion in-herit from \T1/cmtt/m/n/10.95 torch.autograd.Functi
@@ -3147,8 +3152,8 @@ on\T1/ptm/m/n/10.95 (-20) .
 
 
 
-[159 <./Figures/Chapter_6/Slide_60.jpg>]
-<figures/Chapter_6/slide_61.jpg, id=2562, 963.6pt x 542.025pt>
+[160 <./Figures/Chapter_6/Slide_60.jpg>]
+<figures/Chapter_6/slide_61.jpg, id=2638, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_61.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_61.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_61.jpg  used on input line 305
@@ -3156,14 +3161,14 @@ Package pdftex.def Info: figures/Chapter_6/slide_61.jpg  used on input line 305
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[160 <./Figures/Chapter_6/Slide_61.jpg>]
-<figures/Chapter_6/slide_66.jpg, id=2570, 963.6pt x 542.025pt>
+[161 <./Figures/Chapter_6/Slide_61.jpg>]
+<figures/Chapter_6/slide_66.jpg, id=2646, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_66.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_66.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_66.jpg  used on input line 331
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_6/slide_70.jpg, id=2571, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_70.jpg, id=2647, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_70.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_70.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_70.jpg  used on input line 345
@@ -3171,8 +3176,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_70.jpg  used on input line 345
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[161 <./Figures/Chapter_6/Slide_66.jpg> <./Figures/Chapter_6/Slide_70.jpg>]
-<figures/Chapter_6/slide_74.jpg, id=2578, 963.6pt x 542.025pt>
+[162 <./Figures/Chapter_6/Slide_66.jpg> <./Figures/Chapter_6/Slide_70.jpg>]
+<figures/Chapter_6/slide_74.jpg, id=2654, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_74.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_74.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_74.jpg  used on input line 379
@@ -3180,12 +3185,12 @@ Package pdftex.def Info: figures/Chapter_6/slide_74.jpg  used on input line 379
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[162 <./Figures/Chapter_6/Slide_74.jpg>]
+[163 <./Figures/Chapter_6/Slide_74.jpg>]
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<figures/Chapter_6/slide_80.jpg, id=2585, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_80.jpg, id=2662, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_80.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_80.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_80.jpg  used on input line 423
@@ -3193,8 +3198,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_80.jpg  used on input line 423
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[163 <./Figures/Chapter_6/Slide_80.jpg>]
-<figures/Chapter_6/slide_81.jpg, id=2593, 963.6pt x 542.025pt>
+[164 <./Figures/Chapter_6/Slide_80.jpg>]
+<figures/Chapter_6/slide_81.jpg, id=2669, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_81.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_81.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_81.jpg  used on input line 462
@@ -3202,8 +3207,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_81.jpg  used on input line 462
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[164 <./Figures/Chapter_6/Slide_81.jpg>]
-<figures/Chapter_6/slide_98.jpg, id=2599, 963.6pt x 542.025pt>
+[165 <./Figures/Chapter_6/Slide_81.jpg>]
+<figures/Chapter_6/slide_98.jpg, id=2675, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_98.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_98.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_98.jpg  used on input line 520
@@ -3211,14 +3216,14 @@ Package pdftex.def Info: figures/Chapter_6/slide_98.jpg  used on input line 520
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[165 <./Figures/Chapter_6/Slide_98.jpg>]
-<figures/Chapter_6/slide_102.jpg, id=2606, 963.6pt x 542.025pt>
+[166 <./Figures/Chapter_6/Slide_98.jpg>]
+<figures/Chapter_6/slide_102.jpg, id=2683, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_102.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_102.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_102.jpg  used on input line 56
 3.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_6/slide_104.jpg, id=2607, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_104.jpg, id=2684, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_104.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_104.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_104.jpg  used on input line 59
@@ -3226,8 +3231,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_104.jpg  used on input line 59
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[166 <./Figures/Chapter_6/Slide_102.jpg>]
-<figures/Chapter_6/slide_107.jpg, id=2615, 963.6pt x 542.025pt>
+[167 <./Figures/Chapter_6/Slide_102.jpg>]
+<figures/Chapter_6/slide_107.jpg, id=2692, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_107.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_107.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_107.jpg  used on input line 62
@@ -3235,8 +3240,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_107.jpg  used on input line 62
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[167 <./Figures/Chapter_6/Slide_104.jpg> <./Figures/Chapter_6/Slide_107.jpg>]
-<figures/Chapter_6/slide_111.jpg, id=2622, 963.6pt x 542.025pt>
+[168 <./Figures/Chapter_6/Slide_104.jpg> <./Figures/Chapter_6/Slide_107.jpg>]
+<figures/Chapter_6/slide_111.jpg, id=2699, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_111.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_111.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_111.jpg  used on input line 66
@@ -3244,14 +3249,14 @@ Package pdftex.def Info: figures/Chapter_6/slide_111.jpg  used on input line 66
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[168 <./Figures/Chapter_6/Slide_111.jpg>]
-<figures/Chapter_6/slide_114.jpg, id=2630, 963.6pt x 542.025pt>
+[169 <./Figures/Chapter_6/Slide_111.jpg>]
+<figures/Chapter_6/slide_114.jpg, id=2708, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_114.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_114.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_114.jpg  used on input line 67
 4.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_6/slide_120.jpg, id=2631, 963.6pt x 542.025pt>
+<figures/Chapter_6/slide_120.jpg, id=2709, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_120.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_120.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_120.jpg  used on input line 70
@@ -3259,8 +3264,8 @@ Package pdftex.def Info: figures/Chapter_6/slide_120.jpg  used on input line 70
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[169 <./Figures/Chapter_6/Slide_114.jpg>]
-<figures/Chapter_6/slide_121.jpg, id=2640, 963.6pt x 542.025pt>
+[170 <./Figures/Chapter_6/Slide_114.jpg>]
+<figures/Chapter_6/slide_121.jpg, id=2717, 963.6pt x 542.025pt>
 File: figures/Chapter_6/slide_121.jpg Graphic file (type jpg)
 <use figures/Chapter_6/slide_121.jpg>
 Package pdftex.def Info: figures/Chapter_6/slide_121.jpg  used on input line 73
@@ -3268,32 +3273,32 @@ Package pdftex.def Info: figures/Chapter_6/slide_121.jpg  used on input line 73
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[170 <./Figures/Chapter_6/Slide_120.jpg>])
+[171 <./Figures/Chapter_6/Slide_120.jpg>])
 (./Chapters/Chapter_7_Lecture_7_Convolutional_Networks.tex
 
-[171 <./Figures/Chapter_6/Slide_121.jpg>]
+[172 <./Figures/Chapter_6/Slide_121.jpg>]
 Chapter 7.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-<figures/Chapter_7/slide_8.jpg, id=2654, 963.6pt x 542.025pt>
+<figures/Chapter_7/slide_8.jpg, id=2730, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_8.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_8.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_8.jpg  used on input line 19.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[172
+[173
 
  <./Figures/Chapter_7/Slide_8.jpg>]
-<figures/Chapter_7/slide_10.jpg, id=2660, 963.6pt x 542.025pt>
+<figures/Chapter_7/slide_10.jpg, id=2736, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_10.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_10.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_10.jpg  used on input line 40.
 
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_7/slide_17.jpg, id=2661, 963.6pt x 542.025pt>
+<figures/Chapter_7/slide_17.jpg, id=2737, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_17.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_17.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_17.jpg  used on input line 52.
@@ -3301,10 +3306,10 @@ Package pdftex.def Info: figures/Chapter_7/slide_17.jpg  used on input line 52.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[173 <./Figures/Chapter_7/Slide_10.jpg>]
+[174 <./Figures/Chapter_7/Slide_10.jpg>]
 
-[174 <./Figures/Chapter_7/Slide_17.jpg>]
-<figures/Chapter_7/slide_19.jpg, id=2676, 963.6pt x 542.025pt>
+[175 <./Figures/Chapter_7/Slide_17.jpg>]
+<figures/Chapter_7/slide_19.jpg, id=2753, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_19.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_19.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_19.jpg  used on input line 116
@@ -3312,8 +3317,8 @@ Package pdftex.def Info: figures/Chapter_7/slide_19.jpg  used on input line 116
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[175 <./Figures/Chapter_7/Slide_19.jpg>]
-<figures/Chapter_7/2d_conv/grayscale_zoom.jpg, id=2684, 835.923pt x 280.32pt>
+[176 <./Figures/Chapter_7/Slide_19.jpg>]
+<figures/Chapter_7/2d_conv/grayscale_zoom.jpg, id=2760, 835.923pt x 280.32pt>
 File: figures/Chapter_7/2d_conv/grayscale_zoom.jpg Graphic file (type jpg)
 <use figures/Chapter_7/2d_conv/grayscale_zoom.jpg>
 Package pdftex.def Info: figures/Chapter_7/2d_conv/grayscale_zoom.jpg  used on 
@@ -3321,17 +3326,17 @@ input line 128.
 (pdftex.def)             Requested size: 345.75935pt x 115.94566pt.
 
 
-[176 <./Figures/Chapter_7/2d_conv/grayscale_zoom.jpg>]
+[177 <./Figures/Chapter_7/2d_conv/grayscale_zoom.jpg>]
 
-[177]
-<figures/Chapter_7/2d_conv/convolve_gx_1.jpg, id=2705, 928.21782pt x 484.05844p
+[178]
+<figures/Chapter_7/2d_conv/convolve_gx_1.jpg, id=2781, 928.21782pt x 484.05844p
 t>
 File: figures/Chapter_7/2d_conv/convolve_gx_1.jpg Graphic file (type jpg)
 <use figures/Chapter_7/2d_conv/convolve_gx_1.jpg>
 Package pdftex.def Info: figures/Chapter_7/2d_conv/convolve_gx_1.jpg  used on i
 nput line 232.
 (pdftex.def)             Requested size: 345.75935pt x 180.31013pt.
-<figures/Chapter_7/2d_conv/convolve_gx_2.jpg, id=2706, 1107.38719pt x 321.45094
+<figures/Chapter_7/2d_conv/convolve_gx_2.jpg, id=2782, 1107.38719pt x 321.45094
 pt>
 File: figures/Chapter_7/2d_conv/convolve_gx_2.jpg Graphic file (type jpg)
 <use figures/Chapter_7/2d_conv/convolve_gx_2.jpg>
@@ -3340,15 +3345,15 @@ nput line 239.
 (pdftex.def)             Requested size: 345.75935pt x 100.36487pt.
 
 
-[178 <./Figures/Chapter_7/2d_conv/convolve_gx_1.jpg> <./Figures/Chapter_7/2d_co
+[179 <./Figures/Chapter_7/2d_conv/convolve_gx_1.jpg> <./Figures/Chapter_7/2d_co
 nv/convolve_gx_2.jpg>]
-<figures/Chapter_7/2d_conv/sobel_eg.jpg, id=2713, 626.34pt x 162.6075pt>
+<figures/Chapter_7/2d_conv/sobel_eg.jpg, id=2789, 626.34pt x 162.6075pt>
 File: figures/Chapter_7/2d_conv/sobel_eg.jpg Graphic file (type jpg)
 <use figures/Chapter_7/2d_conv/sobel_eg.jpg>
 Package pdftex.def Info: figures/Chapter_7/2d_conv/sobel_eg.jpg  used on input 
 line 257.
 (pdftex.def)             Requested size: 345.75935pt x 89.76688pt.
-<figures/Chapter_7/2d_conv/sobel_end.jpg, id=2714, 331.2375pt x 217.5628pt>
+<figures/Chapter_7/2d_conv/sobel_end.jpg, id=2790, 331.2375pt x 217.5628pt>
 File: figures/Chapter_7/2d_conv/sobel_end.jpg Graphic file (type jpg)
 <use figures/Chapter_7/2d_conv/sobel_end.jpg>
 Package pdftex.def Info: figures/Chapter_7/2d_conv/sobel_end.jpg  used on input
@@ -3356,9 +3361,9 @@ Package pdftex.def Info: figures/Chapter_7/2d_conv/sobel_end.jpg  used on input
 (pdftex.def)             Requested size: 345.75935pt x 227.11314pt.
 
 
-[179 <./Figures/Chapter_7/2d_conv/sobel_eg.jpg> <./Figures/Chapter_7/2d_conv/so
+[180 <./Figures/Chapter_7/2d_conv/sobel_eg.jpg> <./Figures/Chapter_7/2d_conv/so
 bel_end.jpg>]
-<figures/Chapter_7/multi_dim_conv/lotus_channels.jpg, id=2724, 925.20656pt x 48
+<figures/Chapter_7/multi_dim_conv/lotus_channels.jpg, id=2800, 925.20656pt x 48
 0.29437pt>
 File: figures/Chapter_7/multi_dim_conv/lotus_channels.jpg Graphic file (type jp
 g)
@@ -3368,8 +3373,8 @@ sed on input line 280.
 (pdftex.def)             Requested size: 345.75935pt x 179.487pt.
 
 
-[180 <./Figures/Chapter_7/multi_dim_conv/lotus_channels.jpg>]
-<figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg, id=2731, 789.70032pt x 52
+[181 <./Figures/Chapter_7/multi_dim_conv/lotus_channels.jpg>]
+<figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg, id=2809, 789.70032pt x 52
 2.45187pt>
 File: figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg Graphic file (type jp
 g)
@@ -3377,7 +3382,7 @@ g)
 Package pdftex.def Info: figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg  u
 sed on input line 294.
 (pdftex.def)             Requested size: 345.75935pt x 228.74751pt.
-<figures/Chapter_7/multi_dim_conv/channel_bias_patch.jpg, id=2732, 851.43094pt 
+<figures/Chapter_7/multi_dim_conv/channel_bias_patch.jpg, id=2810, 851.43094pt 
 x 500.62032pt>
 File: figures/Chapter_7/multi_dim_conv/channel_bias_patch.jpg Graphic file (typ
 e jpg)
@@ -3387,9 +3392,9 @@ g  used on input line 301.
 (pdftex.def)             Requested size: 345.75935pt x 203.30011pt.
 
 
-[181 <./Figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg> <./Figures/Chapter
+[182 <./Figures/Chapter_7/multi_dim_conv/eg_lotus_patch.jpg> <./Figures/Chapter
 _7/multi_dim_conv/channel_bias_patch.jpg>]
-<figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg, id=2741, 939.51pt x 5
+<figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg, id=2818, 939.51pt x 5
 14.17094pt>
 File: figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg Graphic file (typ
 e jpg)
@@ -3397,7 +3402,7 @@ e jpg)
 Package pdftex.def Info: figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jp
 g  used on input line 317.
 (pdftex.def)             Requested size: 345.75935pt x 189.22034pt.
-<figures/Chapter_7/multi_dim_conv/multi_dim_filter_2.jpg, id=2742, 942.52126pt 
+<figures/Chapter_7/multi_dim_conv/multi_dim_filter_2.jpg, id=2819, 942.52126pt 
 x 502.12593pt>
 File: figures/Chapter_7/multi_dim_conv/multi_dim_filter_2.jpg Graphic file (typ
 e jpg)
@@ -3407,17 +3412,17 @@ g  used on input line 325.
 (pdftex.def)             Requested size: 345.75935pt x 184.20535pt.
 
 
-[182 <./Figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg> <./Figures/Cha
+[183 <./Figures/Chapter_7/multi_dim_conv/multi_dim_filter_1.jpg> <./Figures/Cha
 pter_7/multi_dim_conv/multi_dim_filter_2.jpg>]
 
-[183]
-<figures/Chapter_7/slide_22.jpg, id=2759, 963.6pt x 542.025pt>
+[184]
+<figures/Chapter_7/slide_22.jpg, id=2836, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_22.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_22.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_22.jpg  used on input line 365
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_7/slide_24.jpg, id=2760, 963.6pt x 542.025pt>
+<figures/Chapter_7/slide_24.jpg, id=2837, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_24.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_24.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_24.jpg  used on input line 397
@@ -3425,8 +3430,8 @@ Package pdftex.def Info: figures/Chapter_7/slide_24.jpg  used on input line 397
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[184 <./Figures/Chapter_7/Slide_22.jpg>]
-<figures/Chapter_7/slide_25.jpg, id=2769, 963.6pt x 542.025pt>
+[185 <./Figures/Chapter_7/Slide_22.jpg>]
+<figures/Chapter_7/slide_25.jpg, id=2845, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_25.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_25.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_25.jpg  used on input line 425
@@ -3434,8 +3439,8 @@ Package pdftex.def Info: figures/Chapter_7/slide_25.jpg  used on input line 425
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[185 <./Figures/Chapter_7/Slide_24.jpg>]
-<figures/Chapter_7/slide_28.jpg, id=2775, 963.6pt x 542.025pt>
+[186 <./Figures/Chapter_7/Slide_24.jpg>]
+<figures/Chapter_7/slide_28.jpg, id=2851, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_28.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_28.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_28.jpg  used on input line 461
@@ -3443,16 +3448,16 @@ Package pdftex.def Info: figures/Chapter_7/slide_28.jpg  used on input line 461
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[186 <./Figures/Chapter_7/Slide_25.jpg>]
+[187 <./Figures/Chapter_7/Slide_25.jpg>]
 
-[187 <./Figures/Chapter_7/Slide_28.jpg>]
-<figures/Chapter_7/slide_40.jpg, id=2787, 963.6pt x 542.025pt>
+[188 <./Figures/Chapter_7/Slide_28.jpg>]
+<figures/Chapter_7/slide_40.jpg, id=2863, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_40.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_40.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_40.jpg  used on input line 496
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<figures/Chapter_7/slide_42.jpg, id=2788, 963.6pt x 542.025pt>
+<figures/Chapter_7/slide_42.jpg, id=2864, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_42.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_42.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_42.jpg  used on input line 515
@@ -3460,8 +3465,8 @@ Package pdftex.def Info: figures/Chapter_7/slide_42.jpg  used on input line 515
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[188 <./Figures/Chapter_7/Slide_40.jpg>]
-<figures/Chapter_7/slide_43.jpg, id=2795, 963.6pt x 542.025pt>
+[189 <./Figures/Chapter_7/Slide_40.jpg>]
+<figures/Chapter_7/slide_43.jpg, id=2871, 963.6pt x 542.025pt>
 File: figures/Chapter_7/slide_43.jpg Graphic file (type jpg)
 <use figures/Chapter_7/slide_43.jpg>
 Package pdftex.def Info: figures/Chapter_7/slide_43.jpg  used on input line 531
@@ -3469,8 +3474,8 @@ Package pdftex.def Info: figures/Chapter_7/slide_43.jpg  used on input line 531
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[189 <./Figures/Chapter_7/Slide_42.jpg> <./Figures/Chapter_7/Slide_43.jpg>]
-<figures/Chapter_7/stride_eg.jpg, id=2803, 771.63281pt x 298.86656pt>
+[190 <./Figures/Chapter_7/Slide_42.jpg> <./Figures/Chapter_7/Slide_43.jpg>]
+<figures/Chapter_7/stride_eg.jpg, id=2879, 771.63281pt x 298.86656pt>
 File: figures/Chapter_7/stride_eg.jpg Graphic file (type jpg)
 <use figures/Chapter_7/stride_eg.jpg>
 Package pdftex.def Info: figures/Chapter_7/stride_eg.jpg  used on input line 54
@@ -3478,8 +3483,8 @@ Package pdftex.def Info: figures/Chapter_7/stride_eg.jpg  used on input line 54
 (pdftex.def)             Requested size: 345.75935pt x 133.91866pt.
 
 
-[190 <./Figures/Chapter_7/stride_eg.jpg>]
-<Figures/Chapter_7/slide_32.jpg, id=2809, 963.6pt x 542.025pt>
+[191 <./Figures/Chapter_7/stride_eg.jpg>]
+<Figures/Chapter_7/slide_32.jpg, id=2885, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_32.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_32.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_32.jpg  used on input line 573
@@ -3487,8 +3492,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_32.jpg  used on input line 573
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[191 <./Figures/Chapter_7/Slide_32.jpg>]
-<Figures/Chapter_7/slide_53.jpg, id=2816, 963.6pt x 542.025pt>
+[192 <./Figures/Chapter_7/Slide_32.jpg>]
+<Figures/Chapter_7/slide_53.jpg, id=2892, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_53.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_53.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_53.jpg  used on input line 630
@@ -3496,8 +3501,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_53.jpg  used on input line 630
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[192 <./Figures/Chapter_7/Slide_53.jpg>]
-<Figures/Chapter_7/backprop_conv_graph.jpg, id=2823, 542.025pt x 484.81125pt>
+[193 <./Figures/Chapter_7/Slide_53.jpg>]
+<Figures/Chapter_7/backprop_conv_graph.jpg, id=2900, 542.025pt x 484.81125pt>
 File: Figures/Chapter_7/backprop_conv_graph.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/backprop_conv_graph.jpg>
 Package pdftex.def Info: Figures/Chapter_7/backprop_conv_graph.jpg  used on inp
@@ -3505,10 +3510,10 @@ ut line 685.
 (pdftex.def)             Requested size: 345.75935pt x 309.27206pt.
 
 
-[193]
+[194]
 
-[194 <./Figures/Chapter_7/backprop_conv_graph.jpg>]
-<Figures/Chapter_7/backprop_through_convolutions.jpg, id=2841, 722.7pt x 411.53
+[195 <./Figures/Chapter_7/backprop_conv_graph.jpg>]
+<Figures/Chapter_7/backprop_through_convolutions.jpg, id=2918, 722.7pt x 411.53
 75pt>
 File: Figures/Chapter_7/backprop_through_convolutions.jpg Graphic file (type jp
 g)
@@ -3518,8 +3523,8 @@ sed on input line 753.
 (pdftex.def)             Requested size: 345.75935pt x 196.88896pt.
 
 
-[195 <./Figures/Chapter_7/backprop_through_convolutions.jpg>]
-<Figures/Chapter_7/slide_57.jpg, id=2851, 963.6pt x 542.025pt>
+[196 <./Figures/Chapter_7/backprop_through_convolutions.jpg>]
+<Figures/Chapter_7/slide_57.jpg, id=2928, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_57.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_57.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_57.jpg  used on input line 782
@@ -3527,7 +3532,7 @@ Package pdftex.def Info: Figures/Chapter_7/slide_57.jpg  used on input line 782
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[196 <./Figures/Chapter_7/Slide_57.jpg>]
+[197 <./Figures/Chapter_7/Slide_57.jpg>]
 Overfull \hbox (2.13405pt too wide) detected at line 829
   $[] \OT1/ztmcm/m/n/10.95 = 16[]384 + 64 + 147[]456 + 256  =  164[]160\OML/ztm
 cm/m/it/10.95 ;  [] \OMS/ztmcm/m/n/10.95 ^^Y \OT1/ztmcm/m/n/10.95 67 \OMS/ztmcm
@@ -3538,8 +3543,8 @@ mcm/m/n/10.95 10[] = 634 \OMS/ztmcm/m/n/10.95 ^^B \OT1/ztmcm/m/n/10.95 10[]\OML
 
 
 
-[197]
-<Figures/Chapter_7/slide_62.jpg, id=2869, 963.6pt x 542.025pt>
+[198]
+<Figures/Chapter_7/slide_62.jpg, id=2945, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_62.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_62.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_62.jpg  used on input line 919
@@ -3547,23 +3552,23 @@ Package pdftex.def Info: Figures/Chapter_7/slide_62.jpg  used on input line 919
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[198]
+[199]
 Overfull \hbox (3.71713pt too wide) detected at line 980
  $\OML/ztmcm/m/it/10.95 X \OT1/ztmcm/m/n/10.95 = []$ 
  []
 
 
 
-[199 <./Figures/Chapter_7/Slide_62.jpg>]
-
-[200]
+[200 <./Figures/Chapter_7/Slide_62.jpg>]
 
 [201]
 
 [202]
 
 [203]
-<Figures/Chapter_7/depthwise_conv.png, id=2928, 664.73344pt x 572.1375pt>
+
+[204]
+<Figures/Chapter_7/depthwise_conv.png, id=3004, 664.73344pt x 572.1375pt>
 File: Figures/Chapter_7/depthwise_conv.png Graphic file (type png)
 <use Figures/Chapter_7/depthwise_conv.png>
 Package pdftex.def Info: Figures/Chapter_7/depthwise_conv.png  used on input li
@@ -3571,8 +3576,8 @@ ne 1245.
 (pdftex.def)             Requested size: 345.75935pt x 297.60051pt.
 
 
-[204 <./Figures/Chapter_7/depthwise_conv.png>]
-<Figures/Chapter_7/slide_63.jpg, id=2942, 963.6pt x 542.025pt>
+[205 <./Figures/Chapter_7/depthwise_conv.png>]
+<Figures/Chapter_7/slide_63.jpg, id=3019, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_63.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_63.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_63.jpg  used on input line 130
@@ -3580,8 +3585,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_63.jpg  used on input line 130
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[205]
-<Figures/Chapter_7/slide_64.jpg, id=2951, 963.6pt x 542.025pt>
+[206]
+<Figures/Chapter_7/slide_64.jpg, id=3027, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_64.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_64.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_64.jpg  used on input line 131
@@ -3589,14 +3594,14 @@ Package pdftex.def Info: Figures/Chapter_7/slide_64.jpg  used on input line 131
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[206 <./Figures/Chapter_7/Slide_63.jpg> <./Figures/Chapter_7/Slide_64.jpg>]
-<Figures/Chapter_7/slide_67.jpg, id=2958, 963.6pt x 542.025pt>
+[207 <./Figures/Chapter_7/Slide_63.jpg> <./Figures/Chapter_7/Slide_64.jpg>]
+<Figures/Chapter_7/slide_67.jpg, id=3035, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_67.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_67.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_67.jpg  used on input line 133
 7.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_7/slide_68.jpg, id=2959, 963.6pt x 542.025pt>
+<Figures/Chapter_7/slide_68.jpg, id=3036, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_68.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_68.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_68.jpg  used on input line 135
@@ -3604,16 +3609,16 @@ Package pdftex.def Info: Figures/Chapter_7/slide_68.jpg  used on input line 135
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[207 <./Figures/Chapter_7/Slide_67.jpg>]
+[208 <./Figures/Chapter_7/Slide_67.jpg>]
 
-[208 <./Figures/Chapter_7/Slide_68.jpg>]
-
-[209]
+[209 <./Figures/Chapter_7/Slide_68.jpg>]
 
 [210]
 
 [211]
-<Figures/Chapter_7/slide_80.jpg, id=3008, 963.6pt x 542.025pt>
+
+[212]
+<Figures/Chapter_7/slide_80.jpg, id=3084, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_80.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_80.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_80.jpg  used on input line 158
@@ -3621,9 +3626,7 @@ Package pdftex.def Info: Figures/Chapter_7/slide_80.jpg  used on input line 158
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[212 <./Figures/Chapter_7/Slide_80.jpg>]
-
-[213]
+[213 <./Figures/Chapter_7/Slide_80.jpg>]
 
 [214]
 
@@ -3632,7 +3635,9 @@ Package pdftex.def Info: Figures/Chapter_7/slide_80.jpg  used on input line 158
 [216]
 
 [217]
-<Figures/Chapter_7/sigmoid_and_derivative.png.png, id=3049, 903.375pt x 677.531
+
+[218]
+<Figures/Chapter_7/sigmoid_and_derivative.png.png, id=3125, 903.375pt x 677.531
 25pt>
 File: Figures/Chapter_7/sigmoid_and_derivative.png.png Graphic file (type png)
 <use Figures/Chapter_7/sigmoid_and_derivative.png.png>
@@ -3641,16 +3646,16 @@ Package pdftex.def Info: Figures/Chapter_7/sigmoid_and_derivative.png.png  used
 (pdftex.def)             Requested size: 345.75935pt x 259.32544pt.
 
 
-[218 <./Figures/Chapter_7/sigmoid_and_derivative.png.png>]
-
-[219]
+[219 <./Figures/Chapter_7/sigmoid_and_derivative.png.png>]
 
 [220]
 
 [221]
 
 [222]
-<Figures/Chapter_7/slide_86.jpg, id=3092, 963.6pt x 542.025pt>
+
+[223]
+<Figures/Chapter_7/slide_86.jpg, id=3170, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_86.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_86.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_86.jpg  used on input line 201
@@ -3658,8 +3663,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_86.jpg  used on input line 201
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[223 <./Figures/Chapter_7/Slide_86.jpg>]
-<Figures/Chapter_7/slide_92.jpg, id=3102, 963.6pt x 542.025pt>
+[224 <./Figures/Chapter_7/Slide_86.jpg>]
+<Figures/Chapter_7/slide_92.jpg, id=3178, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_92.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_92.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_92.jpg  used on input line 205
@@ -3667,8 +3672,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_92.jpg  used on input line 205
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[224 <./Figures/Chapter_7/Slide_92.jpg>]
-<Figures/Chapter_7/batchnorm_training_stability.jpg, id=3113, 405.01312pt x 377
+[225 <./Figures/Chapter_7/Slide_92.jpg>]
+<Figures/Chapter_7/batchnorm_training_stability.jpg, id=3189, 405.01312pt x 377
 .91188pt>
 File: Figures/Chapter_7/batchnorm_training_stability.jpg Graphic file (type jpg
 )
@@ -3676,7 +3681,7 @@ File: Figures/Chapter_7/batchnorm_training_stability.jpg Graphic file (type jpg
 Package pdftex.def Info: Figures/Chapter_7/batchnorm_training_stability.jpg  us
 ed on input line 2079.
 (pdftex.def)             Requested size: 345.75935pt x 322.62785pt.
-<Figures/Chapter_7/batchnorm_loss_smooth.jpg, id=3114, 1049.42062pt x 305.64188
+<Figures/Chapter_7/batchnorm_loss_smooth.jpg, id=3190, 1049.42062pt x 305.64188
 pt>
 File: Figures/Chapter_7/batchnorm_loss_smooth.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/batchnorm_loss_smooth.jpg>
@@ -3685,14 +3690,14 @@ nput line 2089.
 (pdftex.def)             Requested size: 345.75935pt x 100.69888pt.
 
 
-[225 <./Figures/Chapter_7/batchnorm_training_stability.jpg>]
+[226 <./Figures/Chapter_7/batchnorm_training_stability.jpg>]
 
-[226 <./Figures/Chapter_7/batchnorm_loss_smooth.jpg>]
-
-[227]
+[227 <./Figures/Chapter_7/batchnorm_loss_smooth.jpg>]
 
 [228]
-<Figures/Chapter_7/slide_91.jpg, id=3151, 963.6pt x 542.025pt>
+
+[229]
+<Figures/Chapter_7/slide_91.jpg, id=3228, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_91.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_91.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_91.jpg  used on input line 221
@@ -3700,8 +3705,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_91.jpg  used on input line 221
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[229 <./Figures/Chapter_7/Slide_91.jpg>]
-<Figures/Chapter_7/slide_96.jpg, id=3160, 963.6pt x 542.025pt>
+[230 <./Figures/Chapter_7/Slide_91.jpg>]
+<Figures/Chapter_7/slide_96.jpg, id=3236, 963.6pt x 542.025pt>
 File: Figures/Chapter_7/slide_96.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_96.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_96.jpg  used on input line 225
@@ -3709,7 +3714,7 @@ Package pdftex.def Info: Figures/Chapter_7/slide_96.jpg  used on input line 225
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[230 <./Figures/Chapter_7/Slide_96.jpg>]
+[231 <./Figures/Chapter_7/Slide_96.jpg>]
 File: Figures/Chapter_7/slide_96.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/slide_96.jpg>
 Package pdftex.def Info: Figures/Chapter_7/slide_96.jpg  used on input line 227
@@ -3717,8 +3722,8 @@ Package pdftex.def Info: Figures/Chapter_7/slide_96.jpg  used on input line 227
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[231]
-<Figures/Chapter_7/layer_norm.jpg, id=3177, 1505.625pt x 376.40625pt>
+[232]
+<Figures/Chapter_7/layer_norm.jpg, id=3253, 1505.625pt x 376.40625pt>
 File: Figures/Chapter_7/layer_norm.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/layer_norm.jpg>
 Package pdftex.def Info: Figures/Chapter_7/layer_norm.jpg  used on input line 2
@@ -3726,8 +3731,8 @@ Package pdftex.def Info: Figures/Chapter_7/layer_norm.jpg  used on input line 2
 (pdftex.def)             Requested size: 345.75935pt x 86.43951pt.
 
 
-[232 <./Figures/Chapter_7/layer_norm.jpg>]
-<Figures/Chapter_7/instance_norm_visual.jpg, id=3194, 750.55406pt x 207.02344pt
+[233 <./Figures/Chapter_7/layer_norm.jpg>]
+<Figures/Chapter_7/instance_norm_visual.jpg, id=3271, 750.55406pt x 207.02344pt
 >
 File: Figures/Chapter_7/instance_norm_visual.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/instance_norm_visual.jpg>
@@ -3736,8 +3741,8 @@ put line 2367.
 (pdftex.def)             Requested size: 345.75935pt x 95.37091pt.
 
 
-[233 <./Figures/Chapter_7/instance_norm_visual.jpg>]
-<Figures/Chapter_7/normalizations_comparison.jpg, id=3206, 542.025pt x 151.3153
+[234 <./Figures/Chapter_7/instance_norm_visual.jpg>]
+<Figures/Chapter_7/normalizations_comparison.jpg, id=3283, 542.025pt x 151.3153
 pt>
 File: Figures/Chapter_7/normalizations_comparison.jpg Graphic file (type jpg)
 <use Figures/Chapter_7/normalizations_comparison.jpg>
@@ -3746,13 +3751,13 @@ on input line 2410.
 (pdftex.def)             Requested size: 345.75935pt x 96.52745pt.
 
 
-[234 <./Figures/Chapter_7/normalizations_comparison.jpg>]
-
-[235]
+[235 <./Figures/Chapter_7/normalizations_comparison.jpg>]
 
 [236]
 
 [237]
+
+[238]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 2626.
@@ -3763,9 +3768,9 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 
-[238]) (./Chapters/Chapter_8_Lecture_8_CNN_Architectures_I.tex
+[239]) (./Chapters/Chapter_8_Lecture_8_CNN_Architectures_I.tex
 
-[239]
+[240]
 Chapter 8.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -3773,12 +3778,12 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[240
+[241
 
 ]
 
-[241]
-<Figures/Chapter_8/slide_46.jpg, id=3288, 963.6pt x 542.025pt>
+[242]
+<Figures/Chapter_8/slide_46.jpg, id=3364, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_46.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_46.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_46.jpg  used on input line 122
@@ -3786,14 +3791,14 @@ Package pdftex.def Info: Figures/Chapter_8/slide_46.jpg  used on input line 122
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[242 <./Figures/Chapter_8/Slide_46.jpg>]
-<Figures/Chapter_8/slide_49.jpg, id=3300, 963.6pt x 542.025pt>
+[243 <./Figures/Chapter_8/Slide_46.jpg>]
+<Figures/Chapter_8/slide_49.jpg, id=3376, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_49.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_49.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_49.jpg  used on input line 136
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_8/slide_52.jpg, id=3302, 963.6pt x 542.025pt>
+<Figures/Chapter_8/slide_52.jpg, id=3378, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_52.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_52.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_52.jpg  used on input line 147
@@ -3801,8 +3806,8 @@ Package pdftex.def Info: Figures/Chapter_8/slide_52.jpg  used on input line 147
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[243 <./Figures/Chapter_8/Slide_49.jpg> <./Figures/Chapter_8/Slide_52.jpg>]
-<figures/Chapter_8/slide_63.jpg, id=3311, 963.6pt x 542.025pt>
+[244 <./Figures/Chapter_8/Slide_49.jpg> <./Figures/Chapter_8/Slide_52.jpg>]
+<figures/Chapter_8/slide_63.jpg, id=3388, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_63.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_63.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_63.jpg  used on input line 168
@@ -3810,8 +3815,8 @@ Package pdftex.def Info: figures/Chapter_8/slide_63.jpg  used on input line 168
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[244 <./Figures/Chapter_8/Slide_63.jpg>]
-<figures/Chapter_8/slide_56.jpg, id=3324, 963.6pt x 542.025pt>
+[245 <./Figures/Chapter_8/Slide_63.jpg>]
+<figures/Chapter_8/slide_56.jpg, id=3401, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_56.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_56.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_56.jpg  used on input line 196
@@ -3819,10 +3824,10 @@ Package pdftex.def Info: figures/Chapter_8/slide_56.jpg  used on input line 196
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[245 <./Figures/Chapter_8/Slide_56.jpg>]
+[246 <./Figures/Chapter_8/Slide_56.jpg>]
 
-[246]
-<figures/Chapter_8/slide_65.jpg, id=3348, 963.6pt x 542.025pt>
+[247]
+<figures/Chapter_8/slide_65.jpg, id=3425, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_65.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_65.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_65.jpg  used on input line 287
@@ -3830,8 +3835,8 @@ Package pdftex.def Info: figures/Chapter_8/slide_65.jpg  used on input line 287
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[247 <./Figures/Chapter_8/Slide_65.jpg>]
-<figures/Chapter_8/slide_69.jpg, id=3358, 963.6pt x 542.025pt>
+[248 <./Figures/Chapter_8/Slide_65.jpg>]
+<figures/Chapter_8/slide_69.jpg, id=3434, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_69.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_69.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_69.jpg  used on input line 311
@@ -3839,8 +3844,8 @@ Package pdftex.def Info: figures/Chapter_8/slide_69.jpg  used on input line 311
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[248 <./Figures/Chapter_8/Slide_69.jpg>]
-<figures/Chapter_8/slide_70.jpg, id=3364, 963.6pt x 542.025pt>
+[249 <./Figures/Chapter_8/Slide_69.jpg>]
+<figures/Chapter_8/slide_70.jpg, id=3440, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_70.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_70.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_70.jpg  used on input line 329
@@ -3848,13 +3853,13 @@ Package pdftex.def Info: figures/Chapter_8/slide_70.jpg  used on input line 329
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[249 <./Figures/Chapter_8/Slide_70.jpg>]
+[250 <./Figures/Chapter_8/Slide_70.jpg>]
 Overfull \hbox (6.6369pt too wide) in paragraph at lines 347--348
 []\T1/ptm/b/n/10.95 (-20) Redundancy and Ro-bust-ness: \T1/ptm/m/n/10.95 (-20) 
 Dif-fer-ent branches spe-cial-ize in dif-fer-ent spa-tial con-texts^^Vsome
  []
 
-<figures/Chapter_8/slide_73.jpg, id=3371, 963.6pt x 542.025pt>
+<figures/Chapter_8/slide_73.jpg, id=3447, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_73.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_73.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_73.jpg  used on input line 373
@@ -3862,10 +3867,10 @@ Package pdftex.def Info: figures/Chapter_8/slide_73.jpg  used on input line 373
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[250]
+[251]
 
-[251 <./Figures/Chapter_8/Slide_73.jpg>]
-<figures/Chapter_8/slide_74.jpg, id=3385, 963.6pt x 542.025pt>
+[252 <./Figures/Chapter_8/Slide_73.jpg>]
+<figures/Chapter_8/slide_74.jpg, id=3461, 963.6pt x 542.025pt>
 File: figures/Chapter_8/slide_74.jpg Graphic file (type jpg)
 <use figures/Chapter_8/slide_74.jpg>
 Package pdftex.def Info: figures/Chapter_8/slide_74.jpg  used on input line 407
@@ -3873,14 +3878,14 @@ Package pdftex.def Info: figures/Chapter_8/slide_74.jpg  used on input line 407
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[252 <./Figures/Chapter_8/Slide_74.jpg>]
-<Figures/Chapter_8/slide_76.jpg, id=3395, 963.6pt x 542.025pt>
+[253 <./Figures/Chapter_8/Slide_74.jpg>]
+<Figures/Chapter_8/slide_76.jpg, id=3472, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_76.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_76.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_76.jpg  used on input line 443
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_8/slide_79.jpg, id=3396, 963.6pt x 542.025pt>
+<Figures/Chapter_8/slide_79.jpg, id=3473, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_79.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_79.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_79.jpg  used on input line 456
@@ -3888,8 +3893,8 @@ Package pdftex.def Info: Figures/Chapter_8/slide_79.jpg  used on input line 456
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[253 <./Figures/Chapter_8/Slide_76.jpg>]
-<Figures/Chapter_8/slide_83.jpg, id=3403, 963.6pt x 542.025pt>
+[254 <./Figures/Chapter_8/Slide_76.jpg>]
+<Figures/Chapter_8/slide_83.jpg, id=3479, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_83.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_83.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_83.jpg  used on input line 470
@@ -3897,8 +3902,8 @@ Package pdftex.def Info: Figures/Chapter_8/slide_83.jpg  used on input line 470
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[254 <./Figures/Chapter_8/Slide_79.jpg> <./Figures/Chapter_8/Slide_83.jpg>]
-<Figures/Chapter_8/slide_84.jpg, id=3410, 963.6pt x 542.025pt>
+[255 <./Figures/Chapter_8/Slide_79.jpg> <./Figures/Chapter_8/Slide_83.jpg>]
+<Figures/Chapter_8/slide_84.jpg, id=3486, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_84.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_84.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_84.jpg  used on input line 501
@@ -3906,14 +3911,14 @@ Package pdftex.def Info: Figures/Chapter_8/slide_84.jpg  used on input line 501
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[255 <./Figures/Chapter_8/Slide_84.jpg>]
-<Figures/Chapter_8/slide_93.jpg, id=3417, 963.6pt x 542.025pt>
+[256 <./Figures/Chapter_8/Slide_84.jpg>]
+<Figures/Chapter_8/slide_93.jpg, id=3493, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_93.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_93.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_93.jpg  used on input line 520
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_8/slide_96.jpg, id=3418, 963.6pt x 542.025pt>
+<Figures/Chapter_8/slide_96.jpg, id=3494, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_96.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_96.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_96.jpg  used on input line 527
@@ -3921,8 +3926,8 @@ Package pdftex.def Info: Figures/Chapter_8/slide_96.jpg  used on input line 527
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[256 <./Figures/Chapter_8/Slide_93.jpg> <./Figures/Chapter_8/Slide_96.jpg>]
-<Figures/Chapter_8/slide_99.jpg, id=3427, 963.6pt x 542.025pt>
+[257 <./Figures/Chapter_8/Slide_93.jpg> <./Figures/Chapter_8/Slide_96.jpg>]
+<Figures/Chapter_8/slide_99.jpg, id=3504, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_99.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_99.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_99.jpg  used on input line 548
@@ -3930,8 +3935,8 @@ Package pdftex.def Info: Figures/Chapter_8/slide_99.jpg  used on input line 548
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[257 <./Figures/Chapter_8/Slide_99.jpg>]
-<Figures/Chapter_8/slide_105.jpg, id=3435, 963.6pt x 542.025pt>
+[258 <./Figures/Chapter_8/Slide_99.jpg>]
+<Figures/Chapter_8/slide_105.jpg, id=3512, 963.6pt x 542.025pt>
 File: Figures/Chapter_8/slide_105.jpg Graphic file (type jpg)
 <use Figures/Chapter_8/slide_105.jpg>
 Package pdftex.def Info: Figures/Chapter_8/slide_105.jpg  used on input line 56
@@ -3939,10 +3944,10 @@ Package pdftex.def Info: Figures/Chapter_8/slide_105.jpg  used on input line 56
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[258 <./Figures/Chapter_8/Slide_105.jpg>])
+[259 <./Figures/Chapter_8/Slide_105.jpg>])
 (./Chapters/Chapter_9_Lecture_9_Training_Neural_Networks_I.tex
 
-[259]
+[260]
 Chapter 9.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -3950,10 +3955,10 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[260
+[261
 
 ]
-<Figures/Chapter_9/slide_11.jpg, id=3455, 963.6pt x 542.025pt>
+<Figures/Chapter_9/slide_11.jpg, id=3531, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_11.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_11.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_11.jpg  used on input line 82.
@@ -3961,8 +3966,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_11.jpg  used on input line 82.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[261 <./Figures/Chapter_9/Slide_11.jpg>]
-<Figures/Chapter_9/slide_18.jpg, id=3463, 963.6pt x 542.025pt>
+[262 <./Figures/Chapter_9/Slide_11.jpg>]
+<Figures/Chapter_9/slide_18.jpg, id=3539, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_18.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_18.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_18.jpg  used on input line 117
@@ -3970,8 +3975,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_18.jpg  used on input line 117
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[262 <./Figures/Chapter_9/Slide_18.jpg>]
-<Figures/Chapter_9/slide_22.jpg, id=3470, 963.6pt x 542.025pt>
+[263 <./Figures/Chapter_9/Slide_18.jpg>]
+<Figures/Chapter_9/slide_22.jpg, id=3546, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_22.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_22.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_22.jpg  used on input line 146
@@ -3979,8 +3984,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_22.jpg  used on input line 146
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[263 <./Figures/Chapter_9/Slide_22.jpg>]
-<Figures/Chapter_9/slide_28.jpg, id=3478, 963.6pt x 542.025pt>
+[264 <./Figures/Chapter_9/Slide_22.jpg>]
+<Figures/Chapter_9/slide_28.jpg, id=3554, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_28.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_28.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_28.jpg  used on input line 194
@@ -3988,8 +3993,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_28.jpg  used on input line 194
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[264]
-<Figures/Chapter_9/slide_30.jpg, id=3486, 963.6pt x 542.025pt>
+[265]
+<Figures/Chapter_9/slide_30.jpg, id=3563, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_30.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_30.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_30.jpg  used on input line 209
@@ -3997,8 +4002,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_30.jpg  used on input line 209
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[265 <./Figures/Chapter_9/Slide_28.jpg> <./Figures/Chapter_9/Slide_30.jpg>]
-<Figures/Chapter_9/slide_31.jpg, id=3497, 963.6pt x 542.025pt>
+[266 <./Figures/Chapter_9/Slide_28.jpg> <./Figures/Chapter_9/Slide_30.jpg>]
+<Figures/Chapter_9/slide_31.jpg, id=3573, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_31.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_31.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_31.jpg  used on input line 248
@@ -4006,10 +4011,10 @@ Package pdftex.def Info: Figures/Chapter_9/slide_31.jpg  used on input line 248
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[266 <./Figures/Chapter_9/Slide_31.jpg>]
+[267 <./Figures/Chapter_9/Slide_31.jpg>]
 
-[267]
-<Figures/Chapter_9/slide_32.jpg, id=3521, 963.6pt x 542.025pt>
+[268]
+<Figures/Chapter_9/slide_32.jpg, id=3597, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_32.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_32.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_32.jpg  used on input line 326
@@ -4017,8 +4022,8 @@ Package pdftex.def Info: Figures/Chapter_9/slide_32.jpg  used on input line 326
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[268]
-<Figures/Chapter_9/slide_34.jpg, id=3529, 963.6pt x 542.025pt>
+[269]
+<Figures/Chapter_9/slide_34.jpg, id=3605, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_34.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_34.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_34.jpg  used on input line 356
@@ -4026,10 +4031,10 @@ Package pdftex.def Info: Figures/Chapter_9/slide_34.jpg  used on input line 356
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[269 <./Figures/Chapter_9/Slide_32.jpg>]
+[270 <./Figures/Chapter_9/Slide_32.jpg>]
 
-[270 <./Figures/Chapter_9/Slide_34.jpg>]
-<Figures/Chapter_9/swish_activation.png, id=3546, 465.74pt x 319.1925pt>
+[271 <./Figures/Chapter_9/Slide_34.jpg>]
+<Figures/Chapter_9/swish_activation.png, id=3624, 465.74pt x 319.1925pt>
 File: Figures/Chapter_9/swish_activation.png Graphic file (type png)
 <use Figures/Chapter_9/swish_activation.png>
 Package pdftex.def Info: Figures/Chapter_9/swish_activation.png  used on input 
@@ -4037,46 +4042,44 @@ line 401.
 (pdftex.def)             Requested size: 345.75935pt x 236.97314pt.
 
 
-[271 <./Figures/Chapter_9/swish_activation.png>]
+[272 <./Figures/Chapter_9/swish_activation.png>]
 
-[272]
-<Figures/Chapter_9/slide_35.jpg, id=3564, 963.6pt x 542.025pt>
+[273]
+<Figures/Chapter_9/slide_35.jpg, id=3642, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_35.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_35.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_35.jpg  used on input line 460
+Package pdftex.def Info: Figures/Chapter_9/slide_35.jpg  used on input line 461
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[273 <./Figures/Chapter_9/Slide_35.jpg>]
-<Figures/Chapter_9/slide_38.jpg, id=3575, 963.6pt x 542.025pt>
+[274 <./Figures/Chapter_9/Slide_35.jpg>]
+<Figures/Chapter_9/slide_38.jpg, id=3653, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_38.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_38.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_38.jpg  used on input line 494
+Package pdftex.def Info: Figures/Chapter_9/slide_38.jpg  used on input line 495
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_39.jpg, id=3576, 963.6pt x 542.025pt>
+<Figures/Chapter_9/slide_39.jpg, id=3654, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_39.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_39.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_39.jpg  used on input line 508
+Package pdftex.def Info: Figures/Chapter_9/slide_39.jpg  used on input line 509
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[274 <./Figures/Chapter_9/Slide_38.jpg>]
+[275 <./Figures/Chapter_9/Slide_38.jpg>]
 
-[275 <./Figures/Chapter_9/Slide_39.jpg>]
-<Figures/Chapter_9/slide_42.jpg, id=3589, 963.6pt x 542.025pt>
+[276 <./Figures/Chapter_9/Slide_39.jpg>]
+<Figures/Chapter_9/slide_42.jpg, id=3666, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_42.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_42.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_42.jpg  used on input line 551
+Package pdftex.def Info: Figures/Chapter_9/slide_42.jpg  used on input line 552
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[276 <./Figures/Chapter_9/Slide_42.jpg>]
-
-[277]
+[277 <./Figures/Chapter_9/Slide_42.jpg>]
 
 [278]
 
@@ -4085,200 +4088,202 @@ Package pdftex.def Info: Figures/Chapter_9/slide_42.jpg  used on input line 551
 [280]
 
 [281]
-<Figures/Chapter_9/slide_57.jpg, id=3634, 963.6pt x 542.025pt>
+
+[282]
+<Figures/Chapter_9/slide_57.jpg, id=3711, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_57.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_57.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_57.jpg  used on input line 814
+Package pdftex.def Info: Figures/Chapter_9/slide_57.jpg  used on input line 815
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[282 <./Figures/Chapter_9/Slide_57.jpg>]
+[283 <./Figures/Chapter_9/Slide_57.jpg>]
 
-[283]
-Overfull \hbox (10.58325pt too wide) in paragraph at lines 948--949
+[284]
+Overfull \hbox (10.58325pt too wide) in paragraph at lines 949--950
 \T1/ptm/m/n/10.95 (-20) This bal-ances the vari-ance of ac-ti-va-tions and gra-
 di-ents across lay-ers. Al-though it isn't proven/guaranteed
  []
 
 
 
-[284]
-
 [285]
-<Figures/Chapter_9/slide_64.jpg, id=3685, 963.6pt x 542.025pt>
+
+[286]
+<Figures/Chapter_9/slide_64.jpg, id=3763, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_64.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_64.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_64.jpg  used on input line 992
+Package pdftex.def Info: Figures/Chapter_9/slide_64.jpg  used on input line 993
 .
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_65.jpg, id=3686, 963.6pt x 542.025pt>
+<Figures/Chapter_9/slide_65.jpg, id=3764, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_65.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_65.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_65.jpg  used on input line 999
-.
+Package pdftex.def Info: Figures/Chapter_9/slide_65.jpg  used on input line 100
+0.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[286 <./Figures/Chapter_9/Slide_64.jpg>]
+[287 <./Figures/Chapter_9/Slide_64.jpg>]
 
-[287 <./Figures/Chapter_9/Slide_65.jpg>]
-
-[288]
+[288 <./Figures/Chapter_9/Slide_65.jpg>]
 
 [289]
-<Figures/Chapter_9/slide_67.jpg, id=3743, 963.6pt x 542.025pt>
+
+[290]
+<Figures/Chapter_9/slide_67.jpg, id=3820, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_67.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_67.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_67.jpg  used on input line 118
-8.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[290 <./Figures/Chapter_9/Slide_67.jpg>]
-
-[291]
-<Figures/Chapter_9/slide_71.jpg, id=3771, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_71.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_71.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_71.jpg  used on input line 124
-4.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_72.jpg, id=3772, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_72.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_72.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_72.jpg  used on input line 125
-3.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[292 <./Figures/Chapter_9/Slide_71.jpg>]
-<Figures/Chapter_9/slide_73.jpg, id=3779, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_73.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_73.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_73.jpg  used on input line 126
-5.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[293 <./Figures/Chapter_9/Slide_72.jpg> <./Figures/Chapter_9/Slide_73.jpg>]
-<Figures/Chapter_9/slide_75.jpg, id=3787, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_75.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_75.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_75.jpg  used on input line 130
-2.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[294]
-<Figures/Chapter_9/slide_78.jpg, id=3795, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_78.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_78.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_78.jpg  used on input line 132
-1.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[295 <./Figures/Chapter_9/Slide_75.jpg> <./Figures/Chapter_9/Slide_78.jpg>]
-<Figures/Chapter_9/slide_79.jpg, id=3805, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_79.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_79.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_79.jpg  used on input line 133
-0.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_81.jpg, id=3806, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_81.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_81.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_81.jpg  used on input line 134
-2.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[296 <./Figures/Chapter_9/Slide_79.jpg> <./Figures/Chapter_9/Slide_81.jpg>]
-<Figures/Chapter_9/slide_83.jpg, id=3814, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_83.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_83.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_83.jpg  used on input line 136
-2.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[297 <./Figures/Chapter_9/Slide_83.jpg>]
-<Figures/Chapter_9/slide_88.jpg, id=3823, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_88.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_88.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_88.jpg  used on input line 139
-3.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_91.jpg, id=3824, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_91.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_91.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_91.jpg  used on input line 141
-0.
-(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-
-
-[298 <./Figures/Chapter_9/Slide_88.jpg>]
-<Figures/Chapter_9/slide_92.jpg, id=3831, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_92.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_92.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_92.jpg  used on input line 142
 9.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[299 <./Figures/Chapter_9/Slide_91.jpg> <./Figures/Chapter_9/Slide_92.jpg>]
-<Figures/Chapter_9/slide_97.jpg, id=3839, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_97.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_97.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_97.jpg  used on input line 145
-1.
+[291 <./Figures/Chapter_9/Slide_67.jpg>]
+
+[292]
+<Figures/Chapter_9/slide_71.jpg, id=3848, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_71.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_71.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_71.jpg  used on input line 124
+5.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_9/slide_72.jpg, id=3849, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_72.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_72.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_72.jpg  used on input line 125
+4.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[300 <./Figures/Chapter_9/Slide_97.jpg>]
-<Figures/Chapter_9/slide_98.jpg, id=3851, 963.6pt x 542.025pt>
-File: Figures/Chapter_9/slide_98.jpg Graphic file (type jpg)
-<use Figures/Chapter_9/slide_98.jpg>
-Package pdftex.def Info: Figures/Chapter_9/slide_98.jpg  used on input line 148
+[293 <./Figures/Chapter_9/Slide_71.jpg>]
+<Figures/Chapter_9/slide_73.jpg, id=3857, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_73.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_73.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_73.jpg  used on input line 126
 6.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[301 <./Figures/Chapter_9/Slide_98.jpg>]
-<Figures/Chapter_9/slide_100.jpg, id=3862, 963.6pt x 542.025pt>
+[294 <./Figures/Chapter_9/Slide_72.jpg> <./Figures/Chapter_9/Slide_73.jpg>]
+<Figures/Chapter_9/slide_75.jpg, id=3865, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_75.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_75.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_75.jpg  used on input line 130
+3.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[295]
+<Figures/Chapter_9/slide_78.jpg, id=3874, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_78.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_78.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_78.jpg  used on input line 132
+2.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[296 <./Figures/Chapter_9/Slide_75.jpg> <./Figures/Chapter_9/Slide_78.jpg>]
+<Figures/Chapter_9/slide_79.jpg, id=3883, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_79.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_79.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_79.jpg  used on input line 133
+1.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_9/slide_81.jpg, id=3884, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_81.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_81.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_81.jpg  used on input line 134
+3.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[297 <./Figures/Chapter_9/Slide_79.jpg> <./Figures/Chapter_9/Slide_81.jpg>]
+<Figures/Chapter_9/slide_83.jpg, id=3892, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_83.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_83.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_83.jpg  used on input line 136
+3.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[298 <./Figures/Chapter_9/Slide_83.jpg>]
+<Figures/Chapter_9/slide_88.jpg, id=3900, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_88.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_88.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_88.jpg  used on input line 139
+4.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_9/slide_91.jpg, id=3901, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_91.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_91.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_91.jpg  used on input line 141
+1.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[299 <./Figures/Chapter_9/Slide_88.jpg>]
+<Figures/Chapter_9/slide_92.jpg, id=3908, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_92.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_92.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_92.jpg  used on input line 143
+0.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[300 <./Figures/Chapter_9/Slide_91.jpg> <./Figures/Chapter_9/Slide_92.jpg>]
+<Figures/Chapter_9/slide_97.jpg, id=3916, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_97.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_97.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_97.jpg  used on input line 145
+2.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[301 <./Figures/Chapter_9/Slide_97.jpg>]
+<Figures/Chapter_9/slide_98.jpg, id=3929, 963.6pt x 542.025pt>
+File: Figures/Chapter_9/slide_98.jpg Graphic file (type jpg)
+<use Figures/Chapter_9/slide_98.jpg>
+Package pdftex.def Info: Figures/Chapter_9/slide_98.jpg  used on input line 148
+7.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[302 <./Figures/Chapter_9/Slide_98.jpg>]
+<Figures/Chapter_9/slide_100.jpg, id=3939, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_100.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_100.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_100.jpg  used on input line 15
-18.
+19.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_9/slide_101.jpg, id=3864, 963.6pt x 542.025pt>
+<Figures/Chapter_9/slide_101.jpg, id=3941, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_101.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_101.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_101.jpg  used on input line 15
-35.
+36.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[302 <./Figures/Chapter_9/Slide_100.jpg>]
-<Figures/Chapter_9/slide_103.jpg, id=3876, 963.6pt x 542.025pt>
+[303 <./Figures/Chapter_9/Slide_100.jpg>]
+<Figures/Chapter_9/slide_103.jpg, id=3953, 963.6pt x 542.025pt>
 File: Figures/Chapter_9/slide_103.jpg Graphic file (type jpg)
 <use Figures/Chapter_9/slide_103.jpg>
 Package pdftex.def Info: Figures/Chapter_9/slide_103.jpg  used on input line 15
-49.
+50.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[303 <./Figures/Chapter_9/Slide_101.jpg> <./Figures/Chapter_9/Slide_103.jpg>])
+[304 <./Figures/Chapter_9/Slide_101.jpg> <./Figures/Chapter_9/Slide_103.jpg>])
 (./Chapters/Chapter_10_Lecture_10_Training_Neural_Networks_II.tex
 
-[304]
+[305]
 Chapter 10.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-<Figures/Chapter_10/slide_35.jpg, id=3892, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_35.jpg, id=3969, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_35.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_35.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_35.jpg  used on input line 22
@@ -4286,10 +4291,10 @@ Package pdftex.def Info: Figures/Chapter_10/slide_35.jpg  used on input line 22
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[305
+[306
 
  <./Figures/Chapter_10/Slide_35.jpg>]
-<Figures/Chapter_10/slide_36.jpg, id=3899, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_36.jpg, id=3976, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_36.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_36.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_36.jpg  used on input line 45
@@ -4297,8 +4302,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_36.jpg  used on input line 45
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[306 <./Figures/Chapter_10/Slide_36.jpg>]
-<Figures/Chapter_10/slide_37.jpg, id=3906, 963.6pt x 542.025pt>
+[307 <./Figures/Chapter_10/Slide_36.jpg>]
+<Figures/Chapter_10/slide_37.jpg, id=3984, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_37.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_37.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_37.jpg  used on input line 78
@@ -4306,8 +4311,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_37.jpg  used on input line 78
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[307 <./Figures/Chapter_10/Slide_37.jpg>]
-<Figures/Chapter_10/slide_38.jpg, id=3917, 963.6pt x 542.025pt>
+[308 <./Figures/Chapter_10/Slide_37.jpg>]
+<Figures/Chapter_10/slide_38.jpg, id=3995, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_38.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_38.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_38.jpg  used on input line 11
@@ -4315,8 +4320,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_38.jpg  used on input line 11
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[308 <./Figures/Chapter_10/Slide_38.jpg>]
-<Figures/Chapter_10/slide_39.jpg, id=3928, 963.6pt x 542.025pt>
+[309 <./Figures/Chapter_10/Slide_38.jpg>]
+<Figures/Chapter_10/slide_39.jpg, id=4006, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_39.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_39.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_39.jpg  used on input line 14
@@ -4324,8 +4329,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_39.jpg  used on input line 14
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[309 <./Figures/Chapter_10/Slide_39.jpg>]
-<Figures/Chapter_10/slide_40.jpg, id=3937, 963.6pt x 542.025pt>
+[310 <./Figures/Chapter_10/Slide_39.jpg>]
+<Figures/Chapter_10/slide_40.jpg, id=4015, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_40.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_40.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_40.jpg  used on input line 16
@@ -4333,8 +4338,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_40.jpg  used on input line 16
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[310 <./Figures/Chapter_10/Slide_40.jpg>]
-<Figures/Chapter_10/slide_41.jpg, id=3944, 963.6pt x 542.025pt>
+[311 <./Figures/Chapter_10/Slide_40.jpg>]
+<Figures/Chapter_10/slide_41.jpg, id=4022, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_41.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_41.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_41.jpg  used on input line 20
@@ -4342,14 +4347,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_41.jpg  used on input line 20
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[311 <./Figures/Chapter_10/Slide_41.jpg>]
-<Figures/Chapter_10/slide_43.jpg, id=3951, 963.6pt x 542.025pt>
+[312 <./Figures/Chapter_10/Slide_41.jpg>]
+<Figures/Chapter_10/slide_43.jpg, id=4028, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_43.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_43.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_43.jpg  used on input line 23
 0.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_45.jpg, id=3953, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_45.jpg, id=4030, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_45.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_45.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_45.jpg  used on input line 24
@@ -4357,18 +4362,18 @@ Package pdftex.def Info: Figures/Chapter_10/slide_45.jpg  used on input line 24
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[312 <./Figures/Chapter_10/Slide_43.jpg>]
+[313 <./Figures/Chapter_10/Slide_43.jpg>]
 
-[313 <./Figures/Chapter_10/Slide_45.jpg>]
+[314 <./Figures/Chapter_10/Slide_45.jpg>]
 
-[314]
-<Figures/Chapter_10/slide_55.jpg, id=3977, 963.6pt x 542.025pt>
+[315]
+<Figures/Chapter_10/slide_55.jpg, id=4054, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_55.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_55.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_55.jpg  used on input line 34
 7.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_56.jpg, id=3978, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_56.jpg, id=4055, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_56.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_56.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_56.jpg  used on input line 36
@@ -4376,14 +4381,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_56.jpg  used on input line 36
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[315 <./Figures/Chapter_10/Slide_55.jpg>]
-<Figures/Chapter_10/slide_57.jpg, id=3985, 963.6pt x 542.025pt>
+[316 <./Figures/Chapter_10/Slide_55.jpg>]
+<Figures/Chapter_10/slide_57.jpg, id=4062, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_57.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_57.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_57.jpg  used on input line 37
 2.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_58.jpg, id=3986, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_58.jpg, id=4063, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_58.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_58.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_58.jpg  used on input line 38
@@ -4391,14 +4396,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_58.jpg  used on input line 38
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[316 <./Figures/Chapter_10/Slide_56.jpg> <./Figures/Chapter_10/Slide_57.jpg>]
-<Figures/Chapter_10/slide_59.jpg, id=3993, 963.6pt x 542.025pt>
+[317 <./Figures/Chapter_10/Slide_56.jpg> <./Figures/Chapter_10/Slide_57.jpg>]
+<Figures/Chapter_10/slide_59.jpg, id=4070, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_59.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_59.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_59.jpg  used on input line 39
 1.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_60.jpg, id=3994, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_60.jpg, id=4071, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_60.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_60.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_60.jpg  used on input line 40
@@ -4406,8 +4411,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_60.jpg  used on input line 40
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[317 <./Figures/Chapter_10/Slide_58.jpg> <./Figures/Chapter_10/Slide_59.jpg>]
-<Figures/Chapter_10/slide_64.jpg, id=4001, 963.6pt x 542.025pt>
+[318 <./Figures/Chapter_10/Slide_58.jpg> <./Figures/Chapter_10/Slide_59.jpg>]
+<Figures/Chapter_10/slide_64.jpg, id=4078, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_64.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_64.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_64.jpg  used on input line 41
@@ -4415,8 +4420,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_64.jpg  used on input line 41
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[318 <./Figures/Chapter_10/Slide_60.jpg> <./Figures/Chapter_10/Slide_64.jpg>]
-<Figures/Chapter_10/slide_67.jpg, id=4008, 963.6pt x 542.025pt>
+[319 <./Figures/Chapter_10/Slide_60.jpg> <./Figures/Chapter_10/Slide_64.jpg>]
+<Figures/Chapter_10/slide_67.jpg, id=4086, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_67.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_67.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_67.jpg  used on input line 44
@@ -4424,8 +4429,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_67.jpg  used on input line 44
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[319 <./Figures/Chapter_10/Slide_67.jpg>]
-<Figures/Chapter_10/slide_68.jpg, id=4018, 963.6pt x 542.025pt>
+[320 <./Figures/Chapter_10/Slide_67.jpg>]
+<Figures/Chapter_10/slide_68.jpg, id=4095, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_68.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_68.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_68.jpg  used on input line 45
@@ -4433,14 +4438,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_68.jpg  used on input line 45
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[320 <./Figures/Chapter_10/Slide_68.jpg>]
-<Figures/Chapter_10/slide_73.jpg, id=4030, 963.6pt x 542.025pt>
+[321 <./Figures/Chapter_10/Slide_68.jpg>]
+<Figures/Chapter_10/slide_73.jpg, id=4107, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_73.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_73.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_73.jpg  used on input line 48
 2.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_76.jpg, id=4031, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_76.jpg, id=4108, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_76.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_76.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_76.jpg  used on input line 48
@@ -4448,14 +4453,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_76.jpg  used on input line 48
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[321 <./Figures/Chapter_10/Slide_73.jpg> <./Figures/Chapter_10/Slide_76.jpg>]
-<Figures/Chapter_10/slide_77.jpg, id=4039, 963.6pt x 542.025pt>
+[322 <./Figures/Chapter_10/Slide_73.jpg> <./Figures/Chapter_10/Slide_76.jpg>]
+<Figures/Chapter_10/slide_77.jpg, id=4117, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_77.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_77.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_77.jpg  used on input line 50
 0.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_79.jpg, id=4040, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_79.jpg, id=4118, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_79.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_79.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_79.jpg  used on input line 50
@@ -4463,14 +4468,14 @@ Package pdftex.def Info: Figures/Chapter_10/slide_79.jpg  used on input line 50
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[322 <./Figures/Chapter_10/Slide_77.jpg> <./Figures/Chapter_10/Slide_79.jpg>]
-<Figures/Chapter_10/slide_80.jpg, id=4047, 963.6pt x 542.025pt>
+[323 <./Figures/Chapter_10/Slide_77.jpg> <./Figures/Chapter_10/Slide_79.jpg>]
+<Figures/Chapter_10/slide_80.jpg, id=4125, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_80.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_80.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_80.jpg  used on input line 53
 1.
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
-<Figures/Chapter_10/slide_82.jpg, id=4048, 963.6pt x 542.025pt>
+<Figures/Chapter_10/slide_82.jpg, id=4126, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_82.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_82.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_82.jpg  used on input line 54
@@ -4478,8 +4483,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_82.jpg  used on input line 54
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[323 <./Figures/Chapter_10/Slide_80.jpg>]
-<Figures/Chapter_10/slide_86.jpg, id=4054, 963.6pt x 542.025pt>
+[324 <./Figures/Chapter_10/Slide_80.jpg>]
+<Figures/Chapter_10/slide_86.jpg, id=4132, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_86.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_86.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_86.jpg  used on input line 56
@@ -4487,8 +4492,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_86.jpg  used on input line 56
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[324 <./Figures/Chapter_10/Slide_82.jpg>]
-<Figures/Chapter_10/slide_90.jpg, id=4065, 963.6pt x 542.025pt>
+[325 <./Figures/Chapter_10/Slide_82.jpg>]
+<Figures/Chapter_10/slide_90.jpg, id=4144, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_90.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_90.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_90.jpg  used on input line 58
@@ -4496,8 +4501,8 @@ Package pdftex.def Info: Figures/Chapter_10/slide_90.jpg  used on input line 58
 (pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
 
-[325 <./Figures/Chapter_10/Slide_86.jpg> <./Figures/Chapter_10/Slide_90.jpg>]
-<Figures/Chapter_10/slide_93.jpg, id=4081, 963.6pt x 542.025pt>
+[326 <./Figures/Chapter_10/Slide_86.jpg> <./Figures/Chapter_10/Slide_90.jpg>]
+<Figures/Chapter_10/slide_93.jpg, id=4157, 963.6pt x 542.025pt>
 File: Figures/Chapter_10/slide_93.jpg Graphic file (type jpg)
 <use Figures/Chapter_10/slide_93.jpg>
 Package pdftex.def Info: Figures/Chapter_10/slide_93.jpg  used on input line 60
@@ -4506,17 +4511,442 @@ Package pdftex.def Info: Figures/Chapter_10/slide_93.jpg  used on input line 60
 )
 (./Chapters/Chapter_11_Lecture_11_CNN_Architectures_II.tex
 
-[326 <./Figures/Chapter_10/Slide_93.jpg>]
+[327 <./Figures/Chapter_10/Slide_93.jpg>]
 Chapter 11.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
 Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
-) (./Chapters/Chapter_12_Lecture_12_Deep_Learning_Software.tex
+<Figures/Chapter_11/slide_9.jpg, id=4169, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_9.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_9.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_9.jpg  used on input line 17.
 
-[327
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
 
-]
+
+[328
+
+ <./Figures/Chapter_11/Slide_9.jpg>]
+<Figures/Chapter_11/slides_16_17_combined.jpg, id=4175, 956.82469pt x 1043.3981
+3pt>
+File: Figures/Chapter_11/slides_16_17_combined.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slides_16_17_combined.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slides_16_17_combined.jpg  used on 
+input line 46.
+(pdftex.def)             Requested size: 259.32117pt x 282.77203pt.
+
+
+[329 <./Figures/Chapter_11/slides_16_17_combined.jpg>]
+<Figures/Chapter_11/slide_19.jpg, id=4184, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_19.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_19.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_19.jpg  used on input line 61
+.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_21.jpg, id=4185, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_21.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_21.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_21.jpg  used on input line 70
+.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[330 <./Figures/Chapter_11/Slide_19.jpg> <./Figures/Chapter_11/Slide_21.jpg>]
+<Figures/Chapter_11/slide_22.jpg, id=4192, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_22.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_22.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_22.jpg  used on input line 80
+.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_23.jpg, id=4193, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_23.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_23.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_23.jpg  used on input line 87
+.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_24.jpg, id=4194, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_24.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_24.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_24.jpg  used on input line 94
+.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[331 <./Figures/Chapter_11/Slide_22.jpg> <./Figures/Chapter_11/Slide_23.jpg>]
+<Figures/Chapter_11/slide_25.jpg, id=4202, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_25.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_25.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_25.jpg  used on input line 10
+1.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[332 <./Figures/Chapter_11/Slide_24.jpg> <./Figures/Chapter_11/Slide_25.jpg>]
+<Figures/Chapter_11/slide_27.jpg, id=4209, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_27.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_27.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_27.jpg  used on input line 11
+1.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_29.jpg, id=4210, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_29.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_29.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_29.jpg  used on input line 12
+4.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[333 <./Figures/Chapter_11/Slide_27.jpg> <./Figures/Chapter_11/Slide_29.jpg>]
+<Figures/Chapter_11/slide_30.jpg, id=4217, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_30.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_30.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_30.jpg  used on input line 13
+4.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+\openout7 = `main.listing'.
+
+
+(./_minted/2B8A2A370BDD48D5641E5EF0B171892B.highlight.minted)
+
+[334 <./Figures/Chapter_11/Slide_30.jpg>]
+\openout7 = `main.listing'.
+
+
+(./_minted/BB685E28520EFC69B8FA9B21C627F0DE.highlight.minted)
+
+[335]
+<Figures/Chapter_11/slide_36.jpg, id=4231, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_36.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_36.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_36.jpg  used on input line 24
+1.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[336 <./Figures/Chapter_11/Slide_36.jpg>]
+<Figures/Chapter_11/slide_37.jpg, id=4239, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_37.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_37.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_37.jpg  used on input line 27
+3.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[337 <./Figures/Chapter_11/Slide_37.jpg>]
+<Figures/Chapter_11/slide_38.jpg, id=4248, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_38.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_38.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_38.jpg  used on input line 28
+8.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[338 <./Figures/Chapter_11/Slide_38.jpg>]
+
+[339]
+Overfull \hbox (0.28339pt too wide) in paragraph at lines 348--349
+\T1/ptm/m/n/10.95 (-20) The out-put of the ex-ci-ta-tion func-tion is a set of 
+learned \T1/ptm/b/n/10.95 (-20) channel-wise scal-ing fac-tors $\OML/ztmcm/m/it
+/10.95 s \OT1/ztmcm/m/n/10.95 = [\OML/ztmcm/m/it/10.95 s[]; s[]; :::; s[]\OT1/z
+tmcm/m/n/10.95 ]$\T1/ptm/m/n/10.95 (-20) ,
+ []
+
+<Figures/Chapter_11/slide_41.jpg, id=4264, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_41.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_41.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_41.jpg  used on input line 35
+6.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[340 <./Figures/Chapter_11/Slide_41.jpg>]
+<Figures/Chapter_11/slide_42.jpg, id=4276, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_42.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_42.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_42.jpg  used on input line 39
+8.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[341 <./Figures/Chapter_11/Slide_42.jpg>]
+<Figures/Chapter_11/imagenet_completion.jpg, id=4285, 903.375pt x 456.20438pt>
+File: Figures/Chapter_11/imagenet_completion.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/imagenet_completion.jpg>
+Package pdftex.def Info: Figures/Chapter_11/imagenet_completion.jpg  used on in
+put line 428.
+(pdftex.def)             Requested size: 345.75935pt x 174.61246pt.
+
+
+[342 <./Figures/Chapter_11/imagenet_completion.jpg>]
+<Figures/Chapter_11/slide_44.jpg, id=4292, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_44.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_44.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_44.jpg  used on input line 46
+0.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[343 <./Figures/Chapter_11/Slide_44.jpg>]
+<Figures/Chapter_11/slide_45.jpg, id=4301, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_45.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_45.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_45.jpg  used on input line 48
+2.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[344 <./Figures/Chapter_11/Slide_45.jpg>]
+
+[345]
+
+[346]
+<Figures/Chapter_11/slide_54.jpg, id=4331, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_54.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_54.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_54.jpg  used on input line 60
+4.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_56.jpg, id=4333, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_56.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_56.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_56.jpg  used on input line 62
+0.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[347 <./Figures/Chapter_11/Slide_54.jpg>]
+
+[348 <./Figures/Chapter_11/Slide_56.jpg>]
+<Figures/Chapter_11/shufflenet_block.jpg, id=4352, 1099.85907pt x 615.0478pt>
+File: Figures/Chapter_11/shufflenet_block.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/shufflenet_block.jpg>
+Package pdftex.def Info: Figures/Chapter_11/shufflenet_block.jpg  used on input
+ line 654.
+(pdftex.def)             Requested size: 388.97516pt x 217.51294pt.
+
+
+[349 <./Figures/Chapter_11/shufflenet_block.jpg>]
+
+[350]
+
+[351]
+<Figures/Chapter_11/relu_transformations.jpg, id=4382, 1111.15125pt x 173.14688
+pt>
+File: Figures/Chapter_11/relu_transformations.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/relu_transformations.jpg>
+Package pdftex.def Info: Figures/Chapter_11/relu_transformations.jpg  used on i
+nput line 767.
+(pdftex.def)             Requested size: 345.75935pt x 53.8784pt.
+<Figures/Chapter_11/slide_50.jpg, id=4383, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_50.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_50.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_50.jpg  used on input line 79
+3.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[352 <./Figures/Chapter_11/relu_transformations.jpg>]
+
+[353 <./Figures/Chapter_11/Slide_50.jpg>]
+
+[354]
+<Figures/Chapter_11/slide_51.jpg, id=4413, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_51.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_51.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_51.jpg  used on input line 88
+6.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[355 <./Figures/Chapter_11/Slide_51.jpg>]
+
+[356]
+<Figures/Chapter_11/slide_59.jpg, id=4433, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_59.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_59.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_59.jpg  used on input line 10
+01.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[357]
+<Figures/Chapter_11/slide_62.jpg, id=4448, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_62.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_62.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_62.jpg  used on input line 10
+29.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[358 <./Figures/Chapter_11/Slide_59.jpg>]
+
+[359 <./Figures/Chapter_11/Slide_62.jpg>]
+<Figures/Chapter_11/slide_64.jpg, id=4468, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_64.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_64.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_64.jpg  used on input line 11
+10.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[360]
+<Figures/Chapter_11/slide_65.jpg, id=4476, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_65.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_65.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_65.jpg  used on input line 11
+24.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[361 <./Figures/Chapter_11/Slide_64.jpg> <./Figures/Chapter_11/Slide_65.jpg>]
+
+[362]
+
+[363]
+<Figures/Chapter_11/slide_67.jpg, id=4510, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_67.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_67.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_67.jpg  used on input line 12
+23.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+<Figures/Chapter_11/slide_68.jpg, id=4511, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_68.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_68.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_68.jpg  used on input line 12
+40.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[364 <./Figures/Chapter_11/Slide_67.jpg>]
+
+[365 <./Figures/Chapter_11/Slide_68.jpg>]
+
+[366]
+<Figures/Chapter_11/slide_70.jpg, id=4536, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_70.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_70.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_70.jpg  used on input line 13
+34.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[367 <./Figures/Chapter_11/Slide_70.jpg>]
+<Figures/Chapter_11/efficientnet_lite_latency_accuracy.png, id=4547, 1416.29124
+pt x 742.775pt>
+File: Figures/Chapter_11/efficientnet_lite_latency_accuracy.png Graphic file (t
+ype png)
+<use Figures/Chapter_11/efficientnet_lite_latency_accuracy.png>
+Package pdftex.def Info: Figures/Chapter_11/efficientnet_lite_latency_accuracy.
+png  used on input line 1395.
+(pdftex.def)             Requested size: 345.75935pt x 181.32977pt.
+
+
+[368]
+<Figures/Chapter_11/efficientnet_lite_model_size_accuracy.png, id=4560, 1415.28
+75pt x 742.775pt>
+File: Figures/Chapter_11/efficientnet_lite_model_size_accuracy.png Graphic file
+ (type png)
+<use Figures/Chapter_11/efficientnet_lite_model_size_accuracy.png>
+Package pdftex.def Info: Figures/Chapter_11/efficientnet_lite_model_size_accura
+cy.png  used on input line 1405.
+(pdftex.def)             Requested size: 345.75935pt x 181.45444pt.
+
+
+[369 <./Figures/Chapter_11/efficientnet_lite_latency_accuracy.png> <./Figures/C
+hapter_11/efficientnet_lite_model_size_accuracy.png>]
+<Figures/Chapter_11/fused_MBConv.jpg, id=4571, 512.66531pt x 511.15968pt>
+File: Figures/Chapter_11/fused_MBConv.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/fused_MBConv.jpg>
+Package pdftex.def Info: Figures/Chapter_11/fused_MBConv.jpg  used on input lin
+e 1438.
+(pdftex.def)             Requested size: 237.70996pt x 237.00821pt.
+
+
+[370 <./Figures/Chapter_11/fused_MBConv.jpg>]
+<Figures/Chapter_11/fix_res_visualized.jpg, id=4581, 689.57625pt x 336.50719pt>
+
+File: Figures/Chapter_11/fix_res_visualized.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/fix_res_visualized.jpg>
+Package pdftex.def Info: Figures/Chapter_11/fix_res_visualized.jpg  used on inp
+ut line 1479.
+(pdftex.def)             Requested size: 345.75935pt x 168.72556pt.
+
+
+[371 <./Figures/Chapter_11/fix_res_visualized.jpg>]
+
+[372]
+
+[373]
+
+[374]
+
+[375]
+
+[376]
+
+[377]
+
+[378]
+
+[379]
+<Figures/Chapter_11/slide_85.jpg, id=4714, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_85.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_85.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_85.jpg  used on input line 18
+56.
+(pdftex.def)             Requested size: 345.75935pt x 194.48373pt.
+
+
+[380 <./Figures/Chapter_11/Slide_85.jpg>]
+<Figures/Chapter_11/slide_86.jpg, id=4730, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_86.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_86.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_86.jpg  used on input line 19
+11.
+(pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
+
+
+[381 <./Figures/Chapter_11/Slide_86.jpg>]
+<Figures/Chapter_11/slide_87.jpg, id=4739, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_87.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_87.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_87.jpg  used on input line 19
+28.
+(pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
+
+
+[382 <./Figures/Chapter_11/Slide_87.jpg>]
+<Figures/Chapter_11/slide_89.jpg, id=4749, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_89.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_89.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_89.jpg  used on input line 19
+76.
+(pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
+
+
+[383 <./Figures/Chapter_11/Slide_89.jpg>]
+<Figures/Chapter_11/slide_91.jpg, id=4759, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_91.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_91.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_91.jpg  used on input line 20
+03.
+(pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
+<Figures/Chapter_11/slide_92.jpg, id=4760, 963.6pt x 542.025pt>
+File: Figures/Chapter_11/slide_92.jpg Graphic file (type jpg)
+<use Figures/Chapter_11/slide_92.jpg>
+Package pdftex.def Info: Figures/Chapter_11/slide_92.jpg  used on input line 20
+12.
+(pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
+
+
+[384 <./Figures/Chapter_11/Slide_91.jpg> <./Figures/Chapter_11/Slide_92.jpg>]
+
+[385]
+
+[386]) (./Chapters/Chapter_12_Lecture_12_Deep_Learning_Software.tex
+
+[387]
 Chapter 12.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -4524,7 +4954,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_13_Lecture_13_Object_Detection.tex
 
-[328
+[388
 
 ]
 Chapter 13.
@@ -4534,7 +4964,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_14_Lecture_14_Object_Detectors.tex
 
-[329
+[389
 
 ]
 Chapter 14.
@@ -4544,7 +4974,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_15_Lecture_15_Image_Segmentation.tex
 
-[330
+[390
 
 ]
 Chapter 15.
@@ -4554,7 +4984,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_16_Lecture_16_Recurrent_Networks.tex
 
-[331
+[391
 
 ]
 Chapter 16.
@@ -4564,7 +4994,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_17_Lecture_17_Attention.tex
 
-[332
+[392
 
 ]
 Chapter 17.
@@ -4574,7 +5004,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_18_Lecture_18_Vision_Transformers.tex
 
-[333
+[393
 
 ]
 Chapter 18.
@@ -4584,7 +5014,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_19_Lecture_19_Generative_Models_I.tex
 
-[334
+[394
 
 ]
 Chapter 19.
@@ -4594,7 +5024,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_20_Lecture_20_Generative_Models_II.tex
 
-[335
+[395
 
 ]
 Chapter 20.
@@ -4604,7 +5034,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_21_Lecture_21_Visualizing_Models__Generating_Images.tex
 
-[336
+[396
 
 ]
 Chapter 21.
@@ -4614,7 +5044,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_22_Lecture_22_SelfSupervised_Learning.tex
 
-[337
+[397
 
 ]
 Chapter 22.
@@ -4624,7 +5054,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_23_Lecture_23_3D_vision.tex
 
-[338
+[398
 
 ]
 Chapter 23.
@@ -4634,7 +5064,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_24_Lecture_24_Videos.tex
 
-[339
+[399
 
 ]
 Chapter 24.
@@ -4644,7 +5074,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_25_Model_Compression_Quantization_and_Pruning.tex
 
-[340
+[400
 
 ]
 Chapter 25.
@@ -4654,7 +5084,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_26_Foundation_Models_in_Computer_Vision.tex
 
-[341
+[401
 
 ]
 Chapter 26.
@@ -4664,7 +5094,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_27_MAMBA_MultiAgent_MultiBody_Analysis.tex
 
-[342
+[402
 
 ]
 Chapter 27.
@@ -4674,7 +5104,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 )
 
-[343
+[403
 
 ]
 File: Pictures/head2.png Graphic file (type png)
@@ -4683,50 +5113,65 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 163.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[344
+[404
 
 ]
 
-[345]
-Overfull \hbox (30.30502pt too wide) in paragraph at lines 164--164
-[]\T1/ptm/m/n/10.95 (-20) Kaiming He et al. ^^P  Iden-tity map-pings in deep re
-sid-ual net-works^^Q. In: \T1/ptm/m/it/10.95 (-20) arXiv preprint arXiv:1603.05
-027
+[405]
+Overfull \hbox (8.54575pt too wide) in paragraph at lines 164--164
+\T1/ptm/m/n/10.95 (-20) (2023). []$\T1/cmtt/m/n/10.95 https : / / medium . com 
+/ towards -[] data -[] science / kaiming -[] he -[] initialization -[]
+ []
+
+
+Overfull \hbox (25.52086pt too wide) in paragraph at lines 164--164
+\T1/ptm/m/n/10.95 (-20) (2023). []$\T1/cmtt/m/n/10.95 https : / / medium . com 
+/ towards -[] data -[] science / xavier -[] glorot -[] initialization -[]
  []
 
 
 
-[346]
+[406]
 
-[347]
+[407]
 
-[348]
+[408]
 
-[349]
+[409]
+
+[410]
 \tf@ptc=\write9
 \openout9 = `main.ptc'.
 
 
 
-[350] (./main.aux)
+[411] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-09>
  ***********
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
+
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
 
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 52758 strings out of 473253
- 1126128 string characters out of 5722051
- 2195145 words of memory out of 5000000
- 72789 multiletter control sequences out of 15000+600000
- 716050 words of font info for 638 fonts, out of 8000000 for 9000
+ 53675 strings out of 473253
+ 1151124 string characters out of 5722051
+ 2240324 words of memory out of 5000000
+ 73325 multiletter control sequences out of 15000+600000
+ 718755 words of font info for 666 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  89i,17n,93p,1292b,2311s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/tex
@@ -4746,10 +5191,10 @@ vantgar/uagk8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/symbol/usyr.pfb>
 xmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2024/texmf-dist/fonts/typ
 e1/urw/times/utmbi8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmr
 8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (350 pages, 143659216 bytes).
+Output written on main.pdf (411 pages, 161409572 bytes).
 PDF statistics:
- 6088 PDF objects out of 6186 (max. 8388607)
- 4906 compressed objects within 50 object streams
- 1660 named destinations out of 1728 (max. 500000)
- 151129 words of extra memory for PDF output out of 154059 (max. 10000000)
+ 7001 PDF objects out of 7423 (max. 8388607)
+ 5676 compressed objects within 57 object streams
+ 1997 named destinations out of 2073 (max. 500000)
+ 156139 words of extra memory for PDF output out of 184870 (max. 10000000)
 

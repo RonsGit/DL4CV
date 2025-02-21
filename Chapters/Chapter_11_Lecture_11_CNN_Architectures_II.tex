@@ -3,6 +3,2076 @@
 % Chapter-specific content starts here
 \chapter{Lecture 11: CNN Architectures II}
 
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------------------
 %	CHAPTER 11 - Lecture 11: CNN Architectures II
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------------------
+
+\section{Post-ResNet Architectures}
+\label{sec:post_resnet}
+
+ResNet revolutionized deep learning by making it feasible to train much deeper models while maintaining high accuracy. However, increasing the depth indefinitely is not always practical due to computational constraints. Many subsequent architectures aim to improve accuracy while optimizing for computational efficiency. The goal is to maintain or surpass ResNet’s performance while controlling model complexity.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_9.jpg}
+	\caption{Comparison of ResNet variants and their top-1 accuracy on ImageNet. Improvements beyond ResNet-101 yield diminishing returns relative to the increased computational cost.}
+	\label{fig:chapter11_resnet_variants}
+\end{figure}
+
+\newpage
+Model complexity can be measured in several ways:
+\begin{enumerate}
+	\item \textbf{Number of Parameters}: The total number of learnable parameters in the model.
+	\item \textbf{Floating Point Operations (FLOPs)}: The number of arithmetic operations required for a single forward pass. This metric has subtle nuances:
+	\begin{itemize}
+		\item Some papers count only operations in convolutional layers and ignore activation functions, pooling, and Batch Normalization.
+		\item Many sources, including Justin’s notation, define “1 FLOP” as “1 multiply and 1 addition.” Thus, a dot product of two $N$-dimensional vectors requires $N$ FLOPs.
+		\item Other sources, such as NVIDIA, define a multiply-accumulate (MAC) operation as 2 FLOPs, meaning a dot product of two $N$-dimensional vectors takes $2N$ FLOPs.
+	\end{itemize}
+	\item \textbf{Network Runtime}: The actual time taken to perform a forward pass on real hardware.
+\end{enumerate}
+
+\section{Grouped Convolutions}
+\label{sec:grouped_convs}
+
+Before introducing grouped convolutions, let us recall the structure of standard convolutions. In a conventional convolutional layer:
+\begin{itemize}
+	\item Each filter has the same number of channels as the input.
+	\item Each plane of the output depends on the entire input and one filter.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figures/Chapter_11/slides_16_17_combined.jpg}
+	\caption{Regular convolution: each filter operates on all input channels and produces a single feature map.}
+	\label{fig:chapter11_regular_convs}
+\end{figure}
+
+\noindent In grouped convolutions, we divide the input channels into $G$ groups, where $G$ is a hyperparameter. Each group consists of $C_{in} / G$ channels.
+
+\begin{itemize}
+	\item Each filter only operates on a specific subset of input channels corresponding to its group.
+	\item The filters are divided into $G$ groups, similar to input channels.
+	\item The resulting weight tensor has dimensions: $C_{out} \times (C_{in}/G) \times K \times K$.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_19.jpg}
+	\caption{Grouped convolution: input channels are split into groups, where each filter processes only its assigned subset. Example shown for $G=2$.}
+	\label{fig:chapter11_grouped_convs}
+\end{figure}
+
+Each output feature map now depends only on a subset of the input channels. Each group of filters produces $C_{out}/G$ output channels. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_21.jpg}
+	\caption{Each group of filters processes only a subset of the input channels, producing its corresponding output channels.}
+	\label{fig:chapter11_grouped_convs_process}
+\end{figure}
+
+\newpage
+We can visualize the process step by step:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_22.jpg}
+	\caption{The first group creates one output plane (darker blue), using its assigned input channels.}
+	\label{fig:chapter11_grouped_convs_step1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_23.jpg}
+	\caption{The first group produces another output plane using a different filter.}
+	\label{fig:chapter11_grouped_convs_step2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_24.jpg}
+	\caption{The second group processes its assigned channels, producing an output plane (darker green).}
+	\label{fig:chapter11_grouped_convs_step3}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_25.jpg}
+	\caption{The second group produces another output channel using a different filter, producing another output plane (darker green).}
+	\label{fig:chapter11_grouped_convs_step3}
+\end{figure}
+
+\newpage
+\noindent This concept generalizes for any $G > 1$. Below is an example where $G=4$:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_27.jpg}
+	\caption{Grouped convolution example with $G=4$, where each group is assigned a different color.}
+	\label{fig:chapter11_grouped_convs_g4}
+\end{figure}
+
+\noindent A special case of grouped convolutions that we've already encountered is \textbf{depthwise convolution}, where $G$ is set to be equal to the number of input channels. In this scenario:
+\begin{itemize}
+	\item Each filter operates on only one input channel.
+	\item Output feature maps only mix spatial information but do not mix channel information.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_29.jpg}
+	\caption{Depthwise convolution as a special case of grouped convolution, where each group corresponds to a single input channel. In this example, we have several filters per Group, as $C_\text{out}>C_\text{in}$. More specifically, we have 2 filters in each group, as the output channels are twice the input channels ($C_\text{out}=2C_\text{in}$)}
+	\label{fig:chapter11_depthwise_convs}
+\end{figure}
+
+\newpage
+\noindent Using grouped convolutions significantly reduces computational cost, making them an effective tool for designing efficient deep learning models.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_30.jpg}
+	\caption{Summary of grouped convolutions: input splitting, processing by groups, and computational efficiency.}
+	\label{fig:chapter11_grouped_convs_summary}
+\end{figure}
+
+\subsection{Grouped Convolutions in PyTorch}
+\label{subsec:grouped_convs_pytorch}
+
+Grouped convolutions can be efficiently implemented in PyTorch using the \texttt{groups} parameter in \texttt{torch.nn.Conv2d}. By default, \texttt{groups=1}, which corresponds to standard convolution where each filter processes all input channels. Setting \texttt{groups > 1} splits the input channels into $G$ groups, each processed by independent convolutional filters.
+
+\noindent Below is an example demonstrating how to define grouped convolutions in PyTorch:
+
+\begin{mintedbox}{python}
+	import torch
+	import torch.nn as nn
+	
+	# Standard convolution (groups=1)
+	conv_standard = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1, groups=1)
+	
+	# Grouped convolution with G=2 (splitting input into 2 groups)
+	conv_grouped = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1, groups=2)
+	
+	# Depthwise convolution (each input channel has its own filter)
+	conv_depthwise = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1, groups=64)
+	
+	# Forward pass with a random input tensor
+	x = torch.randn(1, 64, 224, 224)  # Batch size of 1, 64 input channels, 224x224 image
+	output_standard = conv_standard(x)
+	output_grouped = conv_grouped(x)
+	output_depthwise = conv_depthwise(x)
+	
+	print(f"Standard Convolution Output Shape: {output_standard.shape}")
+	print(f"Grouped Convolution Output Shape: {output_grouped.shape}")
+	print(f"Depthwise Convolution Output Shape: {output_depthwise.shape}")
+\end{mintedbox}
+
+\noindent Running this code will produce the following output:
+
+\begin{mintedbox}{text}
+	Standard Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Grouped Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Depthwise Convolution Output Shape: torch.Size([1, 64, 224, 224])
+\end{mintedbox}
+
+\subsubsection{Key Observations}
+\begin{itemize}
+	\item \textbf{Standard Convolution ($groups=1$)}:
+	\begin{itemize}
+		\item Each filter operates across all input channels.
+		\item Computational cost remains high.
+		\item The output has 128 channels, same as the number of filters.
+	\end{itemize}
+	
+	\item \textbf{Grouped Convolution ($groups=G$)}:
+	\begin{itemize}
+		\item The input channels are divided into $G$ groups, with each group processed by independent filters.
+		\item Computational cost is reduced by a factor of $G$, making it more efficient.
+		\item The output still has 128 channels, despite reducing computation.
+	\end{itemize}
+	
+	\item \textbf{Depthwise Convolution ($groups=C_{in}$)}:
+	\begin{itemize}
+		\item Each input channel has its own dedicated filter.
+		\item Spatial information is mixed, but channel-wise information is not combined.
+		\item The output has the same number of channels as the input ($C_{in} = C_{out}$).
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{When to Use Grouped Convolutions?}
+\begin{itemize}
+	\item \textbf{Efficient Model Architectures}: Used in models such as \textbf{ResNeXt} and \textbf{Xception}, to balance computational cost and accuracy.
+	\item \textbf{Reducing Computation in Large Networks}: Splitting channels into groups significantly reduces FLOPs, making inference faster.
+	\item \textbf{Specialized Feature Learning}: Each group can learn specialized features independently, improving representation learning.
+\end{itemize}
+
+Grouped convolutions, especially when combined with \textbf{bottleneck layers} and \textbf{pointwise convolutions}, allow for high-performance networks with significantly reduced computational costs.
+
+\section{ResNeXt: Next-Generation Residual Networks}
+\label{sec:resnext}
+
+ResNeXt, introduced by Microsoft Research in 2017 \cite{xie2017_aggregated}, builds upon ResNet’s foundation by incorporating \textbf{aggregated residual transformations}, utilizing multiple parallel pathways within residual blocks. This approach improves accuracy while maintaining computational efficiency, making it a more scalable and flexible architecture.
+
+\subsection{Motivation: Why ResNeXt?}
+Despite the success of ResNet, deeper and wider networks come with increased computational costs. Simply increasing depth does not always yield better performance due to optimization challenges, diminishing returns, and increased memory requirements. While widening the network (increasing the number of channels per layer) can improve capacity, it significantly increases FLOPs, making the model inefficient.
+
+ResNeXt introduces a third dimension, \textbf{cardinality} ($G$), which refers to the number of parallel pathways in a residual block. Instead of solely increasing depth or width, ResNeXt adds multiple transformation pathways within a single block. The results are then concatenated together to a single output for the block. This allows for higher representational power without increasing the number of FLOPs, hence, without greatly increasing the computational cost.
+
+\subsection{Key Innovation: Aggregated Transformations}
+The key innovation in ResNeXt is the use of \textbf{G parallel pathways} of residual transformations. The original bottleneck block in ResNet consists of:
+\begin{itemize}
+	\item A $1\times1$ convolution to reduce dimensionality ($4C \to C$), costing $4HWC^2$ FLOPs.
+	\item A $3\times3$ convolution ($C \to C$), costing $9HWC^2$ FLOPs.
+	\item A $1\times1$ convolution to restore dimensionality ($C \to 4C$), costing another $4HWC^2$ FLOPs.
+\end{itemize}
+This totals to $17HWC^2$ FLOPs per block.
+
+ResNeXt modifies this by introducing \textbf{G parallel pathways}, each containing an intermediate channel count $c$:
+\begin{equation}
+	\text{FLOPs per pathway} = (8Cc + 9c^2)HW
+\end{equation}
+Summing over $G$ pathways results in:
+\begin{equation}
+	\text{Total FLOPs} = (8Cc + 9c^2)HWG
+\end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_36.jpg}
+	\caption{Comparison of the bottleneck residual block (left) with the ResNeXt block using G parallel pathways (right).}
+	\label{fig:chapter11_resnext_block}
+\end{figure}
+
+\noindent To maintain the same computational cost, we solve:
+\begin{equation}
+	9Gc^2 + 8GCc - 17C^2 = 0
+\end{equation}
+Example solutions:
+\begin{itemize}
+	\item $C=64, G=4, c=24$
+	\item $C=64, G=32, c=4$
+\end{itemize}
+
+\noindent Therefore, with ResNeXt blocks, we now have the freedom to play with values of $C,G,c$, and as long as the values solve the equation: $9Gc^2 + 8GCc - 17C^2 = 0$, enjoy from different architectures with the same computational cost
+(i.e., the same number of FLOPs). 
+
+\noindent From testing it empirically, it appears that we can use this argument, and that by increasing the number of groups ($G$) while concurrently reducing the group width, we can improve performance while preserving the number of FLOPs. 
+
+\subsection{ResNeXt and Grouped Convolutions}
+ResNeXt’s implementation can also be formulated in terms of \textbf{grouped convolutions}, making it easy to construct them in practice. Instead of explicitly creating multiple transformation pathways, we use grouped convolutions to enforce this structure efficiently.
+
+Each ResNeXt block is structured as:
+\begin{itemize}
+	\item $1\times1$ convolution ($4C \to Gc$)
+	\item $3\times3$ grouped convolution ($Gc \to Gc$, groups=G)
+	\item $1\times1$ convolution ($Gc \to 4C$)
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_37.jpg}
+	\caption{ResNeXt bottleneck block using grouped convolutions: Conv($1\times1$, $4C \to Gc$), Conv($3\times3$, $Gc \to Gc$, groups=$G$), Conv($1\times1$, $Gc \to 4C$).}
+	\label{fig:chapter11_resnext_grouped}
+\end{figure}
+
+\subsection{Advantages of ResNeXt Over ResNet}
+ResNeXt builds upon the ResNet design by introducing a structured, multi-pathway architecture that enhances representational power without incurring significant additional computational cost. To summarize, its key advantages include:
+
+\begin{itemize}
+	\item \textbf{Improved Accuracy:} The additional parallel transformation pathways enable richer feature extraction, leading to higher accuracy.
+	\item \textbf{Enhanced Efficiency:} Instead of merely increasing network depth or width, ResNeXt uses grouped convolutions (parameterized by \(G\)) to boost capacity efficiently, outperforming deeper or wider ResNets at a similar computational cost.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_38.jpg}
+	\caption{Increasing the number of groups while reducing the width of each group enhances performance without increasing computational cost. This improvement is achieved by expanding the number of parallel transformation pathways (without increasing network depth! meaning, without changing the number of ResNeXt blocks). For instance, ResNeXt-101-32x4d outperforms ResNeXt-101-4x24d despite having an equivalent number of FLOPs.}
+	\label{fig:chapter11_resnext_performance}
+\end{figure}
+
+\subsection{ResNeXt Model Naming Convention}
+ResNeXt models are typically denoted as \texttt{ResNeXt-50-32x4d}, where:
+\begin{itemize}
+	\item \textbf{50}: Number of layers.
+	\item \textbf{32}: Number of groups ($G$).
+	\item \textbf{4}: Number of intermediate channels (dimensions) per group.
+\end{itemize}
+
+\noindent ResNeXt's design principles influenced many subsequent architectures, including \textbf{EfficientNet} and \textbf{Vision Transformers (ViTs)}, demonstrating the significance of aggregated transformations in deep learning.
+
+\section{Squeeze-and-Excitation Networks (SENet)}
+\label{sec:senet}
+
+In 2017, researchers expanded upon ResNeXt by introducing \textbf{Squeeze-and-Excitation Networks (SENet)}, which introduced a novel \textbf{Squeeze-and-Excitation (SE) block} \cite{hu2018_senet}. The core idea behind SENet was to incorporate \textbf{global channel-wise attention} into ResNet blocks, improving the model's ability to capture interdependencies between channels. This enhancement led to improved classification accuracy while adding minimal computational overhead.
+
+SENet won first place in the \textbf{ILSVRC 2017 classification challenge}, achieving a top-5 error rate of \textbf{2.251\%}, a remarkable 25\% relative improvement over the winning model of 2016.
+
+\subsection{Squeeze-and-Excitation (SE) Block}
+\label{subsec:se_block}
+
+The SE block is designed to enhance the representational power of convolutional networks by introducing a \textbf{channel-wise attention mechanism}. Instead of treating all channels equally, SE blocks allow the network to dynamically recalibrate the importance of different feature channels by learning their global interdependencies. 
+
+In standard convolutional layers, feature maps are processed independently across channels, meaning each filter learns to extract spatial patterns without directly considering how different feature channels relate to one another. The SE block addresses this limitation by introducing a \textbf{two-step process}: \textbf{Squeeze} and \textbf{Excitation}.
+
+\subsubsection{Squeeze: Global Information Embedding}
+Each convolutional layer in a ResNet bottleneck block produces a set of feature maps, where each channel captures different aspects of the input. However, these feature maps primarily focus on local spatial information, meaning that each activation in a feature map is computed independently of global image context.
+
+To address this, the \textbf{squeeze} operation applies \textbf{global average pooling} across all spatial locations, condensing the entire spatial feature representation into a compact \textbf{channel descriptor}. This descriptor captures \textbf{global context}, summarizing the overall activation strength for each channel:
+\begin{equation}
+	z_c = \frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} U_c(i,j)
+\end{equation}
+where:
+\begin{itemize}
+	\item $U_c(i,j)$ is the activation at spatial position $(i,j)$ for channel $c$.
+	\item $z_c$ is a single scalar that represents the global response of channel $c$.
+\end{itemize}
+This operation transforms each feature map from a \textbf{spatial feature map} of shape $(H, W)$ into a \textbf{single scalar value}, providing a compact summary of the channel’s overall importance.
+
+\subsubsection{Excitation: Adaptive Recalibration}
+While the squeeze operation extracts global statistics, it does not yet provide a mechanism for adjusting the importance of each channel. The \textbf{excitation} step models channel-wise dependencies by learning how much each channel should contribute to the final representation.
+
+The excitation process consists of two fully connected (FC) layers, followed by a sigmoid activation:
+\begin{equation}
+	s = \sigma(W_2 \delta(W_1 z))
+\end{equation}
+where:
+\begin{itemize}
+	\item $W_1 \in \mathbb{R}^{C/r \times C}$ and $W_2 \in \mathbb{R}^{C \times C/r}$ are learnable weight matrices.
+	\item $\delta$ is the ReLU activation function.
+	\item $\sigma$ is the sigmoid activation function, ensuring that each recalibration weight is in the range $(0,1)$.
+	\item $r$ is the \textbf{reduction ratio}, a hyperparameter controlling the dimensionality bottleneck.
+\end{itemize}
+
+\newpage
+\subsubsection{Channel Recalibration}
+The output of the excitation function is a set of learned \textbf{channel-wise scaling factors} $s = [s_1, s_2, ..., s_C]$, where each $s_c$ determines how important the corresponding channel $c$ is. These learned scalars are applied to the original feature maps using \textbf{channel-wise multiplication}:
+\begin{equation}
+	\tilde{U}_c = s_c \cdot U_c
+\end{equation}
+where each feature map is rescaled according to its learned importance. Channels with high $s_c$ values are emphasized, while those with low values are suppressed.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_41.jpg}
+	\caption{The SE block incorporated into a ResNet bottleneck block. The SE mechanism applies global pooling (squeeze), learns channel-wise scaling factors (excitation), and rescales feature maps accordingly.}
+	\label{fig:chapter11_se_block}
+\end{figure}
+
+\subsubsection{How SE Blocks Enhance ResNet Bottleneck Blocks}
+SE blocks are an additional component that can be inserted into any convolutional block. In ResNet’s \textbf{bottleneck block}, SE is added \textbf{before the final summation with the shortcut connection}. The process can be summarized as follows:
+\begin{enumerate}
+	\item The input feature maps pass through the standard bottleneck transformation:
+	\begin{itemize}
+		\item $1 \times 1$ convolution reduces dimensions ($4C \to C$).
+		\item $3 \times 3$ convolution extracts spatial features ($C \to C$).
+		\item $1 \times 1$ convolution restores dimensions ($C \to 4C$).
+	\end{itemize}
+	\item Instead of immediately proceeding to the residual summation, the feature maps are processed by an SE block:
+	\begin{itemize}
+		\item Global average pooling (\textbf{squeeze}) reduces each feature map to a scalar.
+		\item Two fully connected layers (\textbf{excitation}) learn per-channel importance.
+		\item The feature maps are reweighted based on their learned importance.
+	\end{itemize}
+	\item The recalibrated feature maps are passed to the identity shortcut connection and summed, completing the residual connection.
+\end{enumerate}
+
+\subsubsection{Why Does SE Improve Performance?}
+\begin{itemize}
+	\item \textbf{Improved Feature Selection}: SE blocks enable the network to focus on the most relevant channels, reducing noise and improving discrimination.
+	\item \textbf{Global Context Awareness}: By incorporating global average pooling, the model learns to adjust features based on the entire input, rather than relying solely on local spatial filters.
+	\item \textbf{Minimal Computational Overhead}: Adding SE blocks increases FLOPs only marginally (usually by less than 1\%). For example, in a ResNet bottleneck block:
+	\begin{itemize}
+		\item Without SE: $17HWC^2$ FLOPs.
+		\item With SE: $8CHW + 2C^2 + \frac{17}{4}C$ FLOPs.
+	\end{itemize}
+	For $H=W=56, C=64$, this translates to an increase from \textbf{218 MFLOPs to 219.6 MFLOPs}.
+\end{itemize}
+
+\subsubsection{Performance Gains, Scalability, and Integration of SE Blocks}
+\label{subsubsec:se_performance_scalability}
+
+Incorporating SE blocks consistently improves accuracy across various architectures. By introducing dynamic \textbf{channel-wise attention}, SE blocks enable CNNs to focus on the most relevant features, improving feature discrimination without significant computational overhead.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_42.jpg}
+	\caption{Performance improvements from integrating SE blocks into ResNet, ResNeXt, Inception, and VGG architectures. Each gains roughly a 1–2\% boost in accuracy without requiring additional changes.}
+	\label{fig:chapter11_se_performance}
+\end{figure}
+
+\subsubsection{Impact on Various Tasks}
+SE blocks enhance performance across multiple domains:
+\begin{itemize}
+	\item \textbf{Image Classification:} SE-ResNet-50 achieves a top-5 error of 6.62\% compared to 7.48\% for ResNet-50. Similar improvements occur in SE-ResNet-101, SE-ResNeXt-50, and SE-Inception-ResNet-v2.
+	\item \textbf{Object Detection:} Integrating SE into Faster R-CNN with a ResNet-50 backbone improves average precision by 1.3\% on COCO, a relative gain of 5.2\%.
+	\item \textbf{Scene Classification:} SE-ResNet-152 reduces the Places365 top-5 error from 11.61\% to 11.01\%.
+\end{itemize}
+
+\subsubsection{Practical Applications and Widespread Adoption}
+Due to their efficiency and adaptability, SE blocks have been widely integrated into many advanced architectures beyond classification:
+\begin{itemize}
+	\item \textbf{Object Detection:} Faster R-CNN and RetinaNet benefit from SE-enhanced backbone networks.
+	\item \textbf{Semantic Segmentation:} DeepLab and U-Net architectures integrate SE blocks to improve feature selection.
+	\item \textbf{Lightweight Models:} MobileNet and ShuffleNet variants incorporate SE blocks, enhancing feature discrimination without significantly increasing computation.
+\end{itemize}
+
+SE blocks thus serve as a \textbf{general-purpose enhancement} that improves accuracy across diverse architectures and applications with minimal computational trade-offs.
+
+\subsection{SE Blocks and the End of the ImageNet Classification Challenge}
+\label{subsec:senet_end_imagenet}
+
+The introduction of SE blocks in 2017 marked a turning point in the history of deep learning for image classification. With the Squeeze-and-Excitation Network (SENet) winning the \textbf{ILSVRC 2017 classification challenge} by a significant margin, the ImageNet competition had effectively reached its saturation point. The classification problem that had driven progress in convolutional neural networks (CNNs) for years was, metaphorically, \textbf{squeezed to a pulp}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/imagenet_completion.jpg}
+	\caption{The evolution of top-performing models in the ImageNet classification challenge over the years. SENet achieved the lowest top-5 error rate in 2017, marking the effective end of the challenge.}
+	\label{fig:chapter11_imagenet_completion}
+\end{figure}
+
+\noindent With SENet achieving a \textbf{top-5 error rate of 2.251\%}, nearly matching human-level performance on ImageNet, it became clear that further improvements in classification accuracy would yield diminishing returns. The focus of research started shifting away from pure classification improvements and toward \textbf{efficiency}, enabling CNNs to be deployed on real-world devices.
+
+\newpage
+\subsubsection{Shifting Research Directions: Efficiency and Mobile Deployability}
+While deeper and more powerful models like SENet were being developed, practical applications demanded \textbf{lightweight and efficient networks} that could run on resource-constrained devices such as mobile phones, embedded systems, and edge devices. This need led to a new era of model design, emphasizing:
+\begin{itemize}
+	\item \textbf{Reducing computational complexity} while maintaining accuracy.
+	\item \textbf{Optimizing models for mobile and embedded hardware} (e.g., efficient CNN architectures).
+	\item \textbf{Exploring new paradigms} beyond conventional CNN-based feature extraction.
+\end{itemize}
+
+\subsubsection{What Comes Next?}
+In the following sections, we will explore some of the architectures that emerged as a response to these practical challenges:
+\begin{itemize}
+	\item \textbf{MobileNets}: Depthwise separable convolutions for efficient mobile-friendly models.
+	\item \textbf{ShuffleNet}: Grouped convolutions with channel shuffling to optimize computation.
+	\item \textbf{EfficientNet}: Compound scaling of depth, width, and resolution to maximize accuracy per FLOP.
+\end{itemize}
+These models set the stage for efficient deep learning, shifting the paradigm from \textbf{brute-force accuracy improvements} to \textbf{optimal model design} for real-world deployment.
+
+\section{Efficient Architectures for Edge Devices}
+\label{sec:efficient_edge_devices}
+
+As deep learning models become increasingly powerful, their computational demands also rise sharply. Yet many real-world applications—such are running on smartphones or other embedded systems like in autonomous vehicles. In this section, we explore the evolution of CNN architectures designed for embedded systems, aiming to optimize the accuracy-to-FLOP ratio, striking a careful balance between computational efficiency and predictive performance.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_44.jpg}
+	\caption{Rather than building the largest, most accurate networks, research in the years following SENet focuses on small, efficient models that optimize the accuracy/complexity trade-off. A superior model family shifts the entire accuracy-versus-complexity curve upward and to the left.}
+	\label{fig:chapter11_accuracy_vs_complexity}
+\end{figure}
+
+\noindent The journey in efficient deep learning begins with \textbf{MobileNets}, which introduced depthwise separable convolutions to dramatically reduce computational cost while preserving competitive accuracy. Subsequent innovations, such as \textbf{ShuffleNet}, further improved efficiency by reorganizing channel connectivity. More recently, advanced models like \textbf{EfficientNet} have pushed the boundaries by jointly scaling network depth, width, and resolution. Competing architectures such as \textbf{RegNet} offer similar accuracy at the same FLOP level while achieving up to five times faster training speeds.
+
+In the following subsections, we trace the development of these efficient architectures—from the early MobileNets and ShuffleNet to the latest EfficientNet and RegNet models—highlighting the key design principles and innovations that make them well-suited for deployment on edge devices.
+
+\subsection{MobileNet: Depthwise Separable Convolutions}
+\label{subsec:mobilenet_v1}
+
+MobileNetV1 was designed to create highly efficient neural networks that could run in real-time on low-power devices. The key innovation behind MobileNet is its use of \textbf{Depthwise Separable Convolutions}, which factorize a standard convolution operation into two separate steps:
+\begin{enumerate}
+	\item A \textbf{Depthwise Convolution}, where a single convolutional filter is applied per input channel (instead of applying filters across all channels as in standard convolutions).
+	\item A \textbf{Pointwise Convolution} ($1 \times 1$ convolution), which projects the depthwise output back into a full feature representation.
+\end{enumerate}
+
+This decomposition significantly reduces the number of computations required while still maintaining sufficient expressiveness.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_45.jpg}
+	\caption{Standard convolution block (left) vs. Depthwise Separable Convolution (right). The latter significantly reduces computation while maintaining competitive accuracy.}
+	\label{fig:chapter11_depthwise_vs_standard}
+\end{figure}
+
+To understand the efficiency gain, consider the computational cost:
+\begin{itemize}
+	\item \textbf{Standard Convolution:} $9C^2HW$ FLOPs.
+	\item \textbf{Depthwise Separable Convolution:} $(9C + C^2)HW$ FLOPs.
+\end{itemize}
+The speedup is given by:
+\begin{equation}
+	\frac{9C^2}{9C + C^2} = \frac{9C}{9+C}
+\end{equation}
+As $C \to \infty$, the speedup approaches \textbf{9$\times$}, demonstrating the substantial computational savings.
+
+\subsubsection{Width Multiplier: Thinner Models}
+A key parameter in MobileNet is the \emph{width multiplier} \(\alpha \in (0,1]\). It uniformly scales the number of channels in each layer:
+\[
+\text{(Input channels)} \;\mapsto\; \alpha \times (\text{Input channels}), 
+\quad
+\text{(Output channels)} \;\mapsto\; \alpha \times (\text{Output channels}).
+\]
+When \(\alpha=1\), MobileNet uses the baseline channel sizes. As \(\alpha\) decreases, the network becomes thinner at every layer, reducing both computation and parameters approximately by \(\alpha^2\). Typical choices include \(\alpha \in \{1, 0.75, 0.5, 0.25\}\), which trade off accuracy for efficiency in a predictable manner.
+
+\subsubsection{Resolution Multiplier: Reduced Representations}
+Another hyperparameter to control model size is the \emph{resolution multiplier} \(\rho \in (0,1]\). It uniformly scales the spatial resolution at each layer:
+\[
+\text{(Input height/width)} \;\mapsto\; \rho \times (\text{Input height/width}),
+\]
+and similarly for intermediate feature-map resolutions. Reducing resolution can shrink the FLOPs by approximately \(\rho^2\). Common input resolutions are \(\{224,192,160,128\}\), corresponding to \(\rho = 1,\,0.86,\,0.71,\,0.57\) relative to \(224\times224\).
+
+\subsubsection{Computational Cost of Depthwise Separable Convolutions}
+In MobileNet, each layer is a \textbf{depthwise separable convolution}, split into:
+\begin{enumerate}
+	\item \textbf{Depthwise Conv} \((K \times K)\): One spatial filter per input channel.
+	\item \textbf{Pointwise Conv} \((1 \times 1)\): A standard convolution across all input channels to produce output channels.
+\end{enumerate}
+
+If the baseline layer has \(\,M\) input channels, \(\,N\) output channels, kernel size \(K\!\times K\), and spatial dimension \(D\!\times D\), then the total FLOPs for a depthwise separable layer are:
+\[
+\underbrace{(K \times K) \cdot M \cdot D^2}_{\text{Depthwise}} 
+\;+\;
+\underbrace{(1 \times 1)\cdot M \cdot N \cdot D^2}_{\text{Pointwise}}.
+\]
+Applying the width multiplier \(\alpha\) and resolution multiplier \(\rho\) modifies the above to:
+\[
+(K \times K)\,\cdot\,(\alpha M)\,\cdot\,(\rho D)^2 
+\;+\;
+(\alpha M)\,\cdot\,(\alpha N)\,\cdot\,(\rho D)^2,
+\]
+which can be written as:
+\[
+(\rho D)^2 
+\bigl[
+(K^2)\,\alpha M 
+\;+\;
+\alpha^2 (M \cdot N)
+\bigr].
+\]
+Hence, choosing smaller \(\alpha\) or \(\rho\) scales down the network’s computation and number of parameters, at the cost of some accuracy.
+
+\paragraph{Summary of Multipliers}
+Together, the width and resolution multipliers \((\alpha, \rho)\) provide a simple yet powerful mechanism to tailor MobileNet to a wide range of resource constraints, making it suitable for both high-performance and highly constrained edge-device environments. 
+
+\subsubsection{MobileNetV1 vs. Traditional Architectures}
+Despite its lightweight design, MobileNetV1 achieves remarkable efficiency compared to traditional CNNs. Table~\ref{tab:mobilenet_vs_classical} highlights a comparison on the ImageNet dataset.
+
+\begin{table}[H]
+	\centering
+	\caption{Comparison of MobileNet-224, GoogLeNet, and VGG-16 on ImageNet. MobileNet significantly reduces computational cost while maintaining competitive accuracy.}
+	\label{tab:mobilenet_vs_classical}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Model} & \textbf{Top-1 Accuracy} & \textbf{Parameters (M)} & \textbf{FLOPs (B)} \\
+		\midrule
+		GoogLeNet     & 69.8\% & 6.8M  & 1.5B \\
+		VGG-16        & 71.5\% & 138M  & 15.5B \\
+		MobileNet-224 & 70.6\% & 4.2M  & 0.57B \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+MobileNet-224 achieves nearly the same accuracy as VGG-16 while using \textbf{97\% fewer parameters} and \textbf{96\% fewer FLOPs}, making it an ideal choice for real-time edge applications.
+
+\subsubsection{Depthwise Separable vs. Standard Convolutions in MobileNet}
+To understand the tradeoffs involved in using depthwise separable convolutions, Table~\ref{tab:mobile_depthwise_vs_standard} compares a regular convolutional MobileNet to one using depthwise separable convolutions.
+
+\begin{table}[H]
+	\centering
+	\caption{Comparison of MobileNet with standard convolutions vs. depthwise separable convolutions on ImageNet.}
+	\label{tab:mobile_depthwise_vs_standard}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Model} & \textbf{Top-1 Accuracy} & \textbf{Parameters (M)} & \textbf{FLOPs (M)} \\
+		\midrule
+		Regular Conv MobileNet  & 71.7\% & 29.3M  & 4866M \\
+		Depthwise MobileNet     & 70.6\% & 4.2M   & 569M  \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The use of depthwise separable convolutions results in:
+\begin{itemize}
+	\item A slight drop in accuracy (71.7\% $\to$ 70.6\%).
+	\item A \textbf{7$\times$} reduction in parameters (29.3M $\to$ 4.2M).
+	\item A \textbf{9$\times$} reduction in FLOPs (4866M $\to$ 569M).
+\end{itemize}
+
+This tradeoff is highly favorable for edge applications where computational efficiency is critical.
+
+\subsubsection{Summary and Next Steps}
+\label{subsubsec:mobile_to_shufflenet}
+
+MobileNetV1 demonstrated that \textbf{Depthwise Separable Convolutions} can drastically reduce computational cost while maintaining competitive accuracy. By factorizing a standard convolution into a \textbf{3×3 depthwise convolution} (mixing spatial information) followed by a \textbf{1×1 pointwise convolution} (mixing channel information), the model achieves significant efficiency gains.
+
+However, a key limitation remains: \textbf{the 1×1 pointwise convolution still operates on all channels uniformly.} Since this convolution processes each channel independently before recombining them, there is room for optimization in how channels interact.
+
+\noindent \textbf{What’s the problem?} The current design lacks an explicit mechanism to exchange information across different channels efficiently. Consider an alternative approach: \textbf{grouped convolutions}, which split channels into independent groups to reduce computational cost. While grouped convolutions lower the FLOP count, they introduce a new issue—\textbf{channels within a group never interact with channels from other groups.} This results in each output channel only depending on a limited subset of input channels, restricting the model’s capacity to learn rich feature representations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_54.jpg}
+	\caption{Problem: Grouped convolutions do not mix information across groups. Each output channel depends only on its corresponding input group, limiting feature learning.}
+	\label{fig:chapter11_grouped_conv_problem}
+\end{figure}
+
+\noindent This observation raises a fundamental question: \emph{Can we mix channel information more efficiently while maintaining the computational benefits of grouped convolutions?}
+
+\subsection{ShuffleNet: Efficient Channel Mixing via Grouped Convolutions}
+\label{subsec:shufflenet}
+
+MobileNetV1 demonstrated that \textbf{Depthwise Separable Convolutions} can significantly reduce computational cost, but it also introduced a key limitation: \textbf{the 1×1 pointwise convolution does not mix information across channels efficiently}. Grouped convolutions provide a way to further reduce computational cost but come with the drawback that \textbf{channels remain isolated within their groups}, limiting feature interaction.
+
+\noindent \textbf{Solution: ShuffleNet} \cite{zhang2018_shufflenet}. To address this issue, ShuffleNet introduces the \textbf{channel shuffle} operation, which explicitly enables cross-group feature interaction. By applying a grouped convolution followed by a channel shuffle before the next grouped convolution, \textbf{each output channel now depends on multiple input groups}, allowing efficient information exchange across channels while preserving the efficiency benefits of grouped convolutions.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_56.jpg}
+	\caption{Solution: By introducing channel shuffling after a grouped convolution, ShuffleNet ensures that every output channel incorporates information from different groups.}
+	\label{fig:chapter11_channel_shuffle}
+\end{figure}
+
+\noindent Note that Channel shuffle is also differentiable, which means it can be embedded into a DNN for end-to-end training (we can backpropagate through it).
+
+\subsubsection{The ShuffleNet Unit}
+\label{subsubsec:shufflenet_unit}
+
+\noindent
+\textbf{Motivation.} Traditional lightweight networks, such as MobileNet, rely on depthwise separable convolutions to reduce computational complexity. However, a significant proportion of the compute cost still occurs in the \(1\times1\) pointwise convolutions, which are necessary to mix channel-wise information. ShuffleNet addresses this by introducing \textbf{grouped convolutions} in the \(1\times1\) layers and incorporating a \textbf{channel shuffle} operation to ensure effective information exchange between groups.
+
+\paragraph{Core Design Features}
+\begin{itemize}
+	\item \textbf{Grouped 1\(\times\)1 Convolution:}
+	In contrast to ResNeXt (where grouping is typically applied only to \(3\times3\) layers), ShuffleNet extends grouped convolutions to \(1\times1\) layers as well. Since pointwise convolutions often dominate the FLOPs, applying grouping here significantly reduces computational cost.
+	\item \textbf{Channel Shuffle Operation:}
+	Grouped convolutions process disjoint subsets of channels, limiting information exchange across groups. To address this, ShuffleNet inserts a \emph{channel shuffle} step after the first \(1\times1\) grouped convolution, ensuring that subsequent convolutions see information from all channel groups.
+\end{itemize}
+
+\paragraph{Structure of a ShuffleNet Unit}
+A standard ShuffleNet unit (\(\text{stride} = 1\)) consists of:
+\begin{enumerate}
+	\item A \(\mathbf{1\times1}\) \textbf{grouped convolution} to efficiently mix feature representations.
+	\item A \textbf{channel shuffle} step to exchange information between groups.
+	\item A \(\mathbf{3\times3}\) \textbf{depthwise convolution}, capturing spatial information without introducing additional cross-channel dependencies.
+	\item Another \(\mathbf{1\times1}\) \textbf{grouped convolution} to restore the feature dimension.
+	\item \textbf{Batch normalization} and a \textbf{residual connection} to facilitate gradient flow.
+	\item A \textbf{ReLU} (or similar activation) applied after the residual connection.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Chapter_11/shufflenet_block.jpg}
+	\caption{ShuffleNet Units: (a) Standard bottleneck unit with depthwise convolution (DWConv), (b) ShuffleNet unit incorporating pointwise group convolution (GConv) and channel shuffle, (c) ShuffleNet unit with stride = 2, where element-wise addition is replaced with channel concatenation.}
+	\label{fig:chapter11_shufflenet_block}
+\end{figure}
+
+\paragraph{Stride-2 Modification}
+When downsampling with a stride of 2, two adjustments are made:
+\begin{itemize}
+	\item The shortcut branch applies a \(3\times3\) average pooling (stride 2) to reduce its spatial dimensions, so that its spatial dimensions (i.e.,  height and width) match those of the main branch.
+	\item Instead of adding the shortcut to the main branch (which requires matching channel numbers) like we do in the regular block, the outputs are concatenated along the channel dimension. This method preserves all features from both branches and increases the total number of channels, thereby enhancing the network's representational capacity.
+\end{itemize}
+
+\subsubsection{ShuffleNet Architecture}
+\label{subsubsec:shufflenet_architecture}
+
+The overall ShuffleNet architecture is constructed by stacking ShuffleNet units into three main stages. The first block in each stage applies a \textbf{stride of 2} to reduce spatial dimensions while increasing representational capacity. The remaining blocks maintain the same resolution.
+
+\paragraph{Stage-wise Construction:}
+\begin{itemize}
+	\item The first ShuffleNet unit in each stage performs \textbf{downsampling} using stride 2, reducing spatial resolution while expanding the number of channels.
+	\item Subsequent ShuffleNet units within the stage preserve spatial dimensions by using \textbf{stride 1} convolutions. Padding is applied to ensure consistent feature map sizes.
+	\item At the beginning of each new stage, the \textbf{number of output channels is doubled} to compensate for the reduced spatial resolution, maintaining the model’s expressiveness.
+	\item The number of bottleneck channels in each ShuffleNet unit is set to \(\mathbf{1/4}\) of the total output channels.
+\end{itemize}
+
+\paragraph{Scaling Factor}
+Like other efficient models, ShuffleNet allows for scaling via a multiplier \(s\), controlling the number of channels:
+\[
+\text{ShuffleNet }s\times: \quad 
+\text{(\#Channels)} \;=\; s \times \text{(\#Channels in ShuffleNet }1\times\!).
+\]
+Increasing \(s\) grows the model’s capacity (roughly scaling FLOPs by \(s^2\)), allowing for better accuracy when additional computational resources are available.
+
+\paragraph{Design Rationale}
+\begin{itemize}
+	\item \textbf{Groupwise 1 $\times$ 1 Convolution:} Minimizes the FLOPs of the typically expensive pointwise layers.
+	\item \textbf{Channel Shuffle:} Ensures cross-group interaction, avoiding the isolation problem that arises with purely grouped convolutions.
+	\item \textbf{Structured Scaling:} Doubling channels at each stage offsets the reduction in spatial size, balancing efficiency and representational power.
+\end{itemize}
+
+Overall, ShuffleNet offers an efficient alternative to MobileNet, illustrating how grouping and channel shuffling reduce computational complexity while retaining sufficient inter-channel mixing.
+
+\subsubsection{Computational Efficiency of ShuffleNet}
+\label{subsubsec:shufflenet_efficiency}
+
+To highlight the efficiency of ShuffleNet, consider a given input tensor of shape \(C \times H \times W\) and bottleneck channels \(m\). The computational cost of different architectures is:
+
+\begin{itemize}
+	\item \textbf{ResNet Bottleneck Block}: \(hw(2cm + 9m^2)\) FLOPs.
+	\item \textbf{ResNeXt Block}: \(hw(2cm + 9m^2/g)\) FLOPs (utilizing grouped convolutions).
+	\item \textbf{ShuffleNet Block}: \(hw(2cm/g + 9m)\) FLOPs.
+\end{itemize}
+
+\noindent Compared to ResNet and ResNeXt, ShuffleNet significantly reduces computational cost by applying grouped convolutions in all \(1 \times 1\) layers and using channel shuffling for better information exchange.
+
+\subsubsection{Inference Speed and Practical Performance}
+\label{subsubsec:shufflenet_inference}
+
+While theoretical FLOPs reductions provide an initial efficiency estimate, real-world inference speed is critical for edge deployment. Empirical evaluations on ARM-based processors show that ShuffleNet's use of grouped convolutions with channel shuffling achieves a 4× reduction in theoretical complexity, which translates to roughly a 2.6× speedup in practice. The authors experiments indicate that a group count of \(g=3\) strikes an optimal balance between accuracy and speed; although using more groups (e.g., \(g=4\) or \(g=8\)) can further improve accuracy, the additional overhead tends to slow inference, making \(g=3\) the most effective choice under our current implementation.
+
+Furthermore, ShuffleNet models demonstrate significant real-world gains compared to earlier architectures. For instance, the ShuffleNet 0.5× model achieves about a 13× speedup over AlexNet while maintaining comparable accuracy, even though the theoretical speedup is as high as 18×. These observations underscore the importance of considering not only theoretical FLOPs but also actual hardware performance when evaluating efficient architectures.
+
+\subsubsection{Performance Comparison: ShuffleNet vs. MobileNet}
+\label{subsubsec:shufflenet_vs_mobilenet}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Model} & \textbf{Accuracy (Top-1 \%)} & \textbf{Multi-Adds (M)} & \textbf{Parameters (M)} \\
+		\midrule
+		MobileNetV1    & 70.6 & 569 & 4.2 \\
+		ShuffleNet 1×  & 71.7 & 524 & 5.0 \\
+		\bottomrule
+	\end{tabular}
+	\caption{ShuffleNet 1× outperforms MobileNetV1 on ImageNet by achieving higher accuracy with fewer Multi-Adds, albeit with a slightly higher parameter count.}
+	\label{tab:shufflenet_vs_mobilenet}
+\end{table}
+
+\subsubsection{Beyond ShuffleNet: Evolution of Efficient CNN Architectures}
+\label{subsubsec:efficient_cnn_trends}
+
+The innovations introduced by ShuffleNet have spurred further advances in efficient CNN design. For example, MobileNetV2 employs \textbf{inverted residuals with linear bottlenecks} to further reduce computation and improve feature reuse, while MobileNetV3 leverages \textbf{neural architecture search (NAS)} to optimize models for real-world mobile applications. Additionally, recent architectures like RegNet demonstrate that, at the same FLOP budget, they can achieve similar accuracy to EfficientNet but with training iterations that are up to 5× faster.
+
+In the following sections, we explore these advanced architectures and examine how each builds upon the efficiency principles established by models like ShuffleNet, ultimately enabling state-of-the-art performance on resource-constrained devices.
+
+\subsection{MobileNetV2: Inverted Bottleneck and Linear Residual}
+\label{subsec:mobilenetv2}
+
+\noindent
+\textbf{Motivation: When to Apply Non-Linearity?}\\
+MobileNetV2~\cite{sandler2018_mobilenetv2} builds upon MobileNetV1’s depthwise-separable design but further refines \textbf{how and where} non-linear activations are applied. The key insight is that applying a non-linearity such as ReLU at the wrong stage—particularly after reducing the channel dimension—can irreversibly discard useful information. Instead, MobileNetV2 proposes:
+\begin{quote}
+	\emph{“Apply non-linearity in the expanded, high-dimensional space before projecting back linearly to a lower-dimensional representation.”}
+\end{quote}
+This ensures that the most expressive transformations occur in a rich, high-dimensional space, and the final projection back to a lower-dimensional space does not suffer from information loss due to ReLU-induced zeroing-out of channels.
+
+\paragraph{Understanding Feature Representations and Manifolds}
+A convolutional layer with an output shape of \( h \times w \times d \) can be interpreted as a grid of \( h \times w \) spatial locations, where each location contains a \( d \)-dimensional feature vector. Although this representation is formally \( d \)-dimensional, empirical evidence suggests that the \textbf{manifold of interest}—the meaningful variation within these activations—often resides in a much lower-dimensional subset. In other words, not all \( d \) dimensions contain independently useful information; instead, they are highly correlated, meaning they effectively form a low-dimensional structure within the high-dimensional activation space.
+
+\paragraph{ReLU and Information Collapse}
+Applying ReLU in a low-dimensional subspace can lead to an irreversible loss of information. To illustrate this, consider the following experiment:
+
+\begin{itemize}
+	\item A 2D spiral is embedded into an \(n\)-dimensional space using a random matrix transformation \(T\).
+	\item A ReLU activation is applied in this \(n\)-dimensional space.
+	\item The transformed data is then projected back to 2D using \(T^{-1}\).
+	\item When \(n\) is small (e.g., \(n=2\) or \(n=3\)), ReLU distorts or collapses the manifold, as important information is lost when negative values are clamped to zero.
+	\item When \(n\) is large (\(n \geq 15\)), the manifold remains well-preserved, as the high-dimensional space allows the ReLU transformation to retain sufficient structure.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/relu_transformations.jpg}
+	\caption{Visualization of ReLU transformations on low-dimensional manifolds embedded in higher-dimensional spaces. For small $n$ (e.g., $n=2$ or $n=3$), ReLU collapses structural information, while for $n \geq 15$, the transformation largely preserves it.}
+	\label{fig:chapter11_relu_transformations}
+\end{figure}
+
+\noindent
+This experiment highlights a key principle: \textbf{non-linearity should be applied in a sufficiently high-dimensional space to avoid information collapse}. This directly motivates the MobileNetV2 design, which introduces an \textbf{inverted residual block}.
+
+\subsubsection{The MobileNetV2 Block: Inverted Residuals and Linear Bottleneck}
+\label{subsubsec:mobilenetv2_block}
+
+\noindent
+\textbf{Why “Inverted Residual”?} \\
+Traditional residual blocks, such as those in ResNet, transform \textbf{wide} feature representations into a \textbf{narrow} bottleneck before expanding back. MobileNetV2 \textbf{inverts this pattern}: it starts with a \textbf{narrow} representation, expands it using a pointwise convolution, applies a depthwise convolution, then projects it back to a narrow representation. This is why it is called an \textbf{inverted residual}.
+
+\paragraph{Detailed Block Architecture}
+Each MobileNetV2 block consists of:
+\begin{enumerate}
+	\item \textbf{Expansion ($1\times1$ conv + ReLU6):} Increases the channel dimension by an expansion factor $t$ (typically $t=6$), allowing non-linearity to operate in a richer space.
+	\item \textbf{Depthwise Conv ($3\times3$ + ReLU6):} Efficiently captures spatial features with minimal cross-channel computation.
+	\item \textbf{Projection ($1\times1$ conv, \emph{no ReLU}):} Reduces back to the original (narrow) dimension. This step is \textbf{linear} to prevent information loss due to non-linearity.
+	\item \textbf{Residual Connection:} If the input and output shapes match (same spatial size and number of channels), a skip connection adds the input to the output.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_50.jpg}
+	\caption{Comparison of a standard ResNet bottleneck block and the MobileNetV2 inverted block. MobileNetV2 expands the feature space before applying non-linearity and projects back to a narrow representation in the end.}
+	\label{fig:chapter11_mobilenetv2_vs_resnet}
+\end{figure}
+
+\subsubsection{Why is the Inverted Block Fitting to Efficient Networks?}
+\label{subsubsec:inverted_block_efficiency}
+
+At first glance, temporarily expanding the channel dimension before processing and then narrowing it again seems to introduce additional computational cost compared to a straightforward bottleneck or MobileNetV1’s depthwise-separable design. However, MobileNetV2 often achieves higher accuracy at similar or only slightly higher FLOPs due to the following key factors:
+
+\paragraph{1. Depthwise Convolutions Maintain Low Computational Cost}
+As in MobileNetV1, each \(3\times3\) depthwise convolution operates on each channel separately, reducing computational complexity from:
+\[
+\mathcal{O}(k^2 \cdot \text{height} \cdot \text{width} \cdot \text{channels\_in} \times \text{channels\_out})
+\]
+to:
+\[
+\mathcal{O}(k^2 \cdot \text{height} \cdot \text{width} \cdot \text{channels\_in})
+\]
+This ensures that most of the FLOPs in each block remain low despite the temporary expansion of channels.
+
+\paragraph{2. Moderate Expansion Factor \((t)\) Balances Efficiency} 
+The expansion factor \(t\) determines how much the channel dimension increases inside the block. In practice, \(t=6\) is commonly used, striking a balance between expressivity and computational efficiency. This expansion allows non-linear transformations (via ReLU) to operate in a higher-dimensional space, reducing the risk of losing critical channels while ensuring that the final projection does not incur excessive overhead.
+
+\paragraph{3. Comparison to MobileNetV1} 
+The computational cost of a single block in each architecture is:
+
+\begin{itemize}
+	\item \textbf{MobileNetV1:} \(\mathcal{O}((9C + C^2)HW)\)
+	\item \textbf{MobileNetV2:} \(\mathcal{O}((9tC + 2tC^2)HW)\) per block, due to channel expansion.
+\end{itemize}
+
+Although MobileNetV2 appears to introduce additional cost, the overall network remains efficient because:
+
+\begin{itemize}
+	\item MobileNetV2 has \textbf{fewer layers than MobileNetV1}. While the original MobileNetV1 consists of 28 layers, MobileNetV2 reduces this number to 17.
+	\item MobileNetV2 has \textbf{wider representations per layer}. Since each block expands channels internally, fewer layers are needed to reach a comparable expressive power.
+	\item The cost gap between the two architectures decreases as the channel count increases. Specifically, for large \(C\), the cost of MobileNetV1 (which has \(\mathcal{O}(C^2)\) terms) becomes comparable to the cost of MobileNetV2 with moderate expansion (\(t=6\)).
+\end{itemize}
+
+\noindent Empirically, MobileNetV2 achieves \textbf{higher accuracy per FLOP} compared to MobileNetV1, making the trade-off worthwhile.
+
+\paragraph{4. Comparison to ResNet Bottleneck Blocks}
+While MobileNetV2 is inspired by ResNet’s bottleneck design, the computational costs differ:
+
+\begin{itemize}
+	\item \textbf{ResNet bottleneck:} \(\mathcal{O}(17HWC^2)\)
+	\item \textbf{MobileNetV2 bottleneck:} \(\mathcal{O}(2tHWC^2 + 9tHWC)\)
+\end{itemize}
+
+For moderate values of \(t\), e.g., \(t=6\), we have:
+\[
+\text{MobileNetV2 is more efficient than ResNet if: } 54HWC < 5HWC^2
+\]
+At high channel counts, the computational gap reduces significantly. In some cases, MobileNetV2 blocks can even be more efficient than ResNet bottlenecks.
+
+\paragraph{5. Linear Bottleneck Preserves Subtle Features}
+Unlike traditional residual connections, MobileNetV2 omits ReLU in the final projection layer. This ensures that small but useful activations are not lost when projecting back to the lower-dimensional space. This is particularly important in low-dimensional feature spaces where aggressive non-linearity can collapse valuable information.
+
+\paragraph{Summary}
+Although the MobileNetV2 block seems computationally heavier than MobileNetV1 on a per-block basis, the overall \textbf{network-level architecture} is more efficient because:
+\begin{itemize}
+	\item It requires fewer total layers.
+	\item Fewer downsampling stages are used in deeper layers.
+	\item It achieves significantly better accuracy at a similar FLOP budget.
+\end{itemize}
+
+\subsubsection{ReLU6 and Its Role in Low-Precision Inference}
+\label{subsubsec:relu6_mobilenetv2}
+
+\noindent
+\textbf{Definition and Motivation}\\
+MobileNetV2 employs \textbf{ReLU6} instead of standard ReLU, defined as:
+\[
+\mathrm{ReLU6}(x)\;=\;\min\bigl(\max(0,\,x),\,6\bigr).
+\]
+This choice was primarily motivated by:
+
+\begin{itemize}
+	\item \textbf{Activation Range Constraint:} Since ReLU6 clamps values between 0 and 6, it prevents extremely large activations that could dominate later layers, improving numerical stability.
+	\item \textbf{Fixed-Point Quantization Stability:} In 8-bit integer arithmetic, numbers are typically represented with limited dynamic range. By keeping activations within a well-bounded range, ReLU6 reduces precision loss when mapping from floating-point to integer representation.
+\end{itemize}
+
+\paragraph{Practical Observations and Alternatives}
+Later research \cite{krishnamoorthi2018_quantizing} found that:
+\begin{itemize}
+	\item \textbf{ReLU6 does not always improve quantization.} While it was originally intended to make 8-bit inference more robust, in practice, most modern quantization techniques can handle ReLU just as well.
+	\item \textbf{ReLU can sometimes outperform ReLU6.} In particular, in cases where higher activation values play a role in separating decision boundaries, the strict upper bound of ReLU6 can be detrimental.
+\end{itemize}
+As a result, later architectures such as MobileNetV3 have moved back to using standard ReLU.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_51.jpg}
+	\caption{Visualization of ReLU6, which bounds activations within a maximum value of 6. This was initially intended for quantization but later found to be suboptimal in certain cases.}
+	\label{fig:chapter11_relu6_visualization}
+\end{figure}
+
+\subsubsection{MobileNetV2 Architecture and Performance}
+\label{subsubsec:mobilenetv2_architecture}
+
+\noindent
+\textbf{Network Structure} MobileNetV2 consists of:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c c c c c}
+		\toprule
+		\textbf{Input} & \textbf{Operator} & \textbf{\#Repeats} & \textbf{Expansion} & \textbf{Output Channels} \\
+		\midrule
+		$224^2 \times 3$   & $3\times3$ Conv (stride 2) & 1 & -- & 32 \\
+		$112^2 \times 32$  & Inverted Residual Block     & 1 & 1  & 16 \\
+		$112^2 \times 16$  & Inverted Residual Block     & 2 & 6  & 24 \\
+		$56^2 \times 24$   & Inverted Residual Block     & 3 & 6  & 32 \\
+		$28^2 \times 32$   & Inverted Residual Block     & 4 & 6  & 64 \\
+		$14^2 \times 64$   & Inverted Residual Block     & 3 & 6  & 96 \\
+		$14^2 \times 96$   & Inverted Residual Block     & 3 & 6  & 160 \\
+		$7^2 \times 160$   & Inverted Residual Block     & 1 & 6  & 320 \\
+		$7^2 \times 320$   & $1\times1$ Conv            & 1 & -- & 1280 \\
+		\bottomrule
+	\end{tabular}
+	\caption{MobileNetV2 Architecture: Expansion ratios and output channels per block.}
+	\label{tab:chapter11_mobilenetv2_architecture}
+\end{table}
+
+\subsubsection{Comparison to MobileNetV1, ShuffleNet, and NASNet}
+\label{subsubsec:mobilenetv2_comparison}
+
+\noindent
+\textbf{Efficiency and Accuracy Trade-offs}\\
+MobileNetV2 refines MobileNetV1’s depthwise-separable design and introduces \textbf{inverted residuals} and \textbf{linear bottlenecks}, leading to better efficiency-accuracy trade-offs. Compared to alternative lightweight architectures, it strikes a balance between computational cost and real-world deployability.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Network} & \textbf{Top-1 Acc. (\%)} & \textbf{Params (M)} & \textbf{MAdds (M)} & \textbf{CPU Time (ms)} \\
+		\midrule
+		MobileNetV1       & 70.6 & 4.2M  & 575M  & 113ms \\
+		ShuffleNet (1.5×) & 71.5 & 3.4M  & 292M  & -  \\
+		ShuffleNet (2×)   & 73.7 & 5.4M  & 524M  & -  \\
+		NASNet-A          & 74.0 & 5.3M  & 564M  & 183ms \\
+		MobileNetV2       & 72.0 & 3.4M  & 300M  & 75ms  \\
+		MobileNetV2 (1.4×) & 74.7 & 6.9M  & 585M  & 143ms \\
+		\bottomrule
+	\end{tabular}
+	\caption{Performance comparison of MobileNetV2 with other efficient architectures on ImageNet. The last column reports inference time on a Google Pixel 1 CPU using TF-Lite.}
+	\label{tab:chapter11_mobilenetv2_comparison}
+\end{table}
+
+\noindent
+\textbf{Key Observations:}
+\begin{itemize}
+	\item \textbf{MobileNetV2 vs. MobileNetV1:} MobileNetV2 achieves \textbf{1.4\%} higher accuracy while reducing Multiply-Adds by nearly \textbf{50\%}. This efficiency gain comes from \textbf{inverted residuals} and \textbf{linear bottlenecks}, which prevent feature collapse in low-dimensional spaces and allow to reduce the number of layers significantly while retaining representational power.
+	\item \textbf{MobileNetV2 vs. ShuffleNet:} ShuffleNet (2×) achieves a slightly higher \textbf{73.7\%} accuracy but at a higher computational cost (524M Multiply-Adds vs. 300M for MobileNetV2). MobileNetV2 remains more widely used due to better hardware support for its depthwise operations.
+	\item \textbf{MobileNetV2 vs. NASNet-A:} NASNet-A, designed via Neural Architecture Search (NAS), achieves the highest accuracy (\textbf{74.0\%}) but is significantly slower (\textbf{183ms} inference time vs. \textbf{75ms} for MobileNetV2).
+\end{itemize}
+
+\noindent
+\textbf{Motivation for NAS and MobileNetV3}\\
+While MobileNetV2 optimizes manual architecture design, NASNet-A highlights the potential of \textbf{automated architecture search} to find even better efficiency-accuracy trade-offs. However, its high computational cost motivates \textbf{MobileNetV3}, which builds on MobileNetV2 while incorporating NAS techniques to optimize block structures, activation functions, and expansion ratios for real-world deployment.
+
+The next section explores NAS and MobileNetV3, bridging the gap between handcrafted and automatically optimized architectures.
+
+\newpage
+\subsection{Neural Architecture Search (NAS) and MobileNetV3}
+\label{subsec:nas_mobilenetv3}
+
+\noindent
+\textbf{Neural Architecture Search (NAS): Automating Architecture Design}\\
+Designing neural network architectures is a challenging and time-consuming task. Neural Architecture Search (NAS) \cite{zoph2017_nas, zoph2018_learning} aims to automate this process by using a \textbf{controller network} that learns to generate optimal architectures through reinforcement learning.
+
+\subsubsection{How NAS Works? Policy Gradient Optimization}
+\label{subsubsec:nas_policy_gradient}
+
+Neural Architecture Search (NAS) uses a \textbf{controller network} to generate candidate architectures, which are then evaluated to improve the search strategy. However, the challenge is that architectural search is non-differentiable. It is not possible to directly compute gradients for better architectures. Instead, NAS relies on \textbf{policy gradient optimization}, a reinforcement learning (RL) technique, to update the controller.
+
+\paragraph{What is a Policy Gradient?}
+In reinforcement learning, an \textbf{agent} interacts with an \textbf{environment} and takes actions based on a learned policy to maximize a reward. The policy is typically parameterized by a neural network, and a \textbf{policy gradient} method updates these parameters by computing gradients with respect to expected future rewards.
+
+For NAS:
+\begin{itemize}
+	\item The \textbf{controller network} acts as the RL agent, outputting architectural decisions (e.g., filter sizes, number of layers).
+	\item The \textbf{child networks} sampled from the controller act as the environment; they are trained and evaluated on a dataset.
+	\item The \textbf{reward function} is defined based on the validation accuracy of the sampled child networks.
+\end{itemize}
+
+\paragraph{Updating the Controller Using Policy Gradients}
+NAS applies the \textbf{REINFORCE algorithm} \cite{williams1992_simple} to update the controller network:
+\begin{equation}
+	\nabla J(\theta) = \mathbb{E} \left[ \sum_{t=1}^{T} \nabla_{\theta} \log p(a_t | \theta) R \right],
+\end{equation}
+where:
+\begin{itemize}
+	\item \( \theta \) are the controller’s parameters.
+	\item \( a_t \) represents architectural choices (e.g., layer types, kernel sizes).
+	\item \( R \) is the reward (child network validation accuracy).
+\end{itemize}
+Intuitively, this means:
+\begin{enumerate}
+	\item Sample an architecture.
+	\item Train it and measure its accuracy.
+	\item Update the controller to reinforce architectural decisions that led to better accuracy.
+\end{enumerate}
+Over time, NAS converges to high-performing architectures.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_59.jpg}
+	\caption{Neural Architecture Search (NAS) The controller network samples architectures, trains child networks, evaluates them, and updates itself using policy gradient optimization}
+	\label{fig:chapter11_nas_process}
+\end{figure}
+
+\paragraph{Searching for Reusable Block Designs}
+Rather than searching for an entire architecture from scratch, NAS focuses on identifying \textbf{efficient reusable blocks}, which can be stacked to construct a full network. The search space consists of various operations, including:
+\begin{itemize}
+	\item Identity
+	\item $1\times1$ convolution
+	\item $3\times3$ convolution
+	\item $3\times3$ dilated convolution
+	\item $1\times7$ followed by $7\times1$ convolution
+	\item $1\times3$ followed by $3\times1$ convolution
+	\item $3\times3$, $5\times5$, or $7\times7$ depthwise-separable convolutions
+	\item $3\times3$ average pooling
+	\item $3\times3$, $5\times5$, or $7\times7$ max pooling
+\end{itemize}
+
+NAS identifies two primary block types:
+\begin{itemize}
+	\item \textbf{Normal Cell:} Maintains the same spatial resolution.
+	\item \textbf{Reduction Cell:} Reduces spatial resolution by a factor of $2$.
+\end{itemize}
+These cells are then combined in a regular pattern to construct the final architecture.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_62.jpg}
+	\caption{Examples of NAS-discovered \textbf{Normal} and \textbf{Reduction} cells, which are then stacked to form an overall architecture.}
+	\label{fig:chapter11_nas_cells}
+\end{figure}
+
+\subsubsection{MobileNetV3: NAS-Optimized Mobile Network}
+\label{subsubsec:mobilenetv3}
+
+\noindent
+\textbf{Motivation and Evolution from MobileNetV2.}\\
+MobileNetV3 \cite{howard2019_mobilenetv3} builds upon MobileNetV2 by leveraging NAS to further optimize key architectural choices. It incorporates:
+\begin{itemize}
+	\item \textbf{EfficientNet-style NAS search} to refine block selection and expansion ratios.
+	\item \textbf{Swish-like activation function (h-swish)} to improve non-linearity efficiency.
+	\item \textbf{Squeeze-and-Excitation (SE) modules} in some layers to improve channel-wise attention.
+	\item \textbf{Smaller and optimized depthwise convolutions}, reducing computational cost while maintaining expressiveness.
+\end{itemize}
+
+\subsubsection{The MobileNetV3 Block Architecture and Refinements}
+\label{subsubsec:mobilenetv3_block}
+
+MobileNetV3 \cite{howard2019_mobilenetv3} was developed using NAS, which optimized its \textbf{block structure, activation functions, and efficiency improvements}.
+
+\paragraph{Structure of the MobileNetV3 Block}
+The core \textbf{MobileNetV3 block} builds upon the MobileNetV2 inverted residual block but introduces:
+\begin{itemize}
+	\item \textbf{Squeeze-and-Excitation (SE) modules} to enhance important features.
+	\item \textbf{h-swish activation} instead of ReLU6 for better non-linearity.
+	\item \textbf{Smaller depthwise convolutions} to reduce computation.
+\end{itemize}
+
+\paragraph{Differences from Previous MobileNet Blocks}
+\begin{itemize}
+	\item \textbf{MobileNetV1} Used standard depthwise separable convolutions.
+	\item \textbf{MobileNetV2} Introduced the inverted residual block and linear bottlenecks.
+	\item \textbf{MobileNetV3} Enhances MobileNetV2 with NAS-optimized activation functions and attention mechanisms.
+\end{itemize}
+
+\subsubsection{Why is MobileNetV3 More Efficient?}
+\label{subsubsec:mobilenetv3_efficiency}
+
+At first glance, MobileNetV3 may seem computationally more expensive than MobileNetV2 since it builds upon the same \textbf{inverted residual block} while introducing additional mechanisms like \textbf{squeeze-and-excitation (SE)}. However, it is actually \textbf{more efficient} due to several optimizations discovered through NAS.
+
+\paragraph{Key Optimizations That Improve Efficiency}
+\begin{itemize}
+	\item \textbf{Neural Architecture Search (NAS) Optimization:} NAS optimizes layer types, kernel sizes, and expansion ratios to minimize latency on real-world mobile hardware. Rather than using a fixed design like MobileNetV2, NAS learns the most efficient way to balance depthwise separable convolutions, SE blocks, and activation functions.
+	
+	\item \textbf{Selective Use of SE Blocks:} While SE blocks add computation, NAS \emph{only} places them in layers where they provide the most accuracy gain per FLOP. MobileNetV2 did not use the channel-attention mechanism at all, whereas MobileNetV3 strategically incorporates SE \emph{only in certain depthwise layers}, preventing unnecessary overhead.
+	
+	\item \textbf{h-swish Activation:} ReLU6 was initially introduced in MobileNetV2 for quantization robustness but has a hard threshold at 6, limiting its expressiveness. MobileNetV3 replaces it with \textbf{h-swish}, which approximates the smoothness of Swish activation while being computationally efficient:
+	\begin{equation}
+		\text{h-swish}(x) = x \cdot \frac{\max(0, \min(x+3, 6))}{6}.
+	\end{equation}
+	This activation function improves accuracy and stability with little extra computational cost.
+	
+	\item \textbf{Fewer Depthwise Layers, Higher Efficiency:} NAS found that some depthwise convolutions in MobileNetV2 were redundant. By reducing the number of depthwise layers in specific parts of the network while slightly increasing the expansion ratio elsewhere, MobileNetV3 achieves a better accuracy-FLOP tradeoff.
+	
+	\item \textbf{Better Parallelism and Memory Access Efficiency:} MobileNetV3 is designed to maximize memory access efficiency (avoiding network fragmentation) and parallel execution on ARM-based chips.
+\end{itemize}
+
+These optimizations make MobileNetV3 both \textbf{faster} and \textbf{more accurate} than MobileNetV2. Hence, MobileNetV3 outperforms its predecessors in terms of accuracy and efficiency.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Network} & \textbf{Top-1 Acc. (\%)} & \textbf{MAdds (M)} & \textbf{Latency (ms)} \\
+		\midrule
+		MobileNetV1 & 70.6 & 575 & 113 \\
+		MobileNetV2 & 72.0 & 300 & 75 \\
+		MobileNetV3 & 75.2 & 219 & 43 \\
+		ShuffleNetV2 & 74.1 & 299 & - \\
+		NASNet-A & 74.0 & 564 & 183 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Comparison of MobileNet variants and other efficient models on ImageNet MobileNetV3 achieves the best accuracy while maintaining low latency}
+	\label{tab:chapter11_mobilenetv3_comparison}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_64.jpg}
+	\caption{Comparison between MobileNetV2 and MobileNetV3. MobileNetV3 achieves superior performance while maintaining or reducing computational cost.}
+	\label{fig:chapter11_mobilenetv3_vs_mobilenetv2}
+\end{figure}
+
+\subsubsection{The Computational Cost of NAS and Its Limitations}
+\label{subsubsec:nas_limitations}
+
+Despite its success in automating architecture search, \textbf{Neural Architecture Search (NAS) is computationally expensive}, making it impractical for many real-world applications. 
+
+\paragraph{Why is NAS Expensive?}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_65.jpg}
+	\caption{NAS requires training thousands of models, making it prohibitively expensive.}
+	\label{fig:chapter11_nas_cost}
+\end{figure}
+
+\begin{itemize}
+	\item \textbf{Training Thousands of Models:} NAS relies on evaluating a vast number of candidate architectures, requiring immense computational resources.
+	\item \textbf{Slow Policy Gradient Optimization:} Unlike standard gradient-based training, NAS often uses reinforcement learning techniques, such as policy gradients, which require many optimization steps to converge.
+	\item \textbf{Fragmented and Inefficient Architectures:} NAS-generated networks may be highly fragmented, reducing their parallel execution efficiency on modern hardware.
+	\item \textbf{High Parallelism is Often Inefficient:} While NAS models aim to maximize hardware utilization, excessive fragmentation and complex layer dependencies can slow down inference.
+\end{itemize}
+
+While NAS has produced strong models like MobileNetV3, its computational cost remains a major bottleneck. This motivates alternative approaches that focus on efficiency without requiring exhaustive search.
+
+\subsubsection{ShuffleNetV2 and Practical Design Rules}
+\label{subsubsec:shufflenetv2}
+
+\paragraph{Why ShuffleNetV2?}
+Whereas ShuffleNetV1 relied on group convolutions and channel shuffling to optimize FLOPs, \textbf{ShuffleNetV2}~\cite{ma2018_shufflenetv2} reorients the focus toward \emph{real-world efficiency}. This is driven by the observation that FLOPs alone do not adequately reflect performance on edge devices. Instead, factors such as \textbf{memory access cost (MAC) - note, this is not Multiply \& Accumulate!} and parallelism on modern hardware accelerators often determine practical inference speed. ShuffleNetV2 introduces a set of design rules that systematically address these constraints, offering a hardware-friendly approach.
+
+\paragraph{Four Key Guidelines for Practical Efficiency}
+The authors propose four guiding principles to reduce overhead and improve parallel execution:
+\begin{enumerate}[leftmargin=2em]
+	\item \textbf{G1: Equal channel widths minimize MAC.} 
+	Keeping channel dimensions consistent across layers lessens the amount of intermediate buffer allocation and memory reorganization, reducing stalls in the data pipeline.
+	
+	\item \textbf{G2: Excessive group convolutions raise MAC.}
+	While grouped convolutions can lower FLOPs on paper, they risk fragmenting data into many small groups, increasing memory transfers and synchronization overhead.
+	
+	\item \textbf{G3: Excessive network fragmentation hinders parallelism.}
+	Repeatedly splitting and merging tensor flows can degrade throughput on hardware accelerators, as parallel compute units sit idle waiting for partial outputs.
+	
+	\item \textbf{G4: Element-wise ops are non-negligible.}
+	Operations such as channel shuffle, elementwise additions, and ReLUs can collectively add significant latency. Carefully minimizing these is crucial to real-world efficiency.
+\end{enumerate}
+
+\paragraph{From ShuffleNetV1 to ShuffleNetV2}
+ShuffleNetV1 showed that group convolutions plus channel shuffle could reduce FLOPs, but in practice:
+\begin{itemize}[leftmargin=2em]
+	\item Heavy reliance on grouped $1\times1$ convs (often with large group counts) clashed with G2 (increasing memory overhead).
+	\item The multi-stage channel split/shuffle mechanism frequently fragmented the network (clashing with G3).
+\end{itemize}
+ShuffleNetV2 addresses these by reducing group counts (or omitting them in some layers), ensuring uniform channel splits (G1), and structuring the architecture with fewer channel-split/merge steps (G3), thereby reducing elementwise overhead (G4).
+
+\paragraph{Performance vs.\ MobileNetV3}
+Although ShuffleNetV2 demonstrates strong efficiency on real devices, it generally does \emph{not} surpass \textbf{MobileNetV3} in accuracy-versus-FLOP benchmarks. This is due to several factors:
+
+\begin{itemize}[leftmargin=2em]
+	\item \textbf{Inverted bottlenecks} in MobileNetV3 (tuned via NAS) offer higher representational power, even if they appear to violate G1’s principle of uniform channel widths.
+	\item \textbf{NAS-guided design} in MobileNetV3, despite introducing seemingly fragmented connections (counter to G3), includes specialized operator fusions and expansions that improve efficiency in practice.
+	\item \textbf{Real-world inference speed:} While ShuffleNetV2 aims to reduce memory access costs, it does not achieve a significant speedup over MobileNetV3 in practical deployments. MobileNetV3 remains faster in many scenarios, due to its superior layer fusion strategies. 
+\end{itemize}
+
+Nevertheless, ShuffleNetV2 provides valuable \emph{hardware-friendly} insights that help guide future efficient architecture development.
+
+\subsubsection{The Need for Model Scaling and EfficientNets}
+\label{subsubsec:efficientnet_motivation}
+
+\paragraph{Beyond Hand-Designed and NAS-Optimized Models}
+While manually designed architectures (e.g., ShuffleNetV2) and NAS-optimized networks (e.g., MobileNetV3) have driven major advancements in efficiency, there is still room for improvement. The search for better trade-offs between accuracy and computational cost has led researchers to a fundamental question:
+
+\begin{quote}
+	\emph{Instead of searching for entirely new architectures, can we systematically scale existing models to achieve optimal efficiency?}
+\end{quote}
+
+Rather than focusing solely on designing better building blocks or running expensive NAS procedures, an alternative approach emerged: \textbf{scaling existing models in a structured manner}. Scaling a model can involve increasing:
+\begin{itemize}
+	\item \textbf{Depth:} Adding more layers to increase representational power.
+	\item \textbf{Width:} Expanding the number of channels per layer.
+	\item \textbf{Resolution:} Using larger input images to capture finer details.
+\end{itemize}
+
+However, scaling any single dimension in isolation often leads to suboptimal results. Increasing depth alone may result in diminishing returns, while scaling width or resolution independently can make models inefficient. Instead, we need a principled way to scale these three dimensions together.
+
+\paragraph{Introducing EfficientNet}
+To address this challenge, \textbf{EfficientNet} \cite{tan2019_efficientnet} was proposed, leveraging a \textbf{compound scaling} approach that jointly optimizes depth, width, and resolution in a balanced way. By using a carefully tuned scaling coefficient, EfficientNet ensures that all three dimensions grow in harmony, yielding models that maximize accuracy while minimizing computational cost.
+
+\newpage
+\subsection{EfficientNet Compound Model Scaling}
+\label{subsec:efficientnet}
+
+\subsubsection{How Should We Scale a Model}
+\label{subsubsec:efficientnet_scaling}
+
+Given a well-designed baseline architecture, a fundamental question arises:
+
+\begin{quote}
+	\emph{How should we scale it up to improve performance while maintaining efficiency?}
+\end{quote}
+
+Common approaches to scaling include:
+\begin{itemize}
+	\item \textbf{Width Scaling:} Increasing the number of channels per layer to capture more fine-grained features.
+	\item \textbf{Depth Scaling:} Adding more layers to allow deeper feature extraction and better generalization.
+	\item \textbf{Resolution Scaling:} Using higher-resolution images to enhance spatial feature learning.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_67.jpg}
+	\caption{Different ways to scale a model: width, depth, resolution, or all jointly (compound scaling).}
+	\label{fig:chapter11_model_scaling}
+\end{figure}
+
+\paragraph{The Problem with Independent Scaling}
+Scaling only one of these dimensions leads to \emph{diminishing returns}. Excessive depth can cause vanishing gradients, extreme width increases make models harder to optimize, and excessive resolution scaling results in computational inefficiencies. Instead, EfficientNet optimally balances all three.
+
+Furthermore, the different scaling dimensions are not independent:
+\begin{itemize}
+	\item For \emph{higher-resolution images}, increasing depth allows larger receptive fields to capture similar features that include more pixels.
+	\item Increasing \emph{width} enhances fine-grained feature extraction, allowing more expressive representations.
+	\item Simply scaling one dimension in isolation is inefficient—scaling must be done in a coordinated manner to maximize the model’s performance-to-cost ratio.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_68.jpg}
+	\caption{Scaling only one dimension leads to diminishing returns; scaling all dimensions jointly yields better results.}
+	\label{fig:chapter11_scaling_diminishing_returns}
+\end{figure}
+
+\subsubsection{How EfficientNet Works}
+\label{subsubsec:efficientnet_method}
+
+EfficientNet introduces a \emph{compound scaling} approach, which systematically scales width, depth, and resolution together. Instead of arbitrary scaling, EfficientNet determines the best scaling ratios using an optimization process.
+
+\paragraph{Step 1: Designing a Baseline Architecture}
+A well-optimized small model, called \textbf{EfficientNet-B0}, is first discovered using NAS (Neural Architecture Search). This model incorporates:
+\begin{itemize}
+	\item \textbf{Depthwise separable convolutions} to reduce computational cost while preserving spatial feature extraction.
+	\item \textbf{Inverted residual blocks} (from MobileNetV2), also known as \textbf{MBConv blocks}, which employ a \emph{narrow-wide-narrow} structure for efficient processing.
+	\item \textbf{Squeeze-and-Excitation (SE) blocks} to enhance channel-wise feature selection, improving accuracy with minimal overhead.
+\end{itemize}
+
+\paragraph{EfficientNet-B0 Architecture}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c c c c c}
+		\toprule
+		\textbf{Stage} & \textbf{Operator} & \textbf{Resolution} & \textbf{\# Channels} & \textbf{\# Layers} \\
+		\midrule
+		1 & Conv3x3 & $224 \times 224$ & 32 & 1 \\
+		2 & MBConv1, k$3\times3$ & $112 \times 112$ & 16 & 1 \\
+		3 & MBConv6, k$3\times3$ & $112 \times 112$ & 24 & 2 \\
+		4 & MBConv6, k$5\times5$ & $56 \times 56$ & 40 & 2 \\
+		5 & MBConv6, k$3\times3$ & $28 \times 28$ & 80 & 3 \\
+		6 & MBConv6, k$5\times5$ & $14 \times 14$ & 112 & 3 \\
+		7 & MBConv6, k$5\times5$ & $14 \times 14$ & 192 & 4 \\
+		8 & MBConv6, k$3\times3$ & $7 \times 7$ & 320 & 1 \\
+		9 & Conv1x1 \& Pooling \& FC & $7 \times 7$ & 1280 & 1 \\
+		\bottomrule
+	\end{tabular}
+	\caption{EfficientNet-B0 baseline architecture. MBConv blocks are used throughout. These are the MobileNetV2 inverted bottleneck blocks.}
+	\label{tab:chapter11_efficientnet_b0_arch}
+\end{table}
+
+\paragraph{Step 2: Finding Optimal Scaling Factors}
+Once the EfficientNet-B0 model is obtained, a \textbf{grid search} determines the best scaling factors for:
+\begin{itemize}
+	\item \(\alpha\) (depth scaling).
+	\item \(\beta\) (width scaling).
+	\item \(\gamma\) (resolution scaling).
+\end{itemize}
+
+These scaling factors must satisfy the constraint:
+\[
+\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2
+\]
+The reasoning behind this constraint is:
+\begin{itemize}
+	\item It ensures that when we scale the model by a factor of \(\phi\), the total FLOPs increase by approximately \(2^\phi\), making it easier to monitor computational efficiency.
+	\item This balance prevents over-scaling in one dimension while under-scaling in others, leading to more consistent improvements in accuracy per FLOP.
+\end{itemize}
+
+Through empirical search, the optimal values were found to be:
+\[
+\alpha = 1.2, \quad \beta = 1.1, \quad \gamma = 1.15
+\]
+
+\paragraph{Step 3: Scaling to Different Model Sizes}
+By applying these scaling factors to EfficientNet-B0 with different values of \(\phi\), a family of models is created:
+
+\begin{itemize}
+	\item \textbf{EfficientNet-B1} to \textbf{EfficientNet-B7} scale up the base model by increasing depth, width, and resolution proportionally.
+	\item This systematic scaling approach maintains computational efficiency while improving accuracy.
+\end{itemize}
+
+\subsubsection{Why is EfficientNet More Effective}
+\label{subsubsec:efficientnet_advantages}
+
+\paragraph{Balanced Scaling Improves Efficiency}
+Unlike previous models that scale depth, width, or resolution separately, EfficientNet scales them together in a way that optimizes accuracy per FLOP.
+
+\paragraph{Comparison with MobileNetV3}
+EfficientNet builds upon MobileNetV3’s NAS-based design but differs in:
+\begin{itemize}
+	\item \textbf{Optimized Scaling:} MobileNetV3 relies on NAS to refine block structures, whereas EfficientNet applies compound scaling to improve overall architecture efficiency.
+	\item \textbf{Better Accuracy per FLOP:} By jointly optimizing all scaling factors, EfficientNet achieves a better tradeoff than MobileNetV3.
+	\item \textbf{SE Blocks Across the Entire Network:} Unlike MobileNetV3, which applies SE blocks selectively, EfficientNet integrates them at all relevant layers.
+\end{itemize}
+
+\paragraph{Comparison with Other Networks}
+\begin{itemize}
+	\item Compared to ResNets, EfficientNet achieves significantly higher accuracy per parameter.
+	\item Compared to ShuffleNet, EfficientNet provides better optimization for real-world scenarios.
+	\item Compared to MobileNetV2 and V3, EfficientNet systematically improves upon scaling while maintaining efficient building blocks.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_70.jpg}
+	\caption{EfficientNet achieves superior accuracy with fewer FLOPs and parameters compared to previous models.}
+	\label{fig:chapter11_efficientnet_efficiency}
+\end{figure}
+
+\subsubsection{Limitations of EfficientNet}
+\label{subsubsec:efficientnet_limitations}
+
+Despite its efficiency in FLOPs, EfficientNet faces a major real-world issue: \emph{FLOPs do not directly translate to actual speed}. Several factors impact real-world performance:
+
+\begin{itemize}
+	\item \textbf{Hardware Dependency:} Runtime varies significantly across different devices (mobile CPU, server CPU, GPU, TPU).
+	\item \textbf{Depthwise Convolutions:} While efficient on mobile devices, depthwise convolutions become \emph{memory-bound} on GPUs and TPUs, leading to suboptimal execution times.
+	\item \textbf{Alternative Convolution Algorithms:} Standard FLOP counting does not account for fast convolution implementations (e.g., FFT for large kernels, Winograd for \(3 \times 3\) convolutions), making direct FLOP comparisons misleading.
+\end{itemize}
+
+\paragraph{What’s Next? EfficientNetV2 and Beyond}
+Since EfficientNet’s design focuses on FLOPs rather than actual hardware efficiency, researchers sought ways to improve real-world speed. This led to:
+
+\begin{itemize}
+	\item \textbf{EfficientNetV2:} Improves inference speed and training efficiency.
+	\item \textbf{NFNets:} Removes Batch Normalization for improved training stability (when working with a small mini-batch).
+	\item \textbf{ResNet-RS:} A modernized ResNet with better scaling and training techniques.
+	\item \textbf{RegNets:} Optimizes the macro architecture rather than just individual block designs.
+\end{itemize}
+
+\paragraph{Conclusion}
+While EfficientNet represents a significant step forward in model scaling, its reliance on depthwise convolutions makes it suboptimal for GPUs and TPUs. Future architectures seek to address these limitations while maintaining high accuracy per FLOP.
+
+Next, we explore \textbf{EfficientNet-Lite, EfficientNetV2}, which build upon EfficientNet’s strengths while improving real-world efficiency.
+
+\subsection{EfficientNet-Lite Optimizing EfficientNet for Edge Devices}
+\label{subsec:efficientnet_lite}
+
+\subsubsection{Motivation for EfficientNet-Lite}
+\label{subsubsec:efficientnet_lite_motivation}
+
+While EfficientNet achieves an excellent balance between accuracy and computational cost, its deployment on edge devices (such as mobile phones and embedded systems) presents challenges. Many hardware accelerators used in mobile and IoT devices have limited support for certain EfficientNet components, leading to inefficiencies in real-world inference.
+
+To address these limitations, EfficientNet-Lite \cite{tensorflow2020_efficientnetlite} was introduced. It modifies EfficientNet’s architecture to improve execution speed on mobile and embedded hardware while maintaining high accuracy.
+
+\subsubsection{EfficientNet-Lite Architecture}
+\label{subsubsec:efficientnet_lite_arch}
+
+EfficientNet-Lite is based on the original EfficientNet family but introduces several key modifications to enhance performance on edge devices:
+
+\begin{itemize}
+	\item \textbf{Removal of Squeeze-and-Excite (SE) Blocks} SE blocks improve accuracy in EfficientNet, but they are not well supported by edge hardware. Removing them reduces latency and memory overhead.
+	\item \textbf{Replacement of Swish Activation with ReLU6} Swish, used in EfficientNet, is computationally expensive on mobile processors. ReLU6 is a simpler alternative that is better suited for low-power devices.
+	\item \textbf{Fixed Stem and Head Layers} Instead of scaling the initial and final layers when increasing model size, EfficientNet-Lite keeps them fixed. This reduces computational complexity while keeping the network compact.
+\end{itemize}
+
+These optimizations result in five EfficientNet-Lite models, ranging in size from 5M to 13M parameters, offering various accuracy-speed trade-offs.
+
+\subsubsection{Performance and Comparison with Other Models}
+\label{subsubsec:efficientnet_lite_comparison}
+
+EfficientNet-Lite is designed to be a superior alternative to MobileNetV2 for edge devices, offering higher accuracy while maintaining efficiency. In comparison to ResNet, it achieves substantially faster inference times, making it more practical for real-world mobile applications.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/efficientnet_lite_latency_accuracy.png}
+	\caption{EfficientNet-Lite significantly outperforms MobileNetV2 in accuracy while maintaining competitive inference speed. It also runs much faster than ResNet on edge devices. Image credit TensorFlow Blog \cite{tensorflow2020_efficientnetlite}.}
+	\label{fig:chapter11_efficientnet_lite_latency_accuracy}
+\end{figure}
+
+\paragraph{Model Size vs. Accuracy Trade-off}
+EfficientNet-Lite models are designed to balance accuracy and efficiency better than previous mobile architectures. The comparison below illustrates how EfficientNet-Lite achieves superior accuracy with a relatively small model size  compared to MobileNetV2 (that is a bit smaller) and ResNet (that is much larger):
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/efficientnet_lite_model_size_accuracy.png}
+	\caption{EfficientNet-Lite achieves better accuracy than MobileNetV2 at similar model sizes and outperforms ResNet in edge inference efficiency. Image credit TensorFlow Blog \cite{tensorflow2020_efficientnetlite}.}
+	\label{fig:chapter11_efficientnet_lite_model_size_accuracy}
+\end{figure}
+
+\newpage
+\subsection{EfficientNetV2: Faster Training and Improved Efficiency}
+\label{subsec:efficientnetv2}
+
+\subsubsection{Motivation for EfficientNetV2}
+\label{subsubsec:efficientnetv2_motivation}
+
+EfficientNetV1 introduced a highly parameter-efficient scaling approach, but it still had key inefficiencies:
+\begin{itemize}
+	\item \textbf{Slow training due to large image sizes:} EfficientNetV1 aggressively scaled image resolution, which increased memory usage, forced smaller batch sizes, and significantly slowed training.
+	\item \textbf{Depthwise convolutions are inefficient in early layers:} While depthwise convolutions reduce FLOPs, they do not fully utilize modern accelerators (e.g., GPUs, TPUs), leading to slow execution.
+	\item \textbf{Uniform scaling is suboptimal:} EfficientNetV1 scaled all network stages equally, but different stages contribute unequally to accuracy and efficiency.
+\end{itemize}
+
+\noindent EfficientNetV2 \cite{tan2021_efficientnetv2} addresses these issues by introducing:
+\begin{itemize}
+	\item \textbf{Fused-MBConv blocks} to replace depthwise convolutions in early layers, improving training speed.
+	\item \textbf{Progressive learning} with adaptive regularization to accelerate training while maintaining accuracy.
+	\item \textbf{Non-uniform scaling} to selectively increase depth in later network stages rather than scaling all layers equally.
+\end{itemize}
+
+\subsubsection{Fused-MBConv: Improving Early Layers}
+\label{subsubsec:fused_mbconv}
+
+A major efficiency bottleneck in EfficientNetV1 was the extensive use of depthwise convolutions, especially in early layers. While depthwise convolutions reduce parameters and FLOPs, they struggle to efficiently utilize hardware accelerators. EfficientNetV2 replaces depthwise convolutions in early layers with \textbf{Fused-MBConv} blocks. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.55\textwidth]{Figures/Chapter_11/fused_MBConv.jpg}
+	\caption{Comparison of MBConv (left) and Fused-MBConv (right). Fused-MBConv replaces the separate expansion and depthwise convolution layers with a single $3\times3$ convolution, improving efficiency in early layers.}
+	\label{fig:chapter11_fused_mbconv}
+\end{figure}
+
+\noindent These blocks replace the separate $1\times1$ expansion and depthwise convolution layers with a single $3\times3$ convolution. The result:
+\begin{itemize}
+	\item Faster execution on GPUs and TPUs due to better hardware utilization.
+	\item Slightly higher FLOPs, but significantly reduced training time.
+\end{itemize}
+
+\subsubsection{Progressive Learning: Efficient Training with Smaller Images}
+\label{subsubsec:progressive_learning}
+
+Training with large image sizes increases memory usage, forcing smaller batch sizes and slowing down training. EfficientNetV2 introduces \textbf{progressive learning}, where:
+\begin{itemize}
+	\item Training starts with smaller images and weak regularization.
+	\item As training progresses, image size gradually increases, and stronger regularization (e.g., dropout, RandAugment, MixUp) is applied.
+\end{itemize}
+
+This approach:
+\begin{itemize}
+	\item Reduces memory usage, allowing for larger batch sizes (e.g., $128$ vs. $32$ on TPUv3, $24$ vs. $12$ on a V100).
+	\item Speeds up training by up to $2.2\times$ while maintaining or even improving accuracy.
+\end{itemize}
+
+\subsubsection{FixRes: Addressing Train-Test Resolution Discrepancy}
+\label{subsubsec:fixres}
+
+One key challenge in CNN training is the mismatch between the way images are processed during training and inference. EfficientNetV2 incorporates insights from \textbf{FixRes} \cite{touvron2019_fixres} to mitigate this issue.
+
+\paragraph{The Problem: Region of Classification (RoC) Mismatch}
+\begin{itemize}
+	\item During training, images are typically cropped randomly from larger images to introduce data diversity.
+	\item During inference, a \emph{center crop} is usually applied, leading to a distribution mismatch.
+	\item This discrepancy can cause CNNs to struggle with scale invariance, degrading accuracy.
+\end{itemize}
+
+\paragraph{FixRes Solution}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/fix_res_visualized.jpg}
+	\caption{FixRes visualization \cite{touvron2019_fixres}. The red classification region is resampled as a crop fed to the neural network. Standard augmentations can make objects larger at training time than at test time (second column). FixRes mitigates this by either reducing the train-time resolution or increasing the test-time resolution (third and fourth columns), ensuring objects appear at similar sizes in both phases.}
+	\label{fig:chapter11_fixres_visualized}
+\end{figure}
+
+FixRes proposes two techniques to align train-test distributions:
+\begin{enumerate}
+	\item \textbf{Increasing the test-time crop size} to better match training-time object sizes.
+	\item \textbf{Fine-tuning the last few layers} of the network using test-time preprocessing.
+\end{enumerate}
+
+\paragraph{Implementation in EfficientNetV2}
+\begin{itemize}
+	\item EfficientNetV2 benefits from FixRes by aligning image resolutions across training and testing phases, improving robustness.
+	\item Unlike the FixRes paper, EfficientNetV2 does \emph{not} explicitly fine-tune post-training but incorporates similar resolution adjustments during training.
+\end{itemize}
+
+\subsubsection{Non-Uniform Scaling for Improved Efficiency}
+\label{subsubsec:nonuniform_scaling}
+
+EfficientNetV1 scaled width, depth, and resolution uniformly across all stages. However, different stages contribute differently to accuracy and efficiency.
+
+EfficientNetV2 uses a \textbf{non-uniform scaling strategy}:
+\begin{itemize}
+	\item \textbf{More layers are added to later stages} where deeper representations contribute more to accuracy.
+	\item \textbf{Maximum image resolution is capped} at $480\times480$ to avoid excessive memory usage and slow training.
+	\item \textbf{The NAS search objective was updated} to optimize for both accuracy and training efficiency, improving real-world execution.
+\end{itemize}
+
+\subsubsection{EfficientNetV2 Architecture}
+\label{subsubsec:efficientnetv2_architecture}
+
+EfficientNetV2 introduces three main model variants:
+\begin{itemize}
+	\item \textbf{EfficientNetV2-S:} Smallest variant, optimized for efficient training and inference.
+	\item \textbf{EfficientNetV2-M:} Medium variant balancing accuracy and efficiency.
+	\item \textbf{EfficientNetV2-L:} Largest variant for high-accuracy tasks.
+\end{itemize}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c c c c c}
+		\toprule
+		\textbf{Stage} & \textbf{Operator} & \textbf{Stride} & \textbf{Channels} & \textbf{Layers} \\
+		\midrule
+		0 & Conv3x3 & 2 & 24 & 1 \\
+		1 & Fused-MBConv1, k3x3 & 1 & 24 & 2 \\
+		2 & Fused-MBConv4, k3x3 & 2 & 48 & 4 \\
+		3 & Fused-MBConv4, k3x3 & 2 & 64 & 4 \\
+		4 & MBConv4, k3x3, SE0.25 & 2 & 128 & 6 \\
+		5 & MBConv6, k3x3, SE0.25 & 1 & 160 & 9 \\
+		6 & MBConv6, k3x3, SE0.25 & 2 & 256 & 15 \\
+		7 & Conv1x1 \& Pooling \& FC & - & 1280 & 1 \\
+		\bottomrule
+	\end{tabular}
+	\caption{EfficientNetV2-S architecture. Early layers use Fused-MBConv for faster training, while later layers retain MBConv for efficiency.}
+	\label{tab:chapter11_efficientnetv2_architecture}
+\end{table}
+
+\subsubsection{EfficientNetV2 vs. EfficientNetV1}
+\label{subsubsec:efficientnetv2_vs_v1}
+
+EfficientNetV2 improves upon EfficientNetV1 in several ways:
+\begin{itemize}
+	\item \textbf{Faster Training:} Progressive learning and FixRes improve training speed by up to $11\times$.
+	\item \textbf{Better Hardware Utilization:} Fused-MBConv accelerates training by replacing inefficient depthwise convolutions in early layers.
+	\item \textbf{Improved Scaling:} Non-uniform scaling provides better efficiency than EfficientNetV1's uniform scaling.
+\end{itemize}
+
+\subsubsection{EfficientNetV2 vs. Other Models}
+\label{subsubsec:efficientnetv2_comparison}
+
+EfficientNetV2 was designed to enhance \textbf{training speed, parameter efficiency, and real-world inference performance}. While it improves over EfficientNetV1, it is essential to compare it fairly against other architectures, including CNN-based and transformer-based models.
+
+\paragraph{Comparison in Accuracy, FLOPs, and Parameters}
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccc}
+			\toprule
+			\textbf{Model} & \textbf{Top-1 Acc. (\%)} & \textbf{Params (M)} & \textbf{FLOPs (B)} & \textbf{Infer-time (ms)} \\
+			\midrule
+			ResNet-50 \cite{he2016_resnet} & 76.1 & 25.6 & 4.1 & -- \\
+			ResNet-101 \cite{he2016_resnet} & 77.4 & 44.5 & 7.9 & -- \\
+			DeiT-S \cite{touvron2021_deit} & 79.8 & 22.0 & 4.6 & -- \\
+			MobileNetV1 \cite{howard2017_mobilenets} & 70.6 & 4.2 & 0.58 & -- \\
+			MobileNetV2 (1.0) \cite{sandler2018_mobilenetv2} & 71.8 & 3.4 & 0.30 & -- \\
+			MobileNetV3-L \cite{howard2019_mobilenetv3} & 75.2 & 5.4 & 0.22 & -- \\
+			ShuffleNetV1 (1.5) \cite{zhang2018_shufflenet} & 71.5 & 3.4 & 0.29 & -- \\
+			ShuffleNetV2 (1.5) \cite{ma2018_shufflenetv2} & 72.6 & 3.5 & 0.30 & -- \\
+			RegNetY-8GF \cite{radosavovic2020_regnet} & 81.7 & 39 & 8.0 & 21 \\
+			RegNetY-16GF \cite{radosavovic2020_regnet} & 82.9 & 84 & 16.0 & 32 \\
+			EfficientNet-B3 \cite{tan2019_efficientnet} & 81.5 & 12 & 1.9 & 19 \\
+			EfficientNet-B4 \cite{tan2019_efficientnet} & 82.9 & 19 & 4.2 & 30 \\
+			EfficientNet-B5 \cite{tan2019_efficientnet} & 83.7 & 30 & 10.0 & 60 \\
+			\midrule
+			EfficientNetV2-S \cite{tan2021_efficientnetv2} & 83.9 & 22 & 8.8 & 24 \\
+			EfficientNetV2-M \cite{tan2021_efficientnetv2} & 85.1 & 54 & 24.0 & 57 \\
+			EfficientNetV2-L \cite{tan2021_efficientnetv2} & 85.7 & 120 & 53.0 & 98 \\
+			\bottomrule
+		\end{tabular}
+	}
+	\caption{Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \cite{tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models.}
+	\label{tab:model_comparison}
+\end{table}
+
+\noindent
+\textbf{Key Observations:}
+\begin{itemize}	
+	\item \textbf{EfficientNetV2 is significantly larger and slower than MobileNetV1, MobileNetV2, MobileNetV3, and ShuffleNetV2 but offers much better accuracy.} MobileNets and ShuffleNets prioritize extreme efficiency for mobile and real-time applications, whereas EfficientNetV2 targets a balance between accuracy and efficiency. This makes EfficientNetV2 unsuitable for ultra-lightweight applications but ideal for scenarios requiring higher accuracy while maintaining reasonable inference times.
+	
+	\item \textbf{DeiT-S has lower accuracy than EfficientNetV2-S.} Vision Transformers (ViTs) like DeiT-S struggle in real-world inference efficiency. Despite having moderate FLOPs, they require extensive parallelism and memory access, making them substantially slower than most EfficientNetV2 variants and CNNs of similar FLOP count. Additionally, smaller vision transformers like DeiT-S do not achieve competitive accuracy with EfficientNetV2. Only much larger transformer models rival EfficientNetV2 in accuracy, but they come with significantly higher compute and latency costs.
+	
+	\item \textbf{EfficientNetV2 performs similarly to RegNets in terms of inference speed but achieves better accuracy.} Certain RegNet models have comparable FLOPs and inference times to EfficientNetV2 but do not reach the same level of accuracy. While RegNets are optimized for structured scaling, EfficientNetV2 benefits from progressive learning and optimized scaling strategies that boost accuracy at similar computational costs.
+\end{itemize}
+
+\paragraph{Training Speed and Efficiency}
+EfficientNetV2 significantly reduces training time compared to EfficientNetV1, as shown in Table~\ref{tab:chapter11_efficientnetv2_training}.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Model} & \textbf{Training Speedup} & \textbf{Trainable Params (M)} & \textbf{Epochs to Converge} \\
+		\midrule
+		EfficientNet-B7 & 1.0× (baseline) & 66.3 & 350 \\
+		EfficientNetV2-L & 11× faster & 119.5 & 210 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf{11× faster} while requiring fewer epochs.}
+	\label{tab:chapter11_efficientnetv2_training}
+\end{table}
+
+\paragraph{Key Takeaways}
+\begin{itemize}
+	\item EfficientNetV2 achieves \emph{higher accuracy with lower FLOPs} compared to its fitting variants of EfficientNetV1.
+	\item Training time is improved by \emph{up to 11×}, while also reducing the number of epochs required for convergence.
+	\item Optimizations such as \textbf{Fused-MBConv} and \textbf{progressive learning} enable significantly faster training and inference.
+\end{itemize}
+
+\newpage
+\subsection{NFNets: Normalizer-Free ResNets}
+\label{subsec:nfnets}
+
+\subsubsection{Motivation: Why Do We Need NFNets?}
+\label{subsubsec:nfnets_motivation}
+
+Deep networks like ResNets rely heavily on \textbf{Batch Normalization (BN)} to stabilize training. BN is effective because it:
+\begin{itemize}
+	\item \textbf{Stabilizes gradients}, enabling deep networks to train reliably.
+	\item \textbf{Reduces sensitivity to learning rates} and initialization schemes.
+	\item \textbf{Acts as implicit regularization}, improving generalization.
+	\item \textbf{Has zero inference cost}, since BN statistics are merged into preceding layers.
+\end{itemize}
+
+However, BN also has major drawbacks:
+\begin{itemize}
+	\item \textbf{Incompatible with small batch sizes}: BN estimates mean and variance over a batch, leading to instability when batches are too small.
+	\item \textbf{Different behavior at training and inference}: BN tracks running statistics during training, which may not match the distribution at inference.
+	\item \textbf{Slows training}: BN introduces additional computation and memory overhead.
+\end{itemize}
+
+To address these issues, NFNets \cite{brock2021_nfnet} remove BN entirely while preserving training stability. However, removing BN introduces another challenge: \textbf{variance explosion in residual networks}.
+
+\subsubsection{Variance Explosion Without BatchNorm}
+\label{subsubsec:nfnets_no_bn_variance}
+
+\paragraph{Variance Scaling in Residual Networks}
+A typical residual block in a ResNet has the form
+\[
+x_{\ell+1} = f_{\ell}(x_{\ell}) + x_{\ell}.
+\]
+While this skip connection aids gradient flow, it also can accumulate variance at each stage:
+\[
+\operatorname{Var}\bigl(x_{\ell+1}\bigr) \,\approx\, \operatorname{Var}\bigl(x_{\ell}\bigr)\;+\;\operatorname{Var}\bigl(f_{\ell}(x_{\ell})\bigr).
+\]
+In deep architectures, repeated accumulation can cause a \emph{variance explosion}, destabilizing activations.
+
+\paragraph{Role of Weight Initialization}
+Careful initialization is a common strategy to keep activations in check at the start of training. As we've seen, \textbf{Fixup Initialization}~\cite{zhang2019_fixup} modifies weight scaling and learning rates in residual blocks. However, while Fixup prevents variance from exploding early on, it does not guarantee stability throughout the entire training if the network is very deep. Thus, batch normalization historically enabled deeper ResNets by continuously regulating activation variance during training, not just at initialization.
+
+\subsubsection{Why Not Rescale the Residual Branch?}
+\label{subsubsec:residual_reparameterization}
+
+One idea to tame variance is to explicitly rescale the residual output:
+\begin{equation}
+	x_{\ell+1} \;=\; x_{\ell} \;+\;\alpha\; f_{\ell}\!\Bigl(\,\frac{x_{\ell}}{\beta_{\ell}}\Bigr),
+\end{equation}
+where \(\alpha\) is a learned or fixed scaling factor, and
+\[
+\beta_{\ell} \;=\;\sqrt{\operatorname{Var}(x_{\ell})}
+\]
+normalizes the input. This reparameterization implies
+\[
+\operatorname{Var}(x_{\ell+1}) \;\approx\; \operatorname{Var}(x_{\ell}) \;+\; \alpha^2,
+\]
+limiting variance accumulation per layer.
+
+\newpage
+In practice, however, this approach faces two major hurdles:
+\begin{itemize}
+	\item \textbf{Sensitivity to \(\alpha\)}: Choosing or tuning \(\alpha\) is non-trivial; a suboptimal setting can harm training stability.
+	\item \textbf{Long-Term Drift}:
+	Even with rescaling at each layer, subtle interactions over many layers can still lead to drift in variance.
+\end{itemize}
+
+\subsubsection{NFNets: Weight Normalization Instead of BN}
+\label{subsubsec:nfnets_weight_normalization}
+
+To avoid using batch-dependent statistics, \textbf{NFNets} employ a \emph{weight normalization} procedure at every training step. Rather than normalizing layer outputs (as in BN), NFNets normalize convolutional filters directly. Concretely, for each convolutional weight tensor \(\mathbf{W}\) of shape \(\text{(out\_channels)} \times \text{(in\_channels)} \times K \times K\), they compute:
+
+\[
+\widehat{W}_{i,j} \;=\; \gamma \,\cdot\, \frac{W_{i,j} \;-\; \operatorname{mean}(\mathbf{W}_{i,\cdot})}{\operatorname{std}(\mathbf{W}_{i,\cdot}) \,\sqrt{N}},
+\]
+where:
+\begin{itemize}
+	\item \(W_{i,j}\) is the \((i,j)\)-th weight parameter (for the \(i\)-th output channel and \(j\)-th element within that channel’s kernel).
+	\item \(\operatorname{mean}(\mathbf{W}_{i,\cdot})\) and \(\operatorname{std}(\mathbf{W}_{i,\cdot})\) are the mean and standard deviation of all weights in output channel \(i\).
+	\item \(N = K^2 \,C_{\mathrm{in}}\) is the fan-in of the kernel, i.e.\ the total number of input elements for a single filter.
+	\item \(\gamma\) is a channel-wise scaling constant. For ReLU, a recommended choice is 
+	\[
+	\gamma \;=\; \sqrt{\frac{2}{\,1 - (1/\pi)\,}} \;\approx\; 1.38,
+	\]
+	reflecting the variance constraints needed to maintain stable activations.
+\end{itemize}
+
+\paragraph{Why This Works}
+By standardizing each filter to have zero mean and unit variance (up to a fixed scale \(\gamma\)), NFNets ensure that layer outputs do not escalate in variance purely because of unbounded filter norms. This effectively replaces BN’s role of keeping activations well-conditioned:
+\begin{itemize}
+	\item \textbf{No Batch Statistics:} The normalization depends solely on parameters themselves, not on the running or batch-dependent means/variances of activations.
+	\item \textbf{Stable Training Without BN:} Controlling filter norms across all layers prevents activation blow-up or collapse, thereby stabilizing the forward pass and facilitating gradient flow in the backward pass.
+	\item \textbf{No Extra Inference Overhead:} Once the filters have been normalized during training, the final weights \(\widehat{W}\) remain fixed for inference. There are no additional computations per input sample, just as BN adds no overhead at inference time.
+\end{itemize}
+
+\paragraph{Relation to Earlier Weight Standardization}
+NFNets’ approach is reminiscent of “Weight Standardization” and other filter-centric normalization methods, yet NFNets further incorporate factors like \(\gamma\) to preserve proper variance for ReLU (or other activations). This synergy helps to match or exceed the performance of BN-equipped networks, while obviating the need for large batch sizes or running-mean tracking.
+
+\subsubsection{NFNets Architecture and ResNet-D}
+\label{subsubsec:nfnets_resnetd}
+
+NFNets build upon a modified ResNet architecture known as \textbf{ResNet-D} \cite{he2018_resnetd}. This includes:
+\begin{itemize}
+	\item \textbf{Improved stem layer:} Uses an initial \( 3 \times 3 \) convolution followed by an average pooling layer for better downsampling.
+	\item \textbf{Enhanced downsampling blocks:} Applies pooling before strided convolutions to smooth feature transitions.
+	\item \textbf{Increased group width:} Uses \textbf{128 channels per group} to improve feature expressiveness.
+\end{itemize}
+
+NFNets further introduce:
+\begin{itemize}
+	\item \textbf{Adaptive Gradient Clipping (AGC)}: Dynamically clips gradients if they exceed a predefined threshold, preventing instability.
+	\item \textbf{Stronger regularization:} Includes \textbf{MixUp, RandAugment, CutMix, DropOut, and Stochastic Depth} to enhance generalization.
+\end{itemize}
+
+\subsubsection{Comparison Across Diverse Architectures}
+\label{subsubsec:nfnets_comparison_more}
+
+To contextualize \textbf{NFNets} among other leading models—spanning RegNets, efficient CNNs, and Transformers. The following table presents key metrics such as FLOPs, parameter counts, training and inference times, and top-1 accuracy on ImageNet. The data is aggregated from publicly reported benchmarks in \cite{tan2021_efficientnetv2,brock2021_nfnet,radosavovic2020_regnet,zhang2020_resnest,vit2020_transformers,touvron2021_deit}, among others. Where possible, all inference times are measured under the same setup (NVIDIA V100 GPU, FP16 precision, batch size 16) unless explicitly noted.
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccccc}
+			\toprule
+			\textbf{Model} & \textbf{Resolution} & \textbf{Top-1 (\%)} & \textbf{Params (M)} & \textbf{FLOPs (B)} & \textbf{Inference Time (ms, V100)} & \textbf{Train Time (hrs, TPU)} \\
+			\midrule
+			\multicolumn{7}{c}{\emph{Selected CNN Baselines}} \\
+			\midrule
+			ResNet-50~\cite{he2016_resnet}         & 224 & 76.1 & 26 & 4.1  & -- & -- \\
+			RegNetY-16GF~\cite{radosavovic2020_regnet} & 224 & 82.9 & 84 & 16.0 & 32   & -- \\
+			\textbf{NFNet-F0}~\cite{brock2021_nfnet} & 256 & 83.6 & 72 & 12.4 & 56.7 & 8.9 \\
+			NFNet-F1~\cite{brock2021_nfnet}       & 256 & 84.7 & 133 & 35.5 & 133.9 & 20 \\
+			\midrule
+			\multicolumn{7}{c}{\emph{EfficientNet Family}} \\
+			\midrule
+			EfficientNet-B4~\cite{tan2019_efficientnet} & 380 & 82.9 & 19 & 4.2  & 30 & 21 \\
+			EfficientNet-B7~\cite{tan2019_efficientnet} & 600 & 84.7 & 66 & 38.0 & 170 & 139 \\
+			EfficientNetV2-S~\cite{tan2021_efficientnetv2} & 384 & 83.9 & 22 & 8.8  & 24    & 7.1 \\
+			EfficientNetV2-M~\cite{tan2021_efficientnetv2} & 480 & 85.1 & 54 & 24.0 & 57    & 13 \\
+			EfficientNetV2-L~\cite{tan2021_efficientnetv2} & 480 & 85.7 & 120 & 53.0 & 98    & 24 \\
+			\midrule
+			\multicolumn{7}{c}{\emph{Transformer-Based Models}} \\
+			\midrule
+			ViT-B/16~\cite{vit2020_transformers}    & 384 & 77.9$^\dagger$ & 86 & 55.5 & 68   & -- \\
+			DeiT-S~\cite{touvron2021_deit}         & 224 & 79.8 & 22 & 4.6  & --  & -- \\
+			DeiT-B~\cite{touvron2021_deit}         & 224 & 81.8 & 86 & 18.0 & --   & -- \\
+			\bottomrule
+	\end{tabular}}
+	\caption{\textbf{Comparison of NFNets with leading architectures}, including RegNet, EfficientNetV2, and Vision Transformers on ImageNet. \textbf{All models were pre-trained on ImageNet.} The \textit{inference time} refers to single-batch inference on an NVIDIA V100 GPU in FP16 precision with batch size 16, as reported in \cite{tan2021_efficientnetv2,brock2021_nfnet}. The \textit{train time} (hrs) assumes a standard TPUv3 configuration (32–64 cores). $^\dagger$ViT-B/16 at 384 input can vary in accuracy (77--79\%) depending on hyperparameters.}
+	\label{tab:compare_effnetv2_main}
+\end{table}
+
+\paragraph{Key Takeaways}
+\begin{itemize}
+	\item \textbf{NFNet eliminates batch normalization while maintaining high accuracy.} By normalizing weights instead of activations, NFNets improve stability and remove BN’s reliance on batch size.
+	\item \textbf{EfficientNetV2 balances FLOPs, accuracy, and training speed.} Compared to NFNet, EfficientNetV2 achieves high accuracy while optimizing FLOPs and training efficiency, making it ideal for real-world deployment.
+	\item \textbf{RegNets provide a competitive alternative.} RegNetY-16GF balances FLOPs and accuracy well, but it still relies on BN for stability.
+	\item \textbf{Vision Transformers (ViTs) trade efficiency for flexibility.} DeiT-S and ViT-B require significantly more FLOPs for similar accuracy levels and suffer from higher inference times due to less optimized self-attention operations. Nevertheless, as we'll later see, when trained on larger datasets or used in bigger architectures, can perform very well in many CV problems.
+	\item \textbf{Training time is a critical differentiator.} NFNet variants require significantly less training time compared to large EfficientNet or Transformer-based models, making them attractive for rapid deployment.
+	\item \textbf{Higher resolutions increase FLOPs and accuracy.} Many NFNet and EfficientNet variants are trained at larger resolutions ($256\times256$ or higher), leading to improved accuracy but increased computational cost.
+\end{itemize}
+
+\subsubsection{Further Reading and Resources}
+\label{subsubsec:nfnets_further_reading}
+
+For a more intuitive explanation of \textbf{NFNets}, including their theoretical foundations and practical implications, I recommend watching \emph{Yannic Kilcher's} breakdown of the NFNet architecture. His video provides insights into variance scaling, weight normalization, and why NFNets achieve competitive results without batch normalization.
+
+\begin{itemize}
+	\item Yannic Kilcher: \emph{“NFNets – Normalizer-Free Neural Networks”} (\href{https://www.youtube.com/watch?v=rNkHjZtH0RQ}{YouTube Video})
+\end{itemize}
+
+This video complements the material covered in this section by offering an accessible and engaging perspective on the core concepts behind the architecture.
+
+\newpage
+\subsection{Revisiting ResNets: Improved Training and Scaling Strategies}
+\label{subsec:revisiting_resnets}
+
+\textbf{Bello et al. (2021)} \cite{bello2021_revisitingresnets} revisit the ResNet architecture and propose a series of improvements that significantly boost performance through better training strategies and scaling methodologies. Their approach demonstrates that \textbf{ResNets can match or surpass EfficientNets} when trained effectively.
+
+\subsubsection{Training Enhancements for ResNets}
+\label{subsubsec:resnet_training_improvements}
+
+Starting from a baseline \textbf{ResNet-200}, the authors apply several training improvements. The following table summarizes how each change contributes to accuracy gains:
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcc}
+			\toprule
+			\textbf{Modification} & \textbf{Top-1 Accuracy (\%)} & \textbf{Accuracy Gain} \\
+			\midrule
+			Baseline ResNet-200 & 79.0 & -- \\
+			+ Cosine LR decay & 79.3 & +0.3 \\
+			+ Longer training (90 $\rightarrow$ 350 epochs) & 78.8 & -0.5 \\
+			+ EMA of weights & 79.1 & +0.3 \\
+			+ Label smoothing & 80.4 & +1.3 \\
+			+ Stochastic Depth & 80.6 & +0.2 \\
+			+ RandAugment & 81.0 & +0.4 \\
+			+ Dropout on FC layer & 80.7 & -0.3 \\
+			+ Less weight decay & 82.2 & +1.5 \\
+			+ Squeeze-and-Excite (SE) blocks & 82.9 & +0.7 \\
+			+ ResNet-D modifications & 83.4 & +0.5 \\
+			\bottomrule
+	\end{tabular}}
+	\caption{\textbf{Training improvements for ResNet-200} \cite{bello2021_revisitingresnets}. Applying these modifications systematically increases accuracy, demonstrating the potential of ResNet-style architectures when trained properly.}
+	\label{tab:resnet_training_improvements}
+\end{table}
+
+\paragraph{Key Enhancements}
+\begin{itemize}
+	\item \textbf{Cosine Learning Rate Decay:} Adjusts the learning rate smoothly over training, improving convergence.
+	\item \textbf{Exponential Moving Average (EMA) of Weights:} Stabilizes training by averaging weights over time.
+	\item \textbf{Stochastic Depth:} Randomly drops entire layers during training to improve generalization.
+	\item \textbf{RandAugment:} Data augmentation technique that enhances image diversity during training.
+	\item \textbf{Squeeze-and-Excite (SE) Blocks:} Improves channel-wise feature recalibration.
+	\item \textbf{ResNet-D Modifications:} Includes better downsampling strategies to improve feature representation.
+\end{itemize}
+
+\subsubsection{Scaling ResNets for Efficient Training}
+\label{subsubsec:resnet_scaling}
+
+Beyond training strategies, the study explores \textbf{scaling ResNets effectively}, optimizing width, depth, and input resolution to generate networks of various sizes. Instead of using an expensive NAS-based search, the authors \textbf{brute-force search over}:
+
+\begin{itemize}
+	\item \textbf{Network Width:} Initial widths scaled by $0.25\times$, $0.5\times$, $1.0\times$, $1.5\times$, or $2.0\times$ the baseline.
+	\item \textbf{Depth:} Networks evaluated at 26, 50, 101, 200, 300, 350, and 400 layers.
+	\item \textbf{Input Resolution:} Tested at 128, 160, 224, 320, and 448 pixels.
+\end{itemize}
+
+\subsubsection{ResNet-RS vs. EfficientNet: A Re-Evaluation}
+\label{subsubsec:chapter11_resnetrs_vs_efficientnet}
+
+\noindent
+This work challenges the prevailing assumption that EfficientNets are the most optimal CNN models, showing that \textbf{properly trained ResNets can achieve comparable or superior accuracy while training significantly faster than EfficientNets}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_11/slide_85.jpg}
+	\caption{\textbf{Training time comparison:} Optimized ResNets train significantly faster than EfficientNets at the same accuracy level \cite{bello2021_revisitingresnets}.}
+	\label{fig:chapter11_resnet_vs_efficientnet}
+\end{figure}
+
+\paragraph{Comparison of ResNet-RS and EfficientNet}
+Although EfficientNets minimize FLOPs while maintaining high accuracy, ResNet-RS models demonstrate that with optimized scaling and training strategies, ResNets remain highly competitive in both accuracy and efficiency. The following table provides a comparison of ResNet-RS and EfficientNet in terms of accuracy, parameters, FLOPs, memory usage, and inference latency.
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lccccccc}
+			\toprule
+			\textbf{Model} & \textbf{Resolution} & \textbf{Top-1 Acc. (\%)} & \textbf{Params (M)} & \textbf{FLOPs (B)} & \textbf{TPU Latency (s)} & \textbf{TPU Memory (GB)} & \textbf{V100 Latency (s)} \\
+			\midrule
+			ResNet-RS-350 & 256 & 84.0 & 164 & 69  & 1.1  & 7.3  & 4.7  \\
+			EfficientNet-B6 & 528 & 84.0 & 43 (3.8$\times$) & 38 (1.8$\times$) & 3.0 (2.7$\times$) & 16.6 (2.3$\times$) & 15.7 (3.3$\times$) \\
+			ResNet-RS-420 & 320 & 84.4 & 192 & 128 & 2.1  & 15.5 & 10.2 \\
+			EfficientNet-B7 & 600 & 84.7 & 66 (2.9$\times$) & 74 (1.7$\times$) & 6.0 (2.9$\times$) & 28.3 (1.8$\times$) & 29.9 (2.8$\times$) \\
+			\bottomrule
+	\end{tabular}}
+	\caption{\textbf{Comparison of ResNet-RS and EfficientNet} \cite{bello2021_revisitingresnets}. Despite having more parameters and FLOPs, ResNet-RS models are significantly faster in both training and inference. TPU latency is measured per training step for 1024 images on 8 TPUv3 cores, while memory usage is reported for 32 images per core, using bfloat16 precision without fusion or rematerialization.}
+	\label{tab:chapter11_resnetrs_vs_efficientnet}
+\end{table}
+
+\paragraph{Key Observations}
+\begin{itemize}
+	\item \textbf{ResNet-RS models have more FLOPs and parameters but train and infer faster.} Due to architectural refinements and training optimizations, ResNet-RS achieves competitive accuracy with significantly lower latency.
+	\item \textbf{ResNet-RS optimizations improve memory efficiency.} Despite higher parameter counts, ResNet-RS models consume less memory than EfficientNets, making them easier to deploy at scale.
+	\item \textbf{Scaling strategies differ:} EfficientNet follows NAS-derived compound scaling, whereas ResNet-RS employs brute-force search over depth, width, and input resolution to optimize for real-world efficiency. This approach is much easier and practical in comparison. 
+\end{itemize}
+
+\paragraph{Conclusion}
+While EfficientNets have been widely adopted due to their optimized scaling, \cite{bello2021_revisitingresnets} demonstrates that \textbf{properly scaled and trained ResNets can remain highly competitive}. These findings suggest that ResNets can achieve state-of-the-art results with faster training and inference, making them a \textbf{strong alternative to NAS-based architectures like EfficientNet}.
+
+\subsection{RegNets: Network Design Spaces}
+\label{subsec:regnets}
+
+\noindent
+\textbf{Motivation: Designing Scalable Architectures}\\
+While models like improved ResNets and EfficientNets have demonstrated strong performance, they rely on either manual design or costly NAS-based searches. \textbf{RegNets} \cite{radosavovic2020_regnet} propose a structured approach to network design by defining a parameterized \emph{design space} that enables automatic discovery of efficient architectures.
+
+\subsubsection{RegNet Architecture}
+\label{subsubsec:regnet_architecture}
+
+RegNets follow a simple architectural structure:
+\begin{itemize}
+	\item A \textbf{stem} consisting of a single $3 \times 3$ convolution.
+	\item A \textbf{body} composed of \textbf{four stages}, each containing multiple blocks.
+	\item A \textbf{head} with global pooling and a final classification layer.
+\end{itemize}
+Within each stage, the first block downsamples the feature maps by a factor of 2, while the remaining blocks maintain spatial resolution.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_11/slide_86.jpg}
+	\caption{\textbf{RegNet architecture}: A simple backbone with a stem, four-stage body, and head. Each stage consists of multiple blocks with defined parameters. These building blocks will allows us to construct architectures at different sizes that are quite efficient, while producing competitive accuracy.}
+	\label{fig:chapter11_regnet_architecture}
+\end{figure}
+
+\paragraph{Block Design: Generalizing ResNeXt}
+Each RegNet stage is parameterized by:
+\begin{itemize}
+	\item \textbf{Number of blocks} per stage.
+	\item \textbf{Number of input channels} $w$.
+	\item \textbf{Bottleneck ratio} $b$ (determines expansion factor).
+	\item \textbf{Group width} $g$ (number of channels per group).
+\end{itemize}
+This flexible parameterization generalizes ResNeXt, allowing for a controlled exploration of network architectures.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_11/slide_87.jpg}
+	\caption{\textbf{RegNet block structure}: A generalization of ResNeXt, where each stage is defined by four parameters only.}
+	\label{fig:chapter11_regnet_block}
+\end{figure}
+
+\subsubsection{Optimizing the Design Space}
+\label{subsubsec:regnet_optimization}
+
+\noindent
+\textbf{Defining the Initial Design Space}\\
+RegNets aim to find optimal architectures by systematically searching over a well-defined design space rather than relying on manual design or costly NAS searches. Initially, each RegNet model consists of \textbf{four stages}, where each stage is parameterized by:
+\begin{itemize}
+	\item \textbf{Number of blocks} per stage.
+	\item \textbf{Number of input channels} $w$.
+	\item \textbf{Bottleneck ratio} $b$ (ratio of expanded channels within each bottleneck block).
+	\item \textbf{Group width} $g$ (number of channels per group in grouped convolutions).
+\end{itemize}
+Since each of the four stages has these four parameters, the total design space initially consists of \textbf{16 parameters}.
+
+\paragraph{Random Sampling and Performance Trends}
+To refine this large design space, the authors of \cite{radosavovic2020_regnet} employed a \textbf{random sampling approach}:
+\begin{itemize}
+	\item Randomly generate a large number of architectures by varying the 16 parameters.
+	\item Train and evaluate these architectures to identify general performance trends.
+\end{itemize}
+By analyzing these trends, they discovered that some degrees of freedom were unnecessary, and simplifying the design space led to \textbf{more efficient and generalizable architectures}.
+
+\paragraph{Reducing the Design Space}
+Based on observed trends, they progressively reduced the search space from \textbf{16 parameters to just 6}:
+\begin{itemize}
+	\item \textbf{Bottleneck ratio is shared across all stages} (16 $\rightarrow$ 13 parameters).
+	\item \textbf{Group width is shared across all stages} (13 $\rightarrow$ 10 parameters).
+	\item \textbf{Width and block count per stage increase linearly}, rather than being freely chosen (10 $\rightarrow$ 6 parameters).
+\end{itemize}
+
+\paragraph{Final Six Parameters}
+The final, refined design space consists of only \textbf{six parameters}, making it significantly easier to search for high-performing models:
+\begin{itemize}
+	\item \textbf{Overall depth} ($d$) – total number of layers.
+	\item \textbf{Bottleneck ratio} ($b$) – controls the internal channel expansion within each block.
+	\item \textbf{Group width} ($g$) – defines the number of groups in grouped convolutions.
+	\item \textbf{Initial width} ($w_0$) – number of channels in the first stage.
+	\item \textbf{Width growth rate} ($w_a$) – rate at which channels expand between stages.
+	\item \textbf{Blocks per stage} ($w_m$) – number of blocks in each stage.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_11/slide_89.jpg}
+	\caption{\textbf{RegNet design space optimization}: The initial 16 parameters were reduced to 6, enabling efficient architecture search.}
+	\label{fig:chapter11_regnet_design_space}
+\end{figure}
+
+\paragraph{Why This Works}
+By simplifying the search space, RegNets maintain \textbf{flexibility while reducing complexity}, leading to models that:
+\begin{itemize}
+	\item Are \textbf{easier to optimize}, requiring fewer trial-and-error experiments.
+	\item \textbf{Generalize better}, as the imposed structure aligns with observed empirical trends.
+	\item Can be \textbf{searched efficiently}, finding optimal models faster than traditional NAS approaches.
+\end{itemize}
+
+\paragraph{Conclusion}
+Through a structured reduction of the design space, \textbf{RegNets provide a systematic approach to architecture search}, yielding high-performing models without the inefficiencies of exhaustive NAS.
+
+\subsubsection{Performance and Applications}
+\label{subsubsec:regnet_performance}
+
+RegNets yield highly competitive architectures:
+\begin{itemize}
+	\item \textbf{Random search finds strong models} across different FLOP budgets.
+	\item \textbf{RegNet achieves similar accuracy to EfficientNets} while training up to \textbf{5$\times$ faster} per iteration.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_11/slide_91.jpg}
+	\caption{RegNet models match EfficientNet accuracy but train up to 5$\times$ faster per iteration.}
+	\label{fig:chapter11_regnet_vs_efficientnet}
+\end{figure}
+
+\noindent Beyond academic benchmarks, RegNets have been \textbf{deployed in real-world applications}, such as \textbf{Tesla’s autonomous driving system}, where they efficiently process inputs from multiple cameras.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_11/slide_92.jpg}
+	\caption{\textbf{RegNet in real-world deployment}: Tesla uses RegNet-based architectures for processing inputs from multiple cameras.}
+	\label{fig:chapter11_regnet_tesla}
+\end{figure}
+
+\paragraph{Key Takeaways}
+\begin{itemize}
+	\item \textbf{RegNets provide a structured approach to architecture search}, reducing manual design effort while yielding efficient models.
+	\item \textbf{Refining the design space leads to better architectures}, as random search alone is inefficient.
+	\item \textbf{RegNets achieve EfficientNet-level accuracy with significantly faster training}, making them practical for deployment.
+	\item \textbf{RegNets are already in use in real-world applications}, demonstrating their robustness and efficiency.
+\end{itemize}
+
+\paragraph{Conclusion}
+RegNets present an \textbf{automated yet efficient approach to neural architecture search}, demonstrating that careful design-space refinement can lead to highly competitive architectures. By leveraging structured scaling rules, RegNets achieve strong accuracy-FLOP trade-offs while being significantly faster to train than EfficientNets.
+
+\newpage
+\subsection{Summary of Efficient Network Architectures}
+\label{subsec:chapter11_summary}
+
+We have surveyed a wide range of architectural innovations aimed at improving \emph{both} theoretical and real-world efficiency in deep learning. Below is an overarching summary of the progression and the main lessons learned.
+
+\subsubsection{Grouped Convolution and ResNeXt}
+ResNeXt built on the ResNet design by introducing \emph{grouped convolutions} inside its bottleneck blocks, allowing multiple parallel transformations at reduced computational cost. This approach demonstrated that FLOPs could be redistributed more effectively through grouped convolutions, improving accuracy under a fixed compute budget.
+
+\subsubsection{Squeeze-and-Excitation (SE) Blocks}
+SE blocks introduced \emph{channel-wise attention}, reweighting each feature map via a learned global context. By minimally increasing parameters and compute, SE blocks significantly boosted accuracy. Modern designs such as MobileNetV3, EfficientNet, and some RegNet variants incorporate this channel-attention mechanism to enhance representational power.
+
+\subsubsection{MobileNet: Depthwise Separable Convolutions}
+MobileNetV1 popularized \emph{depthwise separable convolutions}, splitting standard convolutions into a spatial depthwise step and a pointwise step. This drastically lowered FLOPs while retaining competitive accuracy. ShuffleNet refined the idea with \emph{channel shuffle} and grouped $1\times1$ layers, though real-world speed gains sometimes lagged behind theoretical FLOPs.
+
+\subsubsection{MobileNetV2 and the Inverted Residual Block}
+MobileNetV2 introduced \emph{inverted residual blocks} with \emph{linear bottlenecks} to mitigate activation collapse in narrow channels. This design improved accuracy and efficiency over MobileNetV1, and paved the way for subsequent refinements.
+
+\subsubsection{NAS and MobileNetV3, ShuffleNetV2 Insights}
+MobileNetV3 combined \emph{NAS}-optimized inverted bottlenecks, SE blocks, and specialized activations, achieving strong mobile efficiency. ShuffleNetV2, while focusing on memory-access cost, demonstrated hardware-friendly design rules, but generally did not match MobileNetV3’s accuracy-FLOP trade-off.
+
+\subsubsection{EfficientNet: Compound Scaling}
+EfficientNet’s \emph{compound scaling} simultaneously adjusts depth, width, and resolution, yielding state-of-the-art accuracy per FLOP. This systematic approach outperformed many manual or purely NAS-based methods, heralding a new paradigm of scaling strategies.
+
+\subsubsection{EfficientNet-Lite and EfficientNetV2}
+EfficientNet-Lite removed SE blocks and used ReLU6 to better suit mobile hardware constraints. Later, \emph{EfficientNetV2} adopted progressive learning, fused-MBConv blocks, and refined scaling, further improving training speed and real-world deployability.
+
+\subsubsection{NFNets and BN-Free Training}
+Normalization-Free Networks (NFNets) showed that one can train very deep residual networks without batch normalization by \emph{normalizing weights} instead of activations, mitigating the variance explosion problem. However, NFNets often require higher FLOPs or more complex weight-standardization to achieve top-tier accuracy.
+
+\subsubsection{Revisiting ResNets and Scaling}
+Well-tuned ResNets (e.g., ResNet-RS) show that older backbones can rival modern methods when trained with improved schedules, stronger data augmentation, and advanced optimizers.
+
+\subsubsection{RegNets: Optimizing Design Spaces}
+RegNets systematically explored architectural hyperparameters, finding families of networks that scale in controlled ways. This structured approach often yields strong accuracy at lower search cost than heavy NAS pipelines.
+
+\subsubsection{Key Takeaways}
+\begin{itemize}
+	\item \textbf{FLOPs Are Not Everything.} Real-world latency depends greatly on operator fusion, memory-access patterns, and parallel efficiency. Many “FLOPs-saving” designs underperform in actual deployments.
+	\item \textbf{NAS Is Powerful but Expensive.} Automated searches (MobileNetV3, MnasNet) can find better topologies but demand large compute resources. Simpler heuristics (compound scaling, grouped conv) can also succeed.
+	\item \textbf{Hardware Constraints Vary.} Mobile-targeted designs do not always excel on GPUs or TPUs. Designers must balance platform-specific considerations (e.g., depthwise speed, memory bandwidth).
+	\item \textbf{BatchNorm Is Prevalent but Not Unavoidable.} BN typically stabilizes training, but NFNets show that normalization-free techniques can still yield high accuracy, at the cost of more complex weight constraints or higher FLOPs.
+	\item \textbf{Architecture Design Spaces Can Be Streamlined.} RegNets illustrate how design dimensions (depth, width, group size) can be reduced to a few continuous hyperparameters, facilitating quick iteration without extensive NAS.
+	\item \textbf{Scaling Strategies, Not Just Operator Choices.} EfficientNet and EfficientNetV2 emphasize the impact of precisely scaling depth, width, and resolution. In many cases, \emph{how you scale} matters as much as \emph{which blocks} you use.
+\end{itemize}
+
+\paragraph{Conclusion}
+The evolution of efficient architectures has yielded a variety of design philosophies—grouped and depthwise separable convolutions, inverted residuals, channel attention, compound scaling, BN-free training, and structured design spaces. Practitioners now have a rich toolbox to fine-tune their models for specific hardware targets, accuracy needs, or resource constraints, reaffirming that \emph{no single network is universally optimal} across all deployment scenarios.
+
+
+

@@ -387,68 +387,69 @@ The primary drawback of GELU is its computational cost. The use of the \(\text{e
 
 \noindent In summary, GELU is a powerful activation function that enhances model expressiveness and stability, particularly in architectures relying on self-attention mechanisms. Its widespread adoption in modern deep learning models, including Transformers, highlights its practical advantages over traditional activation functions.
 
-\subsection{Swish: A Self-Gated Activation Function}
-\label{sec:chapter9_swish}
-
-Swish, introduced by \cite{ramachandran2017_swish}, is a smooth, non-monotonic activation function defined as:
-
-\[
-f(x) = x \cdot \sigma(\beta x) = x \cdot \frac{1}{1 + e^{-\beta x}}
-\]
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/swish_activation.png}
-	\caption{Visualization of the Swish activation function for different values of \(\beta\). When \(\beta=0\), the sigmoid component is constant at 0.5, making \(f(x)=x\cdot0.5\) a linear function. For high values of \(\beta\) (e.g., \(\beta=10\)), the sigmoid approximates a binary step function (yielding near 0 for \(x<0\) and near 1 for \(x>0\)), so \(f(x)\) behaves like ReLU. With the standard choice \(\beta=1\), Swish smoothly interpolates between these two extremes, balancing linearity and nonlinearity for improved gradient flow and model performance.}
-	\label{fig:chapter9_swish}
-\end{figure}
-
-where \(\sigma(\beta x)\) is the standard sigmoid function, and \(\beta\) is a parameter that controls the shape of the activation. In the simplest case, \(\beta = 1\), resulting in:
-
-\[
-f(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}
-\]
-
-Unlike ReLU, Swish is \textbf{self-gated}, meaning the activation dynamically scales itself based on its input. This property leads to several advantages in deep learning.
-
-\subsubsection{Advantages of Swish}
-\label{subsec:chapter9_swish_advantages}
-
-Swish exhibits a combination of desirable properties that make it a strong alternative to ReLU-based activations:
-
-\begin{itemize}
-	\item \textbf{Smooth Activation}: Unlike ReLU, Swish is continuously differentiable, which helps maintain stable gradient flow and improves optimization dynamics.
-	\item \textbf{Non-Monotonicity}: Swish does not strictly increase or decrease across its domain. This allows it to capture more complex relationships in the data compared to monotonic functions like ReLU, potentially enhancing feature learning.
-	\item \textbf{No Dead Neurons}: Unlike ReLU, which can lead to permanently inactive neurons (when weights drive activations below zero), Swish ensures that even negative values contribute to learning, as \(\sigma(x)\) never completely zeroes them out.
-	\item \textbf{Improved Expressiveness}: The self-gating property allows the function to act as a smooth interpolation between linear and non-linear behavior, adapting dynamically across different network layers.
-	\item \textbf{State-of-the-Art Performance}: Swish has been empirically shown to outperform ReLU in large-scale models like EfficientNet, where careful architecture optimization is crucial \cite{tan2019_efficientnet}.
-\end{itemize}
-
-\subsubsection{Disadvantages of Swish}
-\label{subsec:chapter9_swish_disadvantages}
-
-Despite its strengths, Swish has some drawbacks:
-
-\begin{itemize}
-	\item \textbf{Higher Computational Cost}: The sigmoid function \(\sigma(x)\) requires computing an exponential, making Swish computationally more expensive than ReLU. This can be a limiting factor in resource-constrained environments like mobile or edge devices.
-	\item \textbf{Lack of Widespread Adoption}: Although Swish has shown improvements in performance, ReLU remains dominant due to its simplicity and efficiency, particularly in standard architectures.
-	\item \textbf{Sensitivity to \(\beta\)}: While \(\beta\) can be a learnable parameter, tuning it effectively across different architectures is not always straightforward.
-\end{itemize}
-
-\subsubsection{Comparison to Other Top-Tier Activations}
-\label{subsec:chapter9_swish_comparison}
-
-Swish competes with other top-tier activation functions like GELU, ELU, and SELU. The following comparisons highlight where Swish stands:
-
-\begin{itemize}
-	\item \textbf{Swish vs. GELU}: Both are smooth and non-monotonic, making them superior to ReLU in terms of expressiveness. GELU is particularly useful in Transformer models, while Swish has been optimized for CNNs. Swish has a learnable component (\(\beta\)), whereas GELU is entirely data-driven.
-	\item \textbf{Swish vs. ELU}: ELU is zero-centered and smooth, making it more stable than ReLU. However, it enforces a sharp exponential decay in the negative regime, while Swish allows a more gradual transition. Swish generally performs better in deep networks, especially when \(\beta\) is optimized.
-	\item \textbf{Swish vs. SELU}: SELU is explicitly designed for self-normalization and aims to remove the need for BatchNorm. While SELU works well in fully connected architectures, Swish is more versatile and better suited for CNNs and Transformers.
-	\item \textbf{Swish vs. ReLU}: ReLU remains the fastest and most commonly used activation function. Swish generally outperforms ReLU in deeper architectures, but the computational cost of the sigmoid component makes ReLU preferable in most applications.
-\end{itemize}
-
-\subsubsection{Conclusion}
-Swish is a promising activation function that builds upon ReLU’s strengths while mitigating some of its weaknesses. It has been particularly effective in CNNs such as EfficientNet and remains a viable alternative for deep learning models. However, due to its increased computational cost and lack of widespread adoption, ReLU continues to dominate in many architectures. Nevertheless, as neural networks become deeper and more complex, Swish presents a compelling option for researchers seeking improved optimization and expressiveness.
+\begin{enrichment}[Swish: A Self-Gated Activation Function][subsection]
+	\label{enr:chapter9_swish}
+	
+	Swish, introduced by \cite{ramachandran2017_swish}, is a smooth, non-monotonic activation function defined as:
+	
+	\[
+	f(x) = x \cdot \sigma(\beta x) = x \cdot \frac{1}{1 + e^{-\beta x}}
+	\]
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_9/swish_activation.png}
+		\caption{Visualization of the Swish activation function for different values of \(\beta\). When \(\beta=0\), the sigmoid component is constant at 0.5, making \(f(x)=x\cdot0.5\) a linear function. For high values of \(\beta\) (e.g., \(\beta=10\)), the sigmoid approximates a binary step function (yielding near 0 for \(x<0\) and near 1 for \(x>0\)), so \(f(x)\) behaves like ReLU. With the standard choice \(\beta=1\), Swish smoothly interpolates between these two extremes, balancing linearity and nonlinearity for improved gradient flow and model performance.}
+		\label{fig:chapter9_swish}
+	\end{figure}
+	
+	where \(\sigma(\beta x)\) is the standard sigmoid function, and \(\beta\) is a parameter that controls the shape of the activation. In the simplest case, \(\beta = 1\), resulting in:
+	
+	\[
+	f(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}
+	\]
+	
+	Unlike ReLU, Swish is \textbf{self-gated}, meaning the activation dynamically scales itself based on its input. This property leads to several advantages in deep learning.
+	
+	\subsubsection{Advantages of Swish}
+	\label{subsec:chapter9_swish_advantages}
+	
+	Swish exhibits a combination of desirable properties that make it a strong alternative to ReLU-based activations:
+	
+	\begin{itemize}
+		\item \textbf{Smooth Activation}: Unlike ReLU, Swish is continuously differentiable, which helps maintain stable gradient flow and improves optimization dynamics.
+		\item \textbf{Non-Monotonicity}: Swish does not strictly increase or decrease across its domain. This allows it to capture more complex relationships in the data compared to monotonic functions like ReLU, potentially enhancing feature learning.
+		\item \textbf{No Dead Neurons}: Unlike ReLU, which can lead to permanently inactive neurons (when weights drive activations below zero), Swish ensures that even negative values contribute to learning, as \(\sigma(x)\) never completely zeroes them out.
+		\item \textbf{Improved Expressiveness}: The self-gating property allows the function to act as a smooth interpolation between linear and non-linear behavior, adapting dynamically across different network layers.
+		\item \textbf{State-of-the-Art Performance}: Swish has been empirically shown to outperform ReLU in large-scale models like EfficientNet, where careful architecture optimization is crucial \cite{tan2019_efficientnet}.
+	\end{itemize}
+	
+	\subsubsection{Disadvantages of Swish}
+	\label{subsec:chapter9_swish_disadvantages}
+	
+	Despite its strengths, Swish has some drawbacks:
+	
+	\begin{itemize}
+		\item \textbf{Higher Computational Cost}: The sigmoid function \(\sigma(x)\) requires computing an exponential, making Swish computationally more expensive than ReLU. This can be a limiting factor in resource-constrained environments like mobile or edge devices.
+		\item \textbf{Lack of Widespread Adoption}: Although Swish has shown improvements in performance, ReLU remains dominant due to its simplicity and efficiency, particularly in standard architectures.
+		\item \textbf{Sensitivity to \(\beta\)}: While \(\beta\) can be a learnable parameter, tuning it effectively across different architectures is not always straightforward.
+	\end{itemize}
+	
+	\subsubsection{Comparison to Other Top-Tier Activations}
+	\label{subsec:chapter9_swish_comparison}
+	
+	Swish competes with other top-tier activation functions like GELU, ELU, and SELU. The following comparisons highlight where Swish stands:
+	
+	\begin{itemize}
+		\item \textbf{Swish vs. GELU}: Both are smooth and non-monotonic, making them superior to ReLU in terms of expressiveness. GELU is particularly useful in Transformer models, while Swish has been optimized for CNNs. Swish has a learnable component (\(\beta\)), whereas GELU is entirely data-driven.
+		\item \textbf{Swish vs. ELU}: ELU is zero-centered and smooth, making it more stable than ReLU. However, it enforces a sharp exponential decay in the negative regime, while Swish allows a more gradual transition. Swish generally performs better in deep networks, especially when \(\beta\) is optimized.
+		\item \textbf{Swish vs. SELU}: SELU is explicitly designed for self-normalization and aims to remove the need for BatchNorm. While SELU works well in fully connected architectures, Swish is more versatile and better suited for CNNs and Transformers.
+		\item \textbf{Swish vs. ReLU}: ReLU remains the fastest and most commonly used activation function. Swish generally outperforms ReLU in deeper architectures, but the computational cost of the sigmoid component makes ReLU preferable in most applications.
+	\end{itemize}
+	
+	\subsubsection{Conclusion}
+	Swish is a promising activation function that builds upon ReLU’s strengths while mitigating some of its weaknesses. It has been particularly effective in CNNs such as EfficientNet and remains a viable alternative for deep learning models. However, due to its increased computational cost and lack of widespread adoption, ReLU continues to dominate in many architectures. Nevertheless, as neural networks become deeper and more complex, Swish presents a compelling option for researchers seeking improved optimization and expressiveness.
+\end{enrichment}
 
 \subsection{Choosing the Right Activation Function}
 \label{subsec:chapter9_activation_choice}

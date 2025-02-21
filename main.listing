@@ -1,15 +1,3 @@
-	# Visualize the learned weights for each class
-	w = svm.W[:-1, :]  # Strip out the bias term
-	w = w.reshape(32, 32, 3, 10)  # Reshape rows into image format
-	w_min, w_max = np.min(w), np.max(w)
-	
-	classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
-	
-	for i in range(10):
-	plt.subplot(2, 5, i + 1)
-	# Rescale weights to 0-255 range for visualization
-	wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
-	plt.imshow(wimg.astype('uint8'))
-	plt.axis('off')
-	plt.title(classes[i])
-	plt.show()
+	Standard Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Grouped Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Depthwise Convolution Output Shape: torch.Size([1, 64, 224, 224])
