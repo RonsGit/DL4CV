@@ -1,0 +1,29 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k+kn}{import} \PYG{n+nn}{torch}
+	
+	\PYG{k}{class} \PYG{n+nc}{TwoLayerNet}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{)}\PYG{p}{:}
+		\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}\PYG{p}{:}
+			\PYG{n+nb}{super}\PYG{p}{(}\PYG{n}{TwoLayerNet}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+			\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{)}
+			\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
+		
+		\PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+			\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+			\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear2}\PYG{p}{(}\PYG{n}{h\PYGZus{}relu}\PYG{p}{)}
+			\PYG{k}{return} \PYG{n}{y\PYGZus{}pred}
+		
+	\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{10}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{)}
+	\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
+		
+	\PYG{n}{model} \PYG{o}{=} \PYG{n}{TwoLayerNet}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
+	\PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{optim}\PYG{o}{.}\PYG{n}{SGD}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{parameters}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,} \PYG{n}{lr}\PYG{o}{=}\PYG{l+m+mf}{1e\PYGZhy{}4}\PYG{p}{)}
+	
+	\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}\PYG{p}{:}
+		\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+		\PYG{n}{loss} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{functional}\PYG{o}{.}\PYG{n}{mse\PYGZus{}loss}\PYG{p}{(}\PYG{n}{y\PYGZus{}pred}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+		\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}
+		
+		\PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{p}{)}
+		\PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}
+\end{MintedVerbatim}

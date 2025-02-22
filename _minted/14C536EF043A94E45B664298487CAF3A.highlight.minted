@@ -1,0 +1,17 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k}{class} \PYG{n+nc}{Sigmoid}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{autograd}\PYG{o}{.}\PYG{n}{Function}\PYG{p}{)}\PYG{p}{:}
+		\PYG{n+nd}{@staticmethod}
+		\PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n}{ctx}\PYG{p}{,} \PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+			\PYG{n}{y} \PYG{o}{=} \PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{+} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+			\PYG{n}{ctx}\PYG{o}{.}\PYG{n}{save\PYGZus{}for\PYGZus{}backward}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+			\PYG{k}{return} \PYG{n}{y}
+	
+		\PYG{n+nd}{@staticmethod}
+		\PYG{k}{def} \PYG{n+nf}{backward}\PYG{p}{(}\PYG{n}{ctx}\PYG{p}{,} \PYG{n}{grad\PYGZus{}y}\PYG{p}{)}\PYG{p}{:}
+			\PYG{n}{y}\PYG{p}{,} \PYG{o}{=} \PYG{n}{ctx}\PYG{o}{.}\PYG{n}{saved\PYGZus{}tensors}
+			\PYG{n}{grad\PYGZus{}x} \PYG{o}{=} \PYG{n}{grad\PYGZus{}y} \PYG{o}{*} \PYG{n}{y} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}
+			\PYG{k}{return} \PYG{n}{grad\PYGZus{}x}
+		
+	\PYG{k}{def} \PYG{n+nf}{sigmoid}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+		\PYG{k}{return} \PYG{n}{Sigmoid}\PYG{o}{.}\PYG{n}{apply}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\end{MintedVerbatim}

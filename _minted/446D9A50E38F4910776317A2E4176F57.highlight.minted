@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k+kn}{import} \PYG{n+nn}{torch}
+	
+	\PYG{n+nd}{@torch}\PYG{o}{.}\PYG{n}{jit}\PYG{o}{.}\PYG{n}{script}
+	\PYG{k}{def} \PYG{n+nf}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+		\PYG{k}{return} \PYG{n}{x} \PYG{o}{*} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\end{MintedVerbatim}

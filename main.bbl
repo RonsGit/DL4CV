@@ -2100,6 +2100,72 @@
       \verb http://proceedings.mlr.press/v37/ioffe15.html
       \endverb
     \endentry
+    \entry{johnson2017_infering}{misc}{}{}
+      \name{author}{7}{}{%
+        {{hash=90edc587e1d523d4e173b1fe6e733445}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Justin},
+           giveni={J\bibinitperiod}}}%
+        {{hash=9cadf8ca1dd9b5f5a830ba2059b2517f}{%
+           family={Hariharan},
+           familyi={H\bibinitperiod},
+           given={Bharath},
+           giveni={B\bibinitperiod}}}%
+        {{hash=47fbe2837893a84fb516e9e85ba7aa36}{%
+           family={Maaten},
+           familyi={M\bibinitperiod},
+           given={Laurens},
+           giveni={L\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+        {{hash=98392893f850ec17a67d971c57631579}{%
+           family={Hoffman},
+           familyi={H\bibinitperiod},
+           given={Judy},
+           giveni={J\bibinitperiod}}}%
+        {{hash=cd00ce5bc45f687c432e52e0fa1a7aa6}{%
+           family={Fei-Fei},
+           familyi={F\bibinithyphendelim F\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+        {{hash=0eae2d56a9cbb037c64028d6573877a7}{%
+           family={Zitnick},
+           familyi={Z\bibinitperiod},
+           given={C.\bibnamedelimi Lawrence},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=bd5dadbe57bedc5957c19a3154c4d424}{%
+           family={Girshick},
+           familyi={G\bibinitperiod},
+           given={Ross},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{fullhash}{449d247fd583ef8b2cd704504e9159b0}
+      \strng{fullhashraw}{449d247fd583ef8b2cd704504e9159b0}
+      \strng{bibnamehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{authorbibnamehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{authornamehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{authorfullhash}{449d247fd583ef8b2cd704504e9159b0}
+      \strng{authorfullhashraw}{449d247fd583ef8b2cd704504e9159b0}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Inferring and Executing Programs for Visual Reasoning}
+      \field{year}{2017}
+      \verb{eprint}
+      \verb 1705.03633
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1705.03633
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1705.03633
+      \endverb
+    \endentry
     \entry{karpathy2015_visualsemantic}{article}{}{}
       \name{author}{2}{}{%
         {{hash=e91a4c2044bccdbef249eabc886ff988}{%

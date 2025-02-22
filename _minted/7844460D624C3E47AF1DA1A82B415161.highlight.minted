@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k}{def} \PYG{n+nf}{sigmoid}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+		\PYG{k}{return} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{+} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+\end{MintedVerbatim}
