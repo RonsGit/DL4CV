@@ -791,7 +791,7 @@
 \contentsline {paragraph}{Why ShuffleNetV2?}{362}{section*.726}%
 \contentsline {paragraph}{Four Key Guidelines for Practical Efficiency}{362}{section*.727}%
 \contentsline {paragraph}{From ShuffleNetV1 to ShuffleNetV2}{362}{section*.728}%
-\contentsline {paragraph}{Performance vs.\ MobileNetV3}{362}{section*.729}%
+\contentsline {paragraph}{Performance vs.\ MobileNetV3}{363}{section*.729}%
 \contentsline {subsubsection}{The Need for Model Scaling and EfficientNets}{363}{section*.730}%
 \contentsline {paragraph}{Beyond Hand-Designed and NAS-Optimized Models}{363}{section*.731}%
 \contentsline {paragraph}{Introducing EfficientNet}{363}{section*.732}%
@@ -854,42 +854,41 @@
 \contentsline {section}{\numberline {11.11}RegNets: Network Design Spaces}{382}{section.11.11}%
 \contentsline {subsection}{\numberline {11.11.1}RegNet Architecture}{382}{subsection.11.11.1}%
 \contentsline {paragraph}{Block Design: Generalizing ResNeXt}{383}{section*.775}%
-\contentsline {subsection}{\numberline {11.11.2}Optimizing the Design Space}{384}{subsection.11.11.2}%
-\contentsline {paragraph}{Random Sampling and Performance Trends}{384}{section*.777}%
+\contentsline {subsection}{\numberline {11.11.2}Optimizing the Design Space}{383}{subsection.11.11.2}%
+\contentsline {paragraph}{Random Sampling and Performance Trends}{383}{section*.777}%
 \contentsline {paragraph}{Reducing the Design Space}{384}{section*.778}%
-\contentsline {paragraph}{Final Six Parameters}{385}{section*.779}%
-\contentsline {paragraph}{Why This Works}{385}{section*.781}%
+\contentsline {paragraph}{Final Six Parameters}{384}{section*.779}%
+\contentsline {paragraph}{Why This Works}{384}{section*.781}%
 \contentsline {paragraph}{Conclusion}{385}{section*.782}%
 \contentsline {subsection}{\numberline {11.11.3}Performance and Applications}{385}{subsection.11.11.3}%
 \contentsline {paragraph}{Key Takeaways}{386}{section*.785}%
-\contentsline {paragraph}{Conclusion}{387}{section*.786}%
-\contentsline {section}{\numberline {11.12}Summary of Efficient Network Architectures}{388}{section.11.12}%
-\contentsline {subsubsection}{Grouped Convolution and ResNeXt}{388}{section*.787}%
-\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{388}{section*.788}%
-\contentsline {subsubsection}{MobileNet: Depthwise Separable Convolutions}{388}{section*.789}%
-\contentsline {subsubsection}{MobileNetV2 and the Inverted Residual Block}{388}{section*.790}%
-\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{388}{section*.791}%
-\contentsline {subsubsection}{EfficientNet: Compound Scaling}{388}{section*.792}%
+\contentsline {paragraph}{Conclusion}{386}{section*.786}%
+\contentsline {section}{\numberline {11.12}Summary of Efficient Network Architectures}{387}{section.11.12}%
+\contentsline {subsubsection}{Grouped Convolutions and ResNeXt}{387}{section*.787}%
+\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{387}{section*.788}%
+\contentsline {subsubsection}{MobileNet and ShuffleNet: Depthwise Separable Convolutions and Channel Mixing}{387}{section*.789}%
+\contentsline {subsubsection}{MobileNetV2: Inverted Residual Blocks}{387}{section*.790}%
+\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{387}{section*.791}%
+\contentsline {subsubsection}{EfficientNet: Compound Scaling}{387}{section*.792}%
 \contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{388}{section*.793}%
-\contentsline {subsubsection}{NFNets and BN-Free Training}{388}{section*.794}%
-\contentsline {subsubsection}{Revisiting ResNets and Scaling}{389}{section*.795}%
-\contentsline {subsubsection}{RegNets: Optimizing Design Spaces}{389}{section*.796}%
-\contentsline {subsubsection}{Key Takeaways}{389}{section*.797}%
-\contentsline {paragraph}{Conclusion}{389}{section*.798}%
-\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{390}{chapter.12}%
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{391}{chapter.13}%
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{392}{chapter.14}%
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{393}{chapter.15}%
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{394}{chapter.16}%
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{395}{chapter.17}%
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{396}{chapter.18}%
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{397}{chapter.19}%
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{398}{chapter.20}%
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{399}{chapter.21}%
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{400}{chapter.22}%
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{401}{chapter.23}%
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{402}{chapter.24}%
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{403}{chapter.25}%
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{404}{chapter.26}%
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{405}{chapter.27}%
+\contentsline {subsubsection}{NFNets: BN-Free Training}{388}{section*.794}%
+\contentsline {subsubsection}{Revisiting ResNets: Scaling and Training Recipes}{388}{section*.795}%
+\contentsline {subsubsection}{RegNets: Optimizing the Design Space}{388}{section*.796}%
+\contentsline {subsubsection}{Key Takeaways}{388}{section*.797}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{389}{chapter.12}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{390}{chapter.13}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{391}{chapter.14}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{392}{chapter.15}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{393}{chapter.16}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{394}{chapter.17}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{395}{chapter.18}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{396}{chapter.19}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{397}{chapter.20}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{398}{chapter.21}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{399}{chapter.22}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{400}{chapter.23}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{401}{chapter.24}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{402}{chapter.25}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{403}{chapter.26}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{404}{chapter.27}%
 \contentsfinish 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  22 FEB 2025 01:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  22 FEB 2025 11:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2412,12 +2412,12 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_22.jpg  used on input line 271
 \pydata@fh@_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted=\write8
 \openout8 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250222012859 FAD58DE7366495DB4650CF
+runsystem(latexminted config  --timestamp 20250222113536 FAD58DE7366495DB4650CF
 EFAC2FCD61)...executed safely (allowed).
 
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250222012859 FAD58DE7366495DB4
+runsystem(latexminted cleanconfig  --timestamp 20250222113536 FAD58DE7366495DB4
 650CFEFAC2FCD61)...executed safely (allowed).
 
 
@@ -4905,52 +4905,50 @@ Package pdftex.def Info: Figures/Chapter_11/slide_85.jpg  used on input line 18
 File: Figures/Chapter_11/slide_86.jpg Graphic file (type jpg)
 <use Figures/Chapter_11/slide_86.jpg>
 Package pdftex.def Info: Figures/Chapter_11/slide_86.jpg  used on input line 19
-11.
+10.
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[382]
-<Figures/Chapter_11/slide_87.jpg, id=4800, 963.6pt x 542.025pt>
+[382 <./Figures/Chapter_11/Slide_86.jpg>]
+<Figures/Chapter_11/slide_87.jpg, id=4801, 963.6pt x 542.025pt>
 File: Figures/Chapter_11/slide_87.jpg Graphic file (type jpg)
 <use Figures/Chapter_11/slide_87.jpg>
 Package pdftex.def Info: Figures/Chapter_11/slide_87.jpg  used on input line 19
-28.
+29.
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[383 <./Figures/Chapter_11/Slide_86.jpg>]
-
-[384 <./Figures/Chapter_11/Slide_87.jpg>]
-<Figures/Chapter_11/slide_89.jpg, id=4815, 963.6pt x 542.025pt>
+[383 <./Figures/Chapter_11/Slide_87.jpg>]
+<Figures/Chapter_11/slide_89.jpg, id=4810, 963.6pt x 542.025pt>
 File: Figures/Chapter_11/slide_89.jpg Graphic file (type jpg)
 <use Figures/Chapter_11/slide_89.jpg>
 Package pdftex.def Info: Figures/Chapter_11/slide_89.jpg  used on input line 19
-76.
+77.
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
-<Figures/Chapter_11/slide_91.jpg, id=4816, 963.6pt x 542.025pt>
+
+
+[384 <./Figures/Chapter_11/Slide_89.jpg>]
+<Figures/Chapter_11/slide_91.jpg, id=4819, 963.6pt x 542.025pt>
 File: Figures/Chapter_11/slide_91.jpg Graphic file (type jpg)
 <use Figures/Chapter_11/slide_91.jpg>
 Package pdftex.def Info: Figures/Chapter_11/slide_91.jpg  used on input line 20
-03.
+04.
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
-
-
-[385 <./Figures/Chapter_11/Slide_89.jpg>]
-<Figures/Chapter_11/slide_92.jpg, id=4826, 963.6pt x 542.025pt>
+<Figures/Chapter_11/slide_92.jpg, id=4820, 963.6pt x 542.025pt>
 File: Figures/Chapter_11/slide_92.jpg Graphic file (type jpg)
 <use Figures/Chapter_11/slide_92.jpg>
 Package pdftex.def Info: Figures/Chapter_11/slide_92.jpg  used on input line 20
-12.
+13.
 (pdftex.def)             Requested size: 367.37056pt x 206.64156pt.
 
 
-[386 <./Figures/Chapter_11/Slide_91.jpg> <./Figures/Chapter_11/Slide_92.jpg>]
+[385 <./Figures/Chapter_11/Slide_91.jpg>]
 
-[387]
+[386 <./Figures/Chapter_11/Slide_92.jpg>]
 
-[388]) (./Chapters/Chapter_12_Lecture_12_Deep_Learning_Software.tex
+[387]) (./Chapters/Chapter_12_Lecture_12_Deep_Learning_Software.tex
 
-[389]
+[388]
 Chapter 12.
 File: Pictures/head2.png Graphic file (type png)
 <use Pictures/head2.png>
@@ -4958,7 +4956,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_13_Lecture_13_Object_Detection.tex
 
-[390
+[389
 
 ]
 Chapter 13.
@@ -4968,7 +4966,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_14_Lecture_14_Object_Detectors.tex
 
-[391
+[390
 
 ]
 Chapter 14.
@@ -4978,7 +4976,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_15_Lecture_15_Image_Segmentation.tex
 
-[392
+[391
 
 ]
 Chapter 15.
@@ -4988,7 +4986,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_16_Lecture_16_Recurrent_Networks.tex
 
-[393
+[392
 
 ]
 Chapter 16.
@@ -4998,7 +4996,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_17_Lecture_17_Attention.tex
 
-[394
+[393
 
 ]
 Chapter 17.
@@ -5008,7 +5006,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_18_Lecture_18_Vision_Transformers.tex
 
-[395
+[394
 
 ]
 Chapter 18.
@@ -5018,7 +5016,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_19_Lecture_19_Generative_Models_I.tex
 
-[396
+[395
 
 ]
 Chapter 19.
@@ -5028,7 +5026,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_20_Lecture_20_Generative_Models_II.tex
 
-[397
+[396
 
 ]
 Chapter 20.
@@ -5038,7 +5036,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_21_Lecture_21_Visualizing_Models__Generating_Images.tex
 
-[398
+[397
 
 ]
 Chapter 21.
@@ -5048,7 +5046,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_22_Lecture_22_SelfSupervised_Learning.tex
 
-[399
+[398
 
 ]
 Chapter 22.
@@ -5058,7 +5056,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_23_Lecture_23_3D_vision.tex
 
-[400
+[399
 
 ]
 Chapter 23.
@@ -5068,7 +5066,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_24_Lecture_24_Videos.tex
 
-[401
+[400
 
 ]
 Chapter 24.
@@ -5078,7 +5076,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_25_Model_Compression_Quantization_and_Pruning.tex
 
-[402
+[401
 
 ]
 Chapter 25.
@@ -5088,7 +5086,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_26_Foundation_Models_in_Computer_Vision.tex
 
-[403
+[402
 
 ]
 Chapter 26.
@@ -5098,7 +5096,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 ) (./Chapters/Chapter_27_MAMBA_MultiAgent_MultiBody_Analysis.tex
 
-[404
+[403
 
 ]
 Chapter 27.
@@ -5108,7 +5106,7 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 4.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 )
 
-[405
+[404
 
 ]
 File: Pictures/head2.png Graphic file (type png)
@@ -5117,11 +5115,11 @@ Package pdftex.def Info: Pictures/head2.png  used on input line 163.
 (pdftex.def)             Requested size: 614.295pt x 307.30548pt.
 
 
-[406
+[405
 
 ]
 
-[407]
+[406]
 Overfull \hbox (8.54575pt too wide) in paragraph at lines 164--164
 \T1/ptm/m/n/10.95 (-20) (2023). []$\T1/cmtt/m/n/10.95 https : / / medium . com 
 / towards -[] data -[] science / kaiming -[] he -[] initialization -[]
@@ -5135,6 +5133,8 @@ Overfull \hbox (25.52086pt too wide) in paragraph at lines 164--164
 
 
 
+[407]
+
 [408]
 
 [409]
@@ -5142,14 +5142,12 @@ Overfull \hbox (25.52086pt too wide) in paragraph at lines 164--164
 [410]
 
 [411]
-
-[412]
 \tf@ptc=\write9
 \openout9 = `main.ptc'.
 
 
 
-[413] (./main.aux)
+[412] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-09>
@@ -5171,9 +5169,9 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 53705 strings out of 473253
- 1151448 string characters out of 5722051
- 2240751 words of memory out of 5000000
+ 53703 strings out of 473253
+ 1151428 string characters out of 5722051
+ 2240742 words of memory out of 5000000
  73353 multiletter control sequences out of 15000+600000
  718755 words of font info for 666 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -5195,10 +5193,10 @@ vantgar/uagk8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/symbol/usyr.pfb>
 xmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2024/texmf-dist/fonts/typ
 e1/urw/times/utmbi8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmr
 8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (413 pages, 161414801 bytes).
+Output written on main.pdf (412 pages, 161415421 bytes).
 PDF statistics:
- 7152 PDF objects out of 7423 (max. 8388607)
- 5796 compressed objects within 58 object streams
- 1999 named destinations out of 2073 (max. 500000)
+ 7146 PDF objects out of 7423 (max. 8388607)
+ 5791 compressed objects within 58 object streams
+ 1997 named destinations out of 2073 (max. 500000)
  156363 words of extra memory for PDF output out of 184870 (max. 10000000)
 
