@@ -902,84 +902,84 @@
 \contentsline {section}{\numberline {12.1}Deep Learning Frameworks: Evolution and Landscape}{390}{section.12.1}%
 \contentsline {subsection}{\numberline {12.1.1}The Purpose of Deep Learning Frameworks}{391}{subsection.12.1.1}%
 \contentsline {subsection}{\numberline {12.1.2}Recall: Computational Graphs}{391}{subsection.12.1.2}%
-\contentsline {subsection}{\numberline {12.1.3}PyTorch: Fundamental Concepts}{392}{subsection.12.1.3}%
-\contentsline {subsection}{\numberline {12.1.4}Tensors and Basic Computation}{392}{subsection.12.1.4}%
-\contentsline {subsection}{\numberline {12.1.5}Autograd: Automatic Differentiation}{393}{subsection.12.1.5}%
-\contentsline {subsection}{\numberline {12.1.6}Computational Graphs and Modular Computation}{394}{subsection.12.1.6}%
+\contentsline {section}{\numberline {12.2}PyTorch: Fundamental Concepts}{392}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}Tensors and Basic Computation}{392}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}Autograd: Automatic Differentiation}{393}{subsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.2.3}Computational Graphs and Modular Computation}{394}{subsection.12.2.3}%
 \contentsline {subsubsection}{Building the Computational Graph}{394}{section*.800}%
 \contentsline {subsubsection}{Loss Computation and Backpropagation}{395}{section*.804}%
 \contentsline {subsubsection}{Extending Computational Graphs with Python Functions}{396}{section*.806}%
 \contentsline {subsubsection}{Custom Autograd Functions}{397}{section*.807}%
 \contentsline {subsubsection}{Summary: Backpropagation and Graph Optimization}{398}{section*.809}%
-\contentsline {subsection}{\numberline {12.1.7}High-Level Abstractions in PyTorch: \texttt {torch.nn} and Optimizers}{398}{subsection.12.1.7}%
+\contentsline {subsection}{\numberline {12.2.4}High-Level Abstractions in PyTorch: \texttt {torch.nn} and Optimizers}{398}{subsection.12.2.4}%
 \contentsline {subsubsection}{Using \texttt {torch.nn.Sequential}}{398}{section*.810}%
 \contentsline {subsubsection}{Using Optimizers: Automating Gradient Descent}{399}{section*.811}%
 \contentsline {subsubsection}{Defining Custom \texttt {nn.Module} Subclasses}{400}{section*.812}%
 \contentsline {subsubsection}{Key Takeaways}{400}{section*.813}%
-\contentsline {subsection}{\numberline {12.1.8}Combining Custom Modules with Sequential Models}{400}{subsection.12.1.8}%
+\contentsline {subsection}{\numberline {12.2.5}Combining Custom Modules with Sequential Models}{400}{subsection.12.2.5}%
 \contentsline {subsubsection}{Example: Parallel Block}{401}{section*.814}%
-\contentsline {subsection}{\numberline {12.1.9}Efficient Data Loading with \texttt {torch.utils.data}}{402}{subsection.12.1.9}%
+\contentsline {subsection}{\numberline {12.2.6}Efficient Data Loading with \texttt {torch.utils.data}}{402}{subsection.12.2.6}%
 \contentsline {subsubsection}{Example: Using \texttt {DataLoader} for Mini-batching}{402}{section*.817}%
-\contentsline {subsection}{\numberline {12.1.10}Using Pretrained Models with TorchVision}{403}{subsection.12.1.10}%
-\contentsline {subsection}{\numberline {12.1.11}Key Takeaways}{403}{subsection.12.1.11}%
-\contentsline {subsection}{\numberline {12.1.12}Dynamic vs. Static Computational Graphs in PyTorch}{404}{subsection.12.1.12}%
-\contentsline {subsubsection}{Example: Dynamic Graph Construction}{404}{section*.818}%
-\contentsline {subsubsection}{Static Graphs and Just-in-Time (JIT) Compilation}{404}{section*.820}%
-\contentsline {subsubsection}{Using JIT to Create Static Graphs}{405}{section*.821}%
-\contentsline {subsubsection}{Handling Conditionals in Static Graphs}{405}{section*.823}%
-\contentsline {subsubsection}{Optimizing Computation Graphs with JIT}{406}{section*.825}%
-\contentsline {subsubsection}{Benefits and Limitations of Static Graphs}{407}{section*.827}%
-\contentsline {subsubsection}{When Are Dynamic Graphs Necessary?}{407}{section*.828}%
-\contentsline {subsection}{\numberline {12.1.13}TensorFlow: Dynamic and Static Computational Graphs}{407}{subsection.12.1.13}%
-\contentsline {subsubsection}{Defining Computational Graphs in TensorFlow 2.0}{407}{section*.829}%
-\contentsline {subsubsection}{Static Graphs with \texttt {tf.function}}{408}{section*.830}%
-\contentsline {subsection}{\numberline {12.1.14}Keras: High-Level API for TensorFlow}{408}{subsection.12.1.14}%
-\contentsline {subsection}{\numberline {12.1.15}TensorBoard: Visualizing Training Metrics}{409}{subsection.12.1.15}%
-\contentsline {subsection}{\numberline {12.1.16}Comparison: PyTorch vs. TensorFlow}{410}{subsection.12.1.16}%
-\contentsline {paragraph}{Conclusion}{410}{section*.832}%
-\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{411}{chapter.13}%
+\contentsline {subsection}{\numberline {12.2.7}Using Pretrained Models with TorchVision}{403}{subsection.12.2.7}%
+\contentsline {subsubsection}{Key Takeaways}{403}{section*.818}%
+\contentsline {section}{\numberline {12.3}Dynamic vs. Static Computational Graphs in PyTorch}{404}{section.12.3}%
+\contentsline {subsubsection}{Example: Dynamic Graph Construction}{404}{section*.819}%
+\contentsline {subsection}{\numberline {12.3.1}Static Graphs and Just-in-Time (JIT) Compilation}{404}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Using JIT to Create Static Graphs}{405}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}Handling Conditionals in Static Graphs}{406}{subsection.12.3.3}%
+\contentsline {subsection}{\numberline {12.3.4}Optimizing Computation Graphs with JIT}{406}{subsection.12.3.4}%
+\contentsline {subsection}{\numberline {12.3.5}Benefits and Limitations of Static Graphs}{407}{subsection.12.3.5}%
+\contentsline {subsection}{\numberline {12.3.6}When Are Dynamic Graphs Necessary?}{407}{subsection.12.3.6}%
+\contentsline {section}{\numberline {12.4}TensorFlow: Dynamic and Static Computational Graphs}{408}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}Defining Computational Graphs in TensorFlow 2.0}{408}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}Static Graphs with \texttt {tf.function}}{408}{subsection.12.4.2}%
+\contentsline {section}{\numberline {12.5}Keras: High-Level API for TensorFlow}{409}{section.12.5}%
+\contentsline {section}{\numberline {12.6}TensorBoard: Visualizing Training Metrics}{410}{section.12.6}%
+\contentsline {section}{\numberline {12.7}Comparison: PyTorch vs. TensorFlow}{410}{section.12.7}%
+\contentsline {paragraph}{Conclusion}{411}{section*.825}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{412}{chapter.13}%
 \ttl@stoptoc {default@12}
 \ttl@starttoc {default@13}
-\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{412}{chapter.14}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{413}{chapter.14}%
 \ttl@stoptoc {default@13}
 \ttl@starttoc {default@14}
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{413}{chapter.15}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{414}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{414}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{415}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{415}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{416}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{416}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{417}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{417}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{418}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{418}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{419}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{419}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{420}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{420}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{421}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{421}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{422}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{422}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{423}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{423}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{424}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{424}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{425}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{425}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{426}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

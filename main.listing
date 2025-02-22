@@ -1,7 +1,3 @@
-	def step():
-		y_pred = model(x)
-		loss = loss_fn(y_pred, y)
-		return loss
-	
-	for t in range(1000):
-		opt.minimize(step, model.trainable_variables)
+	Standard Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Grouped Convolution Output Shape: torch.Size([1, 128, 224, 224])
+	Depthwise Convolution Output Shape: torch.Size([1, 64, 224, 224])

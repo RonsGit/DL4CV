@@ -69,7 +69,7 @@ The graphs define the sequence of operations required to compute outputs and gra
 
 \noindent Understanding computational graphs is crucial, as different frameworks implement them in distinct ways. The next sections explore how PyTorch and TensorFlow utilize these graphs, comparing \textbf{dynamic} vs. \textbf{static} computation strategies.  
 
-\subsection{PyTorch: Fundamental Concepts}
+\section{PyTorch: Fundamental Concepts}
 \label{subsec:chapter12_pytorch}
 
 PyTorch is a deep learning framework that provides flexibility, dynamic computation graphs, and efficient execution on both CPUs and GPUs. It introduces key abstractions:
@@ -591,14 +591,14 @@ Using pretrained models is as simple as:
 	\item \texttt{torchvision.models} provides a wide variety of architectures beyond AlexNet, VGG, and ResNet.
 \end{itemize}
 
-\subsection{Key Takeaways}
+\subsubsection{Key Takeaways}
 \begin{itemize}
 	\item \textbf{Custom modules and \texttt{torch.nn.Sequential} can be combined} to quickly build complex models while maintaining modularity.
 	\item \textbf{Data loading utilities} such as \texttt{torch.utils.data.DataLoader} facilitate efficient mini-batching and dataset management.
 	\item \textbf{TorchVision provides pretrained models}, making it easy to leverage state-of-the-art architectures for various vision tasks.
 \end{itemize}
 
-\subsection{Dynamic vs. Static Computational Graphs in PyTorch}
+\section{Dynamic vs. Static Computational Graphs in PyTorch}
 \label{subsec:chapter12_pytorch_dynamic_vs_static}
 
 A fundamental design choice in PyTorch is its use of \textbf{dynamic computational graphs}. Unlike static graphs, which are constructed once and reused, PyTorch builds a fresh computational graph for each forward pass. Once \texttt{loss.backward()} is called, the graph is discarded, and a new one is constructed in the next iteration.
@@ -619,7 +619,7 @@ Consider a model where the choice of weight matrix for backpropagation depends o
 
 In dynamic graphs, every forward pass constructs a unique computation graph, allowing for models with \textbf{varying execution paths} across different iterations.
 
-\subsubsection{Static Graphs and Just-in-Time (JIT) Compilation}
+\subsection{Static Graphs and Just-in-Time (JIT) Compilation}
 \label{subsubsec:chapter12_pytorch_static_graphs}
 
 In contrast, \textbf{static computational graphs} follow a two-step process:
@@ -630,7 +630,7 @@ In contrast, \textbf{static computational graphs} follow a two-step process:
 
 \noindent While PyTorch natively operates with dynamic graphs, it also supports static graphs through \textbf{TorchScript} using \textbf{Just-in-Time (JIT) compilation}. This allows PyTorch to analyze the model’s source code, compile it into an optimized static graph, and reuse it for improved efficiency.
 
-\subsubsection{Using JIT to Create Static Graphs}
+\subsection{Using JIT to Create Static Graphs}
 \label{subsubsec:chapter12_pytorch_jit}
 
 To convert a function into a static computational graph, PyTorch provides \texttt{torch.jit.script()}:
@@ -661,7 +661,7 @@ Alternatively, PyTorch allows automatic graph compilation using the \textbf{@tor
 	\label{fig:chapter12_pytorch_jit}
 \end{figure}
 
-\subsubsection{Handling Conditionals in Static Graphs}
+\subsection{Handling Conditionals in Static Graphs}
 \label{subsubsec:chapter12_pytorch_jit_conditionals}
 
 Static graphs struggle with conditionals because they are typically \textbf{fixed at compile time}. However, PyTorch’s JIT can represent conditionals as graph nodes, enabling runtime flexibility.
@@ -675,7 +675,7 @@ Static graphs struggle with conditionals because they are typically \textbf{fixe
 
 This allows some degree of flexibility while retaining the benefits of graph optimization.
 
-\subsubsection{Optimizing Computation Graphs with JIT}
+\subsection{Optimizing Computation Graphs with JIT}
 \label{subsubsec:chapter12_pytorch_graph_optimization}
 
 One advantage of static graphs is that they enable \textbf{graph-level optimizations}. PyTorch JIT can automatically \textbf{fuse operations} such as convolution and activation layers into a single efficient operation.
@@ -689,7 +689,7 @@ One advantage of static graphs is that they enable \textbf{graph-level optimizat
 
 This optimization is performed once, eliminating the need to optimize in every iteration.
 
-\subsubsection{Benefits and Limitations of Static Graphs}
+\subsection{Benefits and Limitations of Static Graphs}
 \label{subsubsec:chapter12_pytorch_static_benefits_challenges}
 
 \textbf{Advantages of Static Graphs:}
@@ -706,7 +706,7 @@ This optimization is performed once, eliminating the need to optimize in every i
 	\item \textbf{Rebuilding Required:} Any model change requires reconstructing the entire graph.
 \end{itemize}
 
-\subsubsection{When Are Dynamic Graphs Necessary?}
+\subsection{When Are Dynamic Graphs Necessary?}
 \label{subsubsec:chapter12_pytorch_dynamic_needed}
 
 Certain architectures \emph{require} dynamic graphs due to their execution dependencies on input data:
@@ -719,12 +719,12 @@ Certain architectures \emph{require} dynamic graphs due to their execution depen
 
 A well-known example is the model in \cite{johnson2017_infering}, where part of the network predicts which module should execute next.
 
-\subsection{TensorFlow: Dynamic and Static Computational Graphs}
+\section{TensorFlow: Dynamic and Static Computational Graphs}
 \label{subsec:chapter12_tensorflow}
 
 TensorFlow originally adopted \textbf{static computational graphs} by default (TensorFlow 1.0), requiring users to explicitly define a computation graph before running it. However, in \textbf{TensorFlow 2.0}, the framework transitioned to \textbf{dynamic graphs} by default, making the API more similar to PyTorch. This shift caused a significant divide in the TensorFlow ecosystem, as older static-graph code intertwined with newer dynamic-graph code, creating confusion and bugs.
 
-\subsubsection{Defining Computational Graphs in TensorFlow 2.0}
+\subsection{Defining Computational Graphs in TensorFlow 2.0}
 \label{subsubsec:chapter12_tensorflow_dynamic}
 
 Unlike PyTorch, where all operations build computational graphs by default (unless wrapped in \texttt{torch.no\_grad()}), TensorFlow requires explicit opt-in using \texttt{tf.GradientTape()}.
@@ -754,7 +754,7 @@ Unlike PyTorch, where all operations build computational graphs by default (unle
 \noindent
 This approach mimics PyTorch’s \texttt{requires\_grad=True}, but requires explicitly wrapping computations inside \texttt{tf.GradientTape()}.
 
-\subsubsection{Static Graphs with \texttt{tf.function}}
+\subsection{Static Graphs with \texttt{tf.function}}
 \label{subsubsec:chapter12_tensorflow_static}
 
 
@@ -778,10 +778,10 @@ TensorFlow 2.0 retains support for static graphs, which can be defined using the
 \noindent
 This function now executes as a static graph, allowing TensorFlow to optimize and fuse operations before execution.
 
-\subsection{Keras: High-Level API for TensorFlow}
+\section{Keras: High-Level API for TensorFlow}
 \label{subsec:chapter12_keras}
 
-Keras provides a high-level API for building deep learning models, simplifying model definition and training.
+Keras provides a high-level API for building deep learning models, simplifying working with models.
 
 \begin{mintedbox}{python}
 	import tensorflow as tf
@@ -814,8 +814,8 @@ Keras provides a high-level API for building deep learning models, simplifying m
 Keras simplifies training by providing:
 \begin{itemize}
 	\item \textbf{Predefined layers}: Easily stack layers with \texttt{Sequential()}.
-	\item \textbf{Common loss functions and optimizers}: Use built-in losses and optimizers like Adam, SGD, etc.
-	\item \textbf{Automatic gradient handling}: The \texttt{opt.apply\_gradients()} method simplifies parameter updates.
+	\item \textbf{Common loss functions and optimizers}: Use built-in losses and optimizers like Adam.
+	\item \textbf{Automatic gradient handling}: \texttt{opt.apply\_gradients()}  simplifies parameter updates.
 \end{itemize}
 
 \noindent
@@ -831,7 +831,7 @@ We can further simplify the training loop using \texttt{opt.minimize()} by defin
 		opt.minimize(step, model.trainable_variables)
 \end{mintedbox}
 
-\subsection{TensorBoard: Visualizing Training Metrics}
+\section{TensorBoard: Visualizing Training Metrics}
 \label{subsec:chapter12_tensorboard}
 
 \begin{figure}[H]
@@ -852,7 +852,7 @@ While originally designed for TensorFlow, TensorBoard now support \textbf{PyTorc
 \texttt{torch.utils.tensorboard} API.
 However, modern alternatives such as \textbf{Weights and Biases (wandb)} and \textbf{MLFlow} provide additional functionality, making them popular choices for tracking experiments.
 
-\subsection{Comparison: PyTorch vs. TensorFlow}
+\section{Comparison: PyTorch vs. TensorFlow}
 \label{subsec:chapter12_comparison}
 
 \begin{itemize}
