@@ -1050,7 +1050,7 @@
 \contentsline {subsection}{\numberline {14.5.7}Advantages of FCOS}{471}{subsection.14.5.7}%
 \contentsline {section}{Enrichment 14.6: YOLO - You Only Look Once}{472}{section*.930}%
 \contentsline {subsection}{Enrichment 14.6.1: Background}{472}{section*.931}%
-\contentsline {subsection}{Enrichment 14.6.2: Detailed Step-by-Step: How YOLOv1 Processes an Input Image}{472}{section*.932}%
+\contentsline {subsection}{Enrichment 14.6.2: Step-by-Step: How YOLOv1 Processes an Input Image}{472}{section*.932}%
 \contentsline {paragraph}{1. Input Image and Preprocessing}{472}{section*.933}%
 \contentsline {paragraph}{2. Feature Extraction (DarkNet + Additional Convolution Layers)}{472}{section*.934}%
 \contentsline {paragraph}{3. Flattening and Fully Connected Layers}{472}{section*.935}%
@@ -1062,43 +1062,51 @@
 \contentsline {paragraph}{9. Final Detections and NMS}{474}{section*.941}%
 \contentsline {paragraph}{Summary}{475}{section*.942}%
 \contentsline {subsection}{Enrichment 14.6.3: Evolution of YOLO}{475}{section*.944}%
-\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{476}{chapter.15}%
+\contentsline {section}{\numberline {14.7}Conclusion: The Evolution of Object Detection}{476}{section.14.7}%
+\contentsline {paragraph}{From R-CNN to Faster R-CNN: Learning Region Proposals}{476}{section*.945}%
+\contentsline {paragraph}{Improving Multi-Scale Detection: Feature Pyramid Networks (FPN)}{476}{section*.946}%
+\contentsline {paragraph}{RetinaNet: A Breakthrough for One-Stage Detectors}{476}{section*.947}%
+\contentsline {paragraph}{FCOS: Moving Toward Anchor-Free Detection}{476}{section*.948}%
+\contentsline {paragraph}{YOLO: A Widely Used Real-Time Detector}{477}{section*.949}%
+\contentsline {paragraph}{Looking Ahead: Transformers and SOTA Detectors}{477}{section*.950}%
+\contentsline {paragraph}{Summary}{477}{section*.951}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{478}{chapter.15}%
 \ttl@stoptoc {default@14}
 \ttl@starttoc {default@15}
-\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{477}{chapter.16}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{479}{chapter.16}%
 \ttl@stoptoc {default@15}
 \ttl@starttoc {default@16}
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{478}{chapter.17}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{480}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{479}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{481}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{480}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{482}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{481}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{483}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{482}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{484}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{483}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{485}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{484}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{486}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{485}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{487}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{486}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{488}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{487}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{489}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{488}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{490}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

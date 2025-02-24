@@ -1144,7 +1144,7 @@ By leveraging fully convolutional architectures and eliminating the complexities
 	Thanks to these advantages, YOLO remains one of the most widely used object detection frameworks, consistently setting new benchmarks for real-time applications.
 \end{enrichment}
 	
-\begin{enrichment}[Detailed Step-by-Step: How YOLOv1 Processes an Input Image][subsection]
+\begin{enrichment}[Step-by-Step: How YOLOv1 Processes an Input Image][subsection]
 	YOLOv1 (\textit{You Only Look Once}) is a single-stage object detector that predicts bounding boxes and class probabilities in one unified forward pass. Below, we outline how YOLOv1 processes an image from start to finish.
 	
 	\paragraph{1. Input Image and Preprocessing}
@@ -1308,3 +1308,51 @@ By leveraging fully convolutional architectures and eliminating the complexities
 		Each version improves upon the previous, refining accuracy, robustness, and efficiency, solidifying YOLO as one of the most influential object detection models in real-time applications.
 		\end{enrichment}
 	\end{enrichment}
+
+\newpage
+\section{Conclusion: The Evolution of Object Detection}
+\label{sec:chapter14_conclusion}
+
+Object detection has undergone significant advancements over the years, with each iteration improving both speed and accuracy. This chapter traced the evolution of object detectors, highlighting key innovations that have shaped modern detection frameworks.
+
+\paragraph{From R-CNN to Faster R-CNN: Learning Region Proposals}
+Early object detection models, such as \textbf{R-CNN}, relied on region proposal methods like Selective Search to generate candidate object regions. While effective, R-CNN suffered from slow inference times, as it required passing each region through a CNN separately. 
+
+\textbf{Fast R-CNN} improved this process by computing feature maps once for the entire image and then applying \textbf{RoI Pooling} or \textbf{RoIAlign} to extract features for each proposal, significantly reducing inference time. However, it still relied on external region proposals, which remained a computational bottleneck.
+
+\textbf{Faster R-CNN} introduced \textbf{Region Proposal Networks (RPNs)}, replacing hand-crafted region proposal methods with a trainable, CNN-based approach. This enabled fully end-to-end training, where the region proposals were learned jointly with the detector. While Faster R-CNN achieved high accuracy, its two-stage nature still made it slower, and also more computationally expensive.
+
+\paragraph{Improving Multi-Scale Detection: Feature Pyramid Networks (FPN)}
+While Faster R-CNN was a breakthrough, it struggled with detecting objects at different scales, especially smaller ones. To address this, \textbf{Feature Pyramid Networks (FPNs)} were introduced, leveraging the multi-scale hierarchical features of CNNs to enhance object detection at different resolutions. By integrating top-down pathways that fused low-level spatial details with high-level semantic information, FPNs became a crucial addition to many detection architectures.
+
+\paragraph{RetinaNet: A Breakthrough for One-Stage Detectors}
+While two-stage detectors like Faster R-CNN were dominant, they were computationally expensive, motivating the need for faster alternatives. \textbf{RetinaNet} was a milestone in object detection as it was the \textbf{first single-stage detector to surpass two-stage detectors in accuracy}, all while maintaining significantly higher speed.
+
+RetinaNet introduced \textbf{Focal Loss}, addressing the issue of class imbalance between foreground and background objects. By down-weighting easy samples and focusing on harder examples, it improved training efficiency and allowed single-stage networks to perform on par with or better than their two-stage counterparts. RetinaNet, like Faster R-CNN, leveraged FPNs for multi-scale feature extraction, making it robust for detecting objects across different sizes.
+
+\paragraph{FCOS: Moving Toward Anchor-Free Detection}
+While RetinaNet and previous detectors relied on \textbf{anchor boxes} (predefined bounding box templates), \textbf{FCOS} took a different approach. It introduced an \textbf{anchor-free detection framework}, treating object detection as a per-pixel regression problem, similar to semantic segmentation. Instead of relying on predefined priors, FCOS predicted bounding boxes directly at each spatial location. This simplified the detection pipeline by removing anchor hyperparameters while maintaining strong performance.
+
+\newpage
+\paragraph{YOLO: A Widely Used Real-Time Detector}
+Although not covered in the main content of this chapter, we included an \textbf{enrichment section on YOLO}, a widely used object detector known for its real-time speed. YOLO differs from traditional object detectors by treating detection as a global regression problem, predicting bounding boxes and class probabilities in a single forward pass. Over successive versions, YOLO has refined its accuracy and efficiency, making it a popular choice for applications requiring real-time object detection.
+
+\paragraph{Looking Ahead: Transformers and SOTA Detectors}
+While this chapter focused on CNN-based object detectors, modern detection frameworks have evolved further with \textbf{transformer-based architectures}. Models like \textbf{DEtection TRansformer (DeTR)} and self-supervised approaches such as \textbf{DINOv2} have redefined object detection by eliminating region proposal mechanisms and relying on attention-based feature learning. 
+
+We have yet to cover these cutting-edge techniques, but as we progress in this document, we will explore several examples of \textbf{state-of-the-art (SOTA)} object detectors that leverage transformers to push the boundaries of accuracy and efficiency.
+
+\paragraph{Summary}
+The evolution of object detectors has followed a clear trajectory:
+\begin{itemize}
+	\item \textbf{R-CNN} introduced region-based detection but was computationally expensive.
+	\item \textbf{Fast R-CNN} improved efficiency with shared feature computation but still relied on slow region proposals.
+	\item \textbf{Faster R-CNN} replaced manual proposals with a learnable \textbf{RPN}, making detection fully end-to-end.
+	\item \textbf{FPNs} enhanced multi-scale detection, improving performance on small objects.
+	\item \textbf{RetinaNet} was the first one-stage detector to outperform two-stage models, enabled by \textbf{Focal Loss}.
+	\item \textbf{FCOS} demonstrated the viability of \textbf{anchor-free detection}, further simplifying object detection.
+	\item \textbf{YOLO} has remained a widely adopted real-time detector, continuously evolving across versions.
+	\item \textbf{Transformers are emerging as the next frontier} in object detection, removing the need for proposal-based architectures.
+\end{itemize}
+
+Each of these advancements has built upon prior innovations, gradually refining object detection into the highly efficient, accurate, and scalable frameworks we see today. As we move forward in this document, we will explore more advanced architectures, particularly those utilizing transformers, to understand how object detection continues to evolve.
