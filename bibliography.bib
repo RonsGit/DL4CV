@@ -235,6 +235,18 @@
 	pages={1097--1105}
 }
 
+@ARTICLE{alexe2012_objectness,
+	author={Alexe, Bogdan and Deselaers, Thomas and Ferrari, Vittorio},
+	journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+	title={Measuring the Objectness of Image Windows}, 
+	year={2012},
+	volume={34},
+	number={11},
+	pages={2189-2202},
+	keywords={Detectors;Image edge detection;Image segmentation;Kernel;Image color analysis;Training;Area measurement;Objectness measure;object detection;object recognition},
+	doi={10.1109/TPAMI.2012.28}}
+
+
 @article{bergstra2012_randomsearch,
 	author  = {James Bergstra and Yoshua Bengio},
 	title   = {Random Search for Hyper-Parameter Optimization},
@@ -264,6 +276,19 @@
 	abstract = 	 {We introduce DropConnect, a generalization of DropOut, for regularizing large fully-connected layers within neural networks. When training with Dropout, a randomly selected subset of activations are set to zero within each layer. DropConnect instead sets a randomly selected subset of weights within the network to zero. Each unit thus receives input from a random subset of units in the previous layer. We derive a bound on the generalization performance of both Dropout and DropConnect. We then evaluate DropConnect on a range of datasets, comparing to Dropout, and show state-of-the-art results on several image recoginition benchmarks can be obtained by aggregating multiple DropConnect-trained models.}
 }
 
+@Article{uijlings2013_selective,
+	author       = "Uijlings, J. R. R. and van de Sande, K. E. A. and Gevers, T. and Smeulders, A. W. M.",
+	title        = "Selective Search for Object Recognition",
+	journal      = "International Journal of Computer Vision",
+	number       = "2",
+	volume       = "104",
+	pages        = "154--171",
+	year         = "2013",
+	url          = "https://ivi.fnwi.uva.nl/isis/publications/2013/UijlingsIJCV2013",
+	pdf          = "https://ivi.fnwi.uva.nl/isis/publications/2013/UijlingsIJCV2013/UijlingsIJCV2013.pdf",
+	has_image    = 1
+}
+
 @inproceedings{zeiler2014_visualizing,
 	author    = {Matthew D. Zeiler and Rob Fergus},
 	title     = {Visualizing and Understanding Convolutional Networks},
@@ -275,6 +300,31 @@
 	archivePrefix = {arXiv},
 	eprint    = {1311.2901},
 	primaryClass = {cs.CV}
+}
+
+@inproceedings{girshick2014_rcnn,
+	title={Rich feature hierarchies for accurate object detection and semantic segmentation},
+	author={Girshick, Ross and Donahue, Jeff and Darrell, Trevor and Malik, Jitendra},
+	booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages={580--587},
+	year={2014}
+}
+
+@inproceedings{zitnick2014_edgeboxes,
+	title={Edge boxes: Locating object proposals from edges},
+	author={Zitnick, C Lawrence and Doll{\'a}r, Piotr},
+	booktitle={Computer Vision--ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014, Proceedings, Part V 13},
+	pages={391--405},
+	year={2014},
+	organization={Springer}
+}
+
+@inproceedings{cheng2014_bing,
+	title={BING: Binarized normed gradients for objectness estimation at 300fps},
+	author={Cheng, Ming-Ming and Zhang, Ziming and Lin, Wen-Yan and Torr, Philip},
+	booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages={3286--3293},
+	year={2014}
 }
 
 @inproceedings{simonyan2014_vgg,
@@ -346,6 +396,16 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/1412.6071}, 
+}
+
+@misc{girshick2015_fastrcnn,
+	title={Fast R-CNN}, 
+	author={Ross Girshick},
+	year={2015},
+	eprint={1504.08083},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1504.08083}, 
 }
 
 @article{devlin2015_imagetocaption,
@@ -437,6 +497,17 @@
 	year={2015}
 }
 
+@misc{ren2016_fasterrcnn,
+	title={Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks}, 
+	author={Shaoqing Ren and Kaiming He and Ross Girshick and Jian Sun},
+	year={2016},
+	eprint={1506.01497},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1506.01497}, 
+}
+
+
 @misc{huang2016_stochasticdepth,
 	title={Deep Networks with Stochastic Depth}, 
 	author={Gao Huang and Yu Sun and Zhuang Liu and Daniel Sedra and Kilian Weinberger},
@@ -467,6 +538,16 @@
 	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
 	year      = {2016},
 	pages     = {770--778}
+}
+
+@misc{redmon2016_yolo,
+	title={You Only Look Once: Unified, Real-Time Object Detection}, 
+	author={Joseph Redmon and Santosh Divvala and Ross Girshick and Ali Farhadi},
+	year={2016},
+	eprint={1506.02640},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1506.02640}, 
 }
 
 @misc{zakka2016_batchnorm,
@@ -502,6 +583,14 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/1708.04552}, 
+}
+
+@inproceedings{redmon2017_yolo9000,
+	title={YOLO9000: better, faster, stronger},
+	author={Redmon, Joseph and Farhadi, Ali},
+	booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages={7263--7271},
+	year={2017}
 }
 
 @article{ramachandran2017_searching,
@@ -597,6 +686,17 @@
 	doi = {10.1109/CVPR.2017.195}
 }
 
+@INPROCEEDINGS{lin2017_fpn,
+	author={Lin, Tsung-Yi and Dollár, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
+	booktitle={2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+	title={Feature Pyramid Networks for Object Detection}, 
+	year={2017},
+	volume={},
+	number={},
+	pages={936-944},
+	keywords={Feature extraction;Detectors;Semantics;Computer architecture;Proposals;Object detection;Robustness},
+	doi={10.1109/CVPR.2017.106}}
+
 @misc{johnson2017_infering,
 	title={Inferring and Executing Programs for Visual Reasoning}, 
 	author={Justin Johnson and Bharath Hariharan and Laurens van der Maaten and Judy Hoffman and Li Fei-Fei and C. Lawrence Zitnick and Ross Girshick},
@@ -617,6 +717,13 @@
 	url = {https://arxiv.org/abs/1709.01507}
 }
 
+@article{redmon2018_yolov3,
+	title={Yolov3: An incremental improvement},
+	author={Redmon, Joseph and Farhadi, Ali},
+	journal={arXiv preprint arXiv:1804.02767},
+	year={2018}
+}
+
 @misc{zhang2018_mixup,
 	title={mixup: Beyond Empirical Risk Minimization}, 
 	author={Hongyi Zhang and Moustapha Cisse and Yann N. Dauphin and David Lopez-Paz},
@@ -625,6 +732,16 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/1710.09412}, 
+}
+
+@misc{lin2018_focalloss,
+	title={Focal Loss for Dense Object Detection}, 
+	author={Tsung-Yi Lin and Priya Goyal and Ross Girshick and Kaiming He and Piotr Dollár},
+	year={2018},
+	eprint={1708.02002},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1708.02002}, 
 }
 
 @article{santurkar2018_howdoesbatchnormhelp,
@@ -742,6 +859,15 @@
 	doi = {10.48550/arXiv.1905.11946}
 }
 
+@misc{tian2019_fcos,
+	title={FCOS: Fully Convolutional One-Stage Object Detection}, 
+	author={Zhi Tian and Chunhua Shen and Hao Chen and Tong He},
+	year={2019},
+	eprint={1904.01355},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1904.01355}, 
+}
 
 @inproceedings{howard2019_mobilenetv3,
 	author = {Howard, Andrew and Sandler, Mark and Chu, Grace and Chen, Liang-Chieh and Chen, Bo and Tan, Mingxing and Wang, Weijun and Zhu, Yukun and Pang, Ruoming and Vasudevan, Vijay and Le, Quoc V. and Adam, Hartwig},
@@ -799,6 +925,16 @@
 	url={https://arxiv.org/abs/1907.11692}, 
 }
 
+@misc{law2019_cornernet,
+	title={CornerNet: Detecting Objects as Paired Keypoints}, 
+	author={Hei Law and Jia Deng},
+	year={2019},
+	eprint={1808.01244},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1808.01244}, 
+}
+
 @article{janestreet_l2_bn,
 	author    = {Jane Street},
 	title     = {L2 Regularization and Batch Normalization: How They Interact},
@@ -812,6 +948,23 @@
 	title     = {An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
 	journal   = {arXiv preprint arXiv:2010.11929},
 	year      = {2020}
+}
+
+@article{bochkovskiy2020_yolov4,
+	title={Yolov4: Optimal speed and accuracy of object detection},
+	author={Bochkovskiy, Alexey and Wang, Chien-Yao and Liao, Hong-Yuan Mark},
+	journal={arXiv preprint arXiv:2004.10934},
+	year={2020}
+}
+
+@misc{carion2020_detr, 
+	title={End-to-End Object Detection with Transformers}, 
+	author={Nicolas Carion and Francisco Massa and Gabriel Synnaeve and Nicolas Usunier and Alexander Kirillov and Sergey Zagoruyko},
+	year={2020},
+	eprint={2005.12872},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2005.12872}, 
 }
 
 @misc{tensorflow2020_efficientnetlite,
@@ -839,6 +992,22 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2004.08955}, 
+}
+
+@article{erdem2020_RoIAlign,
+	title   = "Understanding Region of Interest - Part 2 (RoI Align)",
+	author  = "Kemal Erdem",
+	journal = "https://erdem.pl",
+	year    = "2020",
+	month   = "Feb",
+	url     = "https://erdem.pl/2020/02/understanding-region-of-interest-part-2-ro-i-align"
+}
+
+@misc{patnaik2020_roi_pool,
+	title={ROI Pool and Align: PyTorch Implementation}, 
+	author={Kaushik Patnaik},
+	year={2020},
+	url={https://kaushikpatnaik.github.io/annotated/papers/2020/07/04/ROI-Pool-and-Align-Pytorch-Implementation.html}
 }
 
 @InProceedings{huang2020_tfixup,
@@ -930,6 +1099,26 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2102.06171}, 
+}
+
+@misc{zhang2022_dino, 
+	title={DINO: DETR with Improved DeNoising Anchor Boxes for End-to-End Object Detection}, 
+	author={Feng Li and Hao Zhang and Shilong Liu and Jian Guo and Lionel M. Ni and Lei Zhang},
+	year={2022},
+	eprint={2203.03605},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2203.03605}, 
+}
+
+@misc{oquab2023_dinov2, 
+	title={DINOv2: Learning Robust Visual Features without Supervision}, 
+	author={Maxime Oquab and Timothée Darcet and Théo Moutakanni and Huy Vo and Marc Szafraniec and Vasil Khalidov and Pierre Fernandez and Daniel Haziza and Francisco Massa and Alaaeldin El-Nouby and Armand Joulin and Piotr Bojanowski and Mathilde Caron and Hervé Jégou and Benjamin Lefaudeux and Julien Mairal and Patrick Labatut and Alexei Baevski and Ishan Misra and Nicolas Usunier and Hervé Jegou and Jeff Donahue and Benjamin Lefaudeux},
+	year={2023},
+	eprint={2304.07193},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2304.07193}, 
 }
 
 @article{mamba2023_selective,

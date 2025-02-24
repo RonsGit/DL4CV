@@ -1,0 +1,19 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{c+c1}{\PYGZsh{} Find the integer corners surrounding (x, y)}
+	\PYG{n}{x0} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{o}{.}\PYG{n}{type}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{cuda}\PYG{o}{.}\PYG{n}{LongTensor}\PYG{p}{)}
+	\PYG{n}{x1} \PYG{o}{=} \PYG{n}{x0} \PYG{o}{+} \PYG{l+m+mi}{1}
+	\PYG{n}{y0} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{type}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{cuda}\PYG{o}{.}\PYG{n}{LongTensor}\PYG{p}{)}
+	\PYG{n}{y1} \PYG{o}{=} \PYG{n}{y0} \PYG{o}{+} \PYG{l+m+mi}{1}
+	
+	\PYG{c+c1}{\PYGZsh{} Clamp these coordinates to the image boundary to avoid out\PYGZhy{}of\PYGZhy{}range indexing}
+	\PYG{n}{x0} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{img}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{n}{x1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n}{x1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{img}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{n}{y0} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n}{y0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{img}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{n}{y1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n}{y1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{img}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+	
+	\PYG{c+c1}{\PYGZsh{} Extract feature values at the four surrounding grid points}
+	\PYG{n}{Ia} \PYG{o}{=} \PYG{n}{img}\PYG{p}{[}\PYG{n}{y0}\PYG{p}{,} \PYG{n}{x0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Top\PYGZhy{}left corner}
+	\PYG{n}{Ib} \PYG{o}{=} \PYG{n}{img}\PYG{p}{[}\PYG{n}{y1}\PYG{p}{,} \PYG{n}{x0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Bottom\PYGZhy{}left corner}
+	\PYG{n}{Ic} \PYG{o}{=} \PYG{n}{img}\PYG{p}{[}\PYG{n}{y0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Top\PYGZhy{}right corner}
+	\PYG{n}{Id} \PYG{o}{=} \PYG{n}{img}\PYG{p}{[}\PYG{n}{y1}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Bottom\PYGZhy{}right corner}
+\end{MintedVerbatim}

@@ -1,0 +1,75 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k}{def} \PYG{n+nf}{\PYGZus{}roi\PYGZus{}align}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{features}\PYG{p}{,} \PYG{n}{scaled\PYGZus{}proposal}\PYG{p}{)}\PYG{p}{:}
+\PYG{+w}{		}\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Given feature layers and scaled proposals return bilinear interpolated}
+\PYG{l+s+sd}{		points in feature layer}
+\PYG{l+s+sd}{		}
+\PYG{l+s+sd}{		Args:}
+\PYG{l+s+sd}{		features (torch.Tensor): Tensor of shape \PYGZlt{}channels x height x width\PYGZgt{}}
+\PYG{l+s+sd}{		scaled\PYGZus{}proposal (list of torch.Tensor): Each tensor is a bbox by which we}
+\PYG{l+s+sd}{		will extract features from features Tensor}
+\PYG{l+s+sd}{		\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+		
+		\PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{num\PYGZus{}channels}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{w} \PYG{o}{=} \PYG{n}{features}\PYG{o}{.}\PYG{n}{shape}
+		
+		\PYG{c+c1}{\PYGZsh{} (xp0, yp0) = top\PYGZhy{}left corner of projected proposal, (xp1, yp1) = bottom\PYGZhy{}right corner.}
+		\PYG{n}{xp0}\PYG{p}{,} \PYG{n}{yp0}\PYG{p}{,} \PYG{n}{xp1}\PYG{p}{,} \PYG{n}{yp1} \PYG{o}{=} \PYG{n}{scaled\PYGZus{}proposal}
+		\PYG{n}{p\PYGZus{}width} \PYG{o}{=} \PYG{n}{xp1} \PYG{o}{\PYGZhy{}} \PYG{n}{xp0}
+		\PYG{n}{p\PYGZus{}height} \PYG{o}{=} \PYG{n}{yp1} \PYG{o}{\PYGZhy{}} \PYG{n}{yp0}
+\PYG{+w}{		}
+\PYG{+w}{		}\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{		If we want to output a nxn tensor to the per\PYGZhy{}proposal network, then output\PYGZus{}size=n.}
+\PYG{l+s+sd}{		The number of sub\PYGZhy{}regions we\PYGZsq{}ll produce, like in RoIPool, will be nxn as well.}
+\PYG{l+s+sd}{		The height and width of each sub\PYGZhy{}region will be equal, as the regions are now of exactly the same size,}
+\PYG{l+s+sd}{		but crucially we no longer snap to integer boundaries.}
+\PYG{l+s+sd}{		Each sub\PYGZhy{}region\PYGZsq{}s representative value will be a linear combination of the pixel values}
+\PYG{l+s+sd}{		that this sub\PYGZhy{}region covers (via bilinear interpolation).}
+\PYG{l+s+sd}{		\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+		\PYG{n}{w\PYGZus{}stride} \PYG{o}{=} \PYG{n}{p\PYGZus{}width} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}  \PYG{c+c1}{\PYGZsh{} The width of each sub\PYGZhy{}region}
+		\PYG{n}{h\PYGZus{}stride} \PYG{o}{=} \PYG{n}{p\PYGZus{}height} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size} \PYG{c+c1}{\PYGZsh{} The height of each sub\PYGZhy{}region}
+		
+		\PYG{n}{interp\PYGZus{}features} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{num\PYGZus{}channels}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{)}
+	
+		\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
+			\PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
+				\PYG{c+c1}{\PYGZsh{} top\PYGZhy{}left x coordinate of the i\PYGZhy{}th sub\PYGZhy{}region}
+				\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride} \PYG{o}{+} \PYG{n}{xp0}
+				\PYG{c+c1}{\PYGZsh{} top\PYGZhy{}left y coordinate of the j\PYGZhy{}th sub\PYGZhy{}region}
+				\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{j} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride} \PYG{o}{+} \PYG{n}{yp0}
+				
+				\PYG{c+c1}{\PYGZsh{} generate 4 points for interpolation (no rounding!)}
+				\PYG{n}{x1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25}\PYG{o}{*}\PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} quarter in the bin (x\PYGZhy{}axis)}
+				\PYG{n}{x2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75}\PYG{o}{*}\PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} three\PYGZhy{}quarters in the bin (x\PYGZhy{}axis)}
+				\PYG{n}{y1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25}\PYG{o}{*}\PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} quarter in the bin (y\PYGZhy{}axis)}
+				\PYG{n}{y2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75}\PYG{o}{*}\PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} three\PYGZhy{}quarters in the bin (y\PYGZhy{}axis)}
+\PYG{+w}{				}
+\PYG{+w}{				}\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{				We sample 2 points along x (0.25 and 0.75 of the bin width)}
+\PYG{l+s+sd}{				and 2 points along y (0.25 and 0.75 of the bin height).}
+\PYG{l+s+sd}{				This yields 2 x 2 = 4 sample points per bin.}
+\PYG{l+s+sd}{				}
+\PYG{l+s+sd}{				Why at 0.25 and 0.75?}
+\PYG{l+s+sd}{				1) Avoid boundaries: Sampling at 0 or 1 might cause rounding/boundary issues.}
+\PYG{l+s+sd}{				2) Capture variation: Multiple sample points per bin help represent}
+\PYG{l+s+sd}{				the internal structure better than a single center point.}
+\PYG{l+s+sd}{				3) Consistent coverage: 0.25 and 0.75 systematically offer an even \PYGZdq{}spread\PYGZdq{}}
+\PYG{l+s+sd}{				in each dimension, approximating the average effectively.}
+\PYG{l+s+sd}{				\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+				
+				\PYG{k}{for} \PYG{n}{c} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{num\PYGZus{}channels}\PYG{p}{)}\PYG{p}{:}
+				\PYG{c+c1}{\PYGZsh{} features[0, c] is the single\PYGZhy{}channel feature map for channel c}
+				\PYG{n}{img} \PYG{o}{=} \PYG{n}{features}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{c}\PYG{p}{]}
+				\PYG{n}{v1} \PYG{o}{=} \PYG{n}{bilinear\PYGZus{}interpolate}\PYG{p}{(}\PYG{n}{img}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{)}
+				\PYG{n}{v2} \PYG{o}{=} \PYG{n}{bilinear\PYGZus{}interpolate}\PYG{p}{(}\PYG{n}{img}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y2}\PYG{p}{)}
+				\PYG{n}{v3} \PYG{o}{=} \PYG{n}{bilinear\PYGZus{}interpolate}\PYG{p}{(}\PYG{n}{img}\PYG{p}{,} \PYG{n}{x2}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{)}
+				\PYG{n}{v4} \PYG{o}{=} \PYG{n}{bilinear\PYGZus{}interpolate}\PYG{p}{(}\PYG{n}{img}\PYG{p}{,} \PYG{n}{x2}\PYG{p}{,} \PYG{n}{y2}\PYG{p}{)}
+\PYG{+w}{				}
+\PYG{+w}{				}\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{				v1, v2, v3, v4 are the bilinear\PYGZhy{}interpolated values at the four sample points.}
+\PYG{l+s+sd}{				We average these 4 values to get a single value for bin (i, j) and channel c.}
+\PYG{l+s+sd}{				Note: In some cases, one might take max instead of average}
+\PYG{l+s+sd}{				(mimicking max pooling). This is what Justin shows in the lecture. Hence, he takes max(v1, v2, v3, v4) instead.}
+\PYG{l+s+sd}{				\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+				\PYG{n}{interp\PYGZus{}features}\PYG{p}{[}\PYG{n}{c}\PYG{p}{,} \PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{v1} \PYG{o}{+} \PYG{n}{v2} \PYG{o}{+} \PYG{n}{v3} \PYG{o}{+} \PYG{n}{v4}\PYG{p}{)} \PYG{o}{/} \PYG{l+m+mi}{4}
+		
+		\PYG{k}{return} \PYG{n}{interp\PYGZus{}features}
+\end{MintedVerbatim}

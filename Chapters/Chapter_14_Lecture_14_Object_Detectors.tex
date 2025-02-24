@@ -3,6 +3,1308 @@
 % Chapter-specific content starts here
 \chapter{Lecture 14: Object Detectors}
 
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
 %	CHAPTER 14 - Lecture 14: Object Detectors
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+\section{Beyond R-CNN: Advancing Object Detection}
+\label{sec:chapter14_intro}
+
+The introduction of R-CNN revolutionized object detection by demonstrating that deep convolutional networks could significantly outperform traditional methods. However, R-CNN was computationally inefficient, requiring a separate CNN forward pass for each of the \(\sim2000\) region proposals per image. This redundancy made it impractical for real-time applications.
+
+As object detection research progressed, new methods aimed at improving efficiency while maintaining accuracy. In this chapter, we explore \textbf{Fast R-CNN}, which significantly accelerates detection by sharing feature computation across proposals. Later, we will cover \textbf{Faster R-CNN}, which eliminates external region proposal methods by learning region proposals end-to-end, and later we'll cover other CNN-based approaches like \textbf{YOLO}.
+
+\subsection{Looking Ahead: Beyond CNN-Based Object Detectors}
+\label{subsec:chapter14_future_object_detection}
+
+Although Fast R-CNN and its successors greatly improved efficiency, as we'll soon see, they still rely on handcrafted region proposals and multi-stage processing pipelines. Modern object detection models have moved toward \textbf{end-to-end architectures} that simplify the detection pipeline while improving accuracy.
+
+State-of-the-art (SOTA) object detectors now leverage \textbf{transformers} rather than CNN-based architectures. Some of the most notable advancements include:
+
+\begin{itemize}
+	\item \textbf{DETR (DEtection TRansformer)} \cite{carion2020_detr}: The first fully end-to-end object detector using transformers. DETR formulates object detection as a set prediction problem, eliminating the need for region proposals and non-maximum suppression (NMS).
+	\item \textbf{DINO} \cite{zhang2022_dino}: An extension of DETR that enhances query initialization and feature interactions to improve detection accuracy and convergence speed.
+	\item \textbf{DINOv2} \cite{oquab2023_dinov2}: A recent self-supervised vision transformer model that achieves SOTA performance on multiple vision tasks, including object detection.
+\end{itemize}
+
+These modern approaches provide several advantages:
+\begin{itemize}
+	\item \textbf{End-to-End Training:} Unlike R-CNN-based methods that require separate steps for region proposals, feature extraction, and classification, transformer-based models optimize the entire detection pipeline jointly.
+	\item \textbf{Improved Scalability:} Transformers naturally handle long-range dependencies and complex object relationships, making them well-suited for large-scale datasets and high-resolution images.
+	\item \textbf{Simplified Post-Processing:} Traditional detectors rely on NMS to filter overlapping detections. DETR and its successors learn to output only the most relevant bounding boxes directly, removing the need for additional heuristics.
+\end{itemize}
+
+While these advanced transformer-based detectors represent the current SOTA, understanding classical methods like Fast R-CNN first is crucial. These methods paved the way for modern advancements and continue to be widely used in practical applications. Later SOTA methods will be covered extensively as well in later parts of the document. 
+
+\section{Fast R-CNN: Accelerating Object Detection}
+\label{sec:chapter14_fast_rcnn}
+
+As running a CNN forward pass separately for each of the \(\sim2000\) region proposals per image led to massive computational overhead, despite its performance, R-CNN was too slow for practical usage.
+
+Fast R-CNN \cite{girshick2015_fastrcnn} was proposed as a major improvement, significantly reducing inference time while maintaining strong detection accuracy. By reusing shared feature maps instead of processing each region proposal independently, it eliminated redundant computations and improved efficiency.
+
+\subsection{Key Idea: Shared Feature Extraction}
+\label{subsec:chapter14_fast_rcnn_idea}
+
+Instead of running a CNN separately for each proposal, \textbf{Fast R-CNN} applies a deep CNN \emph{once} to the entire image, extracting a \textbf{shared feature representation}. Then, \textbf{Region of Interest (RoI) Pooling} is used to extract features corresponding to each region proposal from this shared representation.  A \textbf{small per-region sub-network} is then applied to each extracted region to \textbf{Classify} the region into an object category or background. and \textbf{Refine the bounding box} using regression.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_18.jpg}
+	\caption{\textbf{Fast R-CNN architecture:} A backbone CNN processes the full image, generating a feature map. RoI Pooling extracts regions from this shared representation, followed by classification and bounding box refinement.}
+	\label{fig:chapter14_fast_rcnn}
+\end{figure}
+
+This significantly improves efficiency while maintaining detection accuracy.
+
+\subsection{Using Fully Convolutional Deep Backbones for Feature Extraction}
+\label{subsec:chapter14_fast_rcnn_backbone}
+
+Fast R-CNN leverages deep CNNs to extract features from the entire image in one forward pass. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_19.jpg}
+	\caption{\textbf{AlexNet as a backbone:} Early implementations of Fast R-CNN explored the use of AlexNet for feature extraction. Only the last two FC layers were used for the per-region network.}
+	\label{fig:chapter14_alexnet}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_20.jpg}
+	\caption{\textbf{ResNet as a backbone:} More modern implementations utilize ResNet for feature extraction, leveraging deeper architectures for improved accuracy. In this case, only the last stage of the network was used for the per-region network, while the rest of the network was used as a backbone deriving features from the entire image.}
+	\label{fig:chapter14_resnet}
+\end{figure}
+
+An interesting observation is that both approaches use a \textbf{fully convolutional backbone}. 
+
+\newpage
+\noindent This is deliberate, as a fully convolutional network produces a dense, spatially organized feature map in which each element corresponds directly to a specific location in the input image. This spatial correspondence is critical for RoI pooling: it allows us to accurately map the coordinates of a region proposal (generated in the original image space) onto the feature map, so that the correct features can be “cropped out” and later pooled into a fixed-size representation.
+
+In contrast, if the backbone ended with fully connected layers, the spatial arrangement would be lost because fully connected layers mix information from all locations. Without a maintained spatial structure, there would be no straightforward way to project a region proposal onto the feature map. Consequently, each proposal would have to be processed individually from the image itself—defeating the purpose of using a shared, efficient feature extractor.
+
+\subsection{Region of Interest (RoI) Pooling}
+\label{subsec:chapter14_roi_pooling}
+
+In Fast R-CNN, we aim to extract feature maps corresponding to each region proposal while ensuring that the process remains differentiable so we can backpropagate gradients through the backbone CNN. This challenge is addressed using \textbf{Region of Interest (RoI) Pooling}.
+
+\paragraph{Mapping Region Proposals onto the Feature Map}
+Region proposals—typically generated by methods such as selective search—are initially defined in the coordinate space of the original input image. However, because the backbone CNN downsamples the input by a factor \( k \) (e.g., \( k = 16 \)), these coordinates must be mapped onto the feature map. This transformation is given by:
+
+\[
+x' = \frac{x}{k}, \quad y' = \frac{y}{k}, \quad w' = \frac{w}{k}, \quad h' = \frac{h}{k}
+\]
+
+where \( (x, y, w, h) \) represents the original coordinates and dimensions of the region proposal on the input image, and \( (x', y', w', h') \) represents the corresponding region on the feature map.
+
+Since this division typically results in non-integer values (e.g., \( x' = 9.25 \)), the coordinates are quantized—usually by taking the floor function:
+
+\[
+x'' = \lfloor x' \rfloor, \quad y'' = \lfloor y' \rfloor, \quad w'' = \lfloor w' \rfloor, \quad h'' = \lfloor h' \rfloor
+\]
+
+This snapping operation ensures that proposals align with the discrete grid of the feature map, making it possible to extract features corresponding to each proposal.
+
+\paragraph{Dividing the Region into Fixed Bins}
+Once the region proposal is mapped onto the feature map, the corresponding feature region is divided into a \textbf{fixed number of bins}. This binning ensures that all proposals—regardless of their original aspect ratio—are resized to a common spatial dimension. For example, if the target output size is \( 7 \times 7 \), the extracted region is divided into \( 7 \times 7 \) roughly equal spatial sub-regions.
+
+\paragraph{Max Pooling within Each Bin}
+For each bin, max pooling is applied across all the activations in that sub-region. This operation selects the maximum value within each bin, reducing variable-sized proposals to a uniform output shape while preserving strong feature responses. The output of RoI pooling for each proposal has a fixed spatial size, e.g., \( 7 \times 7 \times C \), where \( C \) is the number of channels in the feature map.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_37.jpg}
+	\caption{\textbf{RoI Pooling Process.} Each region proposal is mapped onto the feature map, divided into fixed bins, and max-pooled to a fixed output size for classification and bounding box refinement.}
+	\label{fig:chapter14_roi_pooling}
+\end{figure}
+
+\paragraph{Summary: Key Steps in RoI Pooling}
+\begin{enumerate}
+	\item \textbf{Scaling Region Proposals}: The bounding box proposals are initially given in the coordinate space of the original image. Since the backbone CNN downsamples the input by a factor \( k \) (e.g., \( k=16 \)), the proposals must be scaled accordingly.
+	\item \textbf{Extracting Feature Patches}: The scaled bounding boxes are mapped to the corresponding feature map locations, ensuring alignment with the CNN's output resolution.
+	\item \textbf{Dividing into Sub-Regions}: Each extracted feature patch is divided into a fixed grid of bins (e.g., \( 7 \times 7 \)), regardless of the original proposal size.
+	\item \textbf{Max Pooling per Sub-Region}: Within each bin, max pooling is applied to obtain a single representative feature value.
+	\item \textbf{Fixed Output Size}: The final output for each proposal is a tensor of shape(num\_proposals, num\_channels, output\_size, output\_size), making it suitable for downstream classification and bounding box regression.
+\end{enumerate}
+
+The RoI Pooling operation can be implemented in PyTorch using a custom function that extracts fixed-size feature maps from region proposals. There is a nice implementation of \cite{patnaik2020_roi_pool} that follows the steps outlined earlier. If you want to understand how this method works in more detail, this is a good place to start. 
+
+\paragraph{Limitations of RoI Pooling}
+A key limitation of RoI pooling is the \textbf{quantization error} introduced during the coordinate snapping process. Since features are assigned to discrete grid locations using floor division, minor localization errors may occur, reducing detection accuracy. This problem becomes more prominent in tasks requiring precise bounding box localization.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/roi_pooling_downside.png}
+	\caption{Impact of quantization in RoI Pooling. When mapping a region proposal onto the feature map (red), quantization (orange) can result in the loss of relevant object information (highlighted in \emph{dark blue}) while also introducing unwanted features from adjacent areas (\emph{green}). This misalignment reduces localization precision, as certain parts of the object may be omitted, while non-object features may be included in the pooled representation. Figure taken from \cite{erdem2020_RoIAlign}.}
+	\label{fig:chapter14_roi_pooling_downside}
+\end{figure}
+
+In addition, the fact that sub-regions are not always of the same size is also weird and may prove to be sub-optimal. Due to these problems, an improved approach called \textbf{RoIAlign} emerged. RoIAlign eliminates quantization errors by using \textbf{bilinear interpolation} instead of rounding coordinates to the nearest discrete pixel. In the next section, we will explore how RoIAlign refines feature extraction to improve object detection accuracy.
+
+\subsection{RoIAlign}
+In RoIAlign we avoid any quantization (rounding) of the coordinates. Instead, we sample the feature map using bilinear interpolation to obtain sub-pixel accuracy and preserve alignment. The idea is to compute a linear combination of feature values based on their Euclidean distance to the sampling point. By doing so, each sub-region in the region of interest contributes a weighted average of the feature map's values, thus preventing misalignments introduced by discrete rounding.
+
+\subsubsection{RoIAlign: A Visual Example}
+\label{subsubsec:roi_align_example}
+
+To further understand how RoIAlign works in practice, we follow a step-by-step example inspired by Justin's lecture and \cite{patnaik2020_roi_pool}, of which the code snippets are taken (with extra documentation I added to make it a bit more clear). This example applies RoIAlign to a region proposal of a cat image projected onto the activation/feature map. For simplicity, we use an output size of $2 \times 2$, meaning the proposal is divided into four equal-sized sub-regions (bins), and we extract a single representative value per bin. In practice, output sizes of $7 \times 7, 14 \times 14$ are more reasonable and common.
+
+\paragraph{Step 1: Projection of Region Proposal onto the Feature Map}
+First, we map the region proposal onto the feature map \emph{without quantization}. The projected region is divided into $2 \times 2$ bins.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_38.jpg}
+	\caption{Projection of the region proposal onto the feature map, dividing it into $2 \times 2$ bins.}
+	\label{fig:chapter14_roi_align_projection}
+\end{figure}
+
+\paragraph{Step 2: Selecting Interpolation Points in Each Bin}
+In RoIAlign, each bin within a region proposal is divided into regularly spaced sampling points to avoid quantization errors. Instead of snapping to the nearest discrete grid like in RoI Pooling, RoIAlign selects \textbf{four interpolation points per bin} to estimate the feature value using bilinear interpolation.
+
+For each bin, four sample points are computed as follows:
+\begin{itemize}
+	\item \( (x_1, y_1) \) – Top-left interpolation point
+	\item \( (x_1, y_2) \) – Bottom-left interpolation point
+	\item \( (x_2, y_1) \) – Top-right interpolation point
+	\item \( (x_2, y_2) \) – Bottom-right interpolation point
+\end{itemize}
+
+As reminder, here is the part of the code in the RoIAlign method, used to compute the points to interpolate within each region of the projected proposal. 
+\begin{mintedbox}{python}
+	for i in range(self.output_size):
+		for j in range(self.output_size):
+			x_bin_strt = i * w_stride + xp0  # Bin's top-left x coordinate
+			y_bin_strt = j * h_stride + yp0  # Bin's top-left y coordinate
+	
+			# Generate 4 points for interpolation (no rounding!)
+			x1 = torch.Tensor([x_bin_strt + 0.25 * w_stride])  # Quarter into the bin
+			x2 = torch.Tensor([x_bin_strt + 0.75 * w_stride])  # Three-quarters inside
+			y1 = torch.Tensor([y_bin_strt + 0.25 * h_stride])  # # Quarter into the bin
+			y2 = torch.Tensor([y_bin_strt + 0.75 * h_stride])  # Three-quarters inside
+			
+			# Bilinear interpolation will be performed at (x1, y1), (x1, y2), (x2, y1), and (x2, y2), and these values will be used to compute the final bin output for the per-region network. 
+\end{mintedbox}
+
+For each bin (sub-region), two sample points are taken along both the \(x\)-axis and \(y\)-axis, creating a total of \(2 \times 2 = 4\) sample points. The interpolation points are systematically selected as:
+
+\[
+\{x_1, x_2\} \times \{y_1, y_2\}
+\]
+
+ensuring comprehensive coverage within the bin.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_39.jpg}
+	\caption{Selection of four interpolation points in each sub-region for bilinear interpolation.}
+	\label{fig:chapter14_roi_align_interpolation_points}
+\end{figure}
+
+\subparagraph{Why Choose 0.25 and 0.75 for Sampling?}
+Instead of selecting points at the exact center of each bin (\(0.5\)) or at its edges (\(0.0\) and \(1.0\)), RoIAlign samples points at \(0.25\) and \(0.75\) of the bin’s width and height. This design choice serves several purposes:
+
+\begin{itemize}
+	\item \textbf{Avoiding boundary artifacts:} Sampling at \(0.0\) (bin edges) can cause rounding errors or unexpected shifts due to floating-point imprecision. Sampling at \(0.25\) and \(0.75\) keeps the points well inside the bin, ensuring they stay within the intended spatial region.
+	
+	\item \textbf{Capturing feature variation:} Sampling at just one location (e.g., the center at \(0.5\)) might miss important variations within the bin. By selecting two points per axis, we better approximate the feature distribution in that region.
+	
+	\item \textbf{Consistent coverage:} This approach systematically captures more representative “average” features, reducing the impact of noise and ensuring smooth gradient flow during backpropagation.
+\end{itemize}
+
+While RoIAlign typically uses a \(2 \times 2\) grid of sample points per bin, some implementations allow configurable sampling ratios, such as \(3 \times 3\) or higher, to improve approximation accuracy at the cost of additional computation.
+
+By eliminating quantization artifacts and ensuring precise feature extraction, this step significantly enhances the quality of extracted region features, making RoIAlign an essential improvement over RoI Pooling.
+
+\paragraph{Step 3: Mapping Sampled Points onto the Feature Grid}
+Each of the four sampled points per bin lies within the continuous feature map, requiring us to determine its surrounding discrete grid points for bilinear interpolation. Given a sampled point \((x, y)\), it is enclosed by four neighboring integer grid points:
+
+\begin{itemize}
+	\item \( a: (x_0, y_0) \) – Top-left corner
+	\item \( b: (x_0, y_1) \) – Bottom-left corner
+	\item \( c: (x_1, y_0) \) – Top-right corner
+	\item \( d: (x_1, y_1) \) – Bottom-right corner
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_41.jpg}
+	\caption{Mapping of the selected interpolation points onto the discrete grid of the feature map. Each sampled point is enclosed by four neighboring grid points, which will be used in bilinear interpolation.}
+	\label{fig:chapter14_roi_align_interpolation_grid}
+\end{figure}
+
+In our example, in the bottom-right bin, we consider a sampled point at \((x_2, y_2) = (6.5, 5.8)\) that is also the bottom-right point within the bin. The nearest integer grid points that enclose it are:
+
+\[
+a=(x_0 = 6, y_0 = 5), \quad b=(x_0 = 6, y_1 = 6), \quad c=(x_1 = 7, y_0 = 5), \quad d=(x_1 = 7, y_1 = 6).
+\]
+
+These four points are used for interpolation, ensuring that each sampled feature value is derived from its surrounding grid points rather than being snapped to the nearest one.
+
+To determine these enclosing grid points programmatically, we perform the following computations:
+
+\begin{mintedbox}{python}
+	# Find the integer corners surrounding (x, y)
+	x0 = torch.floor(x).type(torch.cuda.LongTensor)
+	x1 = x0 + 1
+	y0 = torch.floor(y).type(torch.cuda.LongTensor)
+	y1 = y0 + 1
+	
+	# Clamp these coordinates to the image boundary to avoid out-of-range indexing
+	x0 = torch.clamp(x0, 0, img.shape[1] - 1)
+	x1 = torch.clamp(x1, 0, img.shape[1] - 1)
+	y0 = torch.clamp(y0, 0, img.shape[0] - 1)
+	y1 = torch.clamp(y1, 0, img.shape[0] - 1)
+	
+	# Extract feature values at the four surrounding grid points
+	Ia = img[y0, x0]  # Top-left corner
+	Ib = img[y1, x0]  # Bottom-left corner
+	Ic = img[y0, x1]  # Top-right corner
+	Id = img[y1, x1]  # Bottom-right corner
+\end{mintedbox}
+
+These four feature values \((I_a, I_b, I_c, I_d)\) serve as the basis for bilinear interpolation. Instead of directly snapping \((x, y)\) to the nearest feature grid location, we compute a weighted average of these values, using their relative distances as interpolation weights.
+
+By mapping sampled points onto discrete grid locations in this manner, RoIAlign ensures that every proposal maintains precise alignment with the backbone's feature map, preserving sub-pixel accuracy and avoiding misalignment errors caused by quantization.
+
+\paragraph{Step 4: Computing Bilinear Interpolation Weights}
+Once the four nearest integer grid points for a sampled point \((x,y)\) have been identified, we compute weights that determine each corner’s contribution to the interpolated value. These weights are based on the relative distances between \((x,y)\) and the four grid points.
+
+\subparagraph{Normalization Constant and Its Interpretation}
+The normalization constant is given by
+\[
+\text{norm\_const} = \frac{1}{(x_1 - x_0)(y_1 - y_0)},
+\]
+which is the inverse of the area of the rectangle formed by the grid points \((x_0,y_0)\), \((x_1,y_0)\), \((x_0,y_1)\), and \((x_1,y_1)\). In many cases, including our example, this rectangle is a unit square (i.e., \(x_1 - x_0 = 1\) and \(y_1 - y_0 = 1\)), so the normalization constant is 1. This constant ensures that the computed weights form a convex combination that sums to 1.
+
+\subparagraph{Weight Computation for Each Corner}
+For a sampled point \((x,y) = (6.5, 5.8)\), assume the four surrounding grid points are:
+\[
+(x_0,y_0) = (6,5), \quad (x_1,y_0) = (7,5), \quad (x_0,y_1) = (6,6), \quad (x_1,y_1) = (7,6).
+\]
+We compute the distances:
+\[
+x_1 - x = 7 - 6.5 = 0.5, \quad x - x_0 = 6.5 - 6 = 0.5,
+\]
+\[
+y_1 - y = 6 - 5.8 = 0.2, \quad y - y_0 = 5.8 - 5 = 0.8.
+\]
+The weight for each grid point is the product of the fractional distances along the x and y axes, meaning, each weight is determined by how far the sampled point is from a particular corner, considering both x and y distances. The horizontal and vertical contributions are combined as:
+
+- \((x_1 - x) / (x_1 - x_0)\) → Fraction of the width from \((x, y)\) to the right boundary.
+- \((x - x_0) / (x_1 - x_0)\) → Fraction from \((x, y)\) to the left boundary.
+- \((y_1 - y) / (y_1 - y_0)\) → Fraction of the height from \((x, y)\) to the bottom boundary.
+- \((y - y_0) / (y_1 - y_0)\) → Fraction from \((x, y)\) to the top boundary.
+
+Therefore, for the top-left corner (denoted \(w_a\)), the weight is given by:
+\[
+w_a = (x_1 - x) \cdot (y_1 - y) = 0.5 \times 0.2 = 0.1.
+\]
+Similarly, for the top-right corner (denoted \(w_c\)):
+\[
+w_c = (x - x_0) \cdot (y_1 - y) = 0.5 \times 0.2 = 0.1.
+\]
+For the bottom-left corner (denoted \(w_b\)):
+\[
+w_b = (x_1 - x) \cdot (y - y_0) = 0.5 \times 0.8 = 0.4,
+\]
+and for the bottom-right corner (denoted \(w_d\)):
+\[
+w_d = (x - x_0) \cdot (y - y_0) = 0.5 \times 0.8 = 0.4.
+\]
+Thus, the weights satisfy
+\[
+w_a + w_b + w_c + w_d = 0.1 + 0.4 + 0.1 + 0.4 = 1.0.
+\]
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_42.jpg}
+	\caption{Computing interpolation weight for the top-left corner ($w_a$). Since the sampled point is far from this corner, its weight is relatively low: ($w_a=0.1$).}
+	\label{fig:chapter14_roi_align_interpolation_weight_a}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_43.jpg}
+	\caption{Computing interpolation weight for the top-right corner ($w_c$). Since this point is equidistant from $w_a$, the weights are equal ($w_a = w_c = 0.1$).}
+	\label{fig:chapter14_roi_align_interpolation_weight_c}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_44.jpg}
+	\caption{Computing interpolation weight for the bottom-left corner ($w_b$). Since the sampled point is much closer to this corner, its weight is significantly higher: ($w_b=0.4$).}
+	\label{fig:chapter14_roi_align_interpolation_weight_b}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_45.jpg}
+	\caption{Computing interpolation weight for the bottom-right corner ($w_d$). This weight is identical to $w_b$, because the sampled point $(x,y)$ is symmetrically placed between $b, d$.}
+	\label{fig:chapter14_roi_align_interpolation_weight_d}
+\end{figure}
+
+\paragraph{Step 5: Computing the Interpolated Feature Value}
+Once the interpolation weights have been determined, we compute the interpolated feature value at \((x, y)\) as a weighted sum of the four surrounding feature grid values:
+
+\[
+f_{xy} = w_a f_{x_0 y_0} + w_b f_{x_0 y_1} + w_c f_{x_1 y_0} + w_d f_{x_1 y_1}
+\]
+
+Each weight determines the contribution of the corresponding grid point to the interpolated value. Since closer grid points have higher weights, they exert more influence over the final value than those further away.
+
+\subparagraph{\textbf{Example Computation}}
+For the sampled point \((x,y) = (6.5, 5.8)\), using previously computed weights:
+
+\[
+w_a = 0.1, \quad w_b = 0.4, \quad w_c = 0.1, \quad w_d = 0.4
+\]
+
+and the corresponding feature values from the activation map:
+
+\[
+I_a = f_{6,5}, \quad I_b = f_{6,6}, \quad I_c = f_{7,5}, \quad I_d = f_{7,6}
+\]
+
+we compute the interpolated feature value as:
+
+\[
+f_{6.5,5.8} = (0.1 \times f_{6,5}) + (0.4 \times f_{6,6}) + (0.1 \times f_{7,5}) + (0.4 \times f_{7,6})
+\]
+
+\paragraph{Step 6: Aggregating Interpolated Values}
+After computing the interpolated feature values for all sampled points, we aggregate them using either:
+\begin{itemize}
+	\item \textbf{Average pooling}: The final value is the mean of all interpolated feature values.
+	\item \textbf{Max pooling}: The final value is the maximum of all interpolated values.
+\end{itemize}
+
+In Justin’s example, max pooling is used:
+\[
+\text{bin value} = \max(v_1, v_2, v_3, v_4)
+\]
+
+\subparagraph{\textbf{Final Output}}
+After iterating over all bins, the final RoI feature map is constructed, with each bin containing an aggregated value from bilinear interpolation. The per-proposal network then uses this structured feature representation for classification and bounding-box regression.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_46.jpg}
+	\caption{Final RoIAlign result: Each bin's value is determined via bilinear interpolation and pooling.}
+	\label{fig:chapter14_roi_align_final}
+\end{figure}
+
+\paragraph{Key Takeaways}
+\begin{itemize}
+	\item RoIAlign eliminates the quantization error of RoI Pooling by leveraging bilinear interpolation.
+	\item The interpolation process ensures precise feature extraction, leading to improved localization accuracy.
+	\item The final feature map maintains a fixed size per RoI, making it compatible with subsequent per-region classifiers and regressors.
+\end{itemize}
+
+Hence, RoIAlign is a core component of modern detectors like Mask R-CNN and Faster R-CNN.
+
+\newpage
+\paragraph{RoIAlign Important Implementation Parts in PyTorch}
+Following the implementation of \cite{patnaik2020_roi_pool}, here are the important code snippets that illustrate how RoIAlign works, helping to see how the process looks like from start to finish. 
+
+\begin{mintedbox}{python}
+	def _roi_align(self, features, scaled_proposal):
+		"""Given feature layers and scaled proposals return bilinear interpolated
+		points in feature layer
+		
+		Args:
+		features (torch.Tensor): Tensor of shape <channels x height x width>
+		scaled_proposal (list of torch.Tensor): Each tensor is a bbox by which we
+		will extract features from features Tensor
+		"""
+		
+		_, num_channels, h, w = features.shape
+		
+		# (xp0, yp0) = top-left corner of projected proposal, (xp1, yp1) = bottom-right corner.
+		xp0, yp0, xp1, yp1 = scaled_proposal
+		p_width = xp1 - xp0
+		p_height = yp1 - yp0
+		
+		'''
+		If we want to output a nxn tensor to the per-proposal network, then output_size=n.
+		The number of sub-regions we'll produce, like in RoIPool, will be nxn as well.
+		The height and width of each sub-region will be equal, as the regions are now of exactly the same size, 
+		but crucially we no longer snap to integer boundaries. 
+		Each sub-region's representative value will be a linear combination of the pixel values 
+		that this sub-region covers (via bilinear interpolation).
+		'''
+		w_stride = p_width / self.output_size  # The width of each sub-region
+		h_stride = p_height / self.output_size # The height of each sub-region
+		
+		interp_features = torch.zeros((num_channels, self.output_size, self.output_size))
+	
+		for i in range(self.output_size):
+			for j in range(self.output_size):
+				# top-left x coordinate of the i-th sub-region
+				x_bin_strt = i * w_stride + xp0
+				# top-left y coordinate of the j-th sub-region
+				y_bin_strt = j * h_stride + yp0
+				
+				# generate 4 points for interpolation (no rounding!)
+				x1 = torch.Tensor([x_bin_strt + 0.25*w_stride]) # quarter in the bin (x-axis)
+				x2 = torch.Tensor([x_bin_strt + 0.75*w_stride]) # three-quarters in the bin (x-axis)
+				y1 = torch.Tensor([y_bin_strt + 0.25*h_stride]) # quarter in the bin (y-axis)
+				y2 = torch.Tensor([y_bin_strt + 0.75*h_stride]) # three-quarters in the bin (y-axis)
+				
+				'''
+				We sample 2 points along x (0.25 and 0.75 of the bin width) 
+				and 2 points along y (0.25 and 0.75 of the bin height).
+				This yields 2 x 2 = 4 sample points per bin.
+				
+				Why at 0.25 and 0.75?
+				1) Avoid boundaries: Sampling at 0 or 1 might cause rounding/boundary issues.
+				2) Capture variation: Multiple sample points per bin help represent 
+				the internal structure better than a single center point.
+				3) Consistent coverage: 0.25 and 0.75 systematically offer an even "spread" 
+				in each dimension, approximating the average effectively.
+				'''
+				
+				for c in range(num_channels):
+				# features[0, c] is the single-channel feature map for channel c
+				img = features[0, c]
+				v1 = bilinear_interpolate(img, x1, y1)
+				v2 = bilinear_interpolate(img, x1, y2)
+				v3 = bilinear_interpolate(img, x2, y1)
+				v4 = bilinear_interpolate(img, x2, y2)
+				
+				'''
+				v1, v2, v3, v4 are the bilinear-interpolated values at the four sample points.
+				We average these 4 values to get a single value for bin (i, j) and channel c.
+				Note: In some cases, one might take max instead of average 
+				(mimicking max pooling). This is what Justin shows in the lecture. Hence, he takes max(v1, v2, v3, v4) instead. 
+				'''
+				interp_features[c, j, i] = (v1 + v2 + v3 + v4) / 4
+		
+		return interp_features
+\end{mintedbox}
+
+We now understand the RoIAlign high-level flow. Next, let us examine how bilinear interpolation works for the four regularly sampled points inside each bin, of which we'll compute the output bin value for the per-proposal network later. 
+
+\newpage
+
+\begin{mintedbox}{python}
+	def bilinear_interpolate(img, x, y):
+		''' We are given a point (x,y) that might not be a pixel coordinate,
+		and we want to interpolate its feature value from the surrounding pixels. 
+		'''
+		
+		# find the integer corners that surround (x, y)
+		x0 = torch.floor(x).type(torch.cuda.LongTensor)
+		x1 = x0 + 1
+		y0 = torch.floor(y).type(torch.cuda.LongTensor)
+		y1 = y0 + 1
+		
+		# clamp these coordinates to the image boundary to avoid indexing out of range
+		x0 = torch.clamp(x0, 0, img.shape[1] - 1)
+		x1 = torch.clamp(x1, 0, img.shape[1] - 1)
+		y0 = torch.clamp(y0, 0, img.shape[0] - 1)
+		y1 = torch.clamp(y1, 0, img.shape[0] - 1)
+		
+		# top-left, bottom-left, top-right, bottom-right corner values
+		Ia = img[y0, x0]
+		Ib = img[y1, x0]
+		Ic = img[y0, x1]
+		Id = img[y1, x1]
+		
+		'''
+		Next, we compute the weights for each corner. The idea:
+		- (x1 - x) -> how far we are from the right edge in the x direction
+		- (x - x0) -> how far we are from the left edge in the x direction
+		- (y1 - y) -> how far we are from the bottom edge in the y direction
+		- (y - y0) -> how far we are from the top edge in the y direction
+		
+		We multiply these "partial distances" and then normalize by the total "area" 
+		( (x1 - x0)*(y1 - y0) ) so that wa+wb+wc+wd = 1.
+		'''
+		
+		norm_const = 1 / ((x1.type(torch.float32) - x0.type(torch.float32)) *
+		(y1.type(torch.float32) - y0.type(torch.float32)))
+		
+		wa = (x1.type(torch.float32) - x) * (y1.type(torch.float32) - y) * norm_const
+		wb = (x1.type(torch.float32) - x) * (y - y0.type(torch.float32)) * norm_const
+		wc = (x - x0.type(torch.float32)) * (y1.type(torch.float32) - y) * norm_const
+		wd = (x - x0.type(torch.float32)) * (y - y0.type(torch.float32)) * norm_const
+		
+		# final bilinear interpolation: weighted sum of the four corners
+		return torch.t(torch.t(Ia) * wa) + torch.t(torch.t(Ib) * wb) + \
+		torch.t(torch.t(Ic) * wc) + torch.t(torch.t(Id) * wd)
+\end{mintedbox}
+
+\section{Faster R-CNN: Faster Proposals Using RPNs}
+\label{sec:chapter14_faster_rcnn}
+
+\subsection{Fast R-CNN Bottleneck: Region Proposal Computation}
+Although Fast R-CNN optimized the detection pipeline, the slowest component remained the region proposal generation. The external algorithm used, such as Selective Search, was still running on the CPU, making it a major bottleneck.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_50.jpg}
+	\caption{Problem: Despite Fast R-CNN’s optimizations, runtime is still dominated by region proposal computation. Selective Search runs on the CPU and remains the slowest part of the pipeline.}
+	\label{fig:chapter14_runtime_bottleneck}
+\end{figure}
+
+As shown in Figure \ref{fig:chapter14_runtime_bottleneck}, even though feature extraction and classification were now efficient, generating proposals using heuristic-based methods still consumed a significant portion of the runtime. 
+
+\subsection{Towards Faster Region Proposals: Learning Proposals with CNNs}
+The natural next step in improving object detection efficiency was to replace the handcrafted, CPU-based proposal generation process with a learnable, CNN-based alternative. Faster R-CNN introduced the \textbf{Region Proposal Network (RPN)} \cite{ren2016_fasterrcnn}, an architecture that predicts object proposals directly from the feature maps produced by the backbone CNN. This approach integrates proposal generation into the deep learning pipeline, eliminating the need for slow external algorithms.
+
+The key idea behind RPNs is:
+\begin{itemize}
+	\item Use convolutional feature maps to directly predict high-quality object proposals.
+	\item Train the proposal generator jointly with the rest of the detection pipeline.
+	\item Make the entire object detection process fully differentiable and GPU-accelerated.
+\end{itemize}
+
+By replacing Selective Search with an RPN, Faster R-CNN eliminates the last major bottleneck in Fast R-CNN and makes object detection significantly faster while maintaining high accuracy. In the next section, we will explore the details of Region Proposal Networks and their role in Faster R-CNN.
+
+\subsection{Region Proposal Networks (RPNs)}
+\label{subsec:chapter14_rpn}
+
+\paragraph{\textbf{How RPNs Work}} 
+Instead of using a separate region proposal algorithm, RPNs generate proposals directly from the shared feature map produced by a deep CNN backbone. The process follows these steps:
+
+\begin{enumerate}
+	\item \textbf{Feature Extraction:} The backbone CNN extracts a feature map from the input image while preserving spatial alignment.
+	\item \textbf{Anchor Generation:} At each spatial location on the feature map, predefined \textit{anchor boxes} (of multiple sizes and aspect ratios) serve as candidate proposals.
+	\item \textbf{Objectness Classification:} A small convolutional layer predicts whether each anchor contains an object.
+	\item \textbf{Bounding Box Regression:} For positive anchors, another convolutional layer predicts the transformation required to refine the anchor into a better-fitting bounding box.
+\end{enumerate}
+
+Since the RPN operates directly on the shared feature map, it \textbf{adds minimal computational cost}—it is simply a small set of convolutional layers applied to the extracted backbone features. This allows the model to generate high-quality proposals without needing separate, slow region proposal methods.
+
+\paragraph{\textbf{Anchor Boxes: Handling Scale and Aspect Ratio Variations}}  
+In object detection, objects appear in diverse shapes and sizes. A single fixed-size proposal per spatial location would fail to capture this variability. To address this, RPNs generate proposals using a set of predefined \textbf{anchor boxes} at each spatial location on the feature map. Each anchor serves as a \textbf{reference box} that can be classified and refined to better fit actual objects.  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_59.jpg}
+	\caption{Anchor boxes and their classification: Positive (green) anchors contain objects, while negative (red) anchors do not.}
+	\label{fig:chapter14_rpn_anchor_classification}
+\end{figure}
+
+At each spatial location, RPNs generate \textbf{$K$ anchors} with:  
+\begin{itemize}
+	\item \textbf{Different scales} – Capturing small, medium, and large objects.
+	\item \textbf{Different aspect ratios} – Adapting to tall, square, and wide objects.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_68.jpg}
+	\caption{Examples of $K$ anchor boxes at a single location, illustrating different sizes and aspect ratios.}
+	\label{fig:chapter14_rpn_anchors_sizes}
+\end{figure}
+
+The original Faster R-CNN paper used \textbf{9 anchors per location} (3 scales $\times$ 3 aspect ratios). For each anchor, the RPN predicts:
+
+\begin{itemize}
+	\item \textbf{Objectness Score} – Probability that the anchor contains an object. Usually in order to avoid logistic regression most implementations output an explicit positive score and an explicit negative score, and use a CE loss (on softmax outputs) instead. 
+	\item \textbf{Bounding Box Transform} – A transformation $(t_x, t_y, t_w, t_h)$ refining the anchor box.
+\end{itemize}
+
+These predictions are made using a small CNN applied to the feature map. The classification branch outputs a \textbf{$2K$ score map} (for $K$ anchors per location) per each spatial location in the feature map (meaning in total, it outputs a tensor of shape $2K \times 5 \times 6 $ per training image), and the regression branch outputs a \textbf{$4K$ transform map} per each spatial location in the feature map, corresponding to an output tensor of shape $4K \times 5 \times 6 $ per training image.  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_60.jpg}
+	\caption{RPN predicting objectness scores and bounding box transforms for each anchor.}
+	\label{fig:chapter14_rpn_predictions}
+\end{figure}
+
+\paragraph{\textbf{Bounding Box Refinement: Aligning Anchors to Objects}}  
+Even with multiple anchors per location, an anchor may not perfectly match an object’s true dimensions. To improve localization, the RPN predicts a refinement transformation, similar to what R-CNN and Fast R-CNN do for final detections. For details on bounding box transformations, refer to \textbf{Section~\ref{subsubsec:chapter13_bbox_regression}}.  
+
+The refinement transformation is parameterized as follows:
+
+\[
+t_x = \frac{b_x - p_x}{p_w}, \quad
+t_y = \frac{b_y - p_y}{p_h}, \quad
+t_w = \ln \left( \frac{b_w}{p_w} \right), \quad
+t_h = \ln \left( \frac{b_h}{p_h} \right)
+\]
+
+where $(p_x, p_y, p_w, p_h)$ are the anchor box parameters and $(b_x, b_y, b_w, b_h)$ are the refined bounding box parameters.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_62.jpg}
+	\caption{For positive anchors (green), the RPN predicts a transformation (orange) that converts the anchor to the ground-truth bounding box (gold).}
+	\label{fig:chapter14_rpn_box_transform}
+\end{figure}
+
+Unlike traditional proposal generation methods, RPNs train the proposal generation process jointly with the feature extraction backbone, allowing the network to \textbf{learn proposals that are well-suited for the final detection task}. This integration improves both accuracy and computational efficiency.
+
+\paragraph{\textbf{Training RPNs: Assigning Labels to Anchors}}
+To train a Region Proposal Network (RPN), we must assign labels to the anchor boxes, distinguishing between \textbf{positive}, \textbf{negative}, and \textbf{neutral} examples. This labeling process is crucial for optimizing both classification (objectness score) and bounding box regression.
+
+\begin{itemize}
+	\item \textbf{Positive anchors}: Anchors that have an \textbf{IoU $\geq 0.7$} with at least one ground-truth box are considered positive.
+	\item \textbf{Negative anchors}: Anchors with \textbf{IoU $< 0.3$} with all ground-truth boxes are labeled negative.
+	\item \textbf{Neutral anchors}: Anchors with an IoU between \textbf{0.3 and 0.7} are ignored during training.
+\end{itemize}
+
+Since anchor boxes serve as a reference for object detection, \textbf{positive anchors} are used to compute both classification and regression losses. \textbf{Negative anchors}, on the other hand, only contribute to the classification loss, ensuring the RPN learns to distinguish objects from background effectively.
+
+\paragraph{\textbf{Loss Function for RPN Training}}
+The RPN is trained using a \textbf{multi-task loss function} that jointly optimizes \textbf{object classification} and \textbf{bounding box regression}:
+
+\[
+L(\{p_i\}, \{t_i\}) = \frac{1}{N_{\text{cls}}} \sum_{i} L_{\text{cls}}(p_i, p^*_i) + \lambda \frac{1}{N_{\text{reg}}} \sum_{i} p^*_i L_{\text{reg}}(t_i, t^*_i)
+\]
+
+where:
+\begin{itemize}
+	\item \( p_i \) is the predicted probability of anchor \( i \) containing an object.
+	\item \( p^*_i \) is the ground-truth label (1 for objects, 0 for background).
+	\item \( t_i \) is the predicted bounding box transform for anchor \( i \).
+	\item \( t^*_i \) is the ground-truth bounding box transform.
+	\item \( L_{\text{cls}} \) is the \textbf{binary cross-entropy loss} for object classification.
+	\item \( L_{\text{reg}} \) is the \textbf{smooth \( L_1 \) loss} applied only to positive anchors.
+	\item \( N_{\text{cls}} \) and \( N_{\text{reg}} \) are normalization terms.
+	\item \( \lambda \) is a balancing factor, typically set to 10.
+\end{itemize}
+
+This loss function ensures that \textbf{classification and bounding box regression are optimized simultaneously}.
+
+\subparagraph{\textbf{Assigning Ground-Truth Bounding Boxes to Anchors}}
+Each \textbf{positive anchor} is assigned to the ground-truth box that has the \textbf{maximum IoU} with it. This ensures that the best-matching ground-truth object supervises the training of the anchor's bounding box regression.
+
+\begin{itemize}
+	\item If an anchor has \(\text{IoU} \geq 0.7\) with multiple ground-truth boxes, it is assigned to the object with which it has the highest IoU.
+	\item Each ground-truth box must be matched to at least one anchor. If no anchor has \(\text{IoU} \geq 0.7\) with a given ground-truth box, the anchor with the highest IoU is forcibly assigned to it.
+\end{itemize}
+
+This matching process ensures that \textbf{all ground-truth objects are covered by at least one anchor}, enabling the RPN to propose accurate regions for all objects in an image.
+
+\paragraph{\textbf{Smooth \( L_1 \) Loss for Bounding Box Regression}}
+To refine anchor boxes into accurate region proposals, Faster R-CNN employs the \textbf{smooth \( L_1 \) loss}, which is defined as:
+
+\[
+L_{\text{reg}}(t_i, t^*_i) =
+\begin{cases}
+	0.5 (t_i - t^*_i)^2, & \text{if } |t_i - t^*_i| < 1 \\
+	|t_i - t^*_i| - 0.5, & \text{otherwise}
+\end{cases}
+\]
+
+This loss behaves like an \textbf{\( L_2 \) loss} (squared error) when the error is small, ensuring smooth gradients for small offsets. However, for larger errors, it switches to an \textbf{\( L_1 \) loss} (absolute error), preventing large outliers from dominating the training process.
+
+\textbf{Why Smooth \( L_1 \) Instead of \( L_2 \) Loss?}
+\begin{itemize}
+	\item \textbf{Robustness to Outliers}: Unlike the \( L_2 \) loss, which heavily penalizes large errors, the smooth \( L_1 \) loss reduces the influence of extreme outliers.
+	\item \textbf{Stable Training}: The transition from quadratic to linear loss ensures that large localization errors do not cause excessively high gradients, making optimization more stable.
+	\item \textbf{Better Localization}: Since bounding box predictions can have large variations, the smooth \( L_1 \) loss allows more effective training, focusing on improving the fine alignment of predicted boxes.
+\end{itemize}
+
+By integrating the \textbf{smooth \( L_1 \) loss} into the RPN's training objective, Faster R-CNN achieves \textbf{more accurate and stable region proposals}, leading to improved object detection performance.
+
+\paragraph{\textbf{Why Use Negative Anchors?}}
+\textbf{Negative anchors} (IoU $<$ 0.3) play a crucial role in training the RPN. Without them, the model would lack supervision on how to classify background regions, leading to an excess of false positives. \textbf{Negative anchors}:
+\begin{itemize}
+	\item Ensure the RPN learns to reject background regions by reinforcing the binary classification task.
+	\item Provide a balance between \textbf{object detection} and \textbf{background rejection}, making the system more robust (ensuring that the RPN does not overfit to detecting only foreground objects). 
+\end{itemize}
+
+\paragraph{\textbf{Inference: Generating Region Proposals}}
+At inference time, the RPN processes all anchor boxes across the image and filters out low-confidence proposals to retain the most relevant ones. The process consists of the following steps:
+
+\begin{enumerate}
+	\item \textbf{Compute objectness scores}: The classification branch predicts an \textbf{object score} for each anchor box.
+	\item \textbf{Sort proposals by objectness score}: The top-scoring anchors are retained for further processing.
+	\item \textbf{Apply Non-Maximum Suppression (NMS)}: Overlapping proposals with a high \textbf{IoU} are removed, keeping only the most confident detections.
+	\item \textbf{Select the top $N$ proposals} (e.g., 300 proposals) as final region proposals for Fast R-CNN.
+\end{enumerate}
+
+By filtering out redundant and low-confidence proposals, this step improves both \textbf{efficiency} and \textbf{accuracy}, ensuring that only the most relevant regions are processed by the detector.
+
+\paragraph{\textbf{RPNs Improve Region Proposal Generation}}
+Compared to previous region proposal methods like \textbf{Selective Search}, RPNs introduce key advantages:
+\begin{itemize}
+	\item \textbf{Speed}: RPNs share computation with the backbone CNN, making proposal generation nearly cost-free.
+	\item \textbf{End-to-End Learning}: Unlike traditional methods, RPNs are trained jointly with the detector, leading to \textbf{better proposal quality}.
+	\item \textbf{Better Object Localization}: The bounding box regression allows anchor boxes to be refined dynamically.
+\end{itemize}
+
+Thus, \textbf{Faster R-CNN} achieves \textbf{real-time object detection} by integrating RPNs and Fast R-CNN into a unified pipeline.
+
+\subsection{Faster R-CNN Loss in Practice: Joint Training with Four Losses}
+\label{subsec:chapter14_faster_rcnn_loss}
+
+\paragraph{\textbf{Joint Training in Faster R-CNN}}
+Unlike previous object detection pipelines where region proposal generation and object classification were trained separately, \textbf{Faster R-CNN jointly trains both the RPN and the object detector}. This results in a fully end-to-end learnable system with a \textbf{four-part loss function}:
+
+\[
+L = L_{\text{cls}}^{\text{RPN}} + L_{\text{reg}}^{\text{RPN}} + L_{\text{cls}}^{\text{Fast R-CNN}} + L_{\text{reg}}^{\text{Fast R-CNN}}
+\]
+
+\begin{itemize}
+	\item \( L_{\text{cls}}^{\text{RPN}} \) – Classifies anchor boxes as object vs. background.
+	\item \( L_{\text{reg}}^{\text{RPN}} \) – Refines anchor boxes to generate high-quality proposals.
+	\item \( L_{\text{cls}}^{\text{Fast R-CNN}} \) – Classifies refined proposals into object categories.
+	\item \( L_{\text{reg}}^{\text{Fast R-CNN}} \) – Further refines bounding box localization.
+\end{itemize}
+
+By training the RPN together with the detection network, the \textbf{region proposal generation and object detection become more aligned}, improving both efficiency and accuracy.
+
+\paragraph{\textbf{How RPN Improves Inference Speed}}
+Before Faster R-CNN, Fast R-CNN significantly reduced inference time compared to R-CNN by sharing computations. However, it still relied on external region proposal methods such as Selective Search, which were computationally expensive. Faster R-CNN eliminates this bottleneck by using RPN to generate region proposals directly from the feature map.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_70.jpg}
+	\caption{Comparison of inference time between R-CNN, SPP-Net, Fast R-CNN, and Faster R-CNN. RPN reduces the test-time speed from 2.3s in Fast R-CNN to 0.2s in Faster R-CNN.}
+	\label{fig:chapter14_faster_rcnn_speed_comparison}
+\end{figure}
+
+\textbf{Key Takeaways:}
+\begin{itemize}
+	\item \textbf{Eliminating external region proposals} – Instead of using a separate CPU-based region proposal method (e.g., Selective Search), Faster R-CNN predicts region proposals using CNNs.
+	\item \textbf{Fully convolutional region proposals} – The RPN operates as a small, efficient convolutional network on top of the shared feature map.
+	\item \textbf{Dramatic speedup} – With RPN, the overall test-time speed improves from \textbf{2.3s in Fast R-CNN to just 0.2s in Faster R-CNN}, making real-time object detection more feasible.
+\end{itemize}
+
+By integrating \textbf{joint training}, \textbf{region proposal learning}, and \textbf{feature sharing}, Faster R-CNN achieves significant improvements over previous detectors, making it one of the most influential object detection models.
+
+\subsection{Feature Pyramid Networks (FPNs): Multi-Scale Feature Learning}
+\label{subsec:chapter14_fpn}
+
+Detecting objects of varying scales is a fundamental challenge in object detection. Traditional methods attempted to improve \textbf{scale invariance} by constructing an \textbf{image pyramid}, where the image is resized to multiple scales and processed separately by the detector. This approach is computationally expensive since the network must process the same image multiple times.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_74.jpg}
+	\caption{Illustration of the classic image pyramid approach, where the detector is applied to multiple resized versions of the image to improve small-object detection. However, this method is computationally expensive.}
+	\label{fig:chapter14_image_pyramid}
+\end{figure}
+
+\subsubsection{Feature Pyramid Networks: A More Efficient Approach}
+Rather than resizing the image, Lin et al. (2017) \cite{lin2017_fpn} proposed leveraging the inherent hierarchical structure of convolutional neural networks (CNNs). Since CNNs naturally extract features at multiple resolutions due to their deep architecture, FPNs \textbf{attach independent detectors to features from multiple levels of the backbone}. This enables the model to handle objects at different scales without requiring multiple forward passes.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_76.jpg}
+	\caption{Applying object detectors at different stages of a CNN backbone. However, early-stage features suffer from limited receptive fields and lack access to high-level semantic information, reducing detection performance.}
+	\label{fig:chapter14_fpn_early_stages}
+\end{figure}
+
+\subsubsection{Enhancing Low-Level Features with High-Level Semantics}
+A major drawback of using early-stage CNN features for object detection is that they lack \textbf{semantic richness}. Lower layers in CNNs retain high spatial resolution but primarily capture edges and textures, whereas deeper layers encode more complex features but at a lower resolution. This results in a trade-off: high-resolution features lack meaningful context, while low-resolution features are more informative but spatially coarse.
+
+To address this, FPNs introduce \textbf{top-down connections} that propagate high-level information back to lower-resolution feature maps.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_82.jpg}
+	\caption{Top-down feature fusion in Feature Pyramid Networks. High-level features are progressively upsampled and combined with low-level features to enhance their semantic richness before detection.}
+	\label{fig:chapter14_fpn_topdown}
+\end{figure}
+
+Specifically, the process consists of the following steps:
+
+\begin{enumerate}
+	\item Each feature map from the backbone undergoes a \textbf{$1\times1$ convolution} to change its channel dimensionality. This ensures that features from different levels are compatible when combined.
+	\item The highest-level feature map (smallest spatial size, richest semantic information) is directly used as the starting point for the \textbf{top-down pathway}.
+	\item The lower-resolution feature maps are then progressively \textbf{upsampled} using bilinear interpolation or transposed convolution (also known as deconvolution) to match the spatial resolution of the next finer feature map.
+	\item The upsampled feature map is then \textbf{element-wise added} to the corresponding feature map from the backbone (which retains high spatial resolution but lacks deep semantic information).
+	\item Finally, the fused feature maps are further processed by a \textbf{$3\times3$ convolution} to smooth out artifacts introduced by upsampling and fusion before being used for object detection.
+\end{enumerate}
+
+\paragraph{How Upsampling Works in FPNs}
+Upsampling is a crucial operation in FPNs since it allows coarse but high-level features to be brought into alignment with finer-resolution feature maps. This is typically done in one of two ways:
+
+\begin{itemize}
+	\item \textbf{Bilinear Interpolation:} A non-learnable method we've covered that interpolates pixel values based on surrounding features, and can be used to produce smooth upscaled feature maps.
+	\item \textbf{Transposed Convolution (Deconvolution):} A learnable operation that applies upsampling with trainable filters, allowing the network to learn an optimal way to refine features during backpropagation. We'll cover it in more detail later, when we'll discuss segmentation. 
+\end{itemize}
+
+By applying these top-down connections, FPNs create a hierarchical feature representation where \textbf{all levels of the feature pyramid benefit from deep semantic information}. This significantly improves object detection performance, especially for small objects, by ensuring that all feature levels contribute meaningful information to the final detections.
+
+\subsubsection{Combining Results from Multiple Feature Levels}
+Once object detections are generated from multiple feature levels, they must be merged to produce a final prediction. The standard approach is to apply \textbf{Non-Maximum Suppression (NMS)} across all detections:
+
+\begin{itemize}
+	\item \textbf{Sort all detected bounding boxes} by confidence score.
+	\item \textbf{Iteratively suppress overlapping boxes} with lower confidence, ensuring that redundant detections do not appear in the final output.
+\end{itemize}
+
+\paragraph{Advantages of FPNs}
+Feature Pyramid Networks offer several key advantages over traditional multi-scale detection approaches:
+
+\begin{itemize}
+	\item \textbf{Efficient multi-scale feature extraction} – The network processes the image only once, rather than at multiple scales.
+	\item \textbf{Enhanced small-object detection} – Lower-resolution feature maps retain fine details while incorporating high-level semantics.
+	\item \textbf{Lightweight and scalable} – The additional computational cost of FPNs is minimal compared to constructing an image pyramid.
+\end{itemize}
+
+By efficiently integrating information from different levels of a CNN, FPNs have become a standard component in modern object detection architectures, including Faster R-CNN.
+
+\newpage
+\paragraph{\textbf{The Two-Stage Object Detection Pipeline}}  
+Faster R-CNN is a \textbf{two-stage object detector}, meaning the detection process is divided into two sequential steps:
+
+\begin{enumerate}
+	\item \textbf{Stage 1: Region Proposal Generation}
+	\begin{itemize}
+		\item The backbone CNN processes the entire image once to generate a feature map.
+		\item The \textbf{Region Proposal Network (RPN)} applies convolutional layers to the feature map and outputs a set of \textbf{region proposals}, each with an \textbf{objectness score} and \textbf{bounding box transform}.
+		\item The top $N$ proposals (e.g., 300) are selected using \textbf{Non-Maximum Suppression (NMS)} to remove redundant boxes.
+	\end{itemize}
+	
+	\item \textbf{Stage 2: Object Detection and Classification}
+	\begin{itemize}
+		\item The extracted feature map is cropped using \textbf{RoIAlign}, producing fixed-size feature vectors for each proposal.
+		\item Each proposal is classified into an object category or background.
+		\item A final \textbf{bounding box refinement transformation} improves localization accuracy.
+	\end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_71.jpg}
+	\caption{Visualization of Faster R-CNN as a two-stage object detector. The \textbf{first stage} (blue) generates region proposals, while the \textbf{second stage} (green) classifies objects and refines the proposals.}
+	\label{fig:chapter14_faster_rcnn_pipeline}
+\end{figure}
+
+This two-stage approach provides \textbf{high accuracy} but comes at the cost of increased computational complexity. Faster R-CNN significantly improves inference speed over its predecessors, but the sequential nature of proposal generation and classification still limits real-time performance. 
+
+A natural question arises: \textbf{"Do we really need the second stage?"} The answer is no. In the following, we will explore \textbf{single-stage object detectors}, which eliminate the region proposal step and predict object locations directly in a single pass. 
+
+We will focus on \textbf{RetinaNet} \cite{lin2018_focalloss}, which introduced the \textbf{Focal Loss} to address the class imbalance in object detection, and \textbf{FCOS} \cite{tian2019_fcos}, a fully convolutional anchor-free object detector. Later, after covering \textbf{Transformers}, we will introduce \textbf{DEtection TRansformer (DETR)} \cite{carion2020_detr}, a powerful single-stage detector that models object detection as a set prediction problem.
+
+\section{RetinaNet: A Breakthrough in Single-Stage Object Detection}
+\label{subsec:chapter14_retinanet}
+
+RetinaNet \cite{lin2018_focalloss} was a major breakthrough in object detection, becoming the first \textbf{single-stage detector} to surpass the performance of top two-stage methods such as Faster R-CNN. It is based on a \textbf{ResNet-101-FPN} or \textbf{ResNeXt-101-FPN} backbone, where the \textbf{Feature Pyramid Network (FPN)} serves as the neck. By leveraging FPN, RetinaNet effectively handles multi-scale object detection while maintaining high efficiency.
+
+\subsection{Why Single-Stage Detectors Can Be Faster}
+Single-stage object detectors predict object categories and bounding boxes \textbf{directly from feature maps}, eliminating the need for a region proposal step. Unlike Faster R-CNN, which processes only a few thousand region proposals per image, single-stage detectors like RetinaNet operate on a \textbf{dense grid of anchor boxes}—potentially processing over 100,000 candidate regions in a single forward pass.
+
+\begin{itemize}
+	\item \textbf{Efficiency:} Instead of applying a second-stage classifier per proposal, RetinaNet classifies objects in a single step, reducing inference time.
+	\item \textbf{Parallelization:} Since all predictions are made in parallel, one-stage detectors can fully utilize modern hardware like GPUs.
+\end{itemize}
+
+However, despite these advantages, single-stage detectors historically struggled with \textbf{class imbalance}, which RetinaNet successfully addresses.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_89.jpg}
+	\caption{Inference speed comparison of RetinaNet and other detectors. Single-stage detectors like RetinaNet are significantly faster than two-stage detectors, such as FPN Faster R-CNN.}
+	\label{fig:chapter14_retinanet_inference}
+\end{figure}
+
+\subsection{The Class Imbalance Problem in Dense Detection}
+One of the main challenges in single-stage detection is \textbf{foreground-background class imbalance}. Since these detectors predict objects densely over the entire feature map, most anchor boxes correspond to background regions. This results in:
+
+\begin{enumerate}
+	\item \textbf{Inefficient training:} A vast majority of negative samples are trivial to classify, contributing little to learning.
+	\item \textbf{Overwhelming easy negatives:} The large number of background samples can dominate the loss function, leading to weaker models.
+\end{enumerate}
+
+This issue is less severe in two-stage detectors like Faster R-CNN, where the RPN \textbf{filters out most background regions} before classification, leaving a \textbf{balanced subset} of positive and negative proposals for training.
+
+RetinaNet tackles this problem by modifying the loss function.
+
+\subsection{Focal Loss: Addressing Class Imbalance}
+
+RetinaNet introduced the focal loss to tackle the severe class imbalance inherent in one-stage detectors. Instead of resorting to heuristic sampling or hard-negative mining, focal loss modifies the standard cross-entropy (CE) loss by down-weighting the loss contribution of well-classified examples, thereby shifting the model’s focus toward hard, misclassified examples.
+
+The focal loss is defined as:
+
+\[
+FL(p_t) = - (1 - p_t)^\gamma \log(p_t)
+\]
+
+where:
+\begin{itemize}
+	\item \( p_t \) is the predicted probability for the ground-truth class.
+	\item \( \gamma \) is the tunable focusing parameter.
+\end{itemize}
+
+For comparison, the standard cross-entropy loss is:
+
+\[
+CE(p_t) = -\log(p_t)
+\]
+
+By introducing the modulating factor \((1-p_t)^\gamma\), the focal loss reduces the loss for examples that are already well-classified (i.e., when \( p_t \) is high). For instance, with \(\gamma = 2\):
+\begin{itemize}
+	\item If \( p_t = 0.9 \), then \((1-0.9)^2 = 0.01\), and the loss becomes approximately \(0.01 \times -\log(0.9) \approx 0.01 \times 0.105 = 0.00105\). In contrast, the standard CE loss would be about 0.105.
+	\item If \( p_t = 0.5 \), then \((1-0.5)^2 = 0.25\), and the loss is \(0.25 \times -\log(0.5) \approx 0.25 \times 0.693 = 0.173\).
+	\item If \( p_t = 0.2 \), then \((1-0.2)^2 = 0.64\), and the loss is \(0.64 \times -\log(0.2) \approx 0.64 \times 1.609 = 1.029\).
+\end{itemize}
+
+These examples illustrate that as the prediction confidence \( p_t \) increases (i.e., for easy examples), the modulating factor quickly shrinks the loss, allowing the model to focus its learning capacity on the hard examples where \( p_t \) is lower.
+
+An \(\alpha\)-balanced variant of the focal loss can further address class imbalance by assigning different weights to positive and negative examples:
+
+\[
+FL(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)
+\]
+
+Here, \(\alpha_t\) is chosen to down-weight the loss for the dominant class (usually the background). In practice, selecting \(\gamma = 2\) and an appropriate \(\alpha\) (e.g., 0.25) has been shown to yield robust results.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.65\textwidth]{Figures/Chapter_14/focal_loss_explained.png}
+	\caption{Focal loss modifies the standard cross-entropy loss by incorporating a modulating factor \((1-p_t)^\gamma\). This factor down-weights the loss for well-classified examples. For instance, when \(\gamma=2\), the loss for examples with high confidence (e.g., \(p_t \approx 0.9\)) is significantly reduced, while the loss for moderately difficult examples (e.g., \(p_t \approx 0.5\) or \(p_t \approx 0.2\)) remains similar to that of the standard cross-entropy loss. Setting \(\gamma\) too high (such as \(\gamma=5\)) can overly suppress the loss even for examples that are not trivial, potentially eliminating valuable learning signals. Thus, \(\gamma=2\) is often chosen as a good compromise, effectively reducing the loss from very easy examples while preserving enough gradient for harder examples. Source: \cite{lin2018_focalloss}}
+	\label{fig:chapter14_focal_loss}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/focal_loss_shifts_focus.png}
+	\caption{Cumulative distribution functions (CDFs) of the normalized loss for background (negative) and foreground (positive) examples under different values of \(\gamma\). As \(\gamma\) increases, the loss contribution from easy negatives is dramatically reduced, which flattens the loss distribution for background examples. Importantly, with \(\gamma=2\), the loss for foreground examples remains nearly unchanged, ensuring that the model still learns effectively from the scarce positive examples. This selective down-weighting is crucial for mitigating class imbalance. Source: \cite{lin2018_focalloss}}
+	\label{fig:chapter14_focal_loss_distribution}
+\end{figure}
+
+In summary, focal loss is a key innovation in RetinaNet that directly addresses class imbalance by dynamically down-weighting the loss from easy examples. This enables training a dense one-stage detector effectively without resorting to complex sampling heuristics, ultimately achieving state-of-the-art accuracy while maintaining fast inference speeds.
+
+\subsection{RetinaNet Architecture and Pipeline}
+RetinaNet follows a design similar to Faster R-CNN’s \textbf{Region Proposal Network (RPN)}—except it \textbf{directly classifies anchor boxes} into \( C \) object categories instead of merely determining if they contain objects.
+
+The key differences:
+\begin{itemize}
+	\item Instead of RPN’s \textbf{binary objectness classification}, RetinaNet predicts object categories + background.
+	\item Instead of a second-stage classifier, RetinaNet directly refines bounding boxes using regression.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_87.jpg}
+	\caption{RetinaNet pipeline. Like RPN, it predicts object categories and bounding box refinements, but in a single stage.}
+	\label{fig:chapter14_retinanet_pipeline}
+\end{figure}
+
+By using a \textbf{ResNet-101-FPN} backbone and a novel loss function, RetinaNet successfully bridges the gap between speed and accuracy in object detection.
+
+\newpage
+\section{FCOS: An Anchor-Free, Fully Convolutional Detector}
+\label{subsec:chapter14_fcos}
+
+FCOS \cite{tian2019_fcos} is an \textbf{anchor-free} one-stage object detector that eliminates the need for predefined anchor boxes. Instead, it formulates object detection as a \textbf{per-pixel prediction task}, making it conceptually similar to \textbf{semantic segmentation}. Unlike anchor-based detectors, which rely on pre-generated bounding boxes at fixed scales and aspect ratios, FCOS directly predicts bounding box offsets and class scores at each spatial location in the feature map. This significantly simplifies the detection pipeline and reduces computational overhead.
+
+There are multiple works exploring anchor-free object detection, such as CornerNet \cite{law2019_cornernet}, but in alignment with the 2022 version of the course, we focus on FCOS. This detector provides an excellent introduction to the anchor-free approach, and shares similarities with many solution commonly used in semantic segmentation. By framing object detection as a dense prediction task, FCOS presents a fresh perspective on designing efficient and flexible detection models.
+
+\subsection{Core Pipeline and Feature Map Interpretation}
+The FCOS detection pipeline proceeds through the following key steps:
+
+\begin{enumerate}
+	\item The input image is processed by a backbone CNN (e.g., ResNet-50 or ResNeXt-101) to extract multi-scale feature maps. These maps provide a dense, spatially organized representation of the image.
+	\item For each spatial location \((x,y)\) on the feature map, FCOS predicts:
+	\begin{itemize}
+		\item Class scores for \(C\) object categories plus background.
+		\item A 4D vector \((l, t, r, b)\) encoding the distances from the location to the left, top, right, and bottom edges of the bounding box for the object.
+		\item A centerness score that quantifies how close the location is to the center of the object.
+	\end{itemize}
+	\item Each feature map location is mapped back to the input image using the network’s stride \(s\). Specifically, a feature map point \((x,y)\) corresponds to:
+	\[
+	\left(\lfloor s/2 \rfloor + x \cdot s,\ \lfloor s/2 \rfloor + y \cdot s\right)
+	\]
+	in the original image. This mapping is crucial for determining whether the location falls within a ground-truth bounding box.
+	\item Based on the mapped coordinates:
+	\begin{itemize}
+		\item If the point lies within a ground-truth bounding box, it is labeled as positive and assigned the corresponding object class.
+		\item If the point lies within multiple ground-truth boxes, the box with the smallest area is chosen to favor the detection of smaller, harder-to-detect objects.
+		\item Points that do not fall within any ground-truth box are treated as negatives (background).
+	\end{itemize}
+	\item For each positive location, the ground-truth regression target is computed as a 4D vector:
+	\[
+	l^\ast = x - x_0,\quad t^\ast = y - y_0,\quad r^\ast = x_1 - x,\quad b^\ast = y_1 - y,
+	\]
+	where \((x_0, y_0)\) and \((x_1, y_1)\) are the top-left and bottom-right coordinates of the ground-truth box. In addition, the ideal centerness value is derived from these regression targets:
+	\[
+	\text{centerness}^\ast = \sqrt{\frac{\min(l^\ast, r^\ast)}{\max(l^\ast, r^\ast)} \times \frac{\min(t^\ast, b^\ast)}{\max(t^\ast, b^\ast)}}.
+	\]
+	\item With the ground-truth assignments in place, the model is trained by comparing its predictions with the targets:
+	\begin{itemize}
+		\item The classification branch is supervised by a focal loss (or a variant thereof) to correctly predict the object class.
+		\item The regression branch is supervised using a loss such as IoU loss, ensuring that the predicted \((l,t,r,b)\) values accurately localize the object.
+		\item The centerness branch is trained with a binary cross-entropy loss to produce scores that are high for points near the center of the object and low for peripheral points.
+	\end{itemize}
+	\item The overall loss is a multi-task loss that combines the classification, regression, and centerness losses. This joint optimization enables the network to learn to predict the correct class, accurately regress bounding boxes, and assign high centerness scores to reliable (central) detections.
+\end{enumerate}
+
+In summary, by mapping each feature map location back to the original image, FCOS determines which ground-truth box (if any) a location falls into. This assignment allows the network to learn whether the predicted class is correct, how well the 4D bounding box aligns with the ground-truth, and whether the location is central within the object. These components are then jointly optimized during training, leading to more accurate and robust object detection.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/fcos_edge_case.jpg}
+	\caption{On the left: an example prediction of the 4D localization output of FCOS, fitting a bounding box surrounding the object, according to its predicted distances from the edges. On the right: an example of an ambiguous case in FCOS. When a feature map location falls within multiple ground-truth boxes, to which bounding box shall we assign it? The authors proposed solution is to assign it to the box with the smallest area. This makes sense as smaller objects are harder to detect, so we'll want to give it more weight, and improve our chances to detect it well.}
+	\label{fig:chapter14_fcos_edge_case}
+\end{figure}
+
+\newpage
+\subsection{Bounding Box Regression}
+During training, for each feature map location that falls within a ground-truth bounding box, FCOS computes regression targets to guide the network in predicting accurate box coordinates. For a given location with coordinates \((x, y)\) on the feature map, and an assigned ground-truth box with top-left corner \((x_0, y_0)\) and bottom-right corner \((x_1, y_1)\), the regression targets are defined as:
+
+\[
+l^\ast = x - x_0,\quad t^\ast = y - y_0,\quad r^\ast = x_1 - x,\quad b^\ast = y_1 - y.
+\]
+
+These targets represent the distances from the location \((x, y)\) to the four edges of the ground-truth box. During training, the network is optimized to predict a 4D vector \((l, t, r, b)\) that approximates these targets, using a regression loss (often an IoU loss or smooth \(L_1\) loss). 
+
+At inference time, the network outputs a 4D vector \((l, t, r, b)\) for each location on the feature map. Since no ground-truth boxes are available at inference, the predicted offsets are used to compute the final bounding box for that location by mapping the feature map point back to the original image. Specifically, if a feature map location corresponds to the image coordinate \((x', y')\) (computed by a mapping based on the network’s stride), the predicted bounding box is given by:
+
+\[
+\text{Predicted Box} = \bigl( x' - l,\; y' - t,\; x' + r,\; y' + b \bigr).
+\]
+
+This formulation allows FCOS to directly regress bounding boxes from the feature map without relying on predefined anchor boxes.
+
+\subsection{Centerness: Filtering Low-Quality Predictions}
+Not all locations within a ground-truth box provide equally reliable bounding box predictions. Locations near the edges of an object often yield lower-quality predictions compared to those closer to the center. To address this, FCOS introduces a \emph{centerness score} that reflects the proximity of a feature map point to the center of the object. The centerness target is computed as:
+\[
+\text{centerness}^\ast = \sqrt{\frac{\min(l^\ast, r^\ast)}{\max(l^\ast, r^\ast)} \times \frac{\min(t^\ast, b^\ast)}{\max(t^\ast, b^\ast)}}.
+\]
+Intuitively, if a point is exactly at the center of a ground-truth box, then \(l^\ast = r^\ast\) and \(t^\ast = b^\ast\), resulting in a centerness score of 1. If the point is closer to any boundary, the ratio for that dimension becomes smaller, and the overall centerness score decreases toward 0.
+
+The centerness score serves two primary purposes:
+\begin{itemize}
+	\item \textbf{Training Signal:} It guides the network to prioritize central regions that yield more accurate bounding box regressions.
+	\item \textbf{Inference Filtering:} During inference, the final detection confidence is obtained by multiplying the predicted class score by the predicted centerness. This down-weights detections from locations near object boundaries, reducing the likelihood of false positives.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figures/Chapter_14/slide_94.jpg}
+	\caption{FCOS pipeline: The backbone CNN extracts a multi-scale feature map from the input image. For each spatial location, FCOS predicts class scores, bounding box offsets \((l,t,r,b)\), and a centerness score that reflects the reliability of the prediction based on its distance from the center.}
+	\label{fig:chapter14_fcos_pipeline}
+\end{figure}
+
+In summary, by directly regressing bounding box offsets and incorporating a centerness score, FCOS is able to learn both accurate localization and robust classification without relying on anchor boxes. The centerness score specifically helps to suppress low-quality predictions from peripheral regions, ensuring that only reliable detections contribute to the final output.
+
+\subsection{Multi-Level Feature Prediction with FPN}
+Since objects appear at different scales, FCOS employs a \textbf{Feature Pyramid Network (FPN)} to detect objects at multiple resolutions. Each level of the pyramid is responsible for detecting objects within a specific size range:
+
+\begin{itemize}
+	\item High-resolution maps (small stride) detect small objects.
+	\item Low-resolution maps detect large objects.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_96.jpg}
+	\caption{FCOS utilizes an FPN for multi-scale detection. Each feature level is responsible for detecting objects within a specific size range.}
+	\label{fig:chapter14_fcos_fpn}
+\end{figure}
+
+\subsection{Loss Function: Focal Loss and IoU Loss}
+FCOS optimizes a multi-task loss function that includes:
+
+\begin{itemize}
+	\item \textbf{Focal Loss} for classification, similar to RetinaNet \cite{lin2018_focalloss}, which down-weights easy negative samples and focuses on hard examples.
+	\item \textbf{IoU Loss} for bounding box regression, which directly optimizes the overlap between predicted and ground-truth boxes:
+\end{itemize}
+
+\[
+L_{\text{IoU}} = -\log \frac{\text{Intersection}}{\text{Union}}
+\]
+
+Unlike smooth \( L_1 \) loss, IoU loss is scale-invariant and encourages better localization.
+
+\subsection{Inference: Selecting Final Detections}
+At inference time, FCOS:
+\begin{enumerate}
+	\item Computes class probabilities and bounding box predictions at each spatial location.
+	\item Filters locations with a classification score below a predefined threshold (e.g., 0.05).
+	\item Converts regressed box coordinates into bounding boxes.
+	\item Multiplies classification scores by centerness scores to refine detection confidence.
+	\item Applies Non-Maximum Suppression (NMS) to remove redundant detections.
+\end{enumerate}
+
+\subsection{Advantages of FCOS}
+FCOS introduces several improvements over anchor-based detectors:
+\begin{itemize}
+	\item \textbf{Simpler Design:} Eliminates the need for anchor boxes, reducing hyper-parameter tuning.
+	\item \textbf{Computational Efficiency:} Avoids anchor box computations, reducing memory and processing overhead.
+	\item \textbf{Better Foreground Utilization:} Unlike anchor-based methods, which only consider a subset of anchors, FCOS treats every feature map location inside a ground-truth box as a positive sample.
+	\item \textbf{Improved Detection Quality:} The centerness mechanism suppresses low-quality predictions, reducing false positives.
+\end{itemize}
+
+By leveraging fully convolutional architectures and eliminating the complexities of anchor boxes, FCOS provides a simple yet powerful alternative to traditional object detection methods.
+
+\newpage
+\begin{enrichment}[YOLO - You Only Look Once][section]
+\begin{enrichment}[Background][subsection]
+	YOLO (You Only Look Once) revolutionized object detection by treating it as a \textbf{single regression problem}, enabling real-time detection without requiring multiple passes over an image. 
+	
+	First introduced by Redmon \textit{et al.} in \cite{redmon2016_yolo}, YOLO has continuously evolved (from YOLOv1 to more advanced versions) by improving accuracy while maintaining real-time performance. Its success stems from:
+	\begin{itemize}
+		\item \textbf{Speed}: YOLO's one-pass approach makes it significantly faster than two-stage detectors, enabling applications in autonomous driving, surveillance, and real-time video analysis.
+		\item \textbf{Global Reasoning}: By processing the entire image at once, YOLO reduces false positives from overlapping region proposals and makes more context-aware predictions.
+	\end{itemize}
+	Thanks to these advantages, YOLO remains one of the most widely used object detection frameworks, consistently setting new benchmarks for real-time applications.
+\end{enrichment}
+	
+\begin{enrichment}[Detailed Step-by-Step: How YOLOv1 Processes an Input Image][subsection]
+	YOLOv1 (\textit{You Only Look Once}) is a single-stage object detector that predicts bounding boxes and class probabilities in one unified forward pass. Below, we outline how YOLOv1 processes an image from start to finish.
+	
+	\paragraph{1. Input Image and Preprocessing}
+	\begin{itemize}
+		\item \textbf{Dimensions:} YOLOv1 typically expects an image resized to \(448\times448\).
+		\item \textbf{Normalization:} In practice, pixel values may be scaled (e.g., to \([0,1]\) or \([-1,1]\)) to help training stability.
+		\item This preprocessed image is fed into the network as a PyTorch \texttt{Tensor} of shape \\ \(\bigl[\text{batch\_size}, 3, 448, 448\bigr]\).
+	\end{itemize}
+	
+	\paragraph{2. Feature Extraction (DarkNet + Additional Convolution Layers)}
+ 	 \texttt{YOLOv1} is composed of:
+	\begin{enumerate}
+		\item \texttt{DarkNet}, which produces a high-level feature map from the input image. DarkNet is a series of convolutional layers interspersed with activations (Leaky ReLU) and sometimes batch normalization.
+		\item Additional convolution layers that further refine the 1024-channel output of DarkNet.
+	\end{enumerate}
+	Eventually, these convolutions yield a feature map of shape \(\bigl[\text{batch\_size}, 1024, S, S\bigr]\), where S is grid dimension, a hyperparameter that fits our feature extraction process (in YOLOv1, $S=7$). Hence, YOLOv1 divides the image conceptually into a \(7\times7\) grid.
+	
+	\paragraph{3. Flattening and Fully Connected Layers}
+	After the final convolutional layer, the 7\(\times\)7\(\times\)1024 feature map is:
+	\begin{itemize}
+		\item \textbf{Flattened} into a 1D vector of length \(7 \times 7 \times 1024 = 50176\).
+		\item Passed into a \texttt{Linear(50176, 4096)} layer, a Leaky ReLU, and a dropout layer.
+		\item Finally, passed into a \texttt{Linear(4096, $S \times S \times (5B + C)$)}, where:
+		\begin{itemize}
+			\item \(S=7\) is the number of grid cells per dimension.
+			\item \(B=2\) is the number of bounding boxes each cell predicts.
+			\item \(C=20\) is the number of classes (for PASCAL VOC Dataset).
+		\end{itemize}
+		\item YOLO then applies a \texttt{Sigmoid()} to the entire output, forcing all values into \([0,1]\).
+	\end{itemize}
+	This yields an output tensor of shape:
+	\[
+	\bigl[\text{batch\_size},\,7,\,7,\,(5 \times 2 + 20)\bigr] = \bigl[\text{batch\_size},\,7,\,7,\,30\bigr].
+	\]
+	Hence, for each cell in the \(7\times7\) grid, YOLOv1 predicts:
+	\[
+	2 \times 5\text{ (for bounding boxes)} + 20 \text{ (class probabilities)}.
+	\]
+	
+	\paragraph{4. Understanding the Output Format}
+	Concretely, each cell’s part of the final output includes:
+	\begin{enumerate}
+		\item \(\mathbf{(x, y)}\): Center offsets for box~1 within the cell, in \([0,1]\).
+		\item \(\mathbf{w, h}\): Width and height for box~1, also in \([0,1]\).
+		\item \(\text{confidence}\): A single scalar in \([0,1]\) for how likely the predicted box is \textit{valid} (the bounding box overlaps an object).
+		\item The same 5 parameters for box~2 (\(x, y, w, h, \text{confidence}\)).
+		\item \(\mathbf{C}\) class probabilities for the cell, also in \([0,1]\).
+	\end{enumerate}
+	
+	\paragraph{5. Why a Sigmoid?}
+	The final \texttt{Sigmoid()} layer enforces that all these predictions remain between 0 and 1. For YOLOv1:
+	\begin{itemize}
+		\item \(\hat{x} = \sigma(x)\) and \(\hat{y} = \sigma(y)\) keep the predicted center coordinates from drifting outside the cell boundaries. By adding the cell’s integer offset \((c_x, c_y)\) later and dividing by \(S\), we ensure the center remains in the grid cell area.
+		\item \(\hat{w} = \sigma(w)\) and \(\hat{h} = \sigma(h)\) produce fractional widths and heights. They represent some fraction of the total image dimension. (Alternatively, the original YOLO paper sometimes squared these values for positivity).
+		\item \(\text{confidence} \in [0,1]\) matches the notion of probability that the box encloses an object.
+		\item \(\text{class probabilities} \in [0,1]\) reflect the network’s beliefs over the \(C\) classes.
+	\end{itemize}
+	
+	\paragraph{6. Converting Predictions to Actual Bounding Boxes}
+	\textbf{Inside each cell}, we do:
+	\[
+	\hat{x}_\text{abs} = \frac{c_x + \hat{x}}{S}, \quad
+	\hat{y}_\text{abs} = \frac{c_y + \hat{y}}{S},
+	\]
+	where \(c_x, c_y\) is the grid cell’s top-left integer index (e.g., \((2,3)\) if we are in row~2, column~3) and \(S=7\). Then,
+	\[
+	\hat{w}_\text{abs} = \hat{w} \times \text{image\_width}, \quad
+	\hat{h}_\text{abs} = \hat{h} \times \text{image\_height}.
+	\]
+	The bounding box corners become:
+	\[
+	x_{\text{min}} = \hat{x}_\text{abs} - \tfrac{\hat{w}_\text{abs}}{2}, \quad
+	y_{\text{min}} = \hat{y}_\text{abs} - \tfrac{\hat{h}_\text{abs}}{2}, 
+	\quad
+	x_{\text{max}} = \hat{x}_\text{abs} + \tfrac{\hat{w}_\text{abs}}{2}, 
+	\quad
+	y_{\text{max}} = \hat{y}_\text{abs} + \tfrac{\hat{h}_\text{abs}}{2}.
+	\]
+	Thus each cell contributes up to $B=2$ bounding boxes in absolute image coordinates.
+	
+	\paragraph{7. Loss and Training (High Level)}
+	YOLO’s loss function balances:
+	\begin{itemize}
+		\item \textbf{Localization Loss}: Penalizes bounding box coordinate errors.
+		\item \textbf{Confidence Loss}: Encourages high confidence for detected objects.
+		\item \textbf{Classification Loss}: Cross-entropy for class predictions.
+	\end{itemize}
+	
+	To balance small and large objects, YOLO:
+	\begin{itemize}
+		\item Uses \( \sqrt{w} \) and \( \sqrt{h} \) in the loss function.
+		\item Applies weighting factors:
+		\begin{itemize}
+			\item \( \lambda_{\text{coord}} = 5 \) to emphasize localization.
+			\item \( \lambda_{\text{noobj}} = 0.5 \) to reduce background penalties.
+		\end{itemize}
+	\end{itemize}
+	
+	The full loss function is:
+	\[
+	L = \lambda_{\text{coord}} \sum_{i=1}^{S^2} \sum_{j=1}^{B} 1^{\text{obj}}_{ij} \bigl[(x_i - \hat{x}_i)^2 + (y_i - \hat{y}_i)^2\bigr]
+	\]
+	\[
+	+ \lambda_{\text{coord}} \sum_{i=1}^{S^2}\sum_{j=1}^{B} 1^{\text{obj}}_{ij} \bigl[(\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2\bigr]
+	\]
+	\[
+	+ \sum_{i=1}^{S^2}\sum_{j=1}^{B} 1^{\text{obj}}_{ij} \bigl(C_i - \hat{C}_i\bigr)^2
+	\]
+	\[
+	+ \lambda_{\text{noobj}} \sum_{i=1}^{S^2}\sum_{j=1}^{B} 1^{\text{noobj}}_{ij} \bigl(C_i - \hat{C}_i\bigr)^2
+	\]
+	\[
+	+ \sum_{i=1}^{S^2} 1^{\text{obj}}_{i} \sum_{c \in \text{classes}} \bigl(p_i(c) - \hat{p}_i(c)\bigr)^2.
+	\]
+	
+	\paragraph{8. Why It Works (and Its Trade-offs)}
+	\begin{itemize}
+		\item \textbf{Efficiency:} Only a single CNN forward pass is needed. This is much faster than multi-stage pipelines like \texttt{R-CNN}.
+		\item \textbf{Grid-Based Reasoning:} Each cell “looks” at local features and tries to detect objects centered there, simplifying the logic behind region proposals.
+		\item \textbf{No Anchors in YOLOv1:} The network directly learns bounding box shapes, which can be good for moderate object scale variety, but struggles for extremely small or large aspect ratios. Later YOLO versions added anchor priors for more robust shape handling.
+	\end{itemize}
+	
+	\paragraph{9. Final Detections and NMS}
+	Once the forward pass is done, YOLOv1 typically:
+	\begin{itemize}
+		\item Converts each cell’s bounding box predictions into absolute coordinates as described.
+		\item Filters out boxes with low confidence.
+		\item Applies \textbf{Non-Maximum Suppression} (NMS) to reduce duplicates—keeping only the highest confidence box for each object.
+	\end{itemize}
+	The final set of bounding boxes with class labels becomes YOLO’s detection result.
+	
+	\paragraph{Summary}
+	\begin{enumerate}
+		\item \textit{Input} (448\(\times\)448) \(\to\) \textit{DarkNet} + \textit{Conv} \(\to\) \textit{Flatten} \(\to\) \textit{Fully Connected (4096D)} \(\to\) \(\texttt{Linear}\) \(\to\) \(\texttt{Sigmoid}\).
+		\item Output shape: \(\bigl[\text{batch\_size}, 7, 7, (5 \times 2 + 20)\bigr]\).
+		\item Each \((7\times7)\) cell: \(\underbrace{x, y, w, h, \text{confidence}}_{\text{box 1}},\; \underbrace{x, y, w, h, \text{confidence}}_{\text{box 2}},\; \text{class probabilities}\).
+		\item \(\sigma(\cdot)\) ensures values in \([0,1]\). The predicted offsets are scaled to the full image, producing final bounding boxes.
+		\item Loss includes coordinate errors, objectness confidence errors, and classification errors.
+		\item Post-processing merges overlapping boxes (NMS).
+	\end{enumerate}
+	This pipeline captures \emph{what} YOLOv1 does and \emph{why} it does it in a simple, end-to-end fashion: object localization, classification, and bounding-box regression are all learned jointly in one pass.
+\end{enrichment}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/yolo_pipeline.png}
+	\caption{YOLO pipeline: A single CNN processes the entire image, predicts bounding boxes and class probabilities, and applies NMS to refine detections. Source: \cite{redmon2016_yolo}.}
+	\label{fig:chapter14_yolo_pipeline}
+\end{figure}
+
+	\begin{enrichment}[Evolution of YOLO][subsection]
+		Over time, multiple versions of YOLO have been developed to address its limitations:
+		
+		\begin{itemize}
+			\item \textbf{YOLOv2} (2017) \cite{redmon2017_yolo9000}: Introduced anchor boxes, batch normalization, and multi-scale training, improving both accuracy and generalization.
+			\item \textbf{YOLOv3} (2018) \cite{redmon2018_yolov3}: Added Darknet-53 as a backbone, feature pyramids, and objectness scores, significantly boosting detection accuracy.
+			\item \textbf{YOLOv4} (2020) \cite{bochkovskiy2020_yolov4}: Focused on increasing efficiency with new activation functions (Mish), better data augmentation, and optimization techniques.
+			\item \textbf{YOLOv5+} (2020s+): Introduced by Ultralytics, leveraging PyTorch and adding modern training techniques such as mosaic augmentation and hyperparameter tuning.
+		\end{itemize}
+		
+		Each version improves upon the previous, refining accuracy, robustness, and efficiency, solidifying YOLO as one of the most influential object detection models in real-time applications.
+		\end{enrichment}
+	\end{enrichment}

@@ -406,49 +406,42 @@ innerbottommargin=5pt]{cBox}
 
 \NewDocumentEnvironment{enrichment}{ O{} O{subsection} }{%
 	\ifenrichment
-	% Increase nesting depth
-	\stepcounter{enrichOpenDepth}
-	
-	% Determine which LaTeX counter to increment:
+	% Determine the level and update the appropriate counter
 	\ifthenelse{\equal{#2}{section}}{%
 		\refstepcounter{section}%
 		\def\theLabel{\thesection}%
 		\def\theTOClevel{section}%
-		\def\theHeading{\section*{\color{ocre}Enrichment \thesection: #1}}
+		% Print the heading in ocre (using unstarred \section to update header)
+		\section*{\color{ocre}Enrichment \thesection: #1}%
+		\sectionmark{Enrichment \thesection: #1}%
 	}{%
 		\ifthenelse{\equal{#2}{subsection}}{%
 			\refstepcounter{subsection}%
 			\def\theLabel{\thesubsection}%
 			\def\theTOClevel{subsection}%
-			\def\theHeading{\subsection*{\color{ocre}Enrichment \thesubsection: #1}}
+			\subsection*{\color{ocre}Enrichment \thesubsection: #1}%
+			\subsectionmark{Enrichment \thesubsection: #1}%
 		}{%
-			% Default => subsubsection
 			\refstepcounter{subsubsection}%
 			\def\theLabel{\thesubsubsection}%
 			\def\theTOClevel{subsubsection}%
-			\def\theHeading{\subsubsection*{\color{ocre}Enrichment \thesubsubsection: #1}}
+			\subsubsection*{\color{ocre}Enrichment \thesubsubsection: #1}%
+			% There's no default subsubsectionmark, so we use markboth:
+			\markboth{Enrichment \thesubsubsection: #1}{}%
 		}%
 	}%
-	
-	% Manually add a TOC entry (since we're using star headings)
+	% Add the enrichment to the TOC:
 	\ifx\empty#1\empty
-	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel}
+	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel}%
 	\else
-	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel: #1}
+	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel: #1}%
 	\fi
-	
-	% Print the heading
-	\theHeading
-	\par\vspace{5pt}
-	
-	% Optionally discourage a page break right after heading:
-	\nopagebreak[4]
-	
+	% Some vertical space and discourage a page break immediately:
+	\par\vspace{5pt}\nopagebreak[4]
 	\fi
 }{%
 	\ifenrichment
-	% End of environment
-	\addtocounter{enrichOpenDepth}{-1}
+	% End of environment: no additional actions needed.
 	\fi
 }
 
@@ -490,4 +483,4 @@ innerbottommargin=5pt]{cBox}
 	overlay={%
 		\begin{tcbclipinterior}
 			\fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
-	\end{tcbclipinterior}}}
+\end{tcbclipinterior}}}
