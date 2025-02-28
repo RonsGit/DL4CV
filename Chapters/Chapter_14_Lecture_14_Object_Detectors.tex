@@ -139,9 +139,10 @@ A key limitation of RoI pooling is the \textbf{quantization error} introduced du
 	\label{fig:chapter14_roi_pooling_downside}
 \end{figure}
 
-In addition, the fact that sub-regions are not always of the same size is also weird and may prove to be sub-optimal. Due to these problems, an improved approach called \textbf{RoIAlign} emerged. RoIAlign eliminates quantization errors by using \textbf{bilinear interpolation} instead of rounding coordinates to the nearest discrete pixel. In the next section, we will explore how RoIAlign refines feature extraction to improve object detection accuracy.
+In addition, the fact that sub-regions are not always of the same size is also weird and may prove to be sub-optimal. Due to these problems, an improved approach called \textbf{RoIAlign} emerged. RoIAlign eliminates quantization errors by using \textbf{bilinear interpolation} instead of rounding coordinates to the nearest discrete pixel. In the next section, we will explore how RoIAlign refines feature extraction to improve object detection accuracy. Although not used in Faster R-CNN, it made its way to consequent papers like Mask R-CNN that we'll cover later.
 
 \subsection{RoIAlign}
+\label{subsubsec:roi_align_intro}
 In RoIAlign we avoid any quantization (rounding) of the coordinates. Instead, we sample the feature map using bilinear interpolation to obtain sub-pixel accuracy and preserve alignment. The idea is to compute a linear combination of feature values based on their Euclidean distance to the sampling point. By doing so, each sub-region in the region of interest contributes a weighted average of the feature map's values, thus preventing misalignments introduced by discrete rounding.
 
 \subsubsection{RoIAlign: A Visual Example}
@@ -403,7 +404,7 @@ After iterating over all bins, the final RoI feature map is constructed, with ea
 	\item The final feature map maintains a fixed size per RoI, making it compatible with subsequent per-region classifiers and regressors.
 \end{itemize}
 
-Hence, RoIAlign is a core component of modern detectors like Mask R-CNN and Faster R-CNN.
+Hence, RoIAlign is a core component of modern architectures used for detection and segmentation like Mask R-CNN. 
 
 \newpage
 \paragraph{RoIAlign Important Implementation Parts in PyTorch}
@@ -859,7 +860,7 @@ Faster R-CNN is a \textbf{two-stage object detector}, meaning the detection proc
 	
 	\item \textbf{Stage 2: Object Detection and Classification}
 	\begin{itemize}
-		\item The extracted feature map is cropped using \textbf{RoIAlign}, producing fixed-size feature vectors for each proposal.
+		\item The extracted feature map is cropped using \textbf{RoIPooling}, producing fixed-size feature vectors for each proposal.
 		\item Each proposal is classified into an object category or background.
 		\item A final \textbf{bounding box refinement transformation} improves localization accuracy.
 	\end{itemize}
@@ -954,14 +955,14 @@ Here, \(\alpha_t\) is chosen to down-weight the loss for the dominant class (usu
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.65\textwidth]{Figures/Chapter_14/focal_loss_explained.png}
-	\caption{Focal loss modifies the standard cross-entropy loss by incorporating a modulating factor \((1-p_t)^\gamma\). This factor down-weights the loss for well-classified examples. For instance, when \(\gamma=2\), the loss for examples with high confidence (e.g., \(p_t \approx 0.9\)) is significantly reduced, while the loss for moderately difficult examples (e.g., \(p_t \approx 0.5\) or \(p_t \approx 0.2\)) remains similar to that of the standard cross-entropy loss. Setting \(\gamma\) too high (such as \(\gamma=5\)) can overly suppress the loss even for examples that are not trivial, potentially eliminating valuable learning signals. Thus, \(\gamma=2\) is often chosen as a good compromise, effectively reducing the loss from very easy examples while preserving enough gradient for harder examples. Source: \cite{lin2018_focalloss}}
+	\caption{Focal loss modifies the standard cross-entropy loss by incorporating a modulating factor \((1-p_t)^\gamma\). This factor down-weights the loss for well-classified examples. For instance, when \(\gamma=2\), the loss for examples with high confidence (e.g., \(p_t \approx 0.9\)) is significantly reduced, while the loss for moderately difficult examples (e.g., \(p_t \approx 0.5\) or \(p_t \approx 0.2\)) remains similar to that of the standard cross-entropy loss. Setting \(\gamma\) too high (such as \(\gamma=5\)) can overly suppress the loss even for examples that are not trivial, potentially eliminating valuable learning signals. Thus, \(\gamma=2\) is often chosen as a good compromise, effectively reducing the loss from very easy examples while preserving enough gradient for harder examples. Source: \cite{lin2018_focalloss}.}
 	\label{fig:chapter14_focal_loss}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/focal_loss_shifts_focus.png}
-	\caption{Cumulative distribution functions (CDFs) of the normalized loss for background (negative) and foreground (positive) examples under different values of \(\gamma\). As \(\gamma\) increases, the loss contribution from easy negatives is dramatically reduced, which flattens the loss distribution for background examples. Importantly, with \(\gamma=2\), the loss for foreground examples remains nearly unchanged, ensuring that the model still learns effectively from the scarce positive examples. This selective down-weighting is crucial for mitigating class imbalance. Source: \cite{lin2018_focalloss}}
+	\caption{Cumulative distribution functions (CDFs) of the normalized loss for background (negative) and foreground (positive) examples under different values of \(\gamma\). As \(\gamma\) increases, the loss contribution from easy negatives is dramatically reduced, which flattens the loss distribution for background examples. Importantly, with \(\gamma=2\), the loss for foreground examples remains nearly unchanged, ensuring that the model still learns effectively from the scarce positive examples. This selective down-weighting is crucial for mitigating class imbalance. Source: \cite{lin2018_focalloss}.}
 	\label{fig:chapter14_focal_loss_distribution}
 \end{figure}
 

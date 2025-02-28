@@ -3,7 +3,914 @@
 % Chapter-specific content starts here
 \chapter{Lecture 15: Image Segmentation}
 
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
 %	CHAPTER 15 - Lecture 15: Image Segmentation
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+\section{From Object Detection to Segmentation}
+
+\noindent In the previous chapter, we explored \textbf{object detection}, where the goal was to localize and classify objects within an image using bounding boxes. Object detection models such as Faster R-CNN \cite{ren2016_fasterrcnn} and YOLO \cite{redmon2016_yolo} predict discrete object regions but do not assign labels to every pixel. 
+However, many real-world applications require a finer-grained understanding beyond bounding boxes. This leads us to the problem of \textbf{image segmentation}, where the task is to assign a category label to every pixel in the image.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_36.jpg}
+	\caption{Comparison of different computer vision tasks: classification, object detection, and semantic and instance segmentation. We begin with Semantic Segmentation.}
+	\label{fig:chapter15_cv_tasks}
+\end{figure}
+
+\noindent As shown in Figure~\ref{fig:chapter15_cv_tasks}, segmentation can be divided into two primary tasks:
+
+\begin{itemize}
+	\item \textbf{Semantic segmentation:} Assigns a category label to each pixel but does not differentiate between instances of the same class.
+	\item \textbf{Instance segmentation:} Extends semantic segmentation by distinguishing individual object instances.
+\end{itemize}
+
+\noindent We begin by studying \textbf{semantic segmentation} because it serves as the foundation for understanding pixel-wise classification. Unlike instance segmentation, which requires distinguishing between different objects of the same category, semantic segmentation focuses solely on identifying the type of object at each pixel. 
+By first mastering the fundamental principles of pixel-wise classification, we can later build upon them to incorporate instance-level distinctions.
+
+\begin{enrichment}[Why is Object Detection Not Enough?][section]
+	\noindent Consider an autonomous vehicle navigating through a crowded urban environment. Object detection can provide bounding boxes around pedestrians, vehicles, and obstacles. However, it lacks the granularity required for precise decision-making:
+	
+	\begin{itemize}
+		\item Bounding boxes do not indicate the exact shape of objects. A bounding box around a pedestrian does not provide information on whether they are stepping onto the road or standing on the sidewalk.
+		\item Overlapping bounding boxes create ambiguities. If a cyclist is partially occluded by a car, object detection may struggle to differentiate their positions clearly.
+		\item Environmental awareness is missing. Object detection does not label road surfaces, sidewalks, bike lanes, or traffic signs at the pixel level, limiting a vehicle’s ability to make context-aware decisions.
+	\end{itemize}
+	
+	\noindent Semantic segmentation enables a vehicle to precisely understand its surroundings by labeling each pixel as \textit{road}, \textit{sidewalk}, \textit{pedestrian}, \textit{car}, or \textit{building}, thereby improving scene comprehension, obstacle avoidance, and navigation.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_71.jpg}
+		\caption{Segmentation differentiates between \textit{things} (discrete objects like cars, people) and \textit{stuff} (amorphous regions like sky, road).}
+		\label{fig:chapter15_things_stuff}
+	\end{figure}
+	
+	\noindent In Figure~\ref{fig:chapter15_things_stuff}, we see a breakdown of image elements into \textit{things} (object categories that can be separated into instances, such as \textit{cars, pedestrians, trees}) and \textit{stuff} (regions that lack clear boundaries, such as \textit{sky, road, grass}).
+	This pixel-level distinction enables applications such as lane detection, drivable area estimation, and pedestrian tracking, all of which contribute to safer and more efficient navigation.
+\end{enrichment}
+
+\noindent The next sections will cover the fundamental methods used in segmentation, beginning with \textbf{semantic segmentation}, before proceeding to \textbf{instance segmentation}.
+
+\section{Advancements in Semantic Segmentation}
+
+\noindent In this section, we explore the evolution of semantic segmentation techniques, focusing on solutions that are convolutional neural networks (CNNs) based, reaching to more contemporary architectures. While CNNs have been foundational in image processing tasks, recent advancements indicate that transformer-based models have achieved superior accuracy in segmentation tasks, including semantic segmentation. These will only be discussed in future parts of this document. 
+
+\subsection{Early Approaches: Sliding Window Method}
+
+\noindent A straightforward yet inefficient approach to semantic segmentation involves the \textbf{sliding window} technique. In this method, for each pixel in the image, a patch centered around the pixel is extracted and classified using a CNN to predict the category label of the center pixel.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_39.jpg}
+	\caption{Sliding window approach for semantic segmentation, illustrating the inefficiency due to redundant computations over overlapping patches.}
+	\label{fig:chapter15_sliding_window}
+\end{figure}
+
+\noindent As depicted in Figure~\ref{fig:chapter15_sliding_window}, this approach is computationally expensive because it fails to reuse shared features between overlapping patches, leading to redundant calculations.
+
+\subsection{Fully Convolutional Networks (FCNs)}
+
+\noindent To address the inefficiencies of the sliding window method, \textbf{Fully Convolutional Networks (FCNs)} were introduced to the task \cite{long2015_fcn}. FCNs utilize a fully convolutional backbone to extract features from the entire image, maintaining the spatial dimensions throughout the layers by employing same padding and 1x1 convolutions. The network outputs a feature map with dimensions corresponding to the input image, where each channel represents a class. The final classification for each pixel is obtained by applying a softmax function followed by an argmax operation across the channels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_40.jpg}
+	\caption{Architecture of a Fully Convolutional Network maintaining input spatial dimensions, producing a feature map with $C \times H \times W$, where $C$ is the number of classes.}
+	\label{fig:chapter15_fcn_architecture}
+\end{figure}
+
+\noindent Training is conducted using a per-pixel cross-entropy loss, comparing the predicted class probabilities to the ground truth labels for each pixel.
+
+\subsection{Challenges in FCNs for Semantic Segmentation}
+
+\noindent Despite their advancements, FCNs encounter specific challenges:
+
+\begin{itemize}
+	\item \textbf{Limited Receptive Field:} The effective receptive field size grows linearly with the number of convolutional layers. For instance, with $L$ layers of 3x3 convolutions, the receptive field is $1 + 2L$, which may be insufficient for capturing global context.
+	\item \textbf{Computational Cost:} Performing convolutions on high-resolution images is computationally intensive. Architectures like ResNet address this by aggressively downsampling the input, but this can lead to a loss of spatial detail.
+\end{itemize}
+
+\subsection{Encoder-Decoder Architectures}
+
+\noindent To overcome these challenges, encoder-decoder architectures have been proposed, such as the model by Noh et al. \cite{noh2015_deconvnet}. These networks consist of two main components:
+
+\begin{itemize}
+	\item \textbf{Encoder:} A series of convolutional and pooling layers that progressively downsample the input image, capturing high-level semantic features while expanding the receptive field.
+	\item \textbf{Decoder:} A sequence of upsampling operations, including unpooling and deconvolutions, that restore the spatial dimensions to match the original input size, enabling precise localization for segmentation.
+\end{itemize}
+
+\noindent The encoder captures rich, abstract feature representations by reducing spatial resolution while increasing feature depth, whereas the decoder reconstructs fine-grained spatial details necessary for accurate per-pixel predictions.
+
+\noindent While this encoder-decoder design is applied here for semantic segmentation, it is a widely used architectural pattern in deep learning and extends to many other tasks. For example:
+
+\begin{itemize}
+	\item \textbf{Machine Translation:} Transformer-based sequence-to-sequence models such as T5 \cite{raffel2020_t5} and BART \cite{lewis2020_bart} employ an encoder to process input text and a decoder to generate translated output.
+	\item \textbf{Medical Image Analysis:} U-Net \cite{ronneberger2015_unet} applies an encoder-decoder structure for biomedical image segmentation, achieving precise boundary delineation in tasks like tumor segmentation.
+	\item \textbf{Anomaly Detection:} Autoencoders use an encoder to learn compressed feature representations and a decoder to reconstruct inputs, enabling anomaly detection by identifying discrepancies between the input and reconstruction.
+	\item \textbf{Super-Resolution and Image Generation:} Models like SRGAN \cite{ledig2017_srgan} employ an encoder to extract image features and a decoder to generate high-resolution outputs.
+\end{itemize}
+
+\noindent As we continue, we will encounter various adaptations of this fundamental encoder-decoder structure, each tailored to the specific requirements of different tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_45.jpg}
+	\caption{Encoder-decoder architecture for semantic segmentation, featuring downsampling in the encoder and upsampling in the decoder to achieve pixel-wise classification.}
+	\label{fig:chapter15_encoder_decoder}
+\end{figure}
+
+\section{Upsampling and Unpooling}
+
+\noindent To enhance spatial resolution in feature maps, we employ \textbf{upsampling} techniques. Until now in this course, we have not introduced any method for systematically enlarging the spatial dimensions of tensors in a meaningful way. While we previously used bilinear interpolation to project proposals onto feature maps after downsampling (\ref{subsubsec:roi_align_intro}), we have yet to explore how such techniques can be adapted for general upsampling—something we will examine in later sections.
+
+\noindent Although we can increase tensor size using \textbf{zero-padding} along the borders, this does not introduce any new spatial information or recover lost details, making it ineffective for true upsampling. Instead, we require dedicated upsampling methods that intelligently restore missing details while preserving spatial coherence. Throughout this section, we will explore various approaches that allow us to increase resolution effectively, ensuring that the upsampled feature maps retain meaningful information.
+
+\noindent A crucial variant of upsampling is \textbf{unpooling}, which aims to reverse the effects of pooling operations. While pooling reduces resolution by discarding spatial details, unpooling attempts to restore them, facilitating fine-grained reconstruction of object boundaries. However, unpooling alone is often insufficient for producing smooth and accurate feature maps, as it merely places values in predefined locations without estimating missing information. This can result in reconstruction gaps, blocky artifacts, or unrealistic textures. As we will see, more advanced upsampling techniques address these shortcomings by incorporating interpolation and learnable transformations.
+
+\noindent In the decoder architecture proposed by Noh et al., unpooling plays a fundamental role in progressively recovering lost spatial information. It bridges the gap between the high-level semantic representations learned by the encoder and the dense, pixel-wise predictions required for precise classification.
+
+\noindent In the following sections, we explore various upsampling strategies, beginning with fundamental unpooling techniques and gradually progressing toward more advanced methods.
+
+\subsection{Bed of Nails Unpooling} 
+
+\noindent One of the simplest forms of unpooling is known as \textbf{Bed of Nails} unpooling. To illustrate the concept, consider the following example: We're given an input tensor of size $C \times 2 \times 2$, and our objective is to produce an output tensor of size $C \times 4 \times 4$.
+
+\noindent The method follows these steps:
+
+\begin{itemize}
+	\item An output tensor of the desired size is initialized with all zeros.
+	\item The output tensor is partitioned into non-overlapping regions, each corresponding to a single value from the input tensor. The size of these regions is determined by the \textbf{upsampling factor} $s$, which is the ratio between the spatial dimensions of the output and the input. For example, if the input is $H \times W$ and the output is $sH \times sW$, then each region in the output has size $s \times s$. 
+	\item Each value from the input tensor is placed in the upper-left corner of its corresponding region in the output.
+	\item All remaining positions are left as zeros.
+\end{itemize}
+
+\noindent The term "Bed of Nails" originates from the characteristic sparse structure of this unpooling method, where non-zero values are positioned in a regular grid pattern, resembling nails protruding from a flat surface.
+
+\paragraph{Limitations of Bed of Nails Unpooling}
+
+\noindent While conceptually simple, Bed of Nails unpooling suffers from a critical flaw: it introduces severe \textbf{aliasing}, which significantly degrades the quality of the reconstructed feature maps. By sparsely placing input values into an enlarged output tensor and filling the remaining positions with zeros, this method results in a highly discontinuous representation with abrupt intensity changes. These gaps introduce artificial high-frequency components, making it difficult to recover fine spatial details and leading to distorted reconstructions.
+
+The primary drawbacks of Bed of Nails unpooling are:
+
+\begin{itemize}
+	\item \textbf{Sparse Representation:} The method leaves large gaps of zeros between meaningful values, creating an unnatural, high-frequency pattern that distorts spatial information.
+	\item \textbf{Abrupt Intensity Shifts:} The sharp transitions between non-zero values and surrounding zeros introduce edge artifacts, leading to aliasing effects such as jagged edges and moiré patterns.
+	\item \textbf{Loss of Fine Detail:} The lack of interpolation prevents smooth reconstructions, making it difficult to recover object boundaries and subtle spatial features.
+\end{itemize}
+
+Because of these limitations, Bed of Nails unpooling is rarely used in practice. Its inability to provide a smooth, information-preserving reconstruction makes it unsuitable for tasks requiring high-quality feature map upsampling.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/bed_of_nails.jpg}
+	\caption{Comparison of a well-sampled image (left) versus one affected by aliasing (right). The right image exhibits moiré patterns due to insufficient sampling, a phenomenon similar to the high-frequency distortions introduced by Bed of Nails unpooling. Source: \cite{wiki_Aliasing}.}
+	\label{fig:chapter15_bed_of_nails_artifacts}
+\end{figure}
+
+\subsection{Nearest-Neighbor Unpooling}
+
+\noindent A more practical alternative to Bed of Nails unpooling is \textbf{Nearest-Neighbor unpooling}. Instead of placing a single value in the upper-left corner and filling the rest with zeros, this method \textbf{copies the value across the entire corresponding region}, ensuring a more continuous feature map.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_47.jpg}
+	\caption{Comparison of Bed of Nails unpooling (left) and Nearest-Neighbor unpooling (right).}
+	\label{fig:chapter15_unpooling}
+\end{figure}
+
+\noindent The key advantages of Nearest-Neighbor unpooling include:
+
+\begin{itemize}
+	\item \textbf{Smoother Transitions:} By replicating values across the upsampled regions, Nearest-Neighbor unpooling maintains spatial continuity. In contrast, Bed of Nails unpooling introduces sharp jumps between non-zero values and large zero-filled areas, which disrupts smooth feature propagation.
+	\item \textbf{Reduced Aliasing:} The discontinuities introduced by zero-padding in Bed of Nails unpooling create artificial high-frequency patterns, leading to jagged edges and moiré artifacts. Nearest-Neighbor unpooling minimizes these distortions by ensuring a more uniform intensity distribution.
+	\item \textbf{Better Feature Preservation:} Copying values instead of inserting zeros retains more useful information about the original feature map. Since features remain continuous rather than fragmented by empty gaps, spatial relationships between objects are better preserved.
+\end{itemize}
+
+\noindent These properties make Nearest-Neighbor unpooling a more effective choice than Bed of Nails, particularly for reducing aliasing effects. By ensuring smoother transitions and preventing artificial high-frequency noise, it produces cleaner and more reliable feature maps, making it more suitable for deep learning applications.
+
+\noindent However, Nearest-Neighbor unpooling still has limitations. Since it simply copies values, it can produce blocky (unsmooth) artifacts and lacks the ability to generate new information between upsampled pixels. This makes it unsuitable for capturing fine details, especially when dealing with natural images or complex textures.
+
+\noindent To achieve better reconstructions, more advanced upsampling methods are used. These include:
+\begin{itemize}
+	\item \textbf{Bilinear Interpolation:} A smoother alternative that interpolates pixel values using a weighted average of neighboring points. We've already covered it extensively. 
+	\item \textbf{Bicubic Interpolation:} Extends bilinear interpolation by considering more neighbors and applying cubic functions for higher-quality results.
+	\item \textbf{Max Unpooling:} A structured approach that retains important features by reversing pooling operations using stored indices.
+	\item \textbf{Transposed Convolution:} A learnable upsampling technique that enables neural networks to reconstruct detailed feature maps through trainable filters.
+\end{itemize}
+
+\noindent In the following parts, we will explore each of these methods, highlighting their advantages and trade-offs in deep learning applications.
+
+\subsection{Bilinear Interpolation for Upsampling} \noindent While nearest-neighbor unpooling provides a simple way to upsample feature maps, it often introduces blocky artifacts due to the direct replication of values. A more refined approach is \textbf{bilinear interpolation}, which estimates each output pixel as a weighted sum of its surrounding neighbors, resulting in a smoother reconstruction. \noindent Consider an input feature map of shape $C \times H \times W$ and an output of shape $C \times H' \times W'$, where the spatial dimensions are enlarged ($H' > H$, $W' > W$). Unlike unpooling, which places values at predefined locations without interpolation, bilinear interpolation calculates each pixel's intensity by considering its four nearest neighbors in the original input feature map. \subsubsection{Bilinear Interpolation: Generalized Case} \noindent Given an input feature map $\mathbf{I}$ of size $C \times H \times W$, we 
+
+define an upsampled feature map $\mathbf{I'}$ of size $C \times H' \times W'$. To compute the value of a pixel at a location $(x', y')$ in the upsampled output, we follow these steps: \begin{itemize} \item \textbf{Mapping to the Input Grid:} The coordinate $(x', y')$ in the output feature map is mapped back to the corresponding position $(x, y)$ in the input space using the scaling factors: \[ x = \frac{x' (W - 1)}{W' - 1}, \quad y = \frac{y' (H - 1)}{H' - 1} \] where $W'$ and $H'$ are the new width and height, and $W, H$ are the original dimensions. \item \textbf{Identifying Neighboring Pixels:} The four closest integer grid points that enclose $(x, y)$ are determined as: \[ a = (x_0, y_0), \quad b = (x_0, y_1), \quad c = (x_1, y_0), \quad d = (x_1, y_1) \] where: \[ x_0 = \lfloor x \rfloor, \quad x_1 = \lceil x \rceil, \quad y_0 = \lfloor y \rfloor, \quad y_1 = \lceil y \rfloor. \] These four points form a bounding box around $(x, y)$. \item \textbf{Computing the Interpolation Weights:} Each neighboring pixel contributes to the final interpolated value based on its distance to $(x, y)$. The interpolation weights are computed as: \[ w_a = (x_1 - x) (y_1 - y), \quad w_b = (x_1 - x) (y - y_0) \] \[ w_c = (x - x_0) (y_1 - y), \quad w_d = (x - x_0) (y - y_0). \] \item 
+	
+	\textbf{Normalization:} To ensure that the weights sum to one, we apply a normalization factor: \[ \text{norm\_const} = \frac{1}{(x_1 - x_0)(y_1 - y_0)}. \] \item \textbf{Computing the Interpolated Value:} The final interpolated intensity at $(x', y')$ is then computed as: \[ I'(x', y') = w_a I_a + w_b I_b + w_c I_c + w_d I_d. \] \end{itemize} \begin{figure}[H] \centering \includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_48.jpg} \caption{Bilinear interpolation applied to a $C \times 2 \times 2$ input tensor, producing a $C \times 4 \times 4$ output. Each upsampled value is computed as a weighted sum of its four nearest neighbors in the original feature map.} \label{fig:chapter15_bilinear_interpolation} \end{figure} \subsubsection{Advantages of Bilinear Interpolation} \noindent Compared to nearest-neighbor unpooling, bilinear interpolation introduces the following improvements: \begin{itemize} \item \textbf{Smoother Transitions:} Since bilinear interpolation computes values as a weighted sum of neighbors rather than simply copying them, it eliminates blocky artifacts and ensures smoother intensity changes. \item \textbf{Preserving Structural Information:} The interpolation process 
+	
+	maintains the underlying spatial relationships between features, preventing sudden jumps in pixel intensity. \item \textbf{Reducing Artifacts:} Unlike nearest-neighbor unpooling, which can create unnatural edges, bilinear interpolation produces more natural-looking upsampled feature maps. \end{itemize} \subsubsection{Limitations and Transition to Bicubic Interpolation} \noindent While bilinear interpolation provides a significant improvement over nearest-neighbor unpooling, it still has some limitations. Since it only considers the four closest neighbors, it does not incorporate information from a broader spatial region, which can result in a slight loss of sharpness and detail. Additionally, because the interpolation weights are computed purely from geometric distances, fine textures and small-scale patterns may become blurred. \noindent To address these issues, we now turn to \textbf{bicubic interpolation}, which extends bilinear interpolation by incorporating a larger set of neighboring pixels and applying cubic weighting functions. This allows for an even smoother and more accurate reconstruction while better preserving fine details, making it the go-to approach for image resize in general. 
+
+\subsection{Bicubic Interpolation for Upsampling}
+
+\noindent Bicubic interpolation is a more advanced alternative to bilinear or nearest-neighbor upsampling. While bilinear interpolation calculates output pixel values from the four nearest neighbors using linear weights—often resulting in blurring or loss of detail—bicubic interpolation considers a \(4 \times 4\) neighborhood and applies a carefully designed cubic weighting function. This broader context and smoother transition preserve finer details and produce sharper edges.
+
+\subsubsection{Why Bicubic Interpolation?}
+
+\noindent Bilinear interpolation can blur complex textures and edges because it relies on only four surrounding pixels. In contrast, bicubic interpolation looks at sixteen neighboring pixels (\(4 \times 4\)) for each output position. This wider sampling window helps capture local structure more accurately, leading to less aliasing and better continuity across upsampled regions. As a result, bicubic interpolation often yields clearer, more detailed images or feature maps.
+
+\subsubsection{Mathematical Reasoning}
+
+\noindent Bicubic interpolation extends bilinear interpolation by introducing a \textbf{cubic weighting function} that smoothly distributes the contribution of each neighboring pixel. While bilinear interpolation assigns weights based purely on distance (linearly decreasing to zero), the cubic approach tailors these weights using a function that decays gradually, allowing pixels farther from the target position to still have a small but meaningful influence.
+
+\noindent The commonly used weighting function is piecewise-defined:
+
+\[
+W(t) =
+\begin{cases}
+	(a + 2)|t|^3 - (a + 3)|t|^2 + 1, & 0 \leq |t| < 1, \\
+	a|t|^3 - 5a|t|^2 + 8a|t| - 4a, & 1 \leq |t| < 2, \\
+	0, & |t| \geq 2,
+\end{cases}
+\]
+
+\noindent where \(a\) typically takes values around \(-0.5\) to balance smoothness and sharpness. The function ensures nearby pixels carry the most weight, while more distant neighbors still contribute smoothly rather than being abruptly excluded.
+
+\noindent A concise visual and conceptual explanation can be found in this 
+\href{https://www.youtube.com/watch?v=poY_nGzEEWM&ab_channel=Computerphile}{\textbf{Computerphile video}}.
+
+\subsubsection{Bicubic Interpolation: Generalized Case}
+
+\noindent Assume we have an input feature map \(\mathbf{I}\) of size \(C \times H \times W\), and we wish to produce an upsampled map \(\mathbf{I'}\) of size \(C \times H' \times W'\). The bicubic interpolation proceeds as follows:
+
+\begin{enumerate}
+	\item \textbf{Coordinate Mapping:}  
+	Map the output pixel location \((x',y')\) back to the corresponding floating-point coordinate \((x,y)\) in the input grid:
+	\[
+	x = \frac{x'(W - 1)}{W' - 1}, 
+	\quad
+	y = \frac{y'(H - 1)}{H' - 1}.
+	\]
+	
+	\item \textbf{Neighbor Identification:}  
+	Determine the \(\pm1\) and \(\pm2\) offsets around \(\lfloor x \rfloor\) and \(\lfloor y \rfloor\). This yields a \(4 \times 4\) set of pixels \(\{I_{i,j}\}\) centered near \((x,y)\). 
+	
+	\item \textbf{Applying the Cubic Weights:}  
+	Use the cubic function \(W(t)\) in both the \(x\) and \(y\) directions:
+	\[
+	I'(x', y') = \sum_{i=-1}^{2}\sum_{j=-1}^{2} 
+	W(x - x_i)\,W(y - y_j)\,I_{i,j}.
+	\]
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_49.jpg}
+	\caption{Bicubic interpolation demonstrated on a \(C \times 2 \times 2\) feature map, generating a \(C \times 4 \times 4\) output. Each interpolated value is computed by applying a cubic weighting to the nearest sixteen pixels.}
+	\label{fig:chapter15_bicubic_interpolation}
+\end{figure}
+
+\subsubsection{Advantages and Limitations}
+
+\noindent \textbf{Sharper Details and Continuity.} By sampling a larger neighborhood with a smoothly decaying weight function, bicubic interpolation preserves finer structures, reduces artifacts, and transitions more smoothly across pixel boundaries than bilinear interpolation.
+
+\noindent \textbf{Better Texture Preservation.} Rather than over-smoothing, bicubic interpolation better maintains texture information by assigning fractional influences to pixels farther than one unit away.
+
+\noindent \textbf{Non-Learnable.} Despite these benefits, bicubic interpolation remains a fixed formula that cannot adapt to complex or domain-specific feature distributions in deep learning. In contrast,max unpooling or learnable upsampling layers can dynamically capture where and how to upscale feature maps.
+
+\noindent Hence, while bicubic interpolation offers a clear advantage over simpler methods for image resizing tasks, its fixed nature can be sub-optimal in end-to-end neural networks that require trainable, context-dependent upsampling.
+
+\subsection{Max Unpooling}
+
+\noindent \textbf{Max unpooling} is an upsampling technique that seeks to revert the effects of max pooling by redistributing feature activations according to recorded pooling indices. Unlike bilinear or bicubic interpolation, which spread information across the feature map,max unpooling explicitly restores features to their most salient locations while preserving spatial structure.
+
+\noindent In fully convolutional architectures, such as the decoder proposed by Noh et al., max unpooling layers are strategically placed to match the max pooling layers used in the encoder. This ensures that activations are restored to their original spatial positions, improving alignment between low- and high-level features and facilitating better reconstruction.
+
+\subsubsection{Max Unpooling in the Context of Noh et al. (ICCV 2015)}
+
+\noindent \textbf{Max unpooling} plays a key role in the decoder of a fully convolutional network. It reverses max pooling by restoring feature activations to their original locations, allowing for structured reconstruction of spatial details.
+
+\noindent Unlike interpolation-based upsampling, max unpooling does not estimate values but directly reinstates recorded activations while leaving all other positions as zero. This preserves 
+
+strong activations in meaningful regions without introducing artificial smoothing.
+
+\noindent The process consists of three steps:
+
+\begin{itemize}
+	\item \textbf{Pooling Index Storage:} During the encoder’s forward pass, max pooling reduces spatial resolution while retaining only the most prominent activations. Each pooling layer stores the \textbf{indices} of the maximum values in each pooling window.
+	
+	\item \textbf{Feature Restoration:} In the decoder, max unpooling restores activations by placing them back at their recorded indices within an expanded grid. The remaining positions are set to zero.
+	
+	\item \textbf{Sparse-to-Dense Refinement:} Since max unpooling produces a sparse feature map, additional \textbf{convolutional layers refine the activations into dense, meaningful predictions}.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_50.jpg}
+	\caption{Illustration of \textbf{max unpooling} using recorded pooling indices to restore spatial activations. Unlike interpolation-based methods, \textbf{max unpooling} reinstates feature activations at their original locations.}
+	\label{fig:chapter15_max_unpooling}
+\end{figure}
+
+\subsubsection{Why Max Unpooling is More Effective Than Bed of Nails Unpooling}
+
+\noindent While both max unpooling and Bed of Nails unpooling produce sparse feature maps, max unpooling is significantly more effective because it preserves spatial consistency and avoids artificial artifacts:
+
+\begin{itemize}
+	\item \textbf{Preservation of Spatial Structure:}  
+	- \textbf{Bed of Nails unpooling} places activations in \textbf{arbitrary fixed locations} (e.g., 
+	
+	upper-left corners of upsampled regions), misaligning reconstructed features.  
+	- \textbf{Max unpooling} restores activations to their \textbf{actual spatial positions}, maintaining the original feature layout and creating better alignment between encoder and decoder features.
+	
+	\item \textbf{Why Zeros in Max Unpooling Are Less Problematic:}  
+	- In \textbf{Bed of Nails unpooling}, zeros are inserted \textbf{randomly between activations}, disrupting spatial coherence and creating unnatural gaps.  
+	- In \textbf{max unpooling}, zeros only appear in \textbf{non-salient areas}, preserving the relationships between strong activations and minimizing high-frequency artifacts.
+	
+	\item \textbf{Reconstruction and Refinement:}  
+	- \textbf{Bed of Nails unpooling} creates abrupt intensity changes, leading to aliasing and distortions.  
+	- \textbf{Max unpooling} provides a \textbf{structured, interpretable sparse representation}, which allows subsequent 
+	
+	\textbf{convolutions} to reconstruct meaningful details.
+\end{itemize}
+
+\noindent While max unpooling provides a more structured recovery of activations, it remains a non-learnable upsampling technique, meaning it cannot generate new spatial details beyond those preserved by max pooling.
+
+\subsubsection{Bridging to Transposed Convolution}
+
+\noindent \textbf{Max unpooling} restores spatial activations efficiently, but it lacks the ability to \textbf{generate new details} or refine spatial features dynamically. Since it is a purely index-driven process, it cannot adaptively reconstruct missing information beyond what was retained during \textbf{max pooling}.
+
+\noindent To overcome these limitations, we now explore \textbf{transposed convolution}, a \textbf{learnable upsampling method} that optimizes filter weights to produce high-resolution feature maps. This allows for fine-grained spatial reconstructions and greater adaptability compared to fixed unpooling strategies.
+
+\subsection{Transposed Convolution}
+
+\noindent \textbf{Transposed convolution}, also referred to as \textbf{deconvolution} or \textbf{fractionally strided convolution}, is an upsampling technique that enables the network to learn how to generate high-resolution feature maps from lower-resolution inputs. 
+
+Unlike interpolation-based upsampling or max unpooling, which are fixed operations, transposed convolution is \textbf{learnable}, meaning the network optimizes the filter weights to improve the reconstruction process.
+
+\noindent Although called \textit{deconvolution}, it is not an actual inversion of convolution. Instead, it follows a similar mathematical operation as standard convolution but differs in how the filter is applied to the input tensor.
+
+\subsubsection{Understanding the Similarity to Standard Convolution}
+
+\noindent In a standard \textbf{convolutional layer}, an input feature map is processed using a learned \textbf{filter (kernel)}, which slides over the input using a defined \textbf{stride}. At each step, the filter is multiplied element-wise with the corresponding input region, and the results are summed to produce a single output activation.
+
+\noindent In \textbf{transposed convolution}, the process is similar but applied in reverse:
+\begin{itemize}
+	\item The filter is not applied directly to the input feature map but instead used to \textbf{spread} its contribution to the larger output feature map.
+	\item Each input element is multiplied by every element of the filter, and the weighted filter values are then \textbf{copied} into the output tensor.
+	\item If multiple filter applications overlap at the same location in the output, their values are \textbf{summed}.
+\end{itemize}
+
+\noindent This effectively reconstructs a higher-resolution representation while learning spatial dependencies in an upsampling operation.
+
+\subsubsection{Step-by-Step Process of Transposed Convolution}
+
+\noindent To illustrate how transposed convolution operates, consider a $2 \times 2$ input feature map processed with a $3 \times 3$ filter and a stride of 2, producing a $4 \times 4$ output. The process consists of the following steps:
+
+\begin{enumerate}
+	\item \textbf{Processing the First Element:}  
+	\begin{itemize}
+		\item The first input value is multiplied element-wise with each value in the $3 \times 3$ filter.
+		\item The weighted filter response is then \textbf{placed} into its corresponding region in the output tensor, which was initially set to zeros.
+	\end{itemize}
+	
+	\item \textbf{Processing the Second Element:}  
+	\begin{itemize}
+		\item The second input element undergoes the same multiplication with the filter, producing another set of weighted values.
+		\item These values are positioned in the output grid according to the stride of 2.
+		\item When regions of the output overlap due to filter applications, the corresponding values are \textbf{summed} instead of overwritten.
+	\end{itemize}
+	
+	\item \textbf{Iterating Over the Remaining Elements:}  
+	\begin{itemize}
+		\item The process is repeated for all input elements, progressively constructing the upsampled feature map.
+		\item The final reconstructed output is a $4 \times 4$ feature map, demonstrating how transposed convolution expands spatial resolution while preserving learned feature relationships.
+	\end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_59.jpg}
+	\caption{Illustration of the first step in transposed convolution: applying the filter to the first input element.}
+	\label{fig:chapter15_transposed_conv_first_step}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_61.jpg}
+	\caption{The second input element is processed: its weighted filter values are placed in the output grid, with overlapping values summed.}
+	\label{fig:chapter15_transposed_conv_second_step}
+	
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_62.jpg}
+	\caption{Final constructed output after processing all input elements.}
+	\label{fig:chapter15_transposed_conv_final_output}
+\end{figure}
+
+\subsubsection{1D Transposed Convolution}
+
+\noindent A simpler way to understand transposed convolution is through a \textbf{1D example}. Here, we have:
+\begin{itemize}
+	\item A \textbf{1D input tensor} of \textbf{2 elements}.
+	\item A \textbf{1D filter} of \textbf{3 elements}.
+	\item The result is a \textbf{5-element output}.
+\end{itemize}
+
+\noindent The same principles apply:
+
+\begin{itemize}
+	\item Each input element is \textbf{weighted by the filter values} and placed in the output tensor.
+	\item Overlapping values are \textbf{summed}, producing a larger upsampled output.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_64.jpg}
+	\caption{Illustration of 1D transposed convolution: a 2-element input and a 3-element filter produce a 5-element output.}
+	\label{fig:chapter15_transposed_conv_1D}
+\end{figure}
+
+\newpage
+\subsubsection{Advantages of Transposed Convolution}
+
+\noindent Compared to other upsampling methods, transposed convolution has several advantages:
+
+\begin{itemize}
+	\item \textbf{Learnable Weights:} Unlike bilinear interpolation or max unpooling, transposed convolution learns weights, enabling more refined upsampling.
+	\item \textbf{Trainable Spatial Structure:} The network can optimize filter parameters to reconstruct meaningful spatial details.
+	\item \textbf{Flexible Stride and Padding:} Similar to regular convolutions, transposed convolutions can be configured with different \textbf{strides} and \textbf{padding} to control output resolution.
+\end{itemize}
+
+\subsubsection{Connection to Standard Convolution}
+
+\noindent Despite the difference in application, transposed convolution retains strong similarities to regular convolution:
+\begin{itemize}
+	\item In \textbf{standard convolution}, the filter slides over the input, computing dot products with local regions.
+	\item In \textbf{transposed convolution}, the filter spreads out contributions, reconstructing a larger feature map.
+	
+\end{itemize}
+
+\noindent The main difference is that instead of \textbf{reducing} spatial resolution like standard convolution, transposed convolution is used to \textbf{increase} resolution while retaining learned feature representations.
+
+\subsection{Convolution and Transposed Convolution as Matrix Multiplication}
+
+Below, we present a step-by-step explanation of how 1D convolutions and transposed convolutions (for stride=1) can be formulated as a single matrix--vector multiplication. The same matrix--vector concept also aids in understanding gradient derivations for both regular and transposed convolutions since the forward pass of a transposed convolution aligns closely with the backward pass of a standard convolution.
+
+\subsubsection{Convolution via Matrix Multiplication}
+
+\textbf{Concept:} A 1D convolution can be reformulated as a matrix multiplication by:
+\begin{enumerate}
+	\item Zero-padding the kernel to match the required dimensions.
+	\item Constructing a Toeplitz matrix from the input.
+	\item Flattening the padded kernel into a vector.
+\end{enumerate}
+
+Once these steps are completed, the convolution operation can be expressed as a simple matrix--vector multiplication.
+
+\textbf{Example:}
+\begin{itemize}
+	\item \textbf{1D Input:} $\mathbf{x} = (x, y, z)$, padded to obtain $\mathbf{x}_\text{pad} = (0, x, y, z, 0)$.
+	\item \textbf{1D Filter (Kernel):} $\mathbf{a} = (a, b, c, d)$, zero-padded to $\mathbf{a}_\text{pad} = (0, a, b, c, d, 0)$.
+\end{itemize}
+
+The input is then arranged into a matrix $X$:
+\[
+X = \begin{bmatrix}
+	x & y & z & 0 & 0 & 0\\
+	0 & x & y & z & 0 & 0\\
+	0 & 0 & x & y & z & 0\\
+	0 & 0 & 0 & x & y & z
+\end{bmatrix}
+\]
+Multiplying by the padded kernel vector $\mathbf{a}_\text{pad}$:
+\[
+X \mathbf{a}_\text{pad} = \begin{bmatrix}
+	x & y & z & 0 & 0 & 0\\
+	0 & x & y & z & 0 & 0\\
+	0 & 0 & x & y & z & 0\\
+	0 & 0 & 0 & x & y & z
+\end{bmatrix}
+\begin{bmatrix} 0 \\ a \\ b \\ c \\ d \\ 0 \end{bmatrix} = \begin{bmatrix} a x + b y + c z\\
+	b x + c y + d z\\
+	c x + d y\\
+	d x 
+\end{bmatrix}
+\]
+This matches the expected 1D convolution outputs of size 4. This approach directly represents the convolution operation as matrix--vector multiplication, making it easier to compute gradients and optimize implementations using highly optimized linear algebra routines.
+
+\textbf{Explanation of Matrix Construction:} The matrix $X$ is constructed by shifting the input vector $\mathbf{x}_\text{pad}$ row-wise, ensuring that each row corresponds to one step of the sliding window in convolution. The structure depends on the kernel size and stride:
+\begin{itemize}
+	\item For stride=1, each row of $X$ corresponds to a shifted copy of the input vector.
+	\item For stride > 1, certain columns are skipped to reflect the stride.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_66.jpg}
+	\caption{1D convolution represented as matrix multiplication.}
+	\label{fig:conv_matrix_mul}
+\end{figure}
+
+\subsubsection{Transposed Convolution via Matrix Multiplication (Stride = 1)}
+
+For stride=1, a transposed convolution can be viewed as multiplying by the transpose of the matrix $X$ instead:
+\[
+\mathbf{x}' = X^T \mathbf{a}_\text{no pad}
+\]
+where $\mathbf{a}_\text{no pad}$ is the filter kernel without padding, and $\mathbf{x}'$ represents the output. This demonstrates how transposed convolution is essentially a regular convolution's backward pass with some differences in boundary handling.
+
+The corresponding transposed convolution matrix $X^T$:
+\[
+X^T = \begin{bmatrix}
+	x & 0 & 0 & 0\\
+	y & x & 0 & 0\\
+	z & y & x & 0\\
+	0 & z & y & x\\
+	0 & 0 & z & y\\
+	0 & 0 & 0 & z
+\end{bmatrix}
+\]
+This operation expands the input $\mathbf{a}_\text{no pad}$, distributing values in a manner that effectively reverses the spatial contraction caused by regular convolution.
+
+\textbf{Explanation of Matrix Construction for Transposed Convolution:} The transposed convolution matrix $X^T$ spreads values into a larger space by reversing the compression introduced by standard convolution. Unlike direct convolution, where each row of $X$ corresponds to a windowed segment of the input, the transposed convolution redistributes its input over a larger field, effectively performing an upsampling operation.
+
+However, when stride > 1, transposed convolution can no longer be represented as a simple matrix multiplication. Instead, additional operations such as zero insertion and overlapping summation are required, making its matrix representation infeasible in the same way as regular convolution.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_68.jpg}
+	\caption{Transposed convolution as the transpose of the convolution matrix (for stride=1).}
+	\label{fig:trans_conv_matrix_mul}
+\end{figure}
+
+\subsubsection{Transposed Convolution and Gradient Derivation}
+
+A fundamental property of transposed convolution is that its forward pass is mathematically equivalent to the backward pass of a regular convolution. This arises from the fact that transposed convolution applies the transpose of the original convolution matrix, effectively distributing gradients back to the input space. In gradient-based optimization, when computing the partial derivatives with respect to the input or filter, the convolution operation can be rewritten as matrix--vector multiplication, allowing gradients to be computed using standard matrix differentiation rules. The ability to express both normal and transposed convolutions in matrix form simplifies understanding of how gradients propagate, making it easier to derive update rules in deep learning frameworks. 
+
+\subsubsection{Advantages of Transposed Convolution}
+
+\noindent Compared to other upsampling methods, transposed convolution has several advantages:
+
+\begin{itemize}
+	\item \textbf{Learnable Weights:} Unlike bilinear interpolation or max unpooling, transposed convolution learns weights, enabling more refined upsampling.
+	\item \textbf{Trainable Spatial Structure:} The network can optimize filter parameters to reconstruct meaningful spatial details.
+	\item \textbf{Flexible Stride and Padding:} Similar to regular convolutions, transposed convolutions can be configured with different \textbf{strides} and \textbf{padding} to control output resolution.
+\end{itemize}
+
+\subsubsection{Challenges and Considerations}
+
+\noindent While transposed convolution is highly effective, it introduces some challenges:
+
+\begin{itemize}
+	\item \textbf{Checkerboard Artifacts:} Overlapping filter applications can create unevenly distributed activations, leading to artifacts in the output.
+	\item \textbf{Sensitivity to Stride and Padding:} Incorrect configurations can lead to distorted feature maps or excessive upsampling.
+	
+\end{itemize}
+
+\subsection{Conclusion: Choosing the Right Upsampling Method}
+
+\noindent Throughout this chapter, we explored different \textbf{upsampling techniques}, each with its own advantages and drawbacks. The choice of method depends on the nature of the task, the structure of the network, and the type of downsampling used in the encoder.
+
+\noindent Below is a summary of the key properties of each upsampling approach:
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{|l|p{5cm}|p{5cm}|}
+		\hline
+		\textbf{Upsampling Method} & \textbf{Advantages} & \textbf{Limitations} \\
+		\hline
+		\textbf{Nearest-Neighbor Unpooling} & Simple and fast & Produces blocky artifacts, lacks 
+		
+		smoothness \\
+		\hline
+		\textbf{Bilinear Interpolation} & Smoother transitions, avoids blocky artifacts & Does not restore fine details; introduces blurring \\
+		\hline
+		\textbf{Bicubic Interpolation} & Produces even smoother results than bilinear & Computationally expensive; still introduces some blurring \\
+		\hline
+		\textbf{Max Unpooling} & Preserves learned activations from max pooling & Produces sparse feature maps requiring further refinement \\
+		\hline
+		\textbf{Transposed Convolution} & Learnable upsampling; can generate fine details & May introduce checkerboard artifacts if not properly configured \\
+		\hline
+	\end{tabular}
+	\caption{Comparison of upsampling methods based on their properties.}
+	\label{tab:upsampling_comparison}
+\end{table}
+
+\subsubsection{Guidelines for Choosing an Upsampling Method}
+
+\noindent The selection of an upsampling method is often influenced by the \textbf{downsampling method} used in the encoder and the requirements of the task:
+
+\begin{itemize}
+	\item If the encoder uses \textbf{max pooling}, \textbf{max unpooling} is a natural choice as it preserves spatial locations of high activations. However, it benefits greatly with further refinement using convolutional layers, and that should be considered in the choice, depending on how the architecture looks like. 
+	
+	\item If the goal is to \textbf{smoothly upscale feature maps}, \textbf{bilinear} or \textbf{bicubic interpolation} is effective, but they do not restore lost details.
+	
+	\item If nearest-neighbor upsampling is used, it is usually combined with convolution layers to mitigate blocky artifacts.
+	
+	\item \textbf{Transposed convolution} is useful in cases where the network needs to learn how to reconstruct missing details (e.g., \textbf{semantic segmentation, image super-resolution, or GANs}). However, proper kernel and stride selection is required to avoid checkerboard artifacts.
+	
+	\item For architectures that do not rely on explicit pooling (e.g., fully convolutional networks with strided convolutions), \textbf{transposed convolution} is often preferred as it learns a structured upsampling.
+\end{itemize}
+
+\subsubsection{Final Thoughts}
+
+\noindent There is no universally superior upsampling method; instead, the choice should be based on the specific needs of the network:
+
+\begin{itemize}
+	\item If preserving feature locations is crucial, \textbf{max unpooling} is a strong option.
+	\item If smoothness is preferred over sharp edges, \textbf{bilinear or bicubic interpolation} is a good choice.
+	
+	\item If learning an optimal upsampling strategy is necessary, \textbf{transposed convolution} provides a flexible solution but requires careful tuning.
+\end{itemize}
+
+\noindent Understanding these trade-offs allows for the design of more effective deep learning architectures that balance computational efficiency with reconstruction quality.
+
+\section{Instance Segmentation}
+
+\noindent Instance segmentation is a critical task in computer vision that aims to simultaneously detect and delineate each object instance within an image. Unlike semantic segmentation, which assigns a class label to each pixel without distinguishing between different object instances of the same category, instance segmentation uniquely identifies each occurrence of an object. This is particularly important for applications where individual object identification is required, such as autonomous driving, medical imaging, and robotics.
+
+\noindent In computer vision research, image regions are categorized into two types: \emph{things} and \emph{stuff}. This distinction is fundamental to \textbf{instance segmentation}, where individual object instances are identified at the pixel level.
+
+\begin{itemize}
+	\item \textbf{Things:} Object categories that can be distinctly separated into individual instances, such as \emph{cars, people, and animals}.
+	\item \textbf{Stuff:} Object categories that lack clear instance boundaries, such as \emph{sky, grass, water, and road surfaces}.
+\end{itemize}
+
+\noindent Instance segmentation focuses exclusively on \textbf{things}, as segmenting instances of \textbf{stuff} is not meaningful. The primary goal of instance segmentation is to \emph{detect all objects} in an image and assign a unique segmentation mask to each detected object, ensuring correct differentiation of overlapping instances.
+
+\noindent This task is particularly challenging due to the need for accurate pixel-wise delineation while simultaneously handling object occlusions, varying scales, and complex background clutter. Advanced deep learning architectures, such as \textbf{Mask R-CNN}, have significantly improved the performance of instance segmentation by leveraging region-based feature extraction and mask prediction techniques. 
+
+\noindent The development of instance segmentation models continues to evolve, driven by the increasing demand for high-precision vision systems across various domains.
+
+\subsection{Mask R-CNN: A Two-Stage Framework for Instance Segmentation}
+
+\noindent \textbf{Mask R-CNN} extends \textbf{Faster R-CNN}, a widely used two-stage object detection framework, by incorporating a dedicated branch for per-instance segmentation masks. While Faster R-CNN predicts bounding boxes and class labels, Mask R-CNN further refines this process by generating high-resolution segmentation masks for each detected object.
+
+\subsubsection{Faster R-CNN Backbone}
+
+\noindent Faster R-CNN consists of a \textbf{Region Proposal Network (RPN)} that generates candidate object bounding boxes. Each proposed region is extracted from a shared feature map and processed by two heads: \textbf{classification} and \textbf{bounding box regression}. This results in refined bounding boxes with corresponding class labels.
+
+\subsubsection{Key Additions in Mask R-CNN}
+
+\noindent Mask R-CNN retains the Faster R-CNN structure while introducing two crucial modifications:
+
+\begin{itemize}
+	\item \textbf{A Mask Prediction Head:} A lightweight \textbf{fully convolutional network (FCN)} predicts a \textbf{binary segmentation mask} for each detected object. Instead of producing a single segmentation map for the entire image, Mask R-CNN outputs \textbf{one binary mask per detected instance}. The segmentation head consists of multiple convolutional layers followed by a \textbf{deconvolution (transpose convolution)} layer that upscales the feature maps before predicting the final mask.
+	
+	\item \textbf{RoI Align:} Faster R-CNN uses RoI Pooling, which introduces quantization errors due to rounding. Mask R-CNN replaces this with \textbf{RoI Align}, which applies bilinear interpolation to accurately extract features from proposed regions, improving mask precision.
+\end{itemize}
+
+\noindent The second stage of Mask R-CNN produces three parallel outputs for each region proposal:
+\begin{itemize}
+	\item \textbf{Class label} (via softmax classification),
+	\item \textbf{Bounding box refinement} (via regression),
+	\item \textbf{Segmentation mask} (via an FCN-based mask prediction branch).
+\end{itemize}
+
+\subsubsection{Segmentation Mask Prediction: Fixed Size Output}
+
+\noindent A challenge in instance segmentation is handling objects of varying sizes. Unlike bounding box regression, which adjusts dynamically, Mask R-CNN outputs a \textbf{fixed-size} $28 \times 28$ segmentation mask per object. This design is computationally efficient but requires careful processing:
+
+\begin{enumerate}
+	\item The \textbf{RPN} generates region proposals.
+	\item The \textbf{classification head} predicts object categories and refines bounding boxes.
+	\item The \textbf{segmentation head} generates a $28 \times 28$ binary mask \textbf{per detected instance}.
+	\item The mask corresponding to the predicted class is selected during inference.
+	\item The selected mask is resized to match the detected object’s bounding box using bilinear interpolation.
+\end{enumerate}
+
+\subsubsection{Training Mask R-CNN and Loss Functions}
+
+\noindent Training Mask R-CNN requires optimizing multiple objectives simultaneously, as it performs classification, localization, and segmentation in a unified framework. The model is trained using three loss functions:
+
+\begin{itemize}
+	\item \textbf{Classification Loss:} A standard softmax cross-entropy loss applied to the classification head to predict the correct object category.
+	\item \textbf{Bounding Box Regression Loss:} A smooth L1 loss used to refine the predicted bounding box coordinates, improving localization accuracy.
+	\item \textbf{Mask Loss:} A per-pixel binary cross-entropy loss applied to the mask prediction branch. This loss is computed only for the foreground objects (i.e., objects that have been correctly classified) and encourages the network to accurately segment object boundaries.
+\end{itemize}
+
+\noindent The total loss function for Mask R-CNN is formulated as:
+\[
+L = L_{cls} + L_{box} + L_{mask},
+\]
+where:
+\begin{itemize}
+	\item $L_{cls}$ is the classification loss,
+	\item $L_{box}$ is the bounding box regression loss,
+	\item $L_{mask}$ is the mask prediction loss.
+\end{itemize}
+
+\noindent The training process follows the standard end-to-end approach, where the backbone (e.g., ResNet) is pretrained on large-scale image classification datasets (such as ImageNet) and then fine-tuned on instance segmentation datasets (e.g., COCO). The gradient updates are backpropagated across all network components to optimize detection and segmentation performance.
+
+\subsubsection{Bilinear Interpolation vs. Bicubic Interpolation}
+
+\noindent The upsampling step in Mask R-CNN requires resizing segmentation masks to fit detected object regions. The authors chose \textbf{bilinear interpolation} over \textbf{bicubic interpolation} for the following reasons:
+
+\begin{itemize}
+	\item \textbf{Efficiency:} Bilinear interpolation is computationally less expensive than bicubic interpolation, making it suitable for processing multiple objects per image.
+	\item \textbf{Minimal Accuracy Gains from Bicubic:} Bicubic interpolation considers 16 neighboring pixels, while bilinear uses only 4. Given that Mask R-CNN’s masks are already low resolution ($28 \times 28$), bicubic interpolation does not provide significant accuracy improvements.
+	\item \textbf{Edge Preservation:} Bicubic interpolation introduces additional smoothing, which can blur object boundaries. Bilinear interpolation maintains sharper mask edges, improving segmentation performance.
+\end{itemize}
+
+\subsubsection{Class-Aware Mask Selection}
+
+\noindent Unlike traditional multi-class segmentation models, which predict a single mask covering all categories, Mask R-CNN follows a \textbf{per-instance, per-class} approach:
+
+\begin{itemize}
+	\item The segmentation head predicts \textbf{C binary masks per object}, where $C$ is the number of possible classes.
+	\item The classification head determines the object’s category.
+	\item The corresponding mask for the predicted category is selected and applied to the object.
+\end{itemize}
+
+\noindent This method \textbf{decouples classification from segmentation}, preventing class competition within the mask and improving segmentation accuracy.
+
+\subsubsection{Gradient Flow in Mask R-CNN}
+
+\noindent Mask R-CNN’s forward pass for mask prediction closely mirrors the backward pass of standard convolutional networks. Gradient computations are structured as follows:
+
+\begin{itemize}
+	\item The \textbf{classification and bounding box losses} propagate through the detection pipeline, refining object proposals.
+	\item The \textbf{segmentation loss} propagates gradients through the mask prediction branch, optimizing instance masks.
+	\item \textbf{RoI Align} ensures spatial alignment, preventing gradient misalignment and improving mask accuracy.
+\end{itemize}
+
+\noindent Expressing these processes as matrix--vector operations clarifies how gradients flow through the network, aiding optimization and efficient deep learning framework implementation.
+
+\subsubsection{Summary}
+
+\noindent Mask R-CNN extends Faster R-CNN by introducing a \textbf{per-region mask prediction branch} and \textbf{RoI Align} for accurate feature extraction. The segmentation head predicts a \textbf{fixed-size} $28 \times 28$ binary mask per object, which is then resized using \textbf{bilinear interpolation}. This approach allows for accurate instance segmentation while maintaining computational efficiency, making Mask R-CNN a dominant framework in object segmentation applications.
+
+\subsection{Extending the Object Detection Paradigm}
+
+\noindent Mask R-CNN introduced a paradigm in which object detection models can be extended to perform new vision tasks by adding task-specific prediction heads. This flexible approach has led to the development of new capabilities beyond instance segmentation, such as:
+
+\begin{itemize}
+	\item \textbf{Keypoint Estimation:} Mask R-CNN was further extended for human pose estimation by adding a keypoint detection head. This variation, sometimes called \emph{Mask R-CNN: Keypoints}, predicts key locations such as joints in the human body, facilitating pose estimation.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_90.jpg}
+		\caption{Mask R-CNN extended for keypoint estimation, predicting key locations such as joints for human pose estimation.}
+		\label{fig:chapter15_keypoints}
+	\end{figure}
+	
+	\item \textbf{Dense Captioning:} Inspired by the Mask R-CNN paradigm, \emph{DenseCap} \cite{johnson2015_densecap} extends object detection by incorporating a captioning head. This approach, illustrated below, uses an LSTM-based captioning module to describe detected regions with natural language.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_93.jpg}
+		\caption{Dense Captioning (DenseCap) extends object detection by adding a captioning head, enabling textual descriptions of detected objects.}
+		\label{fig:chapter15_densecap}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_94.jpg}
+		\caption{Example output of DenseCap: Generated captions describe detected regions with natural language.}
+		\label{fig:chapter15_densecap_example}
+	\end{figure}
+	
+	\item \textbf{3D Shape Prediction:} \emph{Mesh R-CNN} \cite{gkioxari2020_meshrcnn} builds upon Mask R-CNN to predict 3D object shapes from 2D images by adding a mesh prediction head. This enables the reconstruction of 3D object geometry directly from image-based inputs, representing a significant step toward vision-based 3D reasoning.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_15/slide_97.jpg}
+		\caption{Mesh R-CNN extends Mask R-CNN with a mesh prediction head, enabling 3D shape reconstruction from 2D images.}
+		\label{fig:chapter15_mesh_rcnn}
+	\end{figure}
+\end{itemize}
+
+\noindent These extensions highlight the versatility of the Mask R-CNN framework and demonstrate how object detection networks can serve as a foundation for diverse computer vision tasks. By incorporating additional task-specific heads, researchers continue to expand the boundaries of what can be achieved using a common underlying object detection architecture.
+
+\newpage
+\begin{enrichment}[U-Net: A Fully Conv Architecture for Segmentation][section]
+	
+	\begin{enrichment}[Overview][subsection]
+		
+		\noindent \textbf{U-Net} \cite{ronneberger2015_unet} is a fully convolutional neural network designed for semantic segmentation, particularly in biomedical imaging. Unlike traditional classification networks, U-Net assigns a class label to each pixel, performing dense prediction. The architecture follows a \textbf{symmetrical encoder-decoder} structure, resembling a "U" shape. The encoder (contracting path) captures contextual information, while the decoder (expansive path) refines localization details.
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[U-Net Architecture][subsection]
+		
+		\noindent U-Net consists of two key components:
+		
+		\begin{itemize}
+			\item \textbf{Contracting Path (Encoder):} 
+			\begin{itemize}
+				\item Repeated \textbf{$3 \times 3$ convolutions} followed by \textbf{ReLU activations}.
+				\item \textbf{$2 \times 2$ max-pooling} for downsampling, reducing spatial resolution while increasing feature depth.
+				\item Captures high-level semantic information necessary for object recognition.
+			\end{itemize}
+			
+			\item \textbf{Expansive Path (Decoder):} 
+			\begin{itemize}
+				\item \textbf{Transposed convolutions} for upsampling, restoring spatial resolution.
+				\item \textbf{Skip connections} integrate feature maps from the encoder to retain spatial details lost during downsampling.
+				\item A \textbf{$1 \times 1$ convolution} maps feature channels to the segmentation classes.
+			\end{itemize}
+		\end{itemize}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.9\textwidth]{Figures/Chapter_15/unet_architecture.png}
+			\caption{U-Net architecture: The encoder (left) captures context, while the decoder (right) restores details using transposed convolutions and skip connections. Source: \cite{ronneberger2015_unet}.}
+			\label{fig:unet_architecture}
+		\end{figure}
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Skip Connections and Concatenation][subsection]
+		
+		\noindent \textbf{Skip connections} are a key innovation in U-Net that directly link corresponding encoder and decoder layers through concatenation. This mechanism enables:
+		
+		\begin{itemize}
+			\item \textbf{Preserving Spatial Information:} 
+			\begin{itemize}
+				\item Encoder feature maps are concatenated with decoder feature maps at corresponding levels.
+				\item This ensures that fine-grained details lost due to downsampling are reinstated.
+			\end{itemize}
+			
+			\item \textbf{Combining Semantic and Spatial Features:} 
+			\begin{itemize}
+				\item The encoder extracts abstract, high-level semantic features.
+				\item The decoder restores fine details, and concatenation helps merge these representations.
+			\end{itemize}
+			
+			\item \textbf{Enhancing Gradient Flow During Training:} 
+			\begin{itemize}
+				\item Skip connections allow gradients to propagate more easily through deep networks, preventing vanishing gradients.
+				\item This improves convergence and stabilizes the training process.
+			\end{itemize}
+		\end{itemize}
+		
+		\noindent The concatenation operation is crucial, as it ensures that both low-level spatial features and high-level semantic features contribute to final pixel-wise classification.
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Training U-Net][subsection]
+		
+		\noindent U-Net is trained end-to-end in a supervised manner, typically using:
+		
+		\begin{itemize}
+			\item \textbf{Loss Function:} 
+			\begin{itemize}
+				\item The standard loss function for U-Net is \textbf{Binary Cross-Entropy (BCE)} for binary segmentation tasks.
+				\item For multi-class segmentation, \textbf{Categorical Cross-Entropy} is used.
+				\item When dealing with imbalanced datasets, \textbf{Dice Loss} or a combination of BCE and Dice Loss is applied.
+			\end{itemize}
+			
+			\item \textbf{Optimization:} 
+			\begin{itemize}
+				\item U-Net is typically trained using 
+				\textbf{Adam} or 
+				\textbf{Stochastic Gradient Descent (SGD)} with momentum.
+			\end{itemize}
+			
+			\item \textbf{Data Augmentation:} 
+			\begin{itemize}
+				\item Given the limited availability of annotated medical data, U-Net heavily relies on augmentation techniques such as:
+				\begin{itemize}
+					\item Random rotations, flips, and intensity shifts.
+					\item Elastic deformations to improve robustness.
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
+		
+		\noindent The combination of skip connections, effective loss functions, and augmentation techniques ensures that U-Net achieves high accuracy even with limited training data.
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Comparison with Mask R-CNN][subsection]
+		
+		\noindent While both U-Net and Mask R-CNN perform segmentation, they differ in:
+		
+		\begin{itemize}
+			\item \textbf{Task Type:} U-Net performs \textbf{semantic segmentation}; Mask R-CNN performs \textbf{instance segmentation}.
+			\item \textbf{Architecture:} U-Net follows an \textbf{encoder-decoder} design, while Mask R-CNN uses a \textbf{two-stage detection-segmentation} approach.
+			\item \textbf{Application Domains:} U-Net is dominant in \textbf{medical imaging and satellite imagery}, whereas Mask R-CNN excels in \textbf{object detection and video analytics}.
+		\end{itemize}
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Impact and Evolution of U-Net][subsection]
+		
+		\noindent Since its introduction, U-Net has significantly influenced segmentation research, inspiring numerous adaptations and improvements:
+		
+		\begin{itemize}
+			\item \textbf{U-Net++} \cite{zhou2018_unetpp}: Incorporates dense connections between encoder-decoder layers to improve gradient flow and feature reuse.
+			\item \textbf{3D U-Net} \cite{cciccek2016_3dunet}: Extends the architecture to volumetric data, benefiting applications like MRI and CT scan analysis.
+			\item \textbf{Residual U-Net} \cite{zhang2018_resunet}: Integrates residual blocks to enhance gradient flow and stabilize training for deeper architectures.
+			\item \textbf{Hybrid U-Net Variants:} Many modern adaptations replace the convolutional backbone with newer architectures, such as vision transformers, to enhance feature extraction.
+		\end{itemize}
+		
+		\noindent Although \textbf{Attention U-Net} \cite{oktay2018_attentionunet} introduces an attention mechanism to selectively focus on relevant features, we have not yet covered attention mechanisms in this course. However, the core U-Net structure remains effective even without attention mechanisms and is widely used in practice. With continuous enhancements, U-Net’s impact on segmentation research persists across various domains.
+	\end{enrichment}
+\end{enrichment}
+
+
+
+
 

@@ -2679,6 +2679,25 @@
     <bcf:citekey order="287" intorder="1">redmon2017_yolo9000</bcf:citekey>
     <bcf:citekey order="288" intorder="1">redmon2018_yolov3</bcf:citekey>
     <bcf:citekey order="289" intorder="1">bochkovskiy2020_yolov4</bcf:citekey>
+    <bcf:citekey order="290" intorder="1">ren2016_fasterrcnn</bcf:citekey>
+    <bcf:citekey order="291" intorder="1">redmon2016_yolo</bcf:citekey>
+    <bcf:citekey order="292" intorder="1">long2015_fcn</bcf:citekey>
+    <bcf:citekey order="293" intorder="1">noh2015_deconvnet</bcf:citekey>
+    <bcf:citekey order="294" intorder="1">raffel2020_t5</bcf:citekey>
+    <bcf:citekey order="295" intorder="1">lewis2020_bart</bcf:citekey>
+    <bcf:citekey order="296" intorder="1">ronneberger2015_unet</bcf:citekey>
+    <bcf:citekey order="297" intorder="1">ledig2017_srgan</bcf:citekey>
+    <bcf:citekey order="298" intorder="1">wiki_Aliasing</bcf:citekey>
+    <bcf:citekey order="299" intorder="1">wiki_Aliasing</bcf:citekey>
+    <bcf:citekey order="300" intorder="1">johnson2015_densecap</bcf:citekey>
+    <bcf:citekey order="301" intorder="1">gkioxari2020_meshrcnn</bcf:citekey>
+    <bcf:citekey order="302" intorder="1">ronneberger2015_unet</bcf:citekey>
+    <bcf:citekey order="303" intorder="1">ronneberger2015_unet</bcf:citekey>
+    <bcf:citekey order="304" intorder="1">ronneberger2015_unet</bcf:citekey>
+    <bcf:citekey order="305" intorder="1">zhou2018_unetpp</bcf:citekey>
+    <bcf:citekey order="306" intorder="1">cciccek2016_3dunet</bcf:citekey>
+    <bcf:citekey order="307" intorder="1">zhang2018_resunet</bcf:citekey>
+    <bcf:citekey order="308" intorder="1">oktay2018_attentionunet</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
