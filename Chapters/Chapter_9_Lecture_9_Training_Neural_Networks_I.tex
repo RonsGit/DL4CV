@@ -470,7 +470,7 @@ Based on empirical findings, the following recommendations can guide activation 
 
 \begin{itemize}
 	\item \textbf{ReLU is usually the best default choice:} It is computationally efficient, simple to implement, and provides strong performance across various architectures.
-	\item \textbf{Consider Leaky ReLU, ELU, SELU, GELU or Swish when seeking marginal gains:} These activations can help squeeze out small improvements, particularly in deeper networks or specific architectures.
+	\item \textbf{Consider Leaky ReLU, ELU, SELU, GELU or Swish when seeking marginal gains:} These activations can help squeeze out small improvements, particularly in deeper networks.
 	\item \textbf{Avoid Sigmoid and Tanh:} These functions cause vanishing gradients, leading to poor optimization dynamics and slower convergence.
 	\item \textbf{Some recent architectures use GELU instead of ReLU, but the gains are minimal:} GELU is commonly found in Transformer-based models like BERT and GPT, but its improvements over ReLU are typically small.
 \end{itemize}

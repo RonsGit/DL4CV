@@ -2698,6 +2698,25 @@
     <bcf:citekey order="306" intorder="1">cciccek2016_3dunet</bcf:citekey>
     <bcf:citekey order="307" intorder="1">zhang2018_resunet</bcf:citekey>
     <bcf:citekey order="308" intorder="1">oktay2018_attentionunet</bcf:citekey>
+    <bcf:citekey order="309" intorder="1">vinyals2015_showtell</bcf:citekey>
+    <bcf:citekey order="310" intorder="1">karpathy2014_largevideo</bcf:citekey>
+    <bcf:citekey order="311" intorder="1">sutskever2014_seq2seq</bcf:citekey>
+    <bcf:citekey order="312" intorder="1">ba2015_attention</bcf:citekey>
+    <bcf:citekey order="313" intorder="1">gregor2015_draw</bcf:citekey>
+    <bcf:citekey order="314" intorder="1">gregor2015_draw</bcf:citekey>
+    <bcf:citekey order="315" intorder="1">bengio1994_learning</bcf:citekey>
+    <bcf:citekey order="315" intorder="2">pascanu2013_difficulty</bcf:citekey>
+    <bcf:citekey order="316" intorder="1">hochreiter1997_lstm</bcf:citekey>
+    <bcf:citekey order="317" intorder="1">cho2014_gru</bcf:citekey>
+    <bcf:citekey order="318" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="319" intorder="1">yao2022_improving</bcf:citekey>
+    <bcf:citekey order="320" intorder="1">gu2018_nonautoregressive</bcf:citekey>
+    <bcf:citekey order="321" intorder="1">sutskever2014_seq2seq</bcf:citekey>
+    <bcf:citekey order="322" intorder="1">bengio1994_learning</bcf:citekey>
+    <bcf:citekey order="323" intorder="1">pascanu2013_difficulty</bcf:citekey>
+    <bcf:citekey order="324" intorder="1">pascanu2013_difficulty</bcf:citekey>
+    <bcf:citekey order="325" intorder="1">pascanu2013_difficulty</bcf:citekey>
+    <bcf:citekey order="326" intorder="1">karpathy2015_visualizing_rnns</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

@@ -3,7 +3,934 @@
 % Chapter-specific content starts here
 \chapter{Lecture 16: Recurrent Networks}
 
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
 %	CHAPTER 16 - Lecture 16: Recurrent Networks
-%----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+\section{Introduction to Recurrent Neural Networks (RNNs)}
+
+\noindent Many real-world problems involve sequential data, where information is not independent but instead follows a temporal or ordered structure. Traditional neural networks, such as fully connected (FC) networks and convolutional neural networks (CNNs), assume that inputs are independent of each other, making them ineffective for tasks where past information influences future outcomes. Recurrent Neural Networks (RNNs) are specifically designed to handle such problems by incorporating memory through recurrent connections, enabling them to process sequences of variable length.
+
+\subsection{Why Study Sequential Models?}
+
+\noindent Sequential modeling is crucial for various applications where past observations influence future predictions. Without specialized architectures, we cannot effectively solve tasks such as:
+
+\begin{itemize}
+	\item \textbf{Image Captioning (One-to-Many)}: Generating a sequence of words to describe an image requires understanding both spatial and sequential dependencies \cite{vinyals2015_showtell}.
+	\item \textbf{Video Classification (Many-to-One)}: Classifying an action or event in a video requires processing frames as a sequence, capturing motion and context \cite{karpathy2014_largevideo}.
+	\item \textbf{Machine Translation (Many-to-Many)}: Translating sentences from one language to another requires modeling sequential dependencies across different languages \cite{sutskever2014_seq2seq}.
+	\item \textbf{Time-Series Forecasting}: Financial market predictions, weather forecasting, and power grid monitoring depend on capturing trends and long-term dependencies.
+	\item \textbf{Sequence Labeling}: Named entity recognition, part-of-speech tagging, and handwriting recognition require assigning labels to elements of a sequence while maintaining context.
+	\item \textbf{Autoregressive Generation}: Music composition, text generation, and speech synthesis involve generating outputs where each step depends on previous ones.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_9.jpg}
+	\caption{Illustration of different sequence modeling problems and their RNN structures: One-to-One, One-to-Many, Many-to-One, and Many-to-Many.}
+	\label{fig:chapter16_rnn_types}
+\end{figure}
+
+\subsection{RNNs as a General-Purpose Sequence Model}
+
+\noindent Unlike traditional models that require a fixed input size, RNNs provide a unified architecture for handling sequences of \textbf{arbitrary length}. This flexibility allows RNNs to process short and long sequences using the same model, making them suitable for tasks ranging from speech processing to video analysis.
+
+\noindent Although RNNs are designed for sequential data, they can also be applied to \textbf{non-sequential tasks} by processing an input sequentially. For instance, instead of analyzing an image in a single forward pass, an RNN can take a series of glimpses and make a decision based on accumulated information.
+
+\subsection{RNNs for Visual Attention and Image Generation}
+
+\noindent \textbf{Recurrent Neural Networks} are traditionally used for sequence modeling, but they can also be leveraged to process images in a sequential manner. Two notable applications include:
+
+\begin{itemize}
+	\item \textbf{Visual Attention Mechanisms}: Instead of processing an entire image at once, an RNN can take a series of \emph{glimpses}, deciding where to focus next based on previous observations.
+	\item \textbf{Autoregressive Image Generation}: Instead of generating an image in one step, an RNN can incrementally refine an output, painting it sequentially over time.
+\end{itemize}
+
+\subsubsection{Visual Attention: Sequential Image Processing}
+
+\noindent A compelling use case of RNNs in non-sequential tasks is \textbf{visual attention}, where an RNN dynamically determines where to focus within an image. This approach is exemplified by \cite{ba2015_attention}, which uses an RNN to sequentially analyze different parts of an image before making a classification decision.
+
+\begin{itemize}
+	\item At each timestep, the network decides which region of the image to examine based on all previously acquired information.
+	\item This process continues over multiple timesteps, accumulating evidence before making a final classification decision.
+	\item A practical example is using RNNs for \textbf{MNIST digit classification}, where instead of viewing the full image at once, the network sequentially attends to different regions before determining the digit.
+\end{itemize}
+
+\subsubsection{Autoregressive Image Generation with RNNs}
+
+\noindent Another fascinating application of RNNs is in \textbf{image generation}, as demonstrated by \cite{gregor2015_draw}. Instead of generating an entire image in one step, the model incrementally constructs it over multiple timesteps:
+
+\begin{itemize}
+	\item The model "draws" small portions of the image sequentially, refining details at each step.
+	\item At each timestep, the RNN decides \textbf{where to modify the canvas} and \textbf{what details to add}.
+	\item This mimics the human drawing process, where an artist sequentially sketches and refines different parts of an image.
+\end{itemize}
+
+\noindent The DRAW model \cite{gregor2015_draw} exemplifies this approach, using recurrent layers to iteratively generate and improve an image.
+
+\noindent These examples illustrate that RNNs are not limited to temporal sequences—they can also be used in spatially structured tasks by treating an image as a sequence of observations or drawing steps.
+
+\subsection{Limitations of Traditional Neural Networks for Sequential Data}
+
+\noindent The inability of FC networks and CNNs to capture temporal dependencies leads to major limitations when dealing with sequential tasks. The following table highlights the key differences:
+
+\begin{table}[H]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			\textbf{Characteristic} & \textbf{FC Networks} & \textbf{CNNs} & \textbf{RNNs} \\
+			\hline
+			Handles Sequential Data & \textbf{No} & \textbf{No} & \textbf{Yes} \\
+			Shares Parameters Across Time & \textbf{No} & \textbf{No} & \textbf{Yes} \\
+			Captures Long-Term Dependencies & \textbf{No} & \textbf{No} & \textbf{Partially} (with LSTMs/GRUs) \\
+			Suitable for Variable-Length Input & \textbf{No} & \textbf{Partially} (1D CNNs) & \textbf{Yes} \\
+			\hline
+		\end{tabular}
+	}
+	\caption{Comparison of RNNs with Fully Connected and Convolutional Networks.}
+	\label{tab:rnn_vs_fc_cnn}
+\end{table}
+
+\subsection{Overview of Recurrent Neural Networks (RNNs) and Their Evolution}
+\label{sec:rnn_overview}
+
+\noindent
+Many tasks in modern machine learning involve sequential or time-dependent data, where each observation depends (often subtly) on previous inputs. Classical feedforward networks (fully connected or convolutional) assume inputs are independent and struggle to capture these temporal dependencies. \textbf{Recurrent Neural Networks (RNNs)} address this by introducing a hidden state that spans timesteps, enabling them to model sequences of arbitrary length.
+
+\subsubsection{RNN Progression: From Vanilla to Gated Units}
+\paragraph{Vanilla RNNs.}
+The simplest RNN (often called an \emph{Elman RNN}) repeatedly applies:
+\[
+\mathbf{h}_t 
+=
+\tanh\Bigl(
+\mathbf{W}_{hh}\,\mathbf{h}_{t-1}
++ 
+\mathbf{W}_{xh}\,\mathbf{x}_t
++
+\mathbf{b}
+\Bigr),
+\]
+where \(\mathbf{h}_t\) is the hidden state at time \(t\), reused for each timestep. While straightforward, \emph{vanilla RNNs} typically suffer from the \textbf{vanishing gradient problem} over long sequences \cite{bengio1994_learning, pascanu2013_difficulty}, making them impractical for tasks beyond about 10--50 timesteps unless carefully managed (e.g.\ truncated BPTT). Exploding gradients can also arise if \(\|\mathbf{W}_{hh}\|>1\) or if the activation allows unbounded growth, but gradient clipping is usually effective at tamping that down.
+
+\paragraph{Long Short-Term Memory (LSTM).}
+To improve the ability to store and retrieve information over hundreds of steps, \textbf{LSTMs} \cite{hochreiter1997_lstm} replace the purely multiplicative recurrence with \emph{additive} cell-state updates and \emph{gates} (input/forget/output). This design alleviates vanishing gradients and made LSTMs a mainstay in speech recognition, language modeling, and many other temporal tasks. However, LSTMs remain \emph{sequential}, limiting parallelization and occasionally struggling with extremely long contexts (thousands of tokens).
+
+\paragraph{Gated Recurrent Units (GRUs).}
+\textbf{GRUs} \cite{cho2014_gru} simplify the LSTM by merging the forget and input gates, creating a single “update” gate and reducing parameter count. They typically match LSTM performance on moderate sequences and are less expensive to train, making them popular in embedded or resource-limited environments. However, some tasks may benefit from the extra flexibility that LSTM gating provides.
+
+\paragraph{Bidirectional RNNs.}
+All these RNN cells (vanilla, LSTM, GRU) can be made \emph{bidirectional}, processing data forward and backward to capture future context (in tasks where the entire sequence is available). This helps with tasks like text classification or named entity recognition but is unsuitable for real-time streaming since you cannot see the “future” data during inference.
+
+\subsubsection{Motivation Toward Transformers}
+Despite gating solutions, RNNs process one timestep at a time, preventing parallel GPU usage across time. Moreover, the hidden state vector remains a fixed-size representation of all prior context, which can lead to capacity issues for extremely large sequences. Recently, \textbf{Transformer} architectures \cite{vaswani2017_attention} replaced recurrence with a self-attention mechanism allowing parallel processing of sequences in one step. Transformers excel at capturing long-range dependencies and have become the default approach for large-scale language tasks, even though:
+\begin{itemize}
+	\item The self-attention step is memory-intensive, scaling as \(O(T^2)\) with sequence length \(T\).
+	\item Generation (\emph{autoregressive}) typically remains token-by-token, and each new token requires re-running self-attention across the entire (growing) context, making it potentially slow for extremely long outputs.
+	\item Ongoing research includes \emph{speculative decoding} \cite{yao2022_improving} and \emph{non-autoregressive} approaches \cite{gu2018_nonautoregressive}, aiming to generate outputs more efficiently.
+\end{itemize}
+
+\subsubsection{Bridging to Detailed Explanations}
+In the next sections, we will:
+\begin{itemize}
+	\item Start with a deep dive into \textbf{vanilla RNNs}, detailing their mathematical formulation, \emph{backpropagation through time (BPTT)}, and the severe \emph{vanishing gradient} issue that arises in long sequences.
+	\item Introduce \textbf{LSTM} and \textbf{GRU} architectures, explaining how their gating mechanisms mitigate vanishing gradients and yield better performance on moderate-length tasks, while noting the sequential nature remains.
+	\item Finally, discuss \textbf{Transformers}, describing their self-attention parallelism, advantages for modeling very long contexts, and trade-offs (e.g.\ memory cost, slower autoregressive generation if the sequence is large, partial solutions like chunking or parallel decoding).
+\end{itemize}
+By following this evolutionary path—vanilla RNN \(\to\) LSTM/GRU \(\to\) Transformers—the primary downsides at each stage become clear, as do the techniques that address them. We start with \textbf{vanilla RNNs} because they establish the fundamental ideas of \emph{hidden states} and \emph{recurrent updates}, upon which the later gating and attention mechanisms are built.
+
+\section{Recurrent Neural Networks (RNNs) - How They Work} 
+\label{sec:chapter16_rnn_how_it_works}
+
+\noindent Recurrent Neural Networks (RNNs) process sequential data by maintaining an \textbf{internal state} that evolves over time. Unlike feedforward neural networks that process inputs independently, RNNs retain memory through recurrent connections, enabling them to model dependencies across time steps. 
+
+\noindent At each timestep \( t \), a new input \( x_t \) is provided to the RNN. The network updates its hidden state \( h_t \) based on both the current input and the previous hidden state \( h_{t-1} \), producing an output \( y_t \):
+\[
+h_t = f_W(h_{t-1}, x_t),
+\]
+where \( f_W \) is the recurrence function, typically a non-linear function such as \(\tanh\). A key property of RNNs is that the \textbf{same function and parameters} are used at every time step. The weights \( W \) are shared across all time steps, allowing the model to process sequences of arbitrary length.
+
+\noindent Expanding this, a simple or "vanilla" RNN is formally defined as:
+\[
+h_t = \tanh(W_{hh}h_{t-1} + W_{xh}x_t + b),
+\]
+\[
+y_t = W_{hy}h_t.
+\]
+This architecture, sometimes called a \textbf{vanilla RNN} or \textbf{Elman RNN} after Prof. Jeffrey Elman, efficiently processes sequences by applying the same weight matrices repeatedly. \textbf{Note: we'll often omit the bias from the notation for simplicity, but don't forget it when you implement RNNs.}
+
+\subsection{RNN Computational Graph}
+\label{sec:chapter16_rnn_computational_graph}
+
+\noindent Since RNNs process sequences iteratively, we can represent their computation graph by unrolling the network over time. The computational graph depends on how inputs and outputs are structured, leading to different sequence processing scenarios.
+
+\subsubsection{Many-to-Many}
+
+\noindent In a \textbf{many-to-many} setup, an RNN processes a sequence of inputs and generates a sequence of outputs. Each hidden state depends on the previous state and the current input:
+\[
+h_t = f_W(h_{t-1}, x_t), \quad y_t = W_{hy}h_t.
+\]
+
+\noindent The initial hidden state \( h_0 \) is typically initialized as a zero vector or sampled from a normal distribution. However, in some architectures, \( h_0 \) is treated as a learnable parameter, allowing it to be optimized during training. This can be beneficial when early time steps contain little useful information.
+
+\noindent The network processes each input sequentially:
+\begin{itemize}
+	\item \( x_1 \) is combined with \( h_0 \) using \( f_W \), producing \( h_1 \) and output \( y_1 \).
+	\item \( h_1 \) is used with \( x_2 \) to compute \( h_2 \), which generates \( y_2 \).
+	\item This process repeats until reaching the final time step \( T \).
+\end{itemize}
+
+\noindent Since the same weight matrix is reused at every time step, the computational graph is \textbf{unrolled} for as long as the sequence continues. During backpropagation, gradients must be summed across all timesteps (As we use the same node in multiple parts of the computation graph).
+
+\noindent Training an RNN involves applying a loss function at each timestep:
+\[
+L = \sum_{t=1}^{T} L_t,
+\]
+where \( L_t \) is the loss at time \( t \). The summed loss is then used for backpropagation.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_24.jpg}
+	\caption{RNN Computational Graph for Many-to-Many Processing.}
+	\label{fig:chapter16_rnn_many_to_many}
+\end{figure}
+
+\subsubsection{Many-to-One}
+
+\noindent Some tasks require processing a sequence of inputs but generating only a single output at the final time step. This \textbf{many-to-one} setting is common in applications such as video classification, where the entire sequence is used to predict one label.
+
+\noindent Instead of computing outputs at each timestep, the RNN produces a final output at step \( T \), based on the last hidden state \( h_T \):
+\[
+y = W_{hy}h_T.
+\]
+\noindent The loss function is then computed using only the final output \( y_T \), such as cross-entropy (CE) loss for classification.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_25.jpg}
+	\caption{RNN Computational Graph for Many-to-One Processing.}
+	\label{fig:chapter16_rnn_many_to_one}
+\end{figure}
+
+\noindent This structure is particularly useful when the full context of the sequence is needed to make an informed decision, such as recognizing an action from a video or predicting sentiment from a passage of text.
+
+\subsubsection{One-to-Many}
+
+\noindent In contrast, \textbf{one-to-many} architectures take a single input and generate a sequence of outputs. This is commonly used in generative tasks such as image captioning, where the network produces a sequence of words based on an input image.
+
+\noindent The RNN is initialized with an input \( x \) and generates outputs iteratively:
+\[
+h_1 = f_W(h_0, x), \quad y_1 = W_{hy}h_1.
+\]
+\noindent The output \( y_1 \) is then fed as input at the next timestep:
+\[
+h_2 = f_W(h_1, y_1), \quad y_2 = W_{hy}h_2.
+\]
+
+\noindent The sequence continues until a special \textbf{END token} is produced, signaling termination.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_26.jpg}
+	\caption{RNN Computational Graph for One-to-Many Processing.}
+	\label{fig:chapter16_rnn_one_to_many}
+\end{figure}
+
+\noindent The network must learn to balance sequential coherence while ensuring that the generated sequence remains contextually relevant.
+
+\subsection{Seq2Seq: Sequence-to-Sequence Learning}
+\label{sec:chapter16_seq2seq}
+
+\noindent Many real-world problems involve transforming one sequence into another, often with differing lengths. A common example is \textbf{machine translation}, where an input sequence (e.g., a sentence in English) is converted into an output sequence (e.g., its French translation). Since different languages follow distinct syntactic structures, the model must effectively handle input-output sequences of varying lengths.
+
+\noindent To address this challenge, \textbf{Sequence-to-Sequence (Seq2Seq)} models \cite{sutskever2014_seq2seq} leverage two Recurrent Neural Networks:
+
+\begin{itemize}
+	\item \textbf{Encoder (Many-to-One)}: Processes the input sequence and encodes it into a fixed-dimensional hidden state \( h_T \).
+	\item \textbf{Decoder (One-to-Many)}: Uses the encoded hidden state \( h_T \) as its initial input and iteratively generates an output sequence.
+\end{itemize}
+
+\noindent The formal process follows:
+
+\begin{enumerate}
+	\item The \textbf{encoder} RNN processes the input sequence \( x_1, x_2, \dots, x_T \), updating its hidden state at each step and producing a final representation:
+	\[
+	h_t = f_W(h_{t-1}, x_t)
+	\]
+	where \( f_W \) represents the encoder’s recurrence function with its learned weight matrices.
+	\item The final hidden state \( h_T \) is passed to the \textbf{decoder} RNN, which generates outputs sequentially:
+	\[
+	h'_t = f_{W_D}(h'_{t-1}, y_{t-1})
+	\]
+	\[
+	y_t = W_{hy}h'_t
+	\]
+	where \( f_{W_D} \) represents the decoder’s recurrence function, distinct from the encoder, with its own set of learned weight matrices.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Chapter_16/slide_28.jpg}
+	\caption{Computational graph of the Sequence-to-Sequence model. The encoder processes the input sequence, producing a final hidden state \( h_T \), which initializes the decoder. The decoder then generates the output sequence step by step.}
+	\label{fig:chapter16_seq2seq_computational_graph}
+\end{figure}
+
+\noindent The decoder generates words iteratively, using the previously generated word as input for the next timestep. This process continues until a special \textbf{END token} is generated, signaling the termination of the output sequence.
+
+\newpage
+\subsubsection{Significance of Seq2Seq Models}
+
+\noindent Seq2Seq models extend the capabilities of RNNs, enabling them to handle complex input-output mappings for various applications:
+
+\begin{itemize}
+	\item \textbf{Machine Translation}: Converting text between languages (e.g., English to French).
+	\item \textbf{Speech Recognition}: Transcribing spoken words into written text.
+	\item \textbf{Text Summarization}: Extracting key information from lengthy documents.
+	\item \textbf{Conversational AI}: Generating responses in chatbot systems.
+\end{itemize}
+
+\noindent While Seq2Seq models provide a powerful framework for sequence transformation, they rely on a single fixed-length hidden state \( h_T \) to encode the entire input sequence. This can lead to information loss, particularly for long sequences, where early inputs may fade in importance as the sequence grows. Addressing this challenge is crucial for improving language modeling and sequence generation tasks.
+
+\noindent Before introducing more advanced mechanisms like \textbf{attention} and \textbf{transformers}, we first examine how recurrent architectures can be improved with \textbf{gated units}, such as Long Short-Term Memory (LSTM) networks and Gated Recurrent Units (GRUs). These architectures introduce specialized gating mechanisms that help mitigate vanishing gradients and improve the ability of RNNs to model long-range dependencies.
+
+\noindent The next section will introduce the fundamentals of \textbf{language modeling}, a key application of Seq2Seq models, followed by a discussion on \textbf{backpropagation through time (BPTT)}, the learning algorithm used for training recurrent networks. As we progress, we will explore how gating mechanisms improve RNN performance, setting the stage for later advancements, including \textbf{attention mechanisms} and \textbf{transformers}, which further refine sequence modeling and generation.
+
+\section{Example Usage of Seq2Seq: Language Modeling}
+\label{sec:chapter16_seq2seq_language_model}
+
+\noindent A concrete example of how RNNs function in practice is in building a \textbf{language model} that processes a continuous stream of input data and, at each time step, predicts the next character in the sequence.
+
+\noindent This model allows the RNN to estimate the probability of character sequences in a language, making it useful for applications such as text generation, autocomplete systems, and speech recognition.
+
+\subsection{Formulating the Problem}
+
+\noindent Given characters \( x_1, x_2, \dots, x_{t-1} \), the model predicts \( x_t \), the next character in the sequence. Since text is inherently sequential, this formulation naturally aligns with the structure of RNNs.
+
+\noindent The network processes input characters step by step:
+\[
+h_t = \tanh(W_{hh}h_{t-1} + W_{xh}x_t + b)
+\]
+
+\noindent Specifically, for the first character in the sequence:
+\[
+h_1 = \tanh(W_{hh}h_{0} + W_{xh}x_1 + b)
+\]
+
+\noindent The predicted output at each step is computed as:
+\[
+y_t = W_{hy}h_t
+\]
+
+\noindent The probability distribution over possible next characters is obtained using a softmax function over \( y_t \).
+
+\subsection{One-Hot Encoding of Input Characters}
+
+\noindent In practice, a fixed vocabulary of known characters is used, and each input is represented via \textbf{one-hot encoding}. For example, given the vocabulary \{h, e, l, o\} and training sequence "hello," the one-hot vectors are:
+
+\[
+\text{'h'} \rightarrow [1\; 0\; 0\; 0]^T, \quad
+\text{'e'} \rightarrow [0\; 1\; 0\; 0]^T, \quad
+\text{'l'} \rightarrow [0\; 0\; 1\; 0]^T, \quad
+\text{'o'} \rightarrow [0\; 0\; 0\; 1]^T
+\]
+
+\subsubsection{Advantages of One-Hot Encoding}
+
+\begin{itemize}
+	\item \textbf{Consistent and Fixed-Length Representation:} Ensures uniform encoding across all characters, simplifying processing since all input vectors maintain the same fixed length.
+	\item \textbf{Eliminates Arbitrary Numerical Biases:} Prevents misleading relationships that could arise if numeric values were assigned to characters. For example, assigning 'A' = 1 and 'B' = 2 implies an artificial proximity between them, which does not necessarily hold in a linguistic context. Similarly, 'B' might appear more important than 'A' simply because its assigned value is larger. One-hot encoding avoids these unintended biases.
+	\item \textbf{Efficient Sparse Representation:} Since only a single index is active per vector, computations become more efficient. Matrix multiplications involving one-hot vectors effectively reduce to selecting specific columns of a weight matrix, minimizing redundant computations.
+	\item \textbf{Facilitates Independent Character Learning:} One-hot encoding treats characters as independent entities, allowing the model to learn meaningful relationships rather than imposing predefined associations.
+	\item \textbf{Enables Embedding Layers for Richer Representations:} While one-hot encoding provides a simple representation, it serves as a foundation for embedding layers, which can map characters to dense vectors that capture more complex relationships. We will explore this in greater detail later.
+\end{itemize}
+
+\subsection{Processing the First Character}
+
+\noindent Initially, the input vector corresponds to the letter "h," the first character in the sequence "hello." The hidden state \( h_0 \) and input \( x_1 \) are processed using \( f_W \), producing \( h_1 \):
+
+\[
+h_1 = [0.3, -0.1, 0.9]^T
+\]
+
+\noindent The predicted output is computed as:
+\[
+y_1 = W_{hy}h_1
+\]
+
+\noindent which might yield:
+\[
+y_1 = [1.0, 2.2, -3.0, 4.1]^T
+\]
+
+\noindent Applying \textbf{argmax} (or softmax) selects the highest probability character, which in this case is "e," the correct next character.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_32.jpg}
+	\caption{Processing the first letter in "hello" and predicting "e" as the next character.}
+	\label{fig:chapter16_rnn_language_model_step}
+\end{figure}
+
+\subsection{Computing Loss Across Time Steps}
+
+\noindent At each time step \( t \), the model produces an output \( y_t \), representing the predicted probability distribution over possible next characters. The loss is computed by comparing \( y_t \) with the ground truth character \( x_{t+1} \) from the training sequence, except for the last time step:
+
+\[
+L_t = \text{CrossEntropy}(y_t, x_{t+1}), \quad \text{for } t = 1, 2, \dots, T-1
+\]
+
+\noindent Since there is no ground truth character \( x_{T+1} \) for the final output \( y_T \), the model does not compute a loss for \( y_T \) directly. Instead, the sequence training typically assumes a special \textbf{END token} at step \( T \) to signal termination.
+
+\noindent The total loss over the sequence is:
+\[
+L = \sum_{t=1}^{T-1} L_t
+\]
+
+\noindent This ensures that the model learns to predict the next character at each step while handling sequence termination correctly.
+
+\subsection{Generating Text with a Trained RNN}
+
+\noindent Once trained, the language model can generate text by sampling one character at a time and feeding each prediction back as input. At test time, the model is initialized with a \textbf{START token} and recursively generates characters:
+
+\[
+h_1 = f_W(h_0, \text{START}), \quad y_1 = W_{hy}h_1
+\]
+
+\noindent The predicted character is then used as input at the next step:
+\[
+h_2 = f_W(h_1, y_1), \quad y_2 = W_{hy}h_2
+\]
+
+\noindent This iterative process continues until a \textbf{STOP token} is predicted, marking the end of generation.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_40.jpg}
+	\caption{Generating text by feeding back each predicted character as input.}
+	\label{fig:chapter16_rnn_text_generation}
+\end{figure}
+
+\subsection{Using an Embedding Layer for Character Inputs}
+
+\noindent It's important to note that instead of directly using one-hot encodings, many models incorporate an \textbf{embedding layer}, which transforms high-dimensional one-hot vectors into dense representations of fixed size \( D \):
+
+\[
+\mathbf{e}_t = \text{Embedding}(x_t), \quad h_t = f_W(h_{t-1}, \mathbf{e}_t)
+\]
+
+\noindent The embedding layer offers several advantages:
+
+\begin{itemize}
+	\item \textbf{Learns Meaningful Relationships}: One-hot encodings treat all characters as equidistant, ignoring linguistic patterns. Embeddings allow the model to learn similarities (e.g., vowels may be closer in representation, and frequently paired letters like ‘th’ or ‘st’ may cluster together).
+	\item \textbf{Improves Learning and Generalization}: Without embeddings, the model must learn relationships from scratch using large weight matrices. Embeddings provide a continuous space where similar inputs have similar features, improving generalization.
+	\item \textbf{Possibly Reduces Dimensionality and Computational Cost}: One-hot vectors scale with vocabulary size (e.g., 26 for letters, thousands for words), leading to large weight matrices. Embeddings can map them into a lower-dimensional space (e.g., 26 \(\rightarrow\) 16), reducing parameters and improving efficiency (dependent, of course, on the chosen embedding dimension D).
+\end{itemize}
+
+\noindent These benefits make character-based RNNs more structured, efficient, and capable of capturing language patterns beyond what raw one-hot encodings allow.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_41.jpg}
+	\caption{RNN architecture incorporating an embedding layer for character inputs.}
+	\label{fig:chapter16_rnn_embedding_layer}
+\end{figure}
+
+\subsection{Conclusion and Next Steps}
+
+\noindent This example illustrates how RNNs process sequential data for next-character prediction. By encoding text into numerical representations and leveraging recurrent processing, the model can generate coherent text. 
+
+\noindent However, training RNNs presents challenges, particularly in how gradients propagate through time. The next section will introduce \textbf{Backpropagation Through Time (BPTT)}, the key algorithm used to train RNNs by unrolling them over sequences. We will then explore the effects of different activation functions, such as \textbf{tanh vs. ReLU}, before examining the diverse tasks RNNs can solve. Finally, we will introduce \textbf{LSTMs and GRUs}, which address the limitations of standard RNNs by mitigating vanishing gradients and improving long-range dependencies.
+
+\section{Backpropagation Through Time (BPTT)}
+\label{sec:chapter16_bptt}
+
+\noindent
+In a Recurrent Neural Network (RNN), the hidden state at each time step depends on the previous hidden state, creating \emph{temporal} connections that expand into a deep computational graph when unrolled. Training an RNN thus requires computing gradients not only through \emph{layers} (as in feedforward networks) but also \emph{through time}. This process is known as \textbf{Backpropagation Through Time (BPTT)}.
+
+\subsection{Mathematical Formulation of BPTT and Memory Constraints}
+\label{sec:chapter16_bptt_math}
+
+\noindent Consider an RNN processing an input sequence of length \( T \). The hidden states evolve as:
+\[
+\mathbf{h}_t = f_W(\mathbf{h}_{t-1}, \mathbf{x}_t),
+\]
+where \( f_W \) is a function parameterized by weight matrices \( \mathbf{W}_{hh}, \mathbf{W}_{xh} \), and biases. The network produces outputs \( y_t \) at each step, with an associated loss function \( \mathcal{L}_t \). The total loss is given by:
+\[
+\mathcal{L} = \sum_{t=1}^{T} \mathcal{L}_t.
+\]
+
+\noindent The gradient with respect to \( \mathbf{W} \) (which includes all trainable parameters) follows from the linearity of differentiation:
+\[
+\frac{\partial \mathcal{L}}{\partial \mathbf{W}} = \sum_{t=1}^{T} \frac{\partial \mathcal{L}_t}{\partial \mathbf{W}}.
+\]
+
+\noindent However, since each \(\mathcal{L}_t\) depends on all prior hidden states through recurrence, the chain rule must be applied recursively:
+\[
+\frac{\partial \mathcal{L}_t}{\partial \mathbf{W}} =
+\frac{\partial \mathcal{L}_t}{\partial \mathbf{h}_t}
+\cdot
+\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}
+\cdot
+\frac{\partial \mathbf{h}_{t-1}}{\partial \mathbf{h}_{t-2}}
+\cdots
+\frac{\partial \mathbf{h}_2}{\partial \mathbf{h}_1}
+\cdot
+\frac{\partial \mathbf{h}_1}{\partial \mathbf{W}}.
+\]
+
+\noindent More compactly, this is written as:
+\[
+\frac{\partial \mathcal{L}_t}{\partial \mathbf{W}}
+\;\;\;\propto\;\;\;
+\prod_{k=t+1}^{T} 
+\frac{\partial \mathbf{h}_k}{\partial \mathbf{h}_{k-1}}.
+\]
+
+\noindent This recursive dependency results in two well-known numerical issues:
+
+\begin{description}
+	\item[Vanishing Gradients:] If \( \left\|\frac{\partial h_k}{\partial h_{k-1}}\right\| < 1 \), repeated multiplications shrink the gradient exponentially, making learning long-range dependencies difficult \cite{bengio1994_learning}.
+	\item[Exploding Gradients:] If \( \left\|\frac{\partial h_k}{\partial h_{k-1}}\right\| > 1 \), the gradients can grow exponentially, leading to unstable training \cite{pascanu2013_difficulty}.
+\end{description}
+
+\noindent As the sequence length \( T \) increases, unrolling the computational graph over all timesteps significantly increases memory usage. Storing all hidden states and intermediate activations requires \( O(T) \) memory, which is infeasible for long sequences. This limitation motivates an approximation called \textbf{truncated BPTT}.
+
+\subsection{Truncated Backpropagation Through Time}
+\label{sec:chapter16_truncated_bptt}
+
+\noindent To handle large or unbounded sequences, \textbf{Truncated BPTT} limits the number of timesteps over which gradients are propagated. Instead of backpropagating through the entire sequence, training is performed in smaller segments of length \( \tau \):
+
+\begin{enumerate}
+	\item \textbf{Process the first chunk (\( t = 1, \dots, \tau \))}: Perform forward and backward passes within this window, then update parameters.
+	\item \textbf{Shift the window forward}: Carry over the final hidden state \( h_{\tau} \) as the initialization for the next chunk (\( t = \tau+1, \dots, 2\tau \)).
+	\item \textbf{Repeat for subsequent chunks until the sequence is processed}.
+\end{enumerate}
+
+\noindent This approach balances computational efficiency and sequence modeling by:
+\begin{itemize}
+	\item \textbf{Reducing memory requirements} since only \( \tau \) timesteps are backpropagated at once.
+	\item \textbf{Introducing truncation error}, as dependencies longer than \( \tau \) steps are not fully backpropagated.
+\end{itemize}
+
+\subsubsection{Loss Processing in Truncated BPTT}
+\label{sec:chapter16_truncated_loss}
+
+\noindent The total loss in truncated BPTT is typically computed by summing the loss across all segments:
+
+\[
+\mathcal{L} = \sum_{s=1}^{S} \sum_{t=(s-1)\tau+1}^{s\tau} \mathcal{L}_t,
+\]
+
+\noindent where \( S \) is the number of segments in the sequence. Alternatively, some implementations average the loss per segment:
+\[
+\mathcal{L} = \frac{1}{S} \sum_{s=1}^{S} \sum_{t=(s-1)\tau+1}^{s\tau} \mathcal{L}_t.
+\]
+
+\noindent The key downside of truncated BPTT is the \textbf{truncation error}: since gradients do not flow beyond \( \tau \) steps, long-range dependencies beyond the truncated segment are not properly learned. This makes it difficult for the model to capture relationships spanning multiple segments.
+
+\subsection{Why BPTT Fails for Long Sequences}
+\label{sec:chapter16_bptt_failures}
+
+\noindent Even when gradient clipping mitigates exploding gradients, and techniques like LSTMs/GRUs reduce vanishing gradients, BPTT still struggles with long sequences due to the fundamental nature of the RNN hidden state:
+
+\begin{itemize}
+	\item \textbf{Fixed Hidden State Size:} The hidden state \( h_t \) is a fixed-size vector, independent of the sequence length. Even if gradients propagate correctly, there is a limit to how much information can be stored in a fixed-dimensional space.
+	\item \textbf{Loss of Distant Dependencies:} Because information must be compressed into a single hidden state at each timestep, earlier timesteps may be "overwritten" by more recent inputs.
+	\item \textbf{Computational Inefficiency:} BPTT requires sequential processing, preventing the parallelization seen in modern architectures like Transformers.
+\end{itemize}
+
+\noindent These limitations motivate alternative architectures such as LSTMs, GRUs, and Transformers, which address these issues in different ways. In the next section, we analyze the role of activation functions in RNNs, particularly why \(\tanh\) remains a preferred choice over ReLU variants.
+
+\section{Why RNNs Use \textit{tanh} Instead of ReLU}
+\label{sec:chapter16_why_tanh_rnns}
+
+\noindent
+Although ReLU-based activations (ReLU6, Leaky ReLU, GeLU, etc.) have improved training stability in deep feedforward networks, classical recurrent neural networks (RNNs) still commonly use the \(\tanh\) activation. This section explains why the repeated application of the same parameter matrix \(\mathbf{W}_{hh}\) in an RNN makes unbounded activations (e.g., ReLU) prone to \textbf{exploding gradients}, while \(\tanh\) is prone to \textbf{vanishing gradients}. Throughout this chapter we will thoroughly explain why despite its limitations, \(\tanh\) remains more reliable for short to medium-length sequences.
+
+\subsection{Recurrent Computation and Gradient Behavior}
+\label{sec:chapter16_single_layer_rnn}
+
+\noindent
+Consider a standard RNN, where the hidden state \(\mathbf{h}_t\) at timestep \(t\) is computed by
+\[
+\mathbf{h}_t
+=
+\phi\!\Bigl(
+\mathbf{W}_{hh}\,\mathbf{h}_{t-1}
++
+\mathbf{W}_{xh}\,\mathbf{x}_t
++
+\mathbf{b}
+\Bigr),
+\]
+with \(\phi(\cdot)\) typically being \(\tanh\) or ReLU, and where \(\mathbf{W}_{hh}\) is reused (the same at every timestep). This design—unlike feedforward networks that have distinct weights \(\mathbf{W}^{(\ell)}\) per layer—applies \(\mathbf{W}_{hh}\) repeatedly across time, which has major implications for hidden state magnitudes and gradient flow.
+
+\subsubsection{Repeated Multiplication and the Hidden State}
+\noindent
+Because the same recurrent matrix \(\mathbf{W}_{hh}\) is applied at each timestep, the effective computation unrolls as:
+\[
+\mathbf{h}_T 
+= 
+\phi\!\Bigl(
+\mathbf{W}_{hh} \,\mathbf{h}_{T-1} 
++ \mathbf{b}
+\Bigr)
+= 
+\phi\!\Bigl(
+\mathbf{W}_{hh}\,\bigl(\phi(\mathbf{W}_{hh}\,\mathbf{h}_{T-2}+\mathbf{b})\bigr)
++\mathbf{b}
+\Bigr),
+\]
+which, when fully expanded over \(T\) steps, yields:
+\[
+\mathbf{h}_T
+=
+\phi\Bigl(
+\mathbf{W}_{hh}^T \,\mathbf{h}_0
+\;+\;
+\sum_{k=0}^{T-1}
+\mathbf{W}_{hh}^k \Bigl(\mathbf{W}_{xh}\,\mathbf{x}_{T-k} + \mathbf{b}\Bigr)
+\Bigr).
+\]
+
+\paragraph{Spectral Properties of \(\mathbf{W}_{hh}\).} 
+The repeated multiplication \(\mathbf{W}_{hh}^k\) governs hidden state growth or decay:
+
+\begin{itemize}
+	\item If \(\mathbf{W}_{hh}\) has an eigenvalue \(\lambda_{\max}\) such that \(|\lambda_{\max}| > 1\), then \(\mathbf{W}_{hh}^k\) grows exponentially with \(k\). This leads to \textbf{exploding hidden states}, which in turn cause exploding gradients.
+	\item If all eigenvalues satisfy \(|\lambda_{\max}| < 1\), then \(\mathbf{W}_{hh}^k\) decays exponentially, resulting in \textbf{vanishing hidden states} and consequently vanishing gradients over long sequences.
+\end{itemize}
+
+\noindent Proper initialization strategies, aiming for \(|\lambda_{\max}| \approx 1\), can help mitigate these issues. Additionally, the choice of activation function plays a crucial role in regulating hidden state growth and preventing instability.
+
+\subsubsection{How Large or Small States Affect Gradients}
+\noindent
+During backpropagation, the influence of an earlier hidden state \(\mathbf{h}_t\) on the final loss \(\mathcal{L}\) is:
+
+\[
+\frac{\partial \mathcal{L}}{\partial \mathbf{h}_t}
+=
+\frac{\partial \mathcal{L}}{\partial \mathbf{h}_T}
+\prod_{j=t}^{T-1}
+\frac{\partial \mathbf{h}_{j+1}}{\partial \mathbf{h}_j},
+\]
+where
+\[
+\frac{\partial \mathbf{h}_{j+1}}{\partial \mathbf{h}_j}
+=
+\phi'\!\Bigl(
+\mathbf{W}_{hh} \,\mathbf{h}_j 
++ \mathbf{W}_{xh}\,\mathbf{x}_j 
++ \mathbf{b}
+\Bigr) 
+\;\mathbf{W}_{hh}.
+\]
+Unrolling from \(t\) to \(T\) yields a product of Jacobians:
+\[
+\frac{\partial \mathcal{L}}{\partial \mathbf{h}_t}
+=
+\frac{\partial \mathcal{L}}{\partial \mathbf{h}_T}
+\;\;
+\prod_{j=t}^{T-1}
+\Bigl[
+\phi'\bigl(\mathbf{W}_{hh}\,\mathbf{h}_j + \mathbf{W}_{xh}\,\mathbf{x}_j + \mathbf{b}\bigr)
+\;\mathbf{W}_{hh}
+\Bigr].
+\]
+If \(\left| \lambda_{\max}(\mathbf{W}_{hh}) \right| > 1\) and \(\phi'(x) \approx 1\) (as with ReLU on positive states), repeated multiplication amplifies gradients exponentially. Conversely, if \(\left| \lambda_{\max} \right| < 1\), gradients can vanish for earlier timesteps.
+
+\paragraph{Effect of Activation Function}
+For ReLU, the derivative is 1 for \(x>0\), so large positive hidden states perpetuate large gradients. If states are negative, the derivative is 0, further compounding vanishing. In contrast, \(\tanh\) has a derivative \(\phi'(x)=1-\tanh^2(x)\le1\), which more effectively moderates gradient magnitude. We'll now explore the mathematical rationale behind \(\tanh\) and why in most cases it is considered the go-to activation function for RNNs.
+
+\subsection{Mathematical Rationale for \textit{tanh} in RNNs}
+\label{sec:chapter16_tanh_stability}
+
+\noindent The \(\tanh\) activation function, defined as:
+\[
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}},
+\]
+has properties that contribute to \textbf{stability} in RNNs. Unlike ReLU, which is unbounded, \(\tanh\) restricts activations to \((-1,1)\), preventing runaway hidden state growth.
+
+\subsubsection{How \textit{tanh} Prevents Exploding Gradients}
+\begin{itemize}
+	\item \textbf{Bounded Outputs:}  
+	Since \(\tanh(x) \in (-1,1)\), hidden states do not grow uncontrollably. This naturally mitigates \textbf{exploding gradients} in deep unrolled RNNs \cite{pascanu2013_difficulty}.
+	
+	\item \textbf{Derivative Control:}  
+	The derivative of \(\tanh\) is:
+	\[
+	\frac{d}{dx} \tanh(x) = 1 - \tanh^2(x),
+	\]
+	which is always \(\leq 1\). This ensures that when gradients are backpropagated through multiple timesteps, they do not multiply by large values, unlike ReLU, where derivatives remain 1 for positive inputs.
+	
+	\item \textbf{Zero-Centered Activation:}  
+	Unlike ReLU, which produces only nonnegative outputs, \(\tanh\) is symmetric around zero. This allows the hidden state to encode both positive and negative values, preventing repeated positive feedback loops.
+\end{itemize}
+
+\noindent However, while \(\tanh\) prevents runaway growth, it does not prevent the \textbf{vanishing gradient problem}, where long-term dependencies become harder to learn due to saturation.
+
+\subsection{Why ReLU6 or Leaky ReLU Are Not a Full Remedy}
+\label{sec:chapter16_relu_variants_rnn_issues}
+
+\noindent Given that standard ReLU is prone to \textbf{exploding gradients} in RNNs (as discussed in ~\ref{sec:chapter16_single_layer_rnn}) due to its unbounded nature, while \(\tanh\) is prone to \textbf{vanishing gradients} over long sequences, alternative activation functions such as \textbf{ReLU6} and \textbf{Leaky ReLU} have been proposed as potential mitigations. However, while they address certain issues, they do not fully resolve the fundamental problems of RNN stability.
+
+\paragraph{ReLU6: The Saturation Issue}
+\noindent ReLU6 modifies standard ReLU by introducing an upper bound, restricting activations to a fixed range:
+\[
+\phi(x) = \min(\max(0, x),6).
+\]
+The rationale behind considering ReLU6 is that, by capping the activation at 6, it prevents unbounded growth, which is the core issue in ReLU-based RNNs that causes exploding gradients. However, this clamping introduces a new problem: once activations reach the saturation limit, their gradient becomes zero:
+\[
+\frac{d}{dx} \phi(x) = 0, \quad \text{for } x > 6.
+\]
+This results in a \textbf{loss of representational capacity}, as neurons stuck at 6 no longer respond to input changes. In an RNN, if hidden states frequently reach this saturation point, they can remain locked in place, severely limiting the ability of the network to learn and adapt over time.
+
+\paragraph{Leaky ReLU: A Partial Fix with Remaining Instability}
+\noindent Leaky ReLU attempts to address one of ReLU's key weaknesses—the "dying ReLU" problem—by allowing small negative slopes for negative inputs:
+\[
+\phi(x) = \begin{cases}
+	x, & x > 0 \\
+	\alpha x, & x < 0.
+\end{cases}
+\]
+The motivation behind Leaky ReLU in RNNs is that it does not saturate like \(\tanh\) (avoiding strong vanishing gradients), and it prevents neurons from becoming permanently inactive. Additionally, unlike ReLU, its derivative is not always 1 for positive values, which reduces the risk of the recurrent Jacobian product growing uncontrollably when the spectral norm of \( \mathbf{W}_{hh} \) is close to or greater than 1.
+
+\noindent However, while Leaky ReLU alleviates some concerns, it remains unbounded for positive values. If hidden states are consistently positive across timesteps, they can still accumulate and lead to \textbf{exploding gradients}, especially if \( \mathbf{W}_{hh} \) has an eigenvalue slightly larger than 1. Thus, while Leaky ReLU may provide a minor improvement in training stability over standard ReLU, it does not fundamentally resolve the recurrent multiplication issue that leads to instability in RNNs.
+
+\subsection{Why Gradient Clipping Alone is Insufficient}
+\label{sec:chapter16_gradient_clipping_limitations}
+
+\noindent Gradient clipping \cite{pascanu2013_difficulty} is a widely used method for controlling exploding gradients in RNNs. It limits the norm of the gradient update as follows:
+\[
+\nabla_t = \frac{\nabla_t}{\max(1, \frac{\|\nabla_t\|}{c})},
+\]
+where \( c \) is a predefined threshold.
+
+\paragraph{Clipping Does Not Prevent Hidden State Growth}
+\begin{itemize}
+	\item While clipping ensures that gradient updates do not exceed a certain threshold, it does not prevent hidden states from growing excessively during the forward pass, meaning activations can still reach unstable magnitudes.
+	\item If gradient clipping is applied frequently, it reduces the effective step size of parameter updates, slowing down learning and making optimization inefficient.
+	\item If hidden states are large but gradients are clipped, the model may struggle to meaningfully adjust its parameters, as the backpropagated signal is artificially limited rather than addressing the root cause of instability.
+\end{itemize}
+
+\noindent This limitation reinforces why \textbf{activation choice is crucial} in RNNs. While ReLU-based activations (including ReLU6 and Leaky ReLU) remain susceptible to exploding gradients, and \(\tanh\) can suffer from vanishing gradients, more robust solutions such as \textbf{gated architectures} (LSTM, GRU) explicitly regulate state updates, reducing dependency on activation functions alone.
+
+In the next sections, we'll cover some examples demonstrating the strengths and limitations of Vanilla RNNs, and explore  \textbf{LSTM} and \textbf{GRU} networks in detail.
+
+\newpage
+\section{Example Usages of Recurrent Neural Networks}
+\label{sec:chapter16_rnn_examples}
+
+\noindent Recurrent Neural Networks (RNNs) are widely used in various sequential tasks, particularly in text processing and generation. With modern deep learning frameworks such as PyTorch, implementing an RNN requires only a few lines of code, allowing researchers and practitioners to train language models on large text corpora efficiently. In this section, we explore notable applications of RNNs, starting with text-based tasks, including text generation and analyzing what representations RNNs learn from data.
+
+\subsection{RNNs for Text-Based Tasks}
+\label{sec:chapter16_rnn_text_tasks}
+
+\noindent One of the most intriguing applications of RNNs is \textbf{text generation}. By training an RNN on a large corpus of text, the model learns to predict the next character or word based on previous context. Once trained, it can generate text in a similar style to its training data, capturing syntactic and stylistic structures.
+
+\subsubsection{Generating Text with RNNs}
+\label{sec:chapter16_rnn_text_generation}
+
+\noindent A simple character-level RNN can be trained on various text corpora, such as Shakespeare's works, LaTeX source files, or C programming code. Despite its simplicity, an RNN can learn meaningful statistical patterns, including character frequencies, word structures, and even basic grammatical rules.
+
+\noindent Some examples of text generation with RNNs:
+\begin{itemize}
+	\item \textbf{Shakespeare-style text:} After training on Shakespeare's works, an RNN can generate text that mimics old-English writing, maintaining proper character names and poetic structure.
+	\item \textbf{LaTeX code generation:} An RNN trained on LaTeX documents can generate LaTeX-like syntax, although the output may not always be valid compilable code.
+	\item \textbf{C code generation:} By training on a dataset of C programming files, the RNN can generate snippets of C-like syntax, capturing programming constructs such as loops and conditionals.
+\end{itemize}
+
+\noindent These examples demonstrate that RNNs can capture both \textbf{structural} and \textbf{stylistic} aspects of language, learning dependencies that extend across sequences. However, understanding what representations the RNN has learned from the data remains an open research question.
+
+\subsection{Understanding What RNNs Learn}
+\label{sec:chapter16_rnn_representations}
+
+\noindent Since an RNN produces hidden states at each timestep, it implicitly learns internal representations of the input data. A key research question is: \textbf{What kinds of representations do RNNs learn from the data they are trained on?}
+
+\noindent A study by Karpathy, Johnson, and Fei-Fei \cite{karpathy2015_visualizing_rnns} explored this question by visualizing hidden states of an RNN trained on the Linux kernel source code. Since each hidden state is a vector passed through a \(\tanh\) activation function, every dimension in the hidden state has values in the range \([-1,1]\). The authors examined how different hidden state dimensions responded to specific characters in the sequence.
+
+\paragraph{Visualization of Hidden State Activations}
+\noindent To interpret what RNN hidden units are learning, the authors colored text based on the activation value of a single hidden state dimension at each timestep:
+\begin{itemize}
+	\item \textbf{Red:} Activation close to \(+1\).
+	\item \textbf{Blue:} Activation close to \(-1\).
+\end{itemize}
+
+\noindent This visualization method allowed them to analyze whether certain hidden state dimensions captured meaningful patterns in the data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_16/slide_62.jpg}
+	\caption{Some hidden units do not exhibit clearly explainable patterns, making interpretation difficult.}
+	\label{fig:chapter16_uninterpretable_cells}
+\end{figure}
+
+\noindent As shown in Figure~\ref{fig:chapter16_uninterpretable_cells}, many hidden unit activations appeared random and did not provide an intuitive understanding of what the RNN was tracking. However, in some cases, individual hidden state dimensions exhibited clear, meaningful behavior.
+
+\subsubsection{Interpretable Hidden Units}
+\label{sec:chapter16_rnn_interpretable_cells}
+
+\noindent While many hidden state dimensions appear uninterpretable, some exhibit structured activation patterns corresponding to meaningful aspects of the data. Below are a few examples:
+
+\paragraph{Quote Detection Cell}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_16/slide_63.jpg}
+	\caption{An RNN hidden unit detecting quoted text. The activations shift significantly at the beginning and end of quotes.}
+	\label{fig:chapter16_quote_cell}
+\end{figure}
+
+\noindent Some hidden units activate strongly in the presence of quoted text, as seen in Figure~\ref{fig:chapter16_quote_cell}.
+
+\paragraph{Line Length Tracking Cell}
+\noindent Another hidden unit tracks the number of characters in a line, transitioning smoothly from blue to red as it approaches 80 characters per line (a common convention in code formatting), as shown in Figure~\ref{fig:chapter16_line_length}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_16/slide_64.jpg}
+	\caption{An RNN hidden unit tracking line length, moving from blue (short lines) to red (long lines).}
+	\label{fig:chapter16_line_length}
+\end{figure}
+
+\noindent This demonstrates that some RNN neurons track specific long-range dependencies, encoding useful properties of the dataset.
+
+\paragraph{Other Interpretable Hidden Units}
+\noindent Other meaningful hidden state activations include:
+\begin{itemize}
+	\item \textbf{Comment Detector:} Some units activate strongly in commented-out sections of code.
+	\item \textbf{Code Depth Tracker:} Certain units track the depth of nested code structures (e.g., counting how many open brackets exist in C code).
+	\item \textbf{Keyword Highlighter:} Some neurons respond selectively to keywords such as \texttt{if}, \texttt{for}, or \texttt{return} in programming languages.
+\end{itemize}
+
+\subsubsection{Key Takeaways from Interpretable Units}
+\noindent The analysis by Karpathy et al. highlights several important insights:
+\begin{itemize}
+	\item \textbf{RNNs can learn abstract properties of sequences.} Some hidden units respond to high-level features, such as quoted text, line length, or code structure.
+	\item \textbf{Not all hidden units are interpretable.} Many dimensions in the hidden state vector appear to activate randomly, making it difficult to extract clear meaning from every neuron.
+	\item \textbf{Neurons behave differently based on the dataset.} The same RNN architecture trained on different corpora may develop completely different internal representations.
+\end{itemize}
+
+\noindent While these findings provide insight into what RNNs learn, interpreting hidden states remains an open challenge in deep learning research. This motivates further study into techniques such as attention mechanisms and gated architectures, which offer more structured ways to track long-term dependencies.
+
+\subsection{Image Captioning}
+\label{sec:chapter16_image_captioning}
+
+\noindent Image captioning is the task of generating a textual description of an image by combining \textbf{computer vision} (to extract meaningful features) and \textbf{natural language processing} (to generate coherent text). The standard pipeline consists of two main components:
+
+\begin{enumerate}
+	\item \textbf{Feature Extraction with a Pre-Trained CNN:}  
+	A convolutional neural network (CNN), originally trained for image classification (e.g., on ImageNet), is used to encode the image into a high-level feature representation. The final fully connected layers are removed, leaving only/mostly the convolutional layers to produce an image embedding.
+	
+	\item \textbf{Caption Generation with an RNN:}  
+	The extracted image features serve as additional input to an RNN, which generates a description one word at a time, starting from a special \texttt{<START>} token and stopping at an \texttt{<END>} token.
+\end{enumerate}
+
+\noindent The standard RNN hidden state update equation:
+\[
+\mathbf{h}_t = \tanh\big( \mathbf{W}_{xh} \mathbf{x}_t + \mathbf{W}_{hh} \mathbf{h}_{t-1} \big),
+\]
+is modified to incorporate the image features:
+\[
+\mathbf{h}_t = \tanh\big( \mathbf{W}_{xh} \mathbf{x}_t + \mathbf{W}_{hh} \mathbf{h}_{t-1} + \mathbf{W}_{ih} \mathbf{v} \big),
+\]
+where:
+\begin{itemize}
+	\item \( \mathbf{x}_t \) is the current input word,
+	\item \( \mathbf{h}_{t-1} \) is the previous hidden state,
+	\item \( \mathbf{v} \) is the image embedding from the CNN,
+	\item \( \mathbf{W}_{ih} \) learns how to integrate image features into the sequence model.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_77.jpg}
+	\caption{An RNN-based image captioning model stops generating text after producing an \texttt{<END>} token.}
+	\label{fig:chapter16_image_captioning_pipeline}
+\end{figure}
+
+\newpage
+\subsection{Image Captioning Results}
+\label{sec:chapter16_image_captioning_results}
+
+\noindent When trained effectively, RNN-based image captioning models generate descriptions that align well with the content of an image.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_78.jpg}
+	\caption{Success cases of RNN-based image captioning: (Left) "A cat sitting on a suitcase on the floor." (Right) "Two giraffes standing in a grassy field."}
+	\label{fig:chapter16_captioning_success}
+\end{figure}
+
+\noindent Some strengths of the model include:
+\begin{itemize}
+	\item Identifying objects and their relationships (e.g., "a cat sitting on a suitcase").
+	\item Capturing spatial context within the scene.
+	\item Producing fluent, grammatically correct sentences.
+\end{itemize}
+
+\noindent However, the model is limited in its reasoning abilities, often making systematic errors.
+
+\subsection{Failure Cases in Image Captioning}
+\label{sec:chapter16_image_captioning_failures}
+
+\noindent Despite generating plausible captions, RNN-based models struggle with dataset biases and lack true scene understanding.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_78.jpg}
+	\caption{Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding.}
+	\label{fig:chapter16_captioning_failures}
+\end{figure}
+
+\noindent Notable failure cases include:
+\begin{itemize}
+	\item \textbf{Texture Confusion:}  
+	\textit{"A woman is holding a cat in her hand."}  
+	\newline → Incorrect. The model misinterprets a fur coat as a cat due to similar texture.
+	
+	\item \textbf{Outdated Training Data:}  
+	\textit{"A person holding a computer mouse on a desk."}  
+	\newline → Incorrect. Since the dataset predates smartphones, the model assumes any small handheld object near a desk is a computer mouse.
+	
+	\item \textbf{Contextual Overgeneralization:}  
+	\textit{"A woman standing on a beach holding a surfboard."}  
+	\newline → Incorrect. The model associates beaches with surfing due to frequent co-occurrence in the dataset.
+	
+	\item \textbf{Co-Occurrence Bias:}  
+	\textit{"A bird is perched on a tree branch."}  
+	\newline → Incorrect. The model predicts a bird even though none are present, likely due to birds frequently appearing in similar scenes in the dataset.
+	
+	\item \textbf{Failure to Understand Actions:}  
+	\textit{"A man in a baseball uniform throwing a ball."}  
+	\newline → Incorrect. The model fails to distinguish between throwing and catching, highlighting a lack of true scene comprehension.
+\end{itemize}
+
+\noindent These errors indicate that RNN-based captioning models rely heavily on \textbf{statistical associations} rather than genuine reasoning. Their fixed-size hidden state struggles to store complex dependencies, and they lack explicit mechanisms to retain and retrieve relevant information over long sequences.
+
+\subsection{Bridging to LSTMs and GRUs: The Need for Gated Memory}
+\label{sec:chapter16_bridging_to_lstm_gru}
+
+\noindent The limitations of RNNs in image captioning—and sequence modeling in general—highlight key challenges:
+\begin{itemize}
+	\item \textbf{Fixed Hidden State Size:}  
+	RNNs must compress all relevant information into a single hidden state vector at each timestep, making it difficult to retain long-range dependencies.
+	
+	\item \textbf{Vanishing and Exploding Gradients:}  
+	As discussed in Section~\ref{sec:chapter16_bptt}, repeated application of the same recurrent weight matrix leads to gradient decay or uncontrolled growth.
+	
+	\item \textbf{Lack of Explicit Memory Mechanisms:}  
+	Standard RNNs do not provide a way to store and selectively retrieve information from previous timesteps, leading to information loss.
+\end{itemize}
+
+\noindent \textbf{LSTMs} and \textbf{GRUs} introduce \textbf{gating mechanisms} to address these challenges. These architectures:
+\begin{itemize}
+	\item Selectively retain and discard information, ensuring long-range dependencies are preserved.
+	\item Use \textbf{additive state updates}, mitigating vanishing gradients.
+	\item Improve contextual memory, allowing models to better handle structured sequences like image captions.
+\end{itemize}
+
+\noindent In the next section, we explore the design of LSTMs and GRUs, detailing how their gating mechanisms improve sequence modeling and enable more effective applications in tasks such as image captioning.
+
+\newpage
 

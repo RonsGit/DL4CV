@@ -1,19 +1,21 @@
 [0] Config.pm:308> INFO - This is Biber 2.20
 [0] Config.pm:311> INFO - Logfile is 'main.blg'
-[116] biber-MSWIN64:340> INFO - === 
-[159] Biber.pm:420> INFO - Reading 'main.bcf'
-[389] Biber.pm:994> INFO - Found 141 citekeys in bib section 0
-[406] Biber.pm:4463> INFO - Processing section 0
-[418] Biber.pm:4654> INFO - Looking for bibtex file 'bibliography.bib' for section 0
-[512] bibtex.pm:1713> INFO - LaTeX decoding ...
-[681] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
-[1628] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[1628] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[1628] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[1628] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
-[1777] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
-[1884] bbl.pm:779> INFO - Output to main.bbl
-[1891] Biber.pm:131> WARN - Duplicate entry key: 'he2017_maskrcnn' in file 'bibliography.bib', skipping ...
-[1891] Biber.pm:131> WARN - legacy month field 'Feb' in entry 'erdem2020_RoIAlign' is not an integer - this will probably not sort properly.
-[1891] Biber.pm:131> WARN - BibTeX subsystem: C:\Users\ronko\AppData\Local\Temp\biber_tmp_lrMh\f4d088b3f9f145b5c3058da33afd57d4_34888.utf8, line 1012, warning: 41 characters of junk seen at toplevel
-[1891] Biber.pm:133> INFO - WARNINGS: 3
+[129] biber-MSWIN64:340> INFO - === 
+[174] Biber.pm:420> INFO - Reading 'main.bcf'
+[398] Biber.pm:994> INFO - Found 152 citekeys in bib section 0
+[415] Biber.pm:4463> INFO - Processing section 0
+[428] Biber.pm:4654> INFO - Looking for bibtex file 'bibliography.bib' for section 0
+[519] bibtex.pm:1713> INFO - LaTeX decoding ...
+[707] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
+[1712] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1712] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1712] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[1712] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
+[1873] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[1988] bbl.pm:779> INFO - Output to main.bbl
+[1995] Biber.pm:131> WARN - Duplicate entry key: 'hochreiter1997_lstm' in file 'bibliography.bib', skipping ...
+[1995] Biber.pm:131> WARN - Duplicate entry key: 'sutskever2014_seq2seq' in file 'bibliography.bib', skipping ...
+[1995] Biber.pm:131> WARN - Duplicate entry key: 'he2017_maskrcnn' in file 'bibliography.bib', skipping ...
+[1995] Biber.pm:131> WARN - legacy month field 'Feb' in entry 'erdem2020_RoIAlign' is not an integer - this will probably not sort properly.
+[1995] Biber.pm:131> WARN - BibTeX subsystem: C:\Users\ronko\AppData\Local\Temp\biber_tmp_0fgE\f4d088b3f9f145b5c3058da33afd57d4_8712.utf8, line 1125, warning: 41 characters of junk seen at toplevel
+[1995] Biber.pm:133> INFO - WARNINGS: 5
