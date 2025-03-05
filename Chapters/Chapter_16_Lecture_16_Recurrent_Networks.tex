@@ -651,23 +651,32 @@ For ReLU, the derivative is 1 for \(x>0\), so large positive hidden states perpe
 \]
 has properties that contribute to \textbf{stability} in RNNs. Unlike ReLU, which is unbounded, \(\tanh\) restricts activations to \((-1,1)\), preventing runaway hidden state growth.
 
-\subsubsection{How \textit{tanh} Prevents Exploding Gradients}
-\begin{itemize}
-	\item \textbf{Bounded Outputs:}  
-	Since \(\tanh(x) \in (-1,1)\), hidden states do not grow uncontrollably. This naturally mitigates \textbf{exploding gradients} in deep unrolled RNNs \cite{pascanu2013_difficulty}.
-	
-	\item \textbf{Derivative Control:}  
-	The derivative of \(\tanh\) is:
-	\[
-	\frac{d}{dx} \tanh(x) = 1 - \tanh^2(x),
-	\]
-	which is always \(\leq 1\). This ensures that when gradients are backpropagated through multiple timesteps, they do not multiply by large values, unlike ReLU, where derivatives remain 1 for positive inputs.
-	
-	\item \textbf{Zero-Centered Activation:}  
-	Unlike ReLU, which produces only nonnegative outputs, \(\tanh\) is symmetric around zero. This allows the hidden state to encode both positive and negative values, preventing repeated positive feedback loops.
-\end{itemize}
+\subsubsection{How \textit{tanh} Curbs Exploding Gradients}
+\label{sec:how_tanh_prevents_explosion}
 
-\noindent However, while \(\tanh\) prevents runaway growth, it does not prevent the \textbf{vanishing gradient problem}, where long-term dependencies become harder to learn due to saturation.
+\noindent
+When an RNN uses the \(\tanh\) activation, it inherently limits hidden state magnitudes and thereby moderates the growth of gradients through multiple timesteps. Below, we re-examine three key points, clarifying why \(\tanh\) is less prone to exploding gradients than unbounded activations like ReLU. 
+
+\paragraph{1. Bounded Outputs:}
+Since \(\tanh(x) \in (-1,1)\), any large input to the activation saturates toward \(\pm 1\). In an RNN’s forward pass over \(T\) timesteps, we repeatedly multiply the hidden states by \(\mathbf{W}_{hh}\). If we had an unbounded activation, hidden states might keep increasing each timestep (particularly if \(\|\mathbf{W}_{hh}\|>1\)), causing \emph{exploding hidden states} that lead to exploding gradients during backpropagation \cite{pascanu2013_difficulty}. By contrast, the \(\tanh\) range clamps each forward state to at most \(\pm 1\), limiting how large the hidden state can become, even if \(\mathbf{W}_{hh}\) has moderately large eigenvalues.
+
+\paragraph{2. Derivative Control:}
+The derivative of \(\tanh\) is 
+\[
+\frac{d}{dx}\tanh(x) \;=\; 1 - \tanh^2(x),
+\]
+which is always \(\le 1\) in absolute value. During BPTT, gradients at each timestep are multiplied by \(\phi'(\mathbf{h}_t)\,\mathbf{W}_{hh}\). If \(\phi'(x)\le1\), it prevents partial derivatives from compounding above unity at every step, unlike ReLU, whose derivative is exactly 1 for all positive inputs. Hence, with \(\tanh\), the product of Jacobians is less likely to exceed 1 repeatedly, moderating \emph{exploding gradients}.
+
+\paragraph{3. Zero-Centered Activation:}
+An often-overlooked advantage of \(\tanh\) is that its output is symmetric around zero, so hidden states can take on both positive and negative values. In contrast, ReLU yields only nonnegative activations. Over many timesteps, this zero-centered property can help avoid a scenario where hidden state updates systematically accumulate in the same (positive) direction step after step. 
+\begin{itemize}
+	\item If \(\mathbf{W}_{hh}\) has both positive and negative entries, a hidden state \(\mathbf{h}_t\) that can also become negative (due to \(\tanh\)) may partially cancel or reduce the net effect of repeated multiplications. 
+	\item With strictly nonnegative outputs (as in ReLU), repeated multiplications by a weight matrix with mostly positive entries can reinforce the same sign direction each timestep, increasing the risk of runaway growth (a “positive feedback loop” in the forward pass). 
+\end{itemize}
+This \emph{does not} guarantee stable eigenvalues, but in practice, a mix of negative and positive activations with smaller norms is less prone to compounding large positive states at each timestep.
+
+\paragraph{A Caveat: Vanishing Gradients Still Remain}
+While \(\tanh\) curtails unbounded state growth, it does not solve the \emph{vanishing gradient problem}. Once \(\tanh\) saturates near \(\pm 1\), the derivative \(1-\tanh^2(x)\) approaches 0, diminishing gradient flow for earlier timesteps. Hence, \(\tanh\) is best suited for \emph{short to moderate} sequence lengths (tens of timesteps). For capturing extended dependencies (hundreds+), \textbf{LSTM} or \textbf{GRU} gating \cite{hochreiter1997_lstm, cho2014_gru} is often necessary to preserve nonvanishing gradients over time.
 
 \subsection{Why ReLU6 or Leaky ReLU Are Not a Full Remedy}
 \label{sec:chapter16_relu_variants_rnn_issues}
@@ -878,7 +887,7 @@ where:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_78.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_79.jpg}
 	\caption{Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding.}
 	\label{fig:chapter16_captioning_failures}
 \end{figure}

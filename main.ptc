@@ -1176,57 +1176,61 @@
 \contentsline {subsubsection}{How Large or Small States Affect Gradients}{524}{section*.1039}%
 \contentsline {paragraph}{Effect of Activation Function}{524}{section*.1040}%
 \contentsline {subsection}{\numberline {16.5.2}Mathematical Rationale for \textit {tanh} in RNNs}{524}{subsection.16.5.2}%
-\contentsline {subsubsection}{How \textit {tanh} Prevents Exploding Gradients}{525}{section*.1041}%
+\contentsline {subsubsection}{How \textit {tanh} Curbs Exploding Gradients}{525}{section*.1041}%
+\contentsline {paragraph}{1. Bounded Outputs:}{525}{section*.1042}%
+\contentsline {paragraph}{2. Derivative Control:}{525}{section*.1043}%
+\contentsline {paragraph}{3. Zero-Centered Activation:}{525}{section*.1044}%
+\contentsline {paragraph}{A Caveat: Vanishing Gradients Still Remain}{525}{section*.1045}%
 \contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{525}{subsection.16.5.3}%
-\contentsline {paragraph}{ReLU6: The Saturation Issue}{525}{section*.1042}%
-\contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{525}{section*.1043}%
+\contentsline {paragraph}{ReLU6: The Saturation Issue}{526}{section*.1046}%
+\contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{526}{section*.1047}%
 \contentsline {subsection}{\numberline {16.5.4}Why Gradient Clipping Alone is Insufficient}{526}{subsection.16.5.4}%
-\contentsline {paragraph}{Clipping Does Not Prevent Hidden State Growth}{526}{section*.1044}%
-\contentsline {section}{\numberline {16.6}Example Usages of Recurrent Neural Networks}{527}{section.16.6}%
-\contentsline {subsection}{\numberline {16.6.1}RNNs for Text-Based Tasks}{527}{subsection.16.6.1}%
-\contentsline {subsubsection}{Generating Text with RNNs}{527}{section*.1045}%
-\contentsline {subsection}{\numberline {16.6.2}Understanding What RNNs Learn}{527}{subsection.16.6.2}%
-\contentsline {paragraph}{Visualization of Hidden State Activations}{527}{section*.1046}%
-\contentsline {subsubsection}{Interpretable Hidden Units}{528}{section*.1048}%
-\contentsline {paragraph}{Quote Detection Cell}{528}{section*.1049}%
-\contentsline {paragraph}{Line Length Tracking Cell}{529}{section*.1051}%
-\contentsline {paragraph}{Other Interpretable Hidden Units}{529}{section*.1053}%
-\contentsline {subsubsection}{Key Takeaways from Interpretable Units}{529}{section*.1054}%
-\contentsline {subsection}{\numberline {16.6.3}Image Captioning}{530}{subsection.16.6.3}%
-\contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{531}{subsection.16.6.4}%
-\contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{531}{subsection.16.6.5}%
-\contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{532}{subsection.16.6.6}%
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{533}{chapter.17}%
+\contentsline {paragraph}{Clipping Does Not Prevent Hidden State Growth}{527}{section*.1048}%
+\contentsline {section}{\numberline {16.6}Example Usages of Recurrent Neural Networks}{528}{section.16.6}%
+\contentsline {subsection}{\numberline {16.6.1}RNNs for Text-Based Tasks}{528}{subsection.16.6.1}%
+\contentsline {subsubsection}{Generating Text with RNNs}{528}{section*.1049}%
+\contentsline {subsection}{\numberline {16.6.2}Understanding What RNNs Learn}{528}{subsection.16.6.2}%
+\contentsline {paragraph}{Visualization of Hidden State Activations}{528}{section*.1050}%
+\contentsline {subsubsection}{Interpretable Hidden Units}{529}{section*.1052}%
+\contentsline {paragraph}{Quote Detection Cell}{529}{section*.1053}%
+\contentsline {paragraph}{Line Length Tracking Cell}{530}{section*.1055}%
+\contentsline {paragraph}{Other Interpretable Hidden Units}{530}{section*.1057}%
+\contentsline {subsubsection}{Key Takeaways from Interpretable Units}{530}{section*.1058}%
+\contentsline {subsection}{\numberline {16.6.3}Image Captioning}{531}{subsection.16.6.3}%
+\contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{532}{subsection.16.6.4}%
+\contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{532}{subsection.16.6.5}%
+\contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{533}{subsection.16.6.6}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{534}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{534}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{535}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{535}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{536}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{536}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{537}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{537}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{538}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{538}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{539}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{539}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{540}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{540}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{541}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{541}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{542}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{542}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{543}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{543}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{544}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

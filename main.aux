@@ -4002,74 +4002,85 @@
 \newlabel{sec:chapter16_single_layer_rnn}{{16.5.1}{523}{Recurrent Computation and Gradient Behavior}{subsection.16.5.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Repeated Multiplication and the Hidden State}{523}{section*.1037}\protected@file@percent }
 \BKM@entry{id=576,dest={73756273656374696F6E2E31362E352E32},srcline={645}}{5C3337365C3337375C3030304D5C303030615C303030745C303030685C303030655C3030306D5C303030615C303030745C303030695C303030635C303030615C3030306C5C3030305C3034305C303030525C303030615C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C303030655C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030745C303030615C3030306E5C303030685C3030305C3034305C303030695C3030306E5C3030305C3034305C303030525C3030304E5C3030304E5C30303073}
-\abx@aux@cite{0}{pascanu2013_difficulty}
-\abx@aux@segm{0}{0}{pascanu2013_difficulty}
 \@writefile{toc}{\contentsline {paragraph}{Spectral Properties of \(\mathbf  {W}_{hh}\).}{524}{section*.1038}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{How Large or Small States Affect Gradients}{524}{section*.1039}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Effect of Activation Function}{524}{section*.1040}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {16.5.2}Mathematical Rationale for \textit  {tanh} in RNNs}{524}{subsection.16.5.2}\protected@file@percent }
 \newlabel{sec:chapter16_tanh_stability}{{16.5.2}{524}{Mathematical Rationale for \textit {tanh} in RNNs}{subsection.16.5.2}{}}
-\BKM@entry{id=577,dest={73756273656374696F6E2E31362E352E33},srcline={672}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030525C303030655C3030304C5C303030555C303030365C3030305C3034305C3030306F5C303030725C3030305C3034305C3030304C5C303030655C303030615C3030306B5C303030795C3030305C3034305C303030525C303030655C3030304C5C303030555C3030305C3034305C303030415C303030725C303030655C3030305C3034305C3030304E5C3030306F5C303030745C3030305C3034305C303030615C3030305C3034305C303030465C303030755C3030306C5C3030306C5C3030305C3034305C303030525C303030655C3030306D5C303030655C303030645C30303079}
-\@writefile{toc}{\contentsline {subsubsection}{How \textit  {tanh} Prevents Exploding Gradients}{525}{section*.1041}\protected@file@percent }
-\abx@aux@backref{343}{pascanu2013_difficulty}{0}{525}{525}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{525}{subsection.16.5.3}\protected@file@percent }
-\newlabel{sec:chapter16_relu_variants_rnn_issues}{{16.5.3}{525}{Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{subsection.16.5.3}{}}
-\@writefile{toc}{\contentsline {paragraph}{ReLU6: The Saturation Issue}{525}{section*.1042}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{525}{section*.1043}\protected@file@percent }
-\BKM@entry{id=578,dest={73756273656374696F6E2E31362E352E34},srcline={700}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030475C303030725C303030615C303030645C303030695C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030695C303030705C303030705C303030695C3030306E5C303030675C3030305C3034305C303030415C3030306C5C3030306F5C3030306E5C303030655C3030305C3034305C303030695C303030735C3030305C3034305C303030495C3030306E5C303030735C303030755C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C30303074}
 \abx@aux@cite{0}{pascanu2013_difficulty}
 \abx@aux@segm{0}{0}{pascanu2013_difficulty}
+\abx@aux@cite{0}{hochreiter1997_lstm}
+\abx@aux@segm{0}{0}{hochreiter1997_lstm}
+\abx@aux@cite{0}{cho2014_gru}
+\abx@aux@segm{0}{0}{cho2014_gru}
+\BKM@entry{id=577,dest={73756273656374696F6E2E31362E352E33},srcline={681}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030525C303030655C3030304C5C303030555C303030365C3030305C3034305C3030306F5C303030725C3030305C3034305C3030304C5C303030655C303030615C3030306B5C303030795C3030305C3034305C303030525C303030655C3030304C5C303030555C3030305C3034305C303030415C303030725C303030655C3030305C3034305C3030304E5C3030306F5C303030745C3030305C3034305C303030615C3030305C3034305C303030465C303030755C3030306C5C3030306C5C3030305C3034305C303030525C303030655C3030306D5C303030655C303030645C30303079}
+\@writefile{toc}{\contentsline {subsubsection}{How \textit  {tanh} Curbs Exploding Gradients}{525}{section*.1041}\protected@file@percent }
+\newlabel{sec:how_tanh_prevents_explosion}{{16.5.2}{525}{How \textit {tanh} Curbs Exploding Gradients}{section*.1041}{}}
+\@writefile{toc}{\contentsline {paragraph}{1. Bounded Outputs:}{525}{section*.1042}\protected@file@percent }
+\abx@aux@backref{343}{pascanu2013_difficulty}{0}{525}{525}
+\@writefile{toc}{\contentsline {paragraph}{2. Derivative Control:}{525}{section*.1043}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{3. Zero-Centered Activation:}{525}{section*.1044}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{A Caveat: Vanishing Gradients Still Remain}{525}{section*.1045}\protected@file@percent }
+\abx@aux@backref{344}{cho2014_gru}{0}{525}{525}
+\abx@aux@backref{345}{hochreiter1997_lstm}{0}{525}{525}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{525}{subsection.16.5.3}\protected@file@percent }
+\newlabel{sec:chapter16_relu_variants_rnn_issues}{{16.5.3}{525}{Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{subsection.16.5.3}{}}
+\BKM@entry{id=578,dest={73756273656374696F6E2E31362E352E34},srcline={709}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030475C303030725C303030615C303030645C303030695C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030695C303030705C303030705C303030695C3030306E5C303030675C3030305C3034305C303030415C3030306C5C3030306F5C3030306E5C303030655C3030305C3034305C303030695C303030735C3030305C3034305C303030495C3030306E5C303030735C303030755C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C30303074}
+\abx@aux@cite{0}{pascanu2013_difficulty}
+\abx@aux@segm{0}{0}{pascanu2013_difficulty}
+\@writefile{toc}{\contentsline {paragraph}{ReLU6: The Saturation Issue}{526}{section*.1046}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{526}{section*.1047}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {16.5.4}Why Gradient Clipping Alone is Insufficient}{526}{subsection.16.5.4}\protected@file@percent }
 \newlabel{sec:chapter16_gradient_clipping_limitations}{{16.5.4}{526}{Why Gradient Clipping Alone is Insufficient}{subsection.16.5.4}{}}
-\abx@aux@backref{344}{pascanu2013_difficulty}{0}{526}{526}
-\@writefile{toc}{\contentsline {paragraph}{Clipping Does Not Prevent Hidden State Growth}{526}{section*.1044}\protected@file@percent }
-\BKM@entry{id=579,dest={73656374696F6E2E31362E36},srcline={721}}{5C3337365C3337375C303030455C303030785C303030615C3030306D5C303030705C3030306C5C303030655C3030305C3034305C303030555C303030735C303030615C303030675C303030655C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030635C303030755C303030725C303030725C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030755C303030725C303030615C3030306C5C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C30303073}
-\BKM@entry{id=580,dest={73756273656374696F6E2E31362E362E31},srcline={726}}{5C3337365C3337375C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030545C303030655C303030785C303030745C3030302D5C303030425C303030615C303030735C303030655C303030645C3030305C3034305C303030545C303030615C303030735C3030306B5C30303073}
-\BKM@entry{id=581,dest={73756273656374696F6E2E31362E362E32},srcline={745}}{5C3337365C3337375C303030555C3030306E5C303030645C303030655C303030725C303030735C303030745C303030615C3030306E5C303030645C303030695C3030306E5C303030675C3030305C3034305C303030575C303030685C303030615C303030745C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E}
+\abx@aux@backref{346}{pascanu2013_difficulty}{0}{526}{526}
+\@writefile{toc}{\contentsline {paragraph}{Clipping Does Not Prevent Hidden State Growth}{527}{section*.1048}\protected@file@percent }
+\BKM@entry{id=579,dest={73656374696F6E2E31362E36},srcline={730}}{5C3337365C3337375C303030455C303030785C303030615C3030306D5C303030705C3030306C5C303030655C3030305C3034305C303030555C303030735C303030615C303030675C303030655C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030635C303030755C303030725C303030725C303030655C3030306E5C303030745C3030305C3034305C3030304E5C303030655C303030755C303030725C303030615C3030306C5C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C30303073}
+\BKM@entry{id=580,dest={73756273656374696F6E2E31362E362E31},srcline={735}}{5C3337365C3337375C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030545C303030655C303030785C303030745C3030302D5C303030425C303030615C303030735C303030655C303030645C3030305C3034305C303030545C303030615C303030735C3030306B5C30303073}
+\BKM@entry{id=581,dest={73756273656374696F6E2E31362E362E32},srcline={754}}{5C3337365C3337375C303030555C3030306E5C303030645C303030655C303030725C303030735C303030745C303030615C3030306E5C303030645C303030695C3030306E5C303030675C3030305C3034305C303030575C303030685C303030615C303030745C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E}
 \abx@aux@cite{0}{karpathy2015_visualizing_rnns}
 \abx@aux@segm{0}{0}{karpathy2015_visualizing_rnns}
-\@writefile{toc}{\contentsline {section}{\numberline {16.6}Example Usages of Recurrent Neural Networks}{527}{section.16.6}\protected@file@percent }
-\newlabel{sec:chapter16_rnn_examples}{{16.6}{527}{Example Usages of Recurrent Neural Networks}{section.16.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.1}RNNs for Text-Based Tasks}{527}{subsection.16.6.1}\protected@file@percent }
-\newlabel{sec:chapter16_rnn_text_tasks}{{16.6.1}{527}{RNNs for Text-Based Tasks}{subsection.16.6.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Generating Text with RNNs}{527}{section*.1045}\protected@file@percent }
-\newlabel{sec:chapter16_rnn_text_generation}{{16.6.1}{527}{Generating Text with RNNs}{section*.1045}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.2}Understanding What RNNs Learn}{527}{subsection.16.6.2}\protected@file@percent }
-\newlabel{sec:chapter16_rnn_representations}{{16.6.2}{527}{Understanding What RNNs Learn}{subsection.16.6.2}{}}
-\abx@aux@backref{345}{karpathy2015_visualizing_rnns}{0}{527}{527}
-\@writefile{toc}{\contentsline {paragraph}{Visualization of Hidden State Activations}{527}{section*.1046}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16.9}{\ignorespaces Some hidden units do not exhibit clearly explainable patterns, making interpretation difficult.}}{528}{figure.caption.1047}\protected@file@percent }
-\newlabel{fig:chapter16_uninterpretable_cells}{{16.9}{528}{Some hidden units do not exhibit clearly explainable patterns, making interpretation difficult}{figure.caption.1047}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Interpretable Hidden Units}{528}{section*.1048}\protected@file@percent }
-\newlabel{sec:chapter16_rnn_interpretable_cells}{{16.6.2}{528}{Interpretable Hidden Units}{section*.1048}{}}
-\@writefile{toc}{\contentsline {paragraph}{Quote Detection Cell}{528}{section*.1049}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16.10}{\ignorespaces An RNN hidden unit detecting quoted text. The activations shift significantly at the beginning and end of quotes.}}{528}{figure.caption.1050}\protected@file@percent }
-\newlabel{fig:chapter16_quote_cell}{{16.10}{528}{An RNN hidden unit detecting quoted text. The activations shift significantly at the beginning and end of quotes}{figure.caption.1050}{}}
-\BKM@entry{id=582,dest={73756273656374696F6E2E31362E362E33},srcline={816}}{5C3337365C3337375C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {paragraph}{Line Length Tracking Cell}{529}{section*.1051}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16.11}{\ignorespaces An RNN hidden unit tracking line length, moving from blue (short lines) to red (long lines).}}{529}{figure.caption.1052}\protected@file@percent }
-\newlabel{fig:chapter16_line_length}{{16.11}{529}{An RNN hidden unit tracking line length, moving from blue (short lines) to red (long lines)}{figure.caption.1052}{}}
-\@writefile{toc}{\contentsline {paragraph}{Other Interpretable Hidden Units}{529}{section*.1053}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Key Takeaways from Interpretable Units}{529}{section*.1054}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.3}Image Captioning}{530}{subsection.16.6.3}\protected@file@percent }
-\newlabel{sec:chapter16_image_captioning}{{16.6.3}{530}{Image Captioning}{subsection.16.6.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.12}{\ignorespaces An RNN-based image captioning model stops generating text after producing an \texttt  {<END>} token.}}{530}{figure.caption.1055}\protected@file@percent }
-\newlabel{fig:chapter16_image_captioning_pipeline}{{16.12}{530}{An RNN-based image captioning model stops generating text after producing an \texttt {<END>} token}{figure.caption.1055}{}}
-\BKM@entry{id=583,dest={73756273656374696F6E2E31362E362E34},srcline={853}}{5C3337365C3337375C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030525C303030655C303030735C303030755C3030306C5C303030745C30303073}
-\BKM@entry{id=584,dest={73756273656374696F6E2E31362E362E35},srcline={874}}{5C3337365C3337375C303030465C303030615C303030695C3030306C5C303030755C303030725C303030655C3030305C3034305C303030435C303030615C303030735C303030655C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{531}{subsection.16.6.4}\protected@file@percent }
-\newlabel{sec:chapter16_image_captioning_results}{{16.6.4}{531}{Image Captioning Results}{subsection.16.6.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.13}{\ignorespaces Success cases of RNN-based image captioning: (Left) "A cat sitting on a suitcase on the floor." (Right) "Two giraffes standing in a grassy field."}}{531}{figure.caption.1056}\protected@file@percent }
-\newlabel{fig:chapter16_captioning_success}{{16.13}{531}{Success cases of RNN-based image captioning: (Left) "A cat sitting on a suitcase on the floor." (Right) "Two giraffes standing in a grassy field."}{figure.caption.1056}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{531}{subsection.16.6.5}\protected@file@percent }
-\newlabel{sec:chapter16_image_captioning_failures}{{16.6.5}{531}{Failure Cases in Image Captioning}{subsection.16.6.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.14}{\ignorespaces Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding.}}{531}{figure.caption.1057}\protected@file@percent }
-\newlabel{fig:chapter16_captioning_failures}{{16.14}{531}{Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding}{figure.caption.1057}{}}
-\BKM@entry{id=585,dest={73756273656374696F6E2E31362E362E36},srcline={911}}{5C3337365C3337375C303030425C303030725C303030695C303030645C303030675C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030535C303030545C3030304D5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030475C303030525C303030555C303030735C3030303A5C3030305C3034305C303030545C303030685C303030655C3030305C3034305C3030304E5C303030655C303030655C303030645C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030475C303030615C303030745C303030655C303030645C3030305C3034305C3030304D5C303030655C3030306D5C3030306F5C303030725C30303079}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{532}{subsection.16.6.6}\protected@file@percent }
-\newlabel{sec:chapter16_bridging_to_lstm_gru}{{16.6.6}{532}{Bridging to LSTMs and GRUs: The Need for Gated Memory}{subsection.16.6.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.6}Example Usages of Recurrent Neural Networks}{528}{section.16.6}\protected@file@percent }
+\newlabel{sec:chapter16_rnn_examples}{{16.6}{528}{Example Usages of Recurrent Neural Networks}{section.16.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.1}RNNs for Text-Based Tasks}{528}{subsection.16.6.1}\protected@file@percent }
+\newlabel{sec:chapter16_rnn_text_tasks}{{16.6.1}{528}{RNNs for Text-Based Tasks}{subsection.16.6.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Generating Text with RNNs}{528}{section*.1049}\protected@file@percent }
+\newlabel{sec:chapter16_rnn_text_generation}{{16.6.1}{528}{Generating Text with RNNs}{section*.1049}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.2}Understanding What RNNs Learn}{528}{subsection.16.6.2}\protected@file@percent }
+\newlabel{sec:chapter16_rnn_representations}{{16.6.2}{528}{Understanding What RNNs Learn}{subsection.16.6.2}{}}
+\abx@aux@backref{347}{karpathy2015_visualizing_rnns}{0}{528}{528}
+\@writefile{toc}{\contentsline {paragraph}{Visualization of Hidden State Activations}{528}{section*.1050}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16.9}{\ignorespaces Some hidden units do not exhibit clearly explainable patterns, making interpretation difficult.}}{529}{figure.caption.1051}\protected@file@percent }
+\newlabel{fig:chapter16_uninterpretable_cells}{{16.9}{529}{Some hidden units do not exhibit clearly explainable patterns, making interpretation difficult}{figure.caption.1051}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Interpretable Hidden Units}{529}{section*.1052}\protected@file@percent }
+\newlabel{sec:chapter16_rnn_interpretable_cells}{{16.6.2}{529}{Interpretable Hidden Units}{section*.1052}{}}
+\@writefile{toc}{\contentsline {paragraph}{Quote Detection Cell}{529}{section*.1053}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16.10}{\ignorespaces An RNN hidden unit detecting quoted text. The activations shift significantly at the beginning and end of quotes.}}{529}{figure.caption.1054}\protected@file@percent }
+\newlabel{fig:chapter16_quote_cell}{{16.10}{529}{An RNN hidden unit detecting quoted text. The activations shift significantly at the beginning and end of quotes}{figure.caption.1054}{}}
+\BKM@entry{id=582,dest={73756273656374696F6E2E31362E362E33},srcline={825}}{5C3337365C3337375C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {paragraph}{Line Length Tracking Cell}{530}{section*.1055}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16.11}{\ignorespaces An RNN hidden unit tracking line length, moving from blue (short lines) to red (long lines).}}{530}{figure.caption.1056}\protected@file@percent }
+\newlabel{fig:chapter16_line_length}{{16.11}{530}{An RNN hidden unit tracking line length, moving from blue (short lines) to red (long lines)}{figure.caption.1056}{}}
+\@writefile{toc}{\contentsline {paragraph}{Other Interpretable Hidden Units}{530}{section*.1057}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Key Takeaways from Interpretable Units}{530}{section*.1058}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.3}Image Captioning}{531}{subsection.16.6.3}\protected@file@percent }
+\newlabel{sec:chapter16_image_captioning}{{16.6.3}{531}{Image Captioning}{subsection.16.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.12}{\ignorespaces An RNN-based image captioning model stops generating text after producing an \texttt  {<END>} token.}}{531}{figure.caption.1059}\protected@file@percent }
+\newlabel{fig:chapter16_image_captioning_pipeline}{{16.12}{531}{An RNN-based image captioning model stops generating text after producing an \texttt {<END>} token}{figure.caption.1059}{}}
+\BKM@entry{id=583,dest={73756273656374696F6E2E31362E362E34},srcline={862}}{5C3337365C3337375C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030525C303030655C303030735C303030755C3030306C5C303030745C30303073}
+\BKM@entry{id=584,dest={73756273656374696F6E2E31362E362E35},srcline={883}}{5C3337365C3337375C303030465C303030615C303030695C3030306C5C303030755C303030725C303030655C3030305C3034305C303030435C303030615C303030735C303030655C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{532}{subsection.16.6.4}\protected@file@percent }
+\newlabel{sec:chapter16_image_captioning_results}{{16.6.4}{532}{Image Captioning Results}{subsection.16.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.13}{\ignorespaces Success cases of RNN-based image captioning: (Left) "A cat sitting on a suitcase on the floor." (Right) "Two giraffes standing in a grassy field."}}{532}{figure.caption.1060}\protected@file@percent }
+\newlabel{fig:chapter16_captioning_success}{{16.13}{532}{Success cases of RNN-based image captioning: (Left) "A cat sitting on a suitcase on the floor." (Right) "Two giraffes standing in a grassy field."}{figure.caption.1060}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{532}{subsection.16.6.5}\protected@file@percent }
+\newlabel{sec:chapter16_image_captioning_failures}{{16.6.5}{532}{Failure Cases in Image Captioning}{subsection.16.6.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.14}{\ignorespaces Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding.}}{532}{figure.caption.1061}\protected@file@percent }
+\newlabel{fig:chapter16_captioning_failures}{{16.14}{532}{Failure cases of RNN-based image captioning, where captions reflect dataset biases rather than true understanding}{figure.caption.1061}{}}
+\BKM@entry{id=585,dest={73756273656374696F6E2E31362E362E36},srcline={920}}{5C3337365C3337375C303030425C303030725C303030695C303030645C303030675C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030535C303030545C3030304D5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030475C303030525C303030555C303030735C3030303A5C3030305C3034305C303030545C303030685C303030655C3030305C3034305C3030304E5C303030655C303030655C303030645C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030475C303030615C303030745C303030655C303030645C3030305C3034305C3030304D5C303030655C3030306D5C3030306F5C303030725C30303079}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{533}{subsection.16.6.6}\protected@file@percent }
+\newlabel{sec:chapter16_bridging_to_lstm_gru}{{16.6.6}{533}{Bridging to LSTMs and GRUs: The Need for Gated Memory}{subsection.16.6.6}{}}
 \BKM@entry{id=586,dest={636861707465722E3137},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030375C3030303A5C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{533}{chapter.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{534}{chapter.17}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@16}}
@@ -4077,7 +4088,7 @@
 \pgfsyspdfmark {pgfid76}{0}{52099153}
 \pgfsyspdfmark {pgfid75}{5966969}{45620378}
 \BKM@entry{id=587,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{534}{chapter.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{535}{chapter.18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@17}}
@@ -4085,7 +4096,7 @@
 \pgfsyspdfmark {pgfid78}{0}{52099153}
 \pgfsyspdfmark {pgfid77}{5966969}{45620378}
 \BKM@entry{id=588,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{535}{chapter.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{536}{chapter.19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@18}}
@@ -4093,7 +4104,7 @@
 \pgfsyspdfmark {pgfid80}{0}{52099153}
 \pgfsyspdfmark {pgfid79}{5966969}{45620378}
 \BKM@entry{id=589,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{536}{chapter.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{537}{chapter.20}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@19}}
@@ -4101,7 +4112,7 @@
 \pgfsyspdfmark {pgfid82}{0}{52099153}
 \pgfsyspdfmark {pgfid81}{5966969}{45620378}
 \BKM@entry{id=590,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{537}{chapter.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{538}{chapter.21}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@20}}
@@ -4109,7 +4120,7 @@
 \pgfsyspdfmark {pgfid84}{0}{52099153}
 \pgfsyspdfmark {pgfid83}{5966969}{45620378}
 \BKM@entry{id=591,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{538}{chapter.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{539}{chapter.22}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@21}}
@@ -4117,7 +4128,7 @@
 \pgfsyspdfmark {pgfid86}{0}{52099153}
 \pgfsyspdfmark {pgfid85}{5966969}{45620378}
 \BKM@entry{id=592,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{539}{chapter.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{540}{chapter.23}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@22}}
@@ -4125,7 +4136,7 @@
 \pgfsyspdfmark {pgfid88}{0}{52099153}
 \pgfsyspdfmark {pgfid87}{5966969}{45620378}
 \BKM@entry{id=593,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{540}{chapter.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{541}{chapter.24}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@23}}
@@ -4133,7 +4144,7 @@
 \pgfsyspdfmark {pgfid90}{0}{52099153}
 \pgfsyspdfmark {pgfid89}{5966969}{45620378}
 \BKM@entry{id=594,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{541}{chapter.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{542}{chapter.25}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@24}}
@@ -4141,7 +4152,7 @@
 \pgfsyspdfmark {pgfid92}{0}{52099153}
 \pgfsyspdfmark {pgfid91}{5966969}{45620378}
 \BKM@entry{id=595,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{542}{chapter.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{543}{chapter.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@25}}
@@ -4149,7 +4160,7 @@
 \pgfsyspdfmark {pgfid94}{0}{52099153}
 \pgfsyspdfmark {pgfid93}{5966969}{45620378}
 \BKM@entry{id=596,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{543}{chapter.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{544}{chapter.27}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@26}}
@@ -4313,4 +4324,4 @@
 \abx@aux@defaultrefcontext{0}{zoph2017_nas}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2018_learning}{nty/global//global/global/global}
 \xdef \mintedoldcachechecksum{\detokenize{C16A9A7F725C62A4367BF5775A53163F:32}}
-\gdef \@abspage@last{554}
+\gdef \@abspage@last{555}

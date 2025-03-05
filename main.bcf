@@ -2715,8 +2715,10 @@
     <bcf:citekey order="322" intorder="1">bengio1994_learning</bcf:citekey>
     <bcf:citekey order="323" intorder="1">pascanu2013_difficulty</bcf:citekey>
     <bcf:citekey order="324" intorder="1">pascanu2013_difficulty</bcf:citekey>
-    <bcf:citekey order="325" intorder="1">pascanu2013_difficulty</bcf:citekey>
-    <bcf:citekey order="326" intorder="1">karpathy2015_visualizing_rnns</bcf:citekey>
+    <bcf:citekey order="325" intorder="1">hochreiter1997_lstm</bcf:citekey>
+    <bcf:citekey order="325" intorder="2">cho2014_gru</bcf:citekey>
+    <bcf:citekey order="326" intorder="1">pascanu2013_difficulty</bcf:citekey>
+    <bcf:citekey order="327" intorder="1">karpathy2015_visualizing_rnns</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
