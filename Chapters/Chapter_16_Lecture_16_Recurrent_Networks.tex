@@ -1039,9 +1039,11 @@ where:
 \]
 
 where:
-- \(\mathbf{f}_t\) is the forget gate, determining how much of \(\mathbf{c}_{t-1}\) is retained.
-- \(\mathbf{i}_t\) is the input gate, deciding how much new information \(\mathbf{g}_t\) should be incorporated.
-- \(\mathbf{g}_t\) is the candidate cell update, typically computed via \(\tanh(\cdot)\).
+\begin{itemize}
+	\item \(\mathbf{f}_t\) is the forget gate, determining how much of \(\mathbf{c}_{t-1}\) is retained.
+	\item \(\mathbf{i}_t\) is the input gate, deciding how much new information \(\mathbf{g}_t\) should be incorporated.
+	\item \(\mathbf{g}_t\) is the candidate cell update, typically computed via \(\tanh(\cdot)\).
+\end{itemize}
 
 Importantly, \(\mathbf{f}_t\) is not a single scalar value, but a vector with dimensionality equal to the LSTM’s hidden size. Each element of \(\mathbf{f}_t\) independently controls the retention of the corresponding dimension in \(\mathbf{c}_t\), meaning that some components of \(\mathbf{c}_t\) can be preserved while others decay.
 
@@ -1066,8 +1068,10 @@ Since the partial derivative of \(\mathbf{c}_t\) with respect to \(\mathbf{c}_{t
 
 The Dominance of \(\mathbf{f}_t\) in Long Sequences
 The dominance of \(\mathbf{f}_t\) in this equation arises because:
-- The other terms involve multiplications of outputs of derivatives of sigmoids (\(\sigma'(z) \leq 0.25\)) and \(\tanh'(z) \leq 1\), which are small and further decay when multiplied through sequential timesteps.
-- The only direct scaling applied to \(\mathbf{c}_{t-1}\) is via \(\mathbf{f}_t\), ensuring that as long as \(\mathbf{f}_t \approx 1\), gradients remain stable.
+\begin{itemize}
+	\item  The other terms involve multiplications of outputs of derivatives of sigmoids (\(\sigma'(z) \leq 0.25\)) and \(\tanh'(z) \leq 1\), which are small and further decay when multiplied through sequential timesteps.
+	\item  The only direct scaling applied to \(\mathbf{c}_{t-1}\) is via \(\mathbf{f}_t\), ensuring that as long as \(\mathbf{f}_t \approx 1\), gradients remain stable.
+\end{itemize}
 
 In contrast, in a vanilla RNN, the term analogous to \(\mathbf{f}_t\) is:
 
@@ -1319,8 +1323,8 @@ Stacked RNNs and LSTMs build hierarchical temporal representations by passing hi
 		
 		\begin{figure}[H]
 			\centering
-			\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/gru_visualized.png}
-			\caption{Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \cite{zhang2024_advanced}.}
+			\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/gru_visualized.png}
+			\caption{Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \cite{Mahadi2024_GRU_Plasmonic}.}
 			\label{fig:chapter16_gru_architecture}
 		\end{figure}
 		
@@ -1432,10 +1436,11 @@ Stacked RNNs and LSTMs build hierarchical temporal representations by passing hi
 	
 \end{enrichment}
 
+\newpage
 \section{Summary and Future Directions} 
 \label{sec:chapter16_summary_future}
 
-\subsection*{Neural Architecture Search for Improved RNNs}
+\subsection{Neural Architecture Search for Improved RNNs}
 
 Despite the effectiveness of manually designed recurrent architectures such as LSTMs and GRUs, significant efforts continue in searching for potentially superior designs using automated methods. \textbf{Neural Architecture Search (NAS)} systematically explores vast spaces of candidate architectures using techniques like evolutionary algorithms or reinforcement learning.
 
@@ -1448,7 +1453,7 @@ For example, Zoph and Le~\cite{zoph2017_nas} evaluated approximately 10,000 cand
 	\label{fig:chapter16_nas_rnn}
 \end{figure}
 
-\subsection*{Summary of RNN Architectures}
+\subsection{Summary of RNN Architectures}
 
 Throughout this chapter, we have explored key architectures developed to overcome challenges inherent to vanilla RNNs—particularly vanishing and exploding gradients:
 
@@ -1469,7 +1474,7 @@ Throughout this chapter, we have explored key architectures developed to overcom
 	\label{fig:chapter16_rnn_lstm_gru_comparison}
 \end{figure}
 
-\subsection*{Beyond RNNs: From Recurrence to Attention}
+\subsection{Beyond RNNs: From Recurrence to Attention}
 
 Although gating mechanisms greatly enhanced sequence modeling, recurrent architectures inherently rely on sequential computations, making parallelization difficult and hindering performance on extremely long sequences.
 
