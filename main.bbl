@@ -184,6 +184,36 @@
       \verb https://www.appen.com/blog/computer-vision-vs-machine-vision-2
       \endverb
     \endentry
+    \entry{medium_lstm_vanishing}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=4ad3728839abfd5f2ee766cfb6b7ec5a}{%
+           family={Arbel},
+           familyi={A\bibinitperiod},
+           given={Nir},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{fullhash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{fullhashraw}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{bibnamehash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{authorbibnamehash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{authornamehash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{authorfullhash}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \strng{authorfullhashraw}{4ad3728839abfd5f2ee766cfb6b7ec5a}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-03-04}
+      \field{title}{How do LSTM networks solve the problem of vanishing gradients?}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://medium.com/datadriveninvestor/how-do-lstm-networks-solve-the-problem-of-vanishing-gradients-a6784971a577
+      \endverb
+      \verb{url}
+      \verb https://medium.com/datadriveninvestor/how-do-lstm-networks-solve-the-problem-of-vanishing-gradients-a6784971a577
+      \endverb
+    \endentry
     \entry{ba2015_attention}{misc}{}{}
       \name{author}{3}{}{%
         {{hash=8aa66e8231cc2fdbe67aa4f18ca970c6}{%
@@ -3797,6 +3827,56 @@
       \verb 10.1007/978-3-030-01264-9_8
       \endverb
     \endentry
+    \entry{Mahadi2024_GRU_Plasmonic}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=c0181c867cdbe383b97c73af0556e8ba}{%
+           family={Mahadi},
+           familyi={M\bibinitperiod},
+           given={Mahin\bibnamedelima Khan},
+           giveni={M\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=2fdc0f211803d81a17a058576eab0375}{%
+           family={Rahad},
+           familyi={R\bibinitperiod},
+           given={Rummanur},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f646250e18a179fe4bc99e71c23bff54}{%
+           family={Haque},
+           familyi={H\bibinitperiod},
+           given={Mohammad\bibnamedelima Ashraful},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=e823f5febb7de9ad31d1c21db52cafec}{%
+           family={Nishat},
+           familyi={N\bibinitperiod},
+           given={Mirza\bibnamedelima Muntasir},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{8c467d817e75bbc736365ad546a465cf}
+      \strng{fullhash}{ec565e1cd620d1c70f4bbde0acded930}
+      \strng{fullhashraw}{ec565e1cd620d1c70f4bbde0acded930}
+      \strng{bibnamehash}{8c467d817e75bbc736365ad546a465cf}
+      \strng{authorbibnamehash}{8c467d817e75bbc736365ad546a465cf}
+      \strng{authornamehash}{8c467d817e75bbc736365ad546a465cf}
+      \strng{authorfullhash}{ec565e1cd620d1c70f4bbde0acded930}
+      \strng{authorfullhashraw}{ec565e1cd620d1c70f4bbde0acded930}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Applied Physics A}
+      \field{number}{784}
+      \field{title}{Gated recurrent unit (GRU)-based deep learning method for spectrum estimation and inverse modeling in plasmonic devices}
+      \field{volume}{130}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.1007/s00339-024-07956-z
+      \endverb
+      \verb{urlraw}
+      \verb https://link.springer.com/article/10.1007/s00339-024-07956-z
+      \endverb
+      \verb{url}
+      \verb https://link.springer.com/article/10.1007/s00339-024-07956-z
+      \endverb
+    \endentry
     \entry{marr1982_vision}{book}{}{}
       \name{author}{1}{}{%
         {{hash=2cf5062b61963ac0956179a605c38d66}{%
@@ -5285,6 +5365,43 @@
       \field{pages}{1929\bibrangedash 1958}
       \range{pages}{30}
     \endentry
+    \entry{srivastava2015_training}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=6397df99520f6918e6e2791bae8a9468}{%
+           family={Srivastava},
+           familyi={S\bibinitperiod},
+           given={Rupesh\bibnamedelima Kumar},
+           giveni={R\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=c7690d8de5e14a38203ad5706d6dd4eb}{%
+           family={Greff},
+           familyi={G\bibinitperiod},
+           given={Klaus},
+           giveni={K\bibinitperiod}}}%
+        {{hash=288bdbcfe1b91ad7484d7a24f74f99ed}{%
+           family={Schmidhuber},
+           familyi={S\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{fullhash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{fullhashraw}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{bibnamehash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{authorbibnamehash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{authornamehash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{authorfullhash}{10ae49cb55cd10956f84d7d805dfe58b}
+      \strng{authorfullhashraw}{10ae49cb55cd10956f84d7d805dfe58b}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems}
+      \field{title}{Training Very Deep Networks}
+      \field{volume}{28}
+      \field{year}{2015}
+      \field{pages}{2377\bibrangedash 2385}
+      \range{pages}{9}
+    \endentry
     \entry{sutskever2014_seq2seq}{misc}{}{}
       \name{author}{3}{}{%
         {{hash=8d569d1d5b8b5a7836017a98b430f959}{%
@@ -6443,6 +6560,42 @@
       \endverb
       \verb{url}
       \verb https://arxiv.org/abs/1710.09412
+      \endverb
+    \endentry
+    \entry{zhang2024_advanced}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=25bbf4047d900f3760c65b01ee899dba}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=dbe83fd8da75338203d4e8dd0e20be17}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Ming},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{fullhash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{fullhashraw}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{bibnamehash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{authorbibnamehash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{authornamehash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{authorfullhash}{b4fe564c76c7810b659c8e1a88289892}
+      \strng{authorfullhashraw}{b4fe564c76c7810b659c8e1a88289892}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Applied Physics A}
+      \field{number}{4}
+      \field{title}{Advanced Deep Learning Techniques for Time Series Prediction}
+      \field{volume}{130}
+      \field{year}{2024}
+      \field{pages}{456}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1007/s00339-024-07956-z
       \endverb
     \endentry
     \entry{zhang2018_shufflenet}{inproceedings}{}{}

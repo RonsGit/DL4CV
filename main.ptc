@@ -1181,7 +1181,7 @@
 \contentsline {paragraph}{2. Derivative Control:}{525}{section*.1043}%
 \contentsline {paragraph}{3. Zero-Centered Activation:}{525}{section*.1044}%
 \contentsline {paragraph}{A Caveat: Vanishing Gradients Still Remain}{525}{section*.1045}%
-\contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{525}{subsection.16.5.3}%
+\contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{526}{subsection.16.5.3}%
 \contentsline {paragraph}{ReLU6: The Saturation Issue}{526}{section*.1046}%
 \contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{526}{section*.1047}%
 \contentsline {subsection}{\numberline {16.5.4}Why Gradient Clipping Alone is Insufficient}{526}{subsection.16.5.4}%
@@ -1200,37 +1200,67 @@
 \contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{532}{subsection.16.6.4}%
 \contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{532}{subsection.16.6.5}%
 \contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{533}{subsection.16.6.6}%
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{534}{chapter.17}%
+\contentsline {section}{\numberline {16.7}Long Short-Term Memory (LSTM) Overview}{534}{section.16.7}%
+\contentsline {subsection}{\numberline {16.7.1}LSTM Gating Mechanism}{534}{subsection.16.7.1}%
+\contentsline {subsection}{\numberline {16.7.2}LSTM Gate Computation}{534}{subsection.16.7.2}%
+\contentsline {subsection}{\numberline {16.7.3}LSTM State Updates}{535}{subsection.16.7.3}%
+\contentsline {subsection}{\numberline {16.7.4}Gradient Flow in LSTMs}{535}{subsection.16.7.4}%
+\contentsline {subsubsection}{Why LSTMs Offer Stable Gradient Paths}{536}{section*.1063}%
+\contentsline {paragraph}{Comparing to Vanilla RNNs}{536}{section*.1064}%
+\contentsline {subsubsection}{Dominance of $\mathbf {f}_t$ in the Cell State Derivative}{536}{section*.1065}%
+\contentsline {paragraph}{Why $\mathbf {f}_t \approx 1$ for Long-Term Memory.}{536}{section*.1066}%
+\contentsline {subsubsection}{How Hidden-State Gradients Differ}{537}{section*.1067}%
+\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{537}{section*.1068}%
+\contentsline {subsubsection}{Mitigating Exploding Gradients}{537}{section*.1069}%
+\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{538}{section.16.8}%
+\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{538}{subsection.16.8.1}%
+\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{538}{subsection.16.8.2}%
+\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{538}{section*.1071}%
+\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{539}{subsection.16.8.3}%
+\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{540}{section.16.9}%
+\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{540}{subsection.16.9.1}%
+\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{541}{subsection.16.9.2}%
+\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{541}{subsection.16.9.3}%
+\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{542}{section*.1075}%
+\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{542}{section*.1076}%
+\contentsline {paragraph}{Key Observations:}{542}{section*.1078}%
+\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{543}{section*.1079}%
+\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{544}{section*.1083}%
+\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{544}{section*.1084}%
+\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{544}{section*.1085}%
+\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{544}{section*.1086}%
+\contentsline {section}{\numberline {16.11}Summary and Future Directions}{545}{section.16.11}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{547}{chapter.17}%
 \ttl@stoptoc {default@16}
 \ttl@starttoc {default@17}
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{535}{chapter.18}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{548}{chapter.18}%
 \ttl@stoptoc {default@17}
 \ttl@starttoc {default@18}
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{536}{chapter.19}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{549}{chapter.19}%
 \ttl@stoptoc {default@18}
 \ttl@starttoc {default@19}
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{537}{chapter.20}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{550}{chapter.20}%
 \ttl@stoptoc {default@19}
 \ttl@starttoc {default@20}
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{538}{chapter.21}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{551}{chapter.21}%
 \ttl@stoptoc {default@20}
 \ttl@starttoc {default@21}
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{539}{chapter.22}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{552}{chapter.22}%
 \ttl@stoptoc {default@21}
 \ttl@starttoc {default@22}
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{540}{chapter.23}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{553}{chapter.23}%
 \ttl@stoptoc {default@22}
 \ttl@starttoc {default@23}
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{541}{chapter.24}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{554}{chapter.24}%
 \ttl@stoptoc {default@23}
 \ttl@starttoc {default@24}
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{542}{chapter.25}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{555}{chapter.25}%
 \ttl@stoptoc {default@24}
 \ttl@starttoc {default@25}
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{543}{chapter.26}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{556}{chapter.26}%
 \ttl@stoptoc {default@25}
 \ttl@starttoc {default@26}
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{544}{chapter.27}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{557}{chapter.27}%
 \ttl@stoptoc {default@26}
 \ttl@starttoc {default@27}
 \contentsfinish 

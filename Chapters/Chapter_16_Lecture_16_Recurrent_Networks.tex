@@ -678,6 +678,7 @@ This \emph{does not} guarantee stable eigenvalues, but in practice, a mix of neg
 \paragraph{A Caveat: Vanishing Gradients Still Remain}
 While \(\tanh\) curtails unbounded state growth, it does not solve the \emph{vanishing gradient problem}. Once \(\tanh\) saturates near \(\pm 1\), the derivative \(1-\tanh^2(x)\) approaches 0, diminishing gradient flow for earlier timesteps. Hence, \(\tanh\) is best suited for \emph{short to moderate} sequence lengths (tens of timesteps). For capturing extended dependencies (hundreds+), \textbf{LSTM} or \textbf{GRU} gating \cite{hochreiter1997_lstm, cho2014_gru} is often necessary to preserve nonvanishing gradients over time.
 
+\newpage
 \subsection{Why ReLU6 or Leaky ReLU Are Not a Full Remedy}
 \label{sec:chapter16_relu_variants_rnn_issues}
 
@@ -942,4 +943,504 @@ where:
 \noindent In the next section, we explore the design of LSTMs and GRUs, detailing how their gating mechanisms improve sequence modeling and enable more effective applications in tasks such as image captioning.
 
 \newpage
+\section{Long Short-Term Memory (LSTM) Overview}
+\label{sec:chapter16_lstm_overview}
+
+\noindent Long Short-Term Memory (LSTM) networks, introduced by Hochreiter and Schmidhuber in 1997 \cite{hochreiter1997_lstm}, were designed to address the limitations of standard Recurrent Neural Networks (RNNs). Despite their theoretical formulation in the late 1990s, LSTMs only gained widespread adoption around 2010 due to advancements in deep learning frameworks and computational resources. 
+
+\noindent LSTMs are now among the most widely used architectures for processing sequential data, excelling in tasks such as speech recognition, machine translation, and time-series forecasting. Their success stems from their ability to selectively retain and update information over long sequences, mitigating the \textbf{vanishing gradient problem} that hampers standard RNNs.
+
+\subsection{LSTM Gating Mechanism}
+\label{sec:chapter16_lstm_gating}
+
+\noindent Unlike vanilla RNNs, where the hidden state is directly updated at each time step, LSTMs introduce a structured gating mechanism to regulate information flow. Instead of maintaining only a single hidden state, LSTMs utilize two states:
+
+\begin{itemize}
+	\item \textbf{Cell State} (\( c_t \)) – serves as long-term memory, preserving relevant information across multiple time steps.
+	\item \textbf{Hidden State} (\( h_t \)) – represents the short-term memory, interacting with external inputs and producing the network's output at each step.
+\end{itemize}
+
+\noindent Standard RNNs update the hidden state in an uncontrolled manner, making it difficult to decide which information should be kept or discarded. LSTMs address this by structuring memory updates through a series of gates, allowing selective addition, removal, and retrieval of information.
+
+\subsection{LSTM Gate Computation}
+\label{sec:chapter16_lstm_gates}
+
+\noindent Instead of directly modifying the hidden state, LSTMs apply a single matrix multiplication whose output is partitioned into four different gates. Each gate has a specific function and is processed through a distinct activation function:
+
+\begin{itemize}
+	\item \textbf{Forget Gate} (\( f_t \)): Determines how much of the previous cell state should be retained or erased.
+	\[
+	f_t = \sigma(W_f [h_{t-1}, x_t] + b_f)
+	\]
+	Since \( f_t \) passes through a sigmoid activation (\(\sigma\)), its values range between 0 and 1. A value close to 1 retains the corresponding information in \( c_{t-1} \), while a value close to 0 erases it. This gate ensures that irrelevant or outdated information is discarded.
+	
+	\item \textbf{Input Gate} (\( i_t \)): Decides how much new information should be added to the cell state.
+	\[
+	i_t = \sigma(W_i [h_{t-1}, x_t] + b_i)
+	\]
+	Like the forget gate, the input gate uses a sigmoid activation, producing values between 0 and 1 to regulate new information introduction.
+	
+	\item \textbf{'Gate'/Candidate Gate} (\( g_t \)): Generates new candidate values for the cell state.
+	\[
+	g_t = \tanh(W_g [h_{t-1}, x_t] + b_g)
+	\]
+	Unlike the other gates, this gate uses a \(\tanh\) activation, producing values between \([-1,1]\). This candidate state represents potential updates to the memory.
+	
+	\item \textbf{Output Gate} (\( o_t \)): Controls how much of the internal cell state should be exposed externally as the hidden state.
+	\[
+	o_t = \sigma(W_o [h_{t-1}, x_t] + b_o)
+	\]
+	The output gate determines the amount of processed memory (\( c_t \)) that contributes to the hidden state, regulating the information available for subsequent computations.
+\end{itemize}
+
+\subsection{LSTM State Updates}
+\label{sec:chapter16_lstm_updates}
+
+\noindent Using these gates, LSTMs update their internal memory as follows:
+
+\begin{enumerate}
+	\item The previous cell state \( c_{t-1} \) is scaled by the forget gate and updated with new information:
+	\[
+	c_t = f_t \odot c_{t-1} + i_t \odot g_t
+	\]
+	where:
+	\begin{itemize}
+		\item \( f_t \odot c_{t-1} \) determines how much past information is retained.
+		\item \( i_t \odot g_t \) represents new information being added to memory.
+	\end{itemize}
+	
+	\item The new hidden state \( h_t \) is computed using the output gate and transformed cell state:
+	\[
+	h_t = o_t \odot \tanh(c_t)
+	\]
+\end{enumerate}
+
+\noindent This formulation ensures that information updates are both structured and stable over long sequences, significantly improving upon the memory limitations of vanilla RNNs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_90.jpg}
+	\caption{Long Short-Term Memory (LSTM) architecture, illustrating the function of each gate.}
+	\label{fig:chapter16_lstm_architecture}
+\end{figure}
+
+\subsection{Gradient Flow in LSTMs}
+\label{sec:chapter16_gradient_flow_lstm}
+
+\noindent
+Long Short-Term Memory (\textbf{LSTM}) networks produce a hidden state \(\mathbf{h}_t\) at each timestep, much like vanilla RNNs. However, they also maintain an internal \emph{cell state} \(\mathbf{c}_t\) that offers a \textbf{stable gradient pathway} across long sequences. By relying on an \emph{additive} update to \(\mathbf{c}_t\), LSTMs significantly reduce the vanishing gradient problem common to standard RNNs.
+
+\subsubsection{Why LSTMs Offer Stable Gradient Paths}
+\label{subsec:chapter16_lstm_gradient_paths}
+
+\noindent
+At the core of LSTMs is the cell state \(\mathbf{c}_t\), updated by an \emph{additive} equation:
+\[
+\mathbf{c}_t 
+\;=\; 
+\mathbf{f}_t \odot \mathbf{c}_{t-1}
+\;+\; 
+\mathbf{i}_t \odot \mathbf{g}_t,
+\]
+where \(\mathbf{f}_t, \mathbf{i}_t \in [0,1]^d\) (the \emph{forget} gate and \emph{input} gate), and \(\mathbf{g}_t\) is often a \(\tanh\) candidate vector. This design means gradients can propagate along a near-identity path determined by \(\mathbf{f}_t\) rather than repeatedly multiplying by $\mathbf{W}_{hh}$ and activation derivatives.
+
+\paragraph{Comparing to Vanilla RNNs}
+A vanilla RNN’s hidden state update is multiplicative:
+\[
+\mathbf{h}_t
+=
+\phi\!\bigl(\mathbf{W}_{hh}\,\mathbf{h}_{t-1} + \dots\bigr),
+\]
+so backpropagating from time \(T\) to \(t\) yields 
+$\prod_{j=t+1}^T \phi'(\dots)\,\mathbf{W}_{hh}$, 
+likely to vanish or explode if those factors differ from unity.  In contrast, LSTMs pass \emph{most of the gradient} through \(\mathbf{c}_t\) via $\partial \mathbf{c}_t/\partial \mathbf{c}_{t-1}\approx \mathbf{f}_t$—an additive chain that can remain near 1 if $\mathbf{f}_t$ is close to 1 
+\cite{medium_lstm_vanishing}.
+
+\subsubsection{Dominance of \texorpdfstring{$\mathbf{f}_t$}{f\_t} in the Cell State Derivative}
+\label{subsec:chapter16_forget_gate_stability}
+
+\noindent
+An LSTM’s cell update:
+\[
+\mathbf{c}_t 
+\;=\; 
+\mathbf{f}_t \odot \mathbf{c}_{t-1} 
+\;+\; 
+\mathbf{i}_t \odot \mathbf{g}_t
+\]
+implies
+\[
+\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}} 
+\;=\; 
+\mathbf{f}_t 
+\;+\;
+\underbrace{
+	\Bigl(\text{terms from gates' derivative channels}\Bigr)
+}_{\text{often smaller}}
+\,.
+\]
+\textbf{Why call \(\mathbf{f}_t\) “dominant”?} Because $f_t$ directly multiplies $\mathbf{c}_{t-1}$, it exerts a large influence on $\mathbf{c}_t$. Meanwhile, the other gate-derivative terms typically involve chain factors such as $\sigma'(z)\le0.25$, $\tanh'(z)\le1$, and additional partial products 
+\cite{srivastava2015_training, medium_lstm_vanishing}.  Hence, those additional gates’ derivatives often \emph{multiply} small numbers together (e.g.\ $\sigma'(z)\tanh'(z)\cdots$), causing them to be overshadowed by $f_t$ in the sum.
+
+\paragraph{Why \texorpdfstring{$\mathbf{f}_t \approx 1$}{f\_t near 1} for Long-Term Memory.}
+If retaining old information lowers the loss, the network learns to make:
+\[
+\mathbf{f}_t 
+\;=\; 
+\sigma(\mathbf{W}_f [\mathbf{h}_{t-1}, \mathbf{x}_t]+\mathbf{b}_f)
+\;\approx\;
+1,
+\]
+so that the product
+\[
+\frac{\partial \mathbf{c}_T}{\partial \mathbf{c}_t} 
+\;\approx\;
+\prod_{k=t+1}^{T} 
+f_k
+\;\approx\;1.
+\]
+This near-identity chain preserves gradient magnitude over many timesteps. By contrast, vanilla RNNs repeatedly multiply by weight-matrix derivatives and saturating activations, leading to exponential decay or blow-up 
+\cite{hochreiter1997_lstm, medium_lstm_vanishing}.
+
+\subsubsection{How Hidden-State Gradients Differ}
+\label{subsec:chapter16_hidden_grad_vanilla}
+
+\noindent
+Even though the LSTM hidden state is
+\(
+\mathbf{h}_t
+=
+\mathbf{o}_t \odot \tanh(\mathbf{c}_t),
+\)
+the derivative 
+$\partial \mathbf{h}_t/\partial \mathbf{h}_{t-1}$
+can still vanish/explode through repeated matrix multiplications.  \textbf{However}, the principal memory signal flows through $c_t$, meaning $\partial \mathbf{c}_t/\partial \mathbf{c}_{t-1}\approx f_t$ \emph{dominates the overall long-range error}.  Hence, diminishing hidden-state gradients do not necessarily destroy the model’s ability to learn long-term patterns 
+\cite{srivastava2015_training, medium_lstm_vanishing}.
+
+\subsubsection{Why Weight-Gradient Vanishing Is Less Critical}
+\label{subsec:chapter16_weights_gradients_lstm}
+
+\noindent
+Each LSTM weight update $\frac{\partial \mathcal{L}}{\partial \mathbf{W}}$ aggregates partial derivatives from $c_t$ and $h_t$. Although these partials can contain repeated matrix multiplications (risking typical vanishing), \emph{the additive pathway via $c_t$ ensures that the total gradient seldom collapses entirely}.  Specifically:
+
+\begin{itemize}
+	\item \textbf{Partial derivatives through $c_t$ remain significant.}  If $f_{t+1}, f_{t+2},\dots$ are near 1, then 
+	$\frac{\partial \mathbf{c}_T}{\partial \mathbf{c}_t}\!\approx1$ 
+	for a wide time range. So the gradient from $c_T$—and thus from $\mathcal{L}$—does not vanish when backpropagated to earlier timesteps.
+	\item \textbf{Moderate vanishing in other subpaths is not devastating.} Because the $c_t$ path preserves the “long-range backbone” of the error signal, local or moderate vanishing in the gate parameters or hidden states is less fatal to overall learning.
+\end{itemize}
+
+Thus, the LSTM can learn large time-lag dependencies even if certain weight gradients occasionally become small, because \emph{some portion of the error} is consistently carried by the near-identity transitions in $c_t$ 
+\cite{hochreiter1997_lstm}.
+
+\subsubsection{Mitigating Exploding Gradients}
+\label{subsec:chapter16_exploding_gradients}
+
+\noindent
+Because the LSTM’s gating (sigmoid) and candidate (tanh) functions are all \emph{bounded in absolute value} (e.g.\ at most 1 for $\tanh$ and $\sigma$), partial derivatives rarely exceed 1 by large margins 
+\cite{pascanu2013_difficulty}.  Moreover, if an occasional surge occurs, standard \emph{gradient clipping} can cap the update norm. Consequently, LSTMs are \emph{less prone} to exploding gradients relative to RNNs with unbounded activations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_92.jpg}
+	\caption{
+		LSTM gradient flow: the primary error path is \emph{additive} in the cell state $\mathbf{c}_t$, with each step scaled by the forget gate $\mathbf{f}_t \approx 1$ (in many cases).  Other gate-derivative channels exist but often contribute smaller factors. 
+	}
+	\label{fig:chapter16_lstm_gradient_flow}
+\end{figure}
+
+\section{Resemblance of LSTMs to Highway Networks and ResNets}
+\label{subsec:chapter16_lstm_highway_resnets}
+
+\noindent Long Short-Term Memory (LSTM) networks incorporate additive updates in their memory cells, a strategy that stabilizes gradient flow over time. This additive approach has a notable parallel in two influential feedforward architectures: \textbf{Highway Networks} \cite{srivastava2015_training} and \textbf{Residual Networks (ResNets)} \cite{he2016_resnet}. Both utilize additive connections to enhance gradient propagation and reduce the vanishing gradient problem.
+
+\subsection{Highway Networks and LSTMs}
+\label{sec:chapter16_highway_networks}
+
+\noindent Highway Networks introduced trainable gating mechanisms before ResNets, and they closely resemble the gating logic in LSTMs. Their primary operation is defined as:
+\[
+\mathbf{y}(x) = T(x) \odot F(x) + (1 - T(x)) \odot x,
+\]
+where the \textbf{transform gate} \(T(x)\) is a learned sigmoid function that determines how much input \(x\) is transformed by a function \(F(x)\) versus being passed directly through. The complementary gate \((1 - T(x))\) serves as a "carry gate," akin to the forget gate (\(f_t\)) in LSTMs. 
+
+Highway Networks dynamically control information flow across network layers, analogous to how LSTMs manage information across timesteps. Both architectures allow the network to selectively retain or transform information, significantly reducing gradient vanishing or explosion.
+
+\subsection{ResNets and LSTMs}
+\label{sec:chapter16_resnets}
+
+\noindent Residual Networks simplify information propagation with additive skip connections:
+\[
+\mathbf{x}_{l+1} = \mathbf{x}_l + F(\mathbf{x}_l)
+\]
+This formulation closely parallels the additive updates in LSTM cell states:
+\[
+\mathbf{c}_t = f_t \odot \mathbf{c}_{t-1} + i_t \odot g_t
+\]
+The main distinction is that ResNets employ simple, identity skip connections without gates, making them easier to train for spatial feature extraction tasks. LSTMs, on the other hand, apply gating mechanisms to control information selectively across time, providing greater flexibility and adaptability to sequential data.
+
+\paragraph{Differences Between ResNets and Highway Networks}
+\begin{itemize}
+	\item \textbf{Gating Mechanism:} Highway Networks employ learned gates similar to LSTM, dynamically controlling information flow. ResNets use fixed skip connections (identity mappings) without trainable gates, making their structure simpler but less adaptable.
+	\item \textbf{Complexity vs. Stability:} Highway Networks' complexity with multiple gates makes them highly adaptable but more challenging to train. ResNets simplify this concept, using straightforward additive skip connections for robust training of deep architectures.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_95.jpg}
+	\caption{Comparison between ResNets and LSTMs: Both employ additive connections to improve gradient flow, but LSTMs introduce gating mechanisms to dynamically control information retention across time.}
+	\label{fig:chapter16_resnets_lstm_similarity}
+\end{figure}
+
+\subsection{Summary of LSTM, Highway, and ResNet Connections}
+
+\noindent Highway Networks, ResNets, and LSTMs share a common principle: they provide additive gradient pathways that enable deep models to be trained effectively. While Highway and ResNet architectures stabilize gradient flow across spatial layers, LSTMs employ a similar concept to stabilize gradient flow across timesteps. The key advantage of LSTMs lies in their adaptive gating, allowing the network to dynamically choose which information is carried forward, facilitating more efficient training and robust learning of long-range temporal dependencies.
+
+\newpage
+\section{Stacking Layers in RNNs and LSTMs}
+\label{sec:chapter16_stacking_rnn_lstm}
+
+\noindent
+Stacking multiple layers in Recurrent Neural Networks (RNNs) and Long Short-Term Memory (LSTM) networks parallels the rationale of deep feedforward architectures. Each added layer typically captures more abstract or higher-level temporal representations of the input sequence, while lower layers focus on immediate, short-term patterns. This hierarchical organization allows the model to integrate both local and long-range dependencies more effectively.
+
+\subsection{Architecture of Stacked RNNs and LSTMs}
+\label{sec:chapter16_stacked_rnn_architecture}
+
+\noindent
+In a stacked RNN (or LSTM), layer \(\ell=1\) processes the raw sequence \(\{\mathbf{x}_t\}\) and outputs hidden states \(\{\mathbf{h}^{(1)}_t\}\). The next layer \(\ell=2\) receives \(\{\mathbf{h}^{(1)}_t\}\) as its input, producing \(\{\mathbf{h}^{(2)}_t\}\), and so on:
+\[
+\mathbf{h}^{(\ell)}_t
+\;=\;
+f^{(\ell)}\Bigl(\,
+\mathbf{h}^{(\ell-1)}_t,\,
+\mathbf{h}^{(\ell)}_{t-1}
+\Bigr),
+\]
+where:
+\begin{itemize}
+	\item \(\mathbf{h}^{(\ell)}_t\) is the hidden state at timestep \(t\) in layer \(\ell\),
+	\item \(\mathbf{h}^{(\ell-1)}_t\) is the output from layer \(\ell-1\) at time \(t\),
+	\item \(\mathbf{h}^{(\ell)}_{t-1}\) is the previous hidden state in layer \(\ell\).
+\end{itemize}
+Each layer refines sequential information from the layer below. This progression from low-level to high-level features is analogous to how deeper CNN layers capture more abstract spatial features.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_97.jpg}
+	\caption{A two-layer stacked RNN. The first layer reads the input sequence; its hidden states feed into the second layer, refining representations at each timestep.}
+	\label{fig:chapter16_two_layer_rnn}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_16/slide_98.jpg}
+	\caption{A three-layer stacked RNN. Each layer takes the hidden states from the layer below, thereby learning progressively more abstract temporal features.}
+	\label{fig:chapter16_three_layer_rnn}
+\end{figure}
+
+\noindent
+For stacked LSTM architectures, each layer has its own cell states \(\mathbf{c}^{(\ell)}_t\), forget gates \(\mathbf{f}_t^{(\ell)}\), input gates, and so forth. Consequently, each layer can learn different temporal abstractions, from short-range local patterns in the first layer to more global, long-range dependencies in deeper layers.
+
+\subsection{Practical Limitations of Deep RNN Architectures}
+\label{subsec:chapter16_deep_rnn_limitations}
+
+Despite their advantages, stacking many recurrent layers can encounter practical limitations:
+\begin{itemize}
+	\item \textbf{Diminishing Returns:} Empirical evidence suggests that adding more layers beyond a certain depth (typically 3-5 layers) provides minimal additional benefit due to gradient propagation challenges and redundancy.
+	\item \textbf{Overfitting Risks:} Additional layers significantly increase the number of parameters, making the model susceptible to overfitting unless substantial data or rigorous regularization techniques are employed.
+	\item \textbf{Increased Complexity and Training Instability:} More layers lead to higher computational complexity and require careful optimization strategies, such as gradient clipping and specialized initializations, to ensure stable and efficient training.
+\end{itemize}
+
+Therefore, practical deep RNN-based models often balance depth with the complexity of their gating mechanisms, typically settling around a moderate number of layers to achieve optimal performance without compromising stability.
+
+\subsection{Deep RNNs: Balancing Depth and Efficiency}
+\label{sec:chapter16_summary_stacking}
+
+\noindent
+Stacked RNNs and LSTMs build hierarchical temporal representations by passing hidden states from lower layers to higher ones. This layered approach extends a model’s capacity to learn both fine-grained and globally long-range patterns. However, as depth grows, so do computational overhead, training instability, and the risk of overfitting or diminishing returns. In practice, many effective architectures limit the stack depth to around 3--5 layers to balance representation power and tractable training.
+
+\begin{enrichment}[Other RNN Variants: GRU][section]
+	\noindent
+	\textbf{Gated Recurrent Units (GRUs)}~\cite{cho2014_gru} are a streamlined yet powerful alternative to Long Short-Term Memory (LSTM) networks, aimed at capturing long-term dependencies while reducing the overall complexity. GRUs merge some of the gating components found in LSTMs, thereby reducing parameters and accelerating training, yet still offering effective gradient flow for many sequence modeling tasks.
+	
+	\begin{enrichment}[GRU Architecture][subsection]
+		
+		\noindent
+		GRUs compress the LSTM’s three gates (input, forget, and output) into two gates:
+		
+		\begin{itemize}
+			\item \textbf{Reset gate} \((r_t)\): Controls how much of the previous hidden state \(\mathbf{h}_{t-1}\) is “forgotten” or “reset” before computing a new candidate.
+			\item \textbf{Update gate} \((z_t)\): Balances new candidate information against the existing hidden state, effectively merging the “input” and “forget” gating roles found in LSTMs.
+		\end{itemize}
+		
+		\noindent
+		Formally, a GRU evolves its hidden state as follows:
+		\[
+		\begin{aligned}
+			r_t &= \sigma\bigl(\mathbf{W}_{xr} \,\mathbf{x}_t \;+\; \mathbf{W}_{hr} \,\mathbf{h}_{t-1} \;+\; \mathbf{b}_r\bigr), \\
+			z_t &= \sigma\bigl(\mathbf{W}_{xz} \,\mathbf{x}_t \;+\; \mathbf{W}_{hz} \,\mathbf{h}_{t-1} \;+\; \mathbf{b}_z\bigr), \\
+			\tilde{h}_t &= \tanh\Bigl(\mathbf{W}_{xh}\,\mathbf{x}_t \;+\; \mathbf{W}_{hh}\,\bigl(r_t \odot \mathbf{h}_{t-1}\bigr) \;+\; \mathbf{b}_h\Bigr), \\
+			\mathbf{h}_t &= \bigl(1 - z_t\bigr)\odot \mathbf{h}_{t-1} \;+\; z_t \odot \tilde{h}_t.
+		\end{aligned}
+		\]
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/gru_visualized.png}
+			\caption{Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \cite{zhang2024_advanced}.}
+			\label{fig:chapter16_gru_architecture}
+		\end{figure}
+		
+		\paragraph{Key Observations:}
+		\begin{itemize}
+			\item The update gate \(z_t\) decides how much of the old hidden state \(\mathbf{h}_{t-1}\) to keep vs.\ how much new information \(\tilde{h}_t\) to incorporate.
+			\item The reset gate \(r_t\) modulates the contribution of the old hidden state \(\mathbf{h}_{t-1}\) before generating the candidate \(\tilde{h}_t\).
+		\end{itemize}
+		This design merges LSTM’s separate “input” and “forget” gates into $z_t$, simplifying the gating mechanism while retaining enough flexibility to capture temporal structure \cite{cho2014_gru}.
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Gradient Flow in GRUs][subsection]
+		\noindent
+		Despite having fewer gates than LSTMs, GRUs preserve stable gradient flow in a way similar to LSTMs, preventing the repeated multiplication issues that plague vanilla RNNs.
+		
+		\subsubsection*{Why GRUs Improve Over Vanilla RNNs}
+		In vanilla RNNs, the hidden state update
+		\[
+		\mathbf{h}_t = \phi(\mathbf{W}_{hh}\,\mathbf{h}_{t-1} + \dots)
+		\]
+		causes gradients to vanish or explode through repeated application of \(\mathbf{W}_{hh}\) and \(\phi'(\cdot)\). In a GRU, large parts of the gradient flow pass through the \emph{update mechanism}:
+		\[
+		\mathbf{h}_t = (1-z_t)\odot \mathbf{h}_{t-1} + z_t\odot \tilde{h}_t,
+		\]
+		where:
+		\[
+		\tilde{h}_t = \tanh\Bigl(\mathbf{W}_{xh}\,\mathbf{x}_t + \mathbf{W}_{hh}(r_t\odot \mathbf{h}_{t-1})\Bigr).
+		\]
+		This partial derivative is more \emph{additive} than purely multiplicative. Specifically, 
+		\[
+		\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}
+		\;=\;
+		(1 - z_t) 
+		\;+\;
+		\bigl(\text{smaller terms from } \tilde{h}_t\text{'s derivative}\bigr)
+		,
+		\]
+		akin to how LSTMs have an additive path in \(\mathbf{c}_t\). The gate $z_t$ is bounded in $(0,1)$, allowing the network to maintain or overwrite hidden states. If retaining old information is advantageous, $z_t\approx0$ keeps $\mathbf{h}_{t-1}$ unaltered, stabilizing the gradient. Conversely, if new content is crucial, $z_t\approx1$ focuses on $\tilde{h}_t$, but still uses \(\tanh(\cdot)\) to bound partial derivatives.
+		
+		\subsubsection*{Reset Gate's Gradient Role}
+		The reset gate $r_t$ shapes how the old hidden state $\mathbf{h}_{t-1}$ influences the candidate $\tilde{h}_t$. 
+		\[
+		\tilde{h}_t = 
+		\tanh(\dots + \mathbf{W}_{hh}\,(r_t \odot \mathbf{h}_{t-1})),
+		\]
+		\[
+		\frac{\partial \tilde{h}_t}{\partial \mathbf{h}_{t-1}}
+		\;=\;
+		\tanh'(\dots)\;\mathbf{W}_{hh}\;\text{diag}(r_t).
+		\]
+		Since $r_t\in[0,1]^d$ and $\tanh'(z)\le1$, the product remains bounded. This ensures that gradients from $\tilde{h}_t$ seldom blow up, and vanish less severely than in vanilla RNNs because the gating can adapt to maintain relevant signals \cite{cho2014_gru}.
+		
+		\subsubsection*{Comparing GRU to LSTM Gradient Paths}
+		Whereas LSTMs separate memory into $\mathbf{c}_t$ (additive cell state) and $\mathbf{h}_t$ (output state), GRUs unify memory and output states in $\mathbf{h}_t$. Nevertheless, the gating structure 
+		\[
+		(1 - z_t)\odot \mathbf{h}_{t-1} + z_t\odot \tilde{h}_t
+		\]
+		also provides an \emph{additive} partial derivative that is often close to a near-identity map through either $(1-z_t)$ or $z_t$ in $(0,1)$ ranges. This helps preserve long-term dependencies more effectively than a single multiplicative path in a vanilla RNN. Both LSTMs and GRUs avoid repeated multiplication by the full $\mathbf{W}_{hh}$ at every step of the gradient chain, stabilizing training over longer sequences.
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Advantages of GRUs over LSTMs][subsection]
+		
+		\noindent
+		GRUs offer several key advantages \cite{cho2014_gru}:
+		\begin{itemize}
+			\item \textbf{Computational Efficiency}: Fewer gates and parameters lead to faster training and reduced memory usage, benefitting resource-constrained applications.
+			\item \textbf{Comparably Strong Performance}: For many tasks, GRUs match or slightly exceed LSTM performance, especially on mid-range sequence lengths.
+			\item \textbf{Simplicity of Implementation}: With fewer gating components, GRUs are often easier to code, tune, and interpret in terms of gating patterns.
+		\end{itemize}
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Limitations of GRUs][subsection]
+		
+		\noindent
+		Despite these advantages:
+		\begin{itemize}
+			\item \textbf{Reduced Capacity}: Merging gates may hamper modeling of extremely subtle or highly specialized long-term relationships, where LSTMs’ separate cell state can shine.
+			\item \textbf{Hyperparameter Sensitivity}: Choosing hidden size, learning rates, or initial gates is often crucial. In certain problems, a suboptimal initialization can degrade performance more than in LSTMs.
+			\item \textbf{Less Granular Control}: By combining forget and input gating into $z_t$, GRUs provide a single mixture path. This can be less fine-grained than the distinct additive cell state in LSTMs.
+		\end{itemize}
+		
+	\end{enrichment}
+	
+	\begin{enrichment}[Comparison with LSTMs][subsection]
+		
+		\noindent
+		Comparing GRUs and LSTMs \textbf{from a gradient-flow standpoint}:
+		\begin{itemize}
+			\item Both mitigate vanishing and exploding gradients \emph{far better} than vanilla RNNs, thanks to gating and partial additive structures.
+			\item LSTM separates memory into $\mathbf{c}_t$ (cell state) and $\mathbf{h}_t$ (output), facilitating highly explicit long-range gradient paths. GRU merges these into $\mathbf{h}_t$ but still keeps a near-identity update for the hidden state.
+			\item GRUs are simpler with fewer parameters (no output gate, no explicit cell state). LSTMs can sometimes capture extremely long or subtle dependencies more robustly, but at higher computational cost.
+		\end{itemize}
+		
+		\noindent
+		Thus, \textbf{both} LSTMs and GRUs significantly improve gradient stability over vanilla RNNs. GRUs are often chosen in resource-limited scenarios or whenever the simpler gating mechanism suffices, whereas LSTMs may still prove stronger on tasks demanding very nuanced long-distance representations.
+		
+	\end{enrichment}
+	
+\begin{enrichment}[Bridging to Advanced Architectures][subsection]
+	
+	\noindent
+	While GRUs and LSTMs have significantly enhanced the training stability and effectiveness of recurrent neural networks, their architectures are still manually designed, and may not be optimal for every task. Furthermore, despite their improved gradient flow, certain long-term dependencies or more complex patterns may still pose challenges.
+	
+	To overcome this, researchers have introduced methods such as \textbf{Neural Architecture Search (NAS)}, which automatically discover recurrent architectures optimized for specific tasks. NAS algorithms systematically explore the design space, identifying architectures that might combine beneficial aspects of GRUs, LSTMs, and other variants, resulting in even more efficient and powerful models.
+	\end{enrichment}
+	
+\end{enrichment}
+
+\section{Summary and Future Directions} 
+\label{sec:chapter16_summary_future}
+
+\subsection*{Neural Architecture Search for Improved RNNs}
+
+Despite the effectiveness of manually designed recurrent architectures such as LSTMs and GRUs, significant efforts continue in searching for potentially superior designs using automated methods. \textbf{Neural Architecture Search (NAS)} systematically explores vast spaces of candidate architectures using techniques like evolutionary algorithms or reinforcement learning.
+
+For example, Zoph and Le~\cite{zoph2017_nas} evaluated approximately 10,000 candidate recurrent architectures, identifying configurations that marginally improved upon traditional LSTMs. However, despite extensive computational investment, these improvements were relatively modest, underscoring that LSTMs and GRUs are already well-tuned architectures with robust performance.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_101.jpg}
+	\caption{Neural Architecture Search (NAS) applied to recurrent neural network architectures, showcasing evolutionary exploration of candidate designs (adapted from \cite{zoph2017_nas}).}
+	\label{fig:chapter16_nas_rnn}
+\end{figure}
+
+\subsection*{Summary of RNN Architectures}
+
+Throughout this chapter, we have explored key architectures developed to overcome challenges inherent to vanilla RNNs—particularly vanishing and exploding gradients:
+
+\begin{itemize}
+	\item \textbf{Vanilla RNNs}: Introduced fundamental recurrence, but significantly constrained by unstable gradients, limiting their practical effectiveness for capturing long-term dependencies.
+	\item \textbf{LSTMs and GRUs}: Revolutionized recurrent architectures by employing gating mechanisms and additive state updates, improving gradient stability and long-range dependency modeling:
+	\begin{itemize}
+		\item \textbf{LSTMs}: Offer explicit gating (input, forget, and output) and an additive cell state, making them robust in capturing intricate and long-term patterns.
+		\item \textbf{GRUs}: Combine gating mechanisms into fewer components, providing computational efficiency and better generalization on limited data or in resource-constrained environments, albeit with slightly reduced representational power compared to LSTMs.
+	\end{itemize}
+	\item \textbf{Gradient Management}: Exploding gradients are effectively controlled by gradient clipping, whereas vanishing gradients are mitigated through gating and additive updates introduced by LSTMs and GRUs.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/rnn_lstm_gru.png}
+	\caption{Comparison of Vanilla RNN, LSTM, and GRU architectures. Source: \cite{Mahadi2024_GRU_Plasmonic}.}
+	\label{fig:chapter16_rnn_lstm_gru_comparison}
+\end{figure}
+
+\subsection*{Beyond RNNs: From Recurrence to Attention}
+
+Although gating mechanisms greatly enhanced sequence modeling, recurrent architectures inherently rely on sequential computations, making parallelization difficult and hindering performance on extremely long sequences.
+
+Recent developments have introduced attention mechanisms—particularly the \textbf{Transformer architecture}~\cite{vaswani2017_attention}—which eliminate recurrence altogether. Transformers employ multi-head self-attention, enabling parallel processing and more effectively capturing extensive contextual relationships within data sequences. This represents a significant advancement, improving modeling capabilities and computational efficiency.
+
+In the upcoming chapter, we will delve deeply into Attention and Transformer architectures, exploring how they address the limitations of RNN-based models and achieve state-of-the-art results in a broad range of sequence modeling tasks.
+
 
