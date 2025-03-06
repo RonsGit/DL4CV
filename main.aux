@@ -4099,118 +4099,106 @@
 \newlabel{fig:chapter16_lstm_architecture}{{16.15}{535}{Long Short-Term Memory (LSTM) architecture, illustrating the function of each gate}{figure.caption.1062}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {16.7.4}Gradient Flow in LSTMs}{535}{subsection.16.7.4}\protected@file@percent }
 \newlabel{sec:chapter16_gradient_flow_lstm}{{16.7.4}{535}{Gradient Flow in LSTMs}{subsection.16.7.4}{}}
-\abx@aux@cite{0}{medium_lstm_vanishing}
-\abx@aux@segm{0}{0}{medium_lstm_vanishing}
+\@writefile{toc}{\contentsline {subsubsection}{Why the Cell State $\mathbf  {c}_t$ Preserves Long-Term Information}{536}{section*.1063}\protected@file@percent }
+\newlabel{subsec:chapter16_lstm_cell_state}{{16.7.4}{536}{Why the Cell State \texorpdfstring {$\mathbf {c}_t$}{c\_t} Preserves Long-Term Information}{section*.1063}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Why $\mathbf  {f}_t$ Prevents Vanishing Gradients}{536}{section*.1064}\protected@file@percent }
+\newlabel{subsec:chapter16_lstm_forget_gate}{{16.7.4}{536}{Why \texorpdfstring {$\mathbf {f}_t$}{f\_t} Prevents Vanishing Gradients}{section*.1064}{}}
 \abx@aux@cite{0}{srivastava2015_training}
 \abx@aux@segm{0}{0}{srivastava2015_training}
 \abx@aux@cite{0}{medium_lstm_vanishing}
 \abx@aux@segm{0}{0}{medium_lstm_vanishing}
-\abx@aux@cite{0}{hochreiter1997_lstm}
-\abx@aux@segm{0}{0}{hochreiter1997_lstm}
-\abx@aux@cite{0}{medium_lstm_vanishing}
-\abx@aux@segm{0}{0}{medium_lstm_vanishing}
-\abx@aux@cite{0}{srivastava2015_training}
-\abx@aux@segm{0}{0}{srivastava2015_training}
-\abx@aux@cite{0}{medium_lstm_vanishing}
-\abx@aux@segm{0}{0}{medium_lstm_vanishing}
-\@writefile{toc}{\contentsline {subsubsection}{Why LSTMs Offer Stable Gradient Paths}{536}{section*.1063}\protected@file@percent }
-\newlabel{subsec:chapter16_lstm_gradient_paths}{{16.7.4}{536}{Why LSTMs Offer Stable Gradient Paths}{section*.1063}{}}
-\@writefile{toc}{\contentsline {paragraph}{Comparing to Vanilla RNNs}{536}{section*.1064}\protected@file@percent }
-\abx@aux@backref{349}{medium_lstm_vanishing}{0}{536}{536}
-\@writefile{toc}{\contentsline {subsubsection}{Dominance of $\mathbf  {f}_t$ in the Cell State Derivative}{536}{section*.1065}\protected@file@percent }
-\newlabel{subsec:chapter16_forget_gate_stability}{{16.7.4}{536}{Dominance of \texorpdfstring {$\mathbf {f}_t$}{f\_t} in the Cell State Derivative}{section*.1065}{}}
-\abx@aux@backref{350}{medium_lstm_vanishing}{0}{536}{536}
-\abx@aux@backref{351}{srivastava2015_training}{0}{536}{536}
-\@writefile{toc}{\contentsline {paragraph}{Why $\mathbf  {f}_t \approx 1$ for Long-Term Memory.}{536}{section*.1066}\protected@file@percent }
-\abx@aux@backref{352}{medium_lstm_vanishing}{0}{536}{536}
-\abx@aux@backref{353}{hochreiter1997_lstm}{0}{536}{536}
+\@writefile{toc}{\contentsline {subsubsection}{Why $\mathbf  {f}_t$ Can Be Learned to Stay Near 1}{537}{section*.1065}\protected@file@percent }
+\newlabel{subsec:chapter16_lstm_why_f_near_1}{{16.7.4}{537}{Why \texorpdfstring {$\mathbf {f}_t$}{f\_t} Can Be Learned to Stay Near 1}{section*.1065}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Why Forget Gates Do Not Cause Exponential Decay Like RNN Activations}{537}{section*.1066}\protected@file@percent }
+\newlabel{subsec:chapter16_lstm_forget_gate_stability}{{16.7.4}{537}{Why Forget Gates Do Not Cause Exponential Decay Like RNN Activations}{section*.1066}{}}
+\@writefile{toc}{\contentsline {subsubsection}{How Hidden-State Gradients Differ}{537}{section*.1067}\protected@file@percent }
+\newlabel{subsec:chapter16_hidden_grad_vanilla}{{16.7.4}{537}{How Hidden-State Gradients Differ}{section*.1067}{}}
+\abx@aux@backref{349}{medium_lstm_vanishing}{0}{537}{537}
+\abx@aux@backref{350}{srivastava2015_training}{0}{537}{537}
 \abx@aux@cite{0}{hochreiter1997_lstm}
 \abx@aux@segm{0}{0}{hochreiter1997_lstm}
 \abx@aux@cite{0}{pascanu2013_difficulty}
 \abx@aux@segm{0}{0}{pascanu2013_difficulty}
-\BKM@entry{id=591,dest={73656374696F6E2E31362E38},srcline={1152}}{5C3337365C3337375C303030525C303030655C303030735C303030655C3030306D5C303030625C3030306C5C303030615C3030306E5C303030635C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030535C303030545C3030304D5C303030735C3030305C3034305C303030745C3030306F5C3030305C3034305C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C30303073}
+\@writefile{toc}{\contentsline {paragraph}{Consequence for Training}{538}{section*.1068}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{538}{section*.1069}\protected@file@percent }
+\newlabel{subsec:chapter16_weights_gradients_lstm}{{16.7.4}{538}{Why Weight-Gradient Vanishing Is Less Critical}{section*.1069}{}}
+\abx@aux@backref{351}{hochreiter1997_lstm}{0}{538}{538}
+\@writefile{toc}{\contentsline {subsubsection}{Mitigating Exploding Gradients}{538}{section*.1070}\protected@file@percent }
+\newlabel{subsec:chapter16_exploding_gradients}{{16.7.4}{538}{Mitigating Exploding Gradients}{section*.1070}{}}
+\abx@aux@backref{352}{pascanu2013_difficulty}{0}{538}{538}
+\BKM@entry{id=591,dest={73656374696F6E2E31362E38},srcline={1186}}{5C3337365C3337375C303030525C303030655C303030735C303030655C3030306D5C303030625C3030306C5C303030615C3030306E5C303030635C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030535C303030545C3030304D5C303030735C3030305C3034305C303030745C3030306F5C3030305C3034305C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C30303073}
 \abx@aux@cite{0}{srivastava2015_training}
 \abx@aux@segm{0}{0}{srivastava2015_training}
 \abx@aux@cite{0}{he2016_resnet}
 \abx@aux@segm{0}{0}{he2016_resnet}
-\@writefile{toc}{\contentsline {subsubsection}{How Hidden-State Gradients Differ}{537}{section*.1067}\protected@file@percent }
-\newlabel{subsec:chapter16_hidden_grad_vanilla}{{16.7.4}{537}{How Hidden-State Gradients Differ}{section*.1067}{}}
-\abx@aux@backref{354}{medium_lstm_vanishing}{0}{537}{537}
-\abx@aux@backref{355}{srivastava2015_training}{0}{537}{537}
-\@writefile{toc}{\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{537}{section*.1068}\protected@file@percent }
-\newlabel{subsec:chapter16_weights_gradients_lstm}{{16.7.4}{537}{Why Weight-Gradient Vanishing Is Less Critical}{section*.1068}{}}
-\abx@aux@backref{356}{hochreiter1997_lstm}{0}{537}{537}
-\@writefile{toc}{\contentsline {subsubsection}{Mitigating Exploding Gradients}{537}{section*.1069}\protected@file@percent }
-\newlabel{subsec:chapter16_exploding_gradients}{{16.7.4}{537}{Mitigating Exploding Gradients}{section*.1069}{}}
-\abx@aux@backref{357}{pascanu2013_difficulty}{0}{537}{537}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.16}{\ignorespaces  LSTM gradient flow: the primary error path is \emph  {additive} in the cell state $\mathbf  {c}_t$, with each step scaled by the forget gate $\mathbf  {f}_t \approx 1$ (in many cases). Other gate-derivative channels exist but often contribute smaller factors. }}{537}{figure.caption.1070}\protected@file@percent }
-\newlabel{fig:chapter16_lstm_gradient_flow}{{16.16}{537}{LSTM gradient flow: the primary error path is \emph {additive} in the cell state $\mathbf {c}_t$, with each step scaled by the forget gate $\mathbf {f}_t \approx 1$ (in many cases). Other gate-derivative channels exist but often contribute smaller factors}{figure.caption.1070}{}}
-\BKM@entry{id=592,dest={73756273656374696F6E2E31362E382E31},srcline={1157}}{5C3337365C3337375C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
-\BKM@entry{id=593,dest={73756273656374696F6E2E31362E382E32},srcline={1168}}{5C3337365C3337375C303030525C303030655C303030735C3030304E5C303030655C303030745C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
-\@writefile{toc}{\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{538}{section.16.8}\protected@file@percent }
-\newlabel{subsec:chapter16_lstm_highway_resnets}{{16.8}{538}{Resemblance of LSTMs to Highway Networks and ResNets}{section.16.8}{}}
-\abx@aux@backref{358}{srivastava2015_training}{0}{538}{538}
-\abx@aux@backref{359}{he2016_resnet}{0}{538}{538}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{538}{subsection.16.8.1}\protected@file@percent }
-\newlabel{sec:chapter16_highway_networks}{{16.8.1}{538}{Highway Networks and LSTMs}{subsection.16.8.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{538}{subsection.16.8.2}\protected@file@percent }
-\newlabel{sec:chapter16_resnets}{{16.8.2}{538}{ResNets and LSTMs}{subsection.16.8.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{538}{section*.1071}\protected@file@percent }
-\BKM@entry{id=594,dest={73756273656374696F6E2E31362E382E33},srcline={1194}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030535C303030545C3030304D5C3030302C5C3030305C3034305C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030302C5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C3030305C3034305C303030435C3030306F5C3030306E5C3030306E5C303030655C303030635C303030745C303030695C3030306F5C3030306E5C30303073}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.17}{\ignorespaces Comparison between ResNets and LSTMs: Both employ additive connections to improve gradient flow, but LSTMs introduce gating mechanisms to dynamically control information retention across time.}}{539}{figure.caption.1072}\protected@file@percent }
-\newlabel{fig:chapter16_resnets_lstm_similarity}{{16.17}{539}{Comparison between ResNets and LSTMs: Both employ additive connections to improve gradient flow, but LSTMs introduce gating mechanisms to dynamically control information retention across time}{figure.caption.1072}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{539}{subsection.16.8.3}\protected@file@percent }
-\BKM@entry{id=595,dest={73656374696F6E2E31362E39},srcline={1199}}{5C3337365C3337375C303030535C303030745C303030615C303030635C3030306B5C303030695C3030306E5C303030675C3030305C3034305C3030304C5C303030615C303030795C303030655C303030725C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
-\BKM@entry{id=596,dest={73756273656374696F6E2E31362E392E31},srcline={1205}}{5C3337365C3337375C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C303030535C303030745C303030615C303030635C3030306B5C303030655C303030645C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
-\@writefile{toc}{\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{540}{section.16.9}\protected@file@percent }
-\newlabel{sec:chapter16_stacking_rnn_lstm}{{16.9}{540}{Stacking Layers in RNNs and LSTMs}{section.16.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{540}{subsection.16.9.1}\protected@file@percent }
-\newlabel{sec:chapter16_stacked_rnn_architecture}{{16.9.1}{540}{Architecture of Stacked RNNs and LSTMs}{subsection.16.9.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.18}{\ignorespaces A two-layer stacked RNN. The first layer reads the input sequence; its hidden states feed into the second layer, refining representations at each timestep.}}{540}{figure.caption.1073}\protected@file@percent }
-\newlabel{fig:chapter16_two_layer_rnn}{{16.18}{540}{A two-layer stacked RNN. The first layer reads the input sequence; its hidden states feed into the second layer, refining representations at each timestep}{figure.caption.1073}{}}
-\BKM@entry{id=597,dest={73756273656374696F6E2E31362E392E32},srcline={1243}}{5C3337365C3337375C303030505C303030725C303030615C303030635C303030745C303030695C303030635C303030615C3030306C5C3030305C3034305C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030445C303030655C303030655C303030705C3030305C3034305C303030525C3030304E5C3030304E5C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
-\BKM@entry{id=598,dest={73756273656374696F6E2E31362E392E33},srcline={1255}}{5C3337365C3337375C303030445C303030655C303030655C303030705C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030303A5C3030305C3034305C303030425C303030615C3030306C5C303030615C3030306E5C303030635C303030695C3030306E5C303030675C3030305C3034305C303030445C303030655C303030705C303030745C303030685C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C30303079}
-\BKM@entry{id=599,dest={73656374696F6E2A2E31303735},srcline={1261}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030303A5C3030305C3034305C3030304F5C303030745C303030685C303030655C303030725C3030305C3034305C303030525C3030304E5C3030304E5C3030305C3034305C303030565C303030615C303030725C303030695C303030615C3030306E5C303030745C303030735C3030303A5C3030305C3034305C303030475C303030525C30303055}
+\BKM@entry{id=592,dest={73756273656374696F6E2E31362E382E31},srcline={1191}}{5C3337365C3337375C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030305C3034305C3030304E5C303030655C303030745C303030775C3030306F5C303030725C3030306B5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\BKM@entry{id=593,dest={73756273656374696F6E2E31362E382E32},srcline={1202}}{5C3337365C3337375C303030525C303030655C303030735C3030304E5C303030655C303030745C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.16}{\ignorespaces  LSTM gradient flow: the primary error path is \emph  {additive} in the cell state $\mathbf  {c}_t$, with each step scaled by the forget gate $\mathbf  {f}_t \approx 1$ (in many cases). Other gate-derivative channels exist but often contribute smaller factors. }}{539}{figure.caption.1071}\protected@file@percent }
+\newlabel{fig:chapter16_lstm_gradient_flow}{{16.16}{539}{LSTM gradient flow: the primary error path is \emph {additive} in the cell state $\mathbf {c}_t$, with each step scaled by the forget gate $\mathbf {f}_t \approx 1$ (in many cases). Other gate-derivative channels exist but often contribute smaller factors}{figure.caption.1071}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{539}{section.16.8}\protected@file@percent }
+\newlabel{subsec:chapter16_lstm_highway_resnets}{{16.8}{539}{Resemblance of LSTMs to Highway Networks and ResNets}{section.16.8}{}}
+\abx@aux@backref{353}{srivastava2015_training}{0}{539}{539}
+\abx@aux@backref{354}{he2016_resnet}{0}{539}{539}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{539}{subsection.16.8.1}\protected@file@percent }
+\newlabel{sec:chapter16_highway_networks}{{16.8.1}{539}{Highway Networks and LSTMs}{subsection.16.8.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{539}{subsection.16.8.2}\protected@file@percent }
+\newlabel{sec:chapter16_resnets}{{16.8.2}{539}{ResNets and LSTMs}{subsection.16.8.2}{}}
+\BKM@entry{id=594,dest={73756273656374696F6E2E31362E382E33},srcline={1228}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030535C303030545C3030304D5C3030302C5C3030305C3034305C303030485C303030695C303030675C303030685C303030775C303030615C303030795C3030302C5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030525C303030655C303030735C3030304E5C303030655C303030745C3030305C3034305C303030435C3030306F5C3030306E5C3030306E5C303030655C303030635C303030745C303030695C3030306F5C3030306E5C30303073}
+\@writefile{toc}{\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{540}{section*.1072}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16.17}{\ignorespaces Comparison between ResNets and LSTMs: Both employ additive connections to improve gradient flow, but LSTMs introduce gating mechanisms to dynamically control information retention across time.}}{540}{figure.caption.1073}\protected@file@percent }
+\newlabel{fig:chapter16_resnets_lstm_similarity}{{16.17}{540}{Comparison between ResNets and LSTMs: Both employ additive connections to improve gradient flow, but LSTMs introduce gating mechanisms to dynamically control information retention across time}{figure.caption.1073}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{540}{subsection.16.8.3}\protected@file@percent }
+\BKM@entry{id=595,dest={73656374696F6E2E31362E39},srcline={1233}}{5C3337365C3337375C303030535C303030745C303030615C303030635C3030306B5C303030695C3030306E5C303030675C3030305C3034305C3030304C5C303030615C303030795C303030655C303030725C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\BKM@entry{id=596,dest={73756273656374696F6E2E31362E392E31},srcline={1239}}{5C3337365C3337375C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C303030535C303030745C303030615C303030635C3030306B5C303030655C303030645C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\@writefile{toc}{\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{541}{section.16.9}\protected@file@percent }
+\newlabel{sec:chapter16_stacking_rnn_lstm}{{16.9}{541}{Stacking Layers in RNNs and LSTMs}{section.16.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{541}{subsection.16.9.1}\protected@file@percent }
+\newlabel{sec:chapter16_stacked_rnn_architecture}{{16.9.1}{541}{Architecture of Stacked RNNs and LSTMs}{subsection.16.9.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.18}{\ignorespaces A two-layer stacked RNN. The first layer reads the input sequence; its hidden states feed into the second layer, refining representations at each timestep.}}{541}{figure.caption.1074}\protected@file@percent }
+\newlabel{fig:chapter16_two_layer_rnn}{{16.18}{541}{A two-layer stacked RNN. The first layer reads the input sequence; its hidden states feed into the second layer, refining representations at each timestep}{figure.caption.1074}{}}
+\BKM@entry{id=597,dest={73756273656374696F6E2E31362E392E32},srcline={1277}}{5C3337365C3337375C303030505C303030725C303030615C303030635C303030745C303030695C303030635C303030615C3030306C5C3030305C3034305C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030445C303030655C303030655C303030705C3030305C3034305C303030525C3030304E5C3030304E5C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
+\BKM@entry{id=598,dest={73756273656374696F6E2E31362E392E33},srcline={1289}}{5C3337365C3337375C303030445C303030655C303030655C303030705C3030305C3034305C303030525C3030304E5C3030304E5C303030735C3030303A5C3030305C3034305C303030425C303030615C3030306C5C303030615C3030306E5C303030635C303030695C3030306E5C303030675C3030305C3034305C303030445C303030655C303030705C303030745C303030685C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C30303079}
+\BKM@entry{id=599,dest={73656374696F6E2A2E31303736},srcline={1295}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030303A5C3030305C3034305C3030304F5C303030745C303030685C303030655C303030725C3030305C3034305C303030525C3030304E5C3030304E5C3030305C3034305C303030565C303030615C303030725C303030695C303030615C3030306E5C303030745C303030735C3030303A5C3030305C3034305C303030475C303030525C30303055}
 \abx@aux@cite{0}{cho2014_gru}
 \abx@aux@segm{0}{0}{cho2014_gru}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.19}{\ignorespaces A three-layer stacked RNN. Each layer takes the hidden states from the layer below, thereby learning progressively more abstract temporal features.}}{541}{figure.caption.1074}\protected@file@percent }
-\newlabel{fig:chapter16_three_layer_rnn}{{16.19}{541}{A three-layer stacked RNN. Each layer takes the hidden states from the layer below, thereby learning progressively more abstract temporal features}{figure.caption.1074}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{541}{subsection.16.9.2}\protected@file@percent }
-\newlabel{subsec:chapter16_deep_rnn_limitations}{{16.9.2}{541}{Practical Limitations of Deep RNN Architectures}{subsection.16.9.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{541}{subsection.16.9.3}\protected@file@percent }
-\newlabel{sec:chapter16_summary_stacking}{{16.9.3}{541}{Deep RNNs: Balancing Depth and Efficiency}{subsection.16.9.3}{}}
-\BKM@entry{id=600,dest={73656374696F6E2A2E31303736},srcline={1265}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030315C3030303A5C3030305C3034305C303030475C303030525C303030555C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C30303065}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.19}{\ignorespaces A three-layer stacked RNN. Each layer takes the hidden states from the layer below, thereby learning progressively more abstract temporal features.}}{542}{figure.caption.1075}\protected@file@percent }
+\newlabel{fig:chapter16_three_layer_rnn}{{16.19}{542}{A three-layer stacked RNN. Each layer takes the hidden states from the layer below, thereby learning progressively more abstract temporal features}{figure.caption.1075}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{542}{subsection.16.9.2}\protected@file@percent }
+\newlabel{subsec:chapter16_deep_rnn_limitations}{{16.9.2}{542}{Practical Limitations of Deep RNN Architectures}{subsection.16.9.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{542}{subsection.16.9.3}\protected@file@percent }
+\newlabel{sec:chapter16_summary_stacking}{{16.9.3}{542}{Deep RNNs: Balancing Depth and Efficiency}{subsection.16.9.3}{}}
+\BKM@entry{id=600,dest={73656374696F6E2A2E31303737},srcline={1299}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030315C3030303A5C3030305C3034305C303030475C303030525C303030555C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C30303065}
 \abx@aux@cite{0}{zhang2024_advanced}
 \abx@aux@segm{0}{0}{zhang2024_advanced}
 \abx@aux@cite{0}{zhang2024_advanced}
 \abx@aux@segm{0}{0}{zhang2024_advanced}
 \abx@aux@cite{0}{cho2014_gru}
 \abx@aux@segm{0}{0}{cho2014_gru}
-\@writefile{toc}{\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{542}{section*.1075}\protected@file@percent }
-\abx@aux@backref{360}{cho2014_gru}{0}{542}{542}
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{542}{section*.1076}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {16.20}{\ignorespaces Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \blx@tocontentsinit {0}\cite {zhang2024_advanced}.}}{542}{figure.caption.1077}\protected@file@percent }
-\abx@aux@backref{362}{zhang2024_advanced}{0}{542}{542}
-\newlabel{fig:chapter16_gru_architecture}{{16.20}{542}{Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \cite {zhang2024_advanced}}{figure.caption.1077}{}}
-\@writefile{toc}{\contentsline {paragraph}{Key Observations:}{542}{section*.1078}\protected@file@percent }
-\BKM@entry{id=601,dest={73656374696F6E2A2E31303739},srcline={1302}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030325C3030303A5C3030305C3034305C303030475C303030725C303030615C303030645C303030695C303030655C3030306E5C303030745C3030305C3034305C303030465C3030306C5C3030306F5C303030775C3030305C3034305C303030695C3030306E5C3030305C3034305C303030475C303030525C303030555C30303073}
+\@writefile{toc}{\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{543}{section*.1076}\protected@file@percent }
+\abx@aux@backref{355}{cho2014_gru}{0}{543}{543}
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{543}{section*.1077}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16.20}{\ignorespaces Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \blx@tocontentsinit {0}\cite {zhang2024_advanced}.}}{543}{figure.caption.1078}\protected@file@percent }
+\abx@aux@backref{357}{zhang2024_advanced}{0}{543}{543}
+\newlabel{fig:chapter16_gru_architecture}{{16.20}{543}{Visualization of GRU architecture, illustrating the reset and update gates. Adapted from \cite {zhang2024_advanced}}{figure.caption.1078}{}}
+\@writefile{toc}{\contentsline {paragraph}{Key Observations:}{543}{section*.1079}\protected@file@percent }
+\BKM@entry{id=601,dest={73656374696F6E2A2E31303830},srcline={1336}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030325C3030303A5C3030305C3034305C303030475C303030725C303030615C303030645C303030695C303030655C3030306E5C303030745C3030305C3034305C303030465C3030306C5C3030306F5C303030775C3030305C3034305C303030695C3030306E5C3030305C3034305C303030475C303030525C303030555C30303073}
 \abx@aux@cite{0}{cho2014_gru}
 \abx@aux@segm{0}{0}{cho2014_gru}
-\BKM@entry{id=602,dest={73656374696F6E2A2E31303833},srcline={1352}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030335C3030303A5C3030305C3034305C303030415C303030645C303030765C303030615C3030306E5C303030745C303030615C303030675C303030655C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030475C303030525C303030555C303030735C3030305C3034305C3030306F5C303030765C303030655C303030725C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\BKM@entry{id=602,dest={73656374696F6E2A2E31303834},srcline={1386}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030335C3030303A5C3030305C3034305C303030415C303030645C303030765C303030615C3030306E5C303030745C303030615C303030675C303030655C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030475C303030525C303030555C303030735C3030305C3034305C3030306F5C303030765C303030655C303030725C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
 \abx@aux@cite{0}{cho2014_gru}
 \abx@aux@segm{0}{0}{cho2014_gru}
-\abx@aux@backref{363}{cho2014_gru}{0}{543}{543}
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{543}{section*.1079}\protected@file@percent }
-\abx@aux@backref{364}{cho2014_gru}{0}{543}{543}
-\BKM@entry{id=603,dest={73656374696F6E2A2E31303834},srcline={1364}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030345C3030303A5C3030305C3034305C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030475C303030525C303030555C30303073}
-\BKM@entry{id=604,dest={73656374696F6E2A2E31303835},srcline={1376}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030355C3030303A5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030615C303030725C303030695C303030735C3030306F5C3030306E5C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
-\BKM@entry{id=605,dest={73656374696F6E2A2E31303836},srcline={1391}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030365C3030303A5C3030305C3034305C303030425C303030725C303030695C303030645C303030675C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C303030415C303030645C303030765C303030615C3030306E5C303030635C303030655C303030645C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
-\BKM@entry{id=606,dest={73656374696F6E2E31362E3131},srcline={1401}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030465C303030755C303030745C303030755C303030725C303030655C3030305C3034305C303030445C303030695C303030725C303030655C303030635C303030745C303030695C3030306F5C3030306E5C30303073}
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{544}{section*.1083}\protected@file@percent }
-\abx@aux@backref{365}{cho2014_gru}{0}{544}{544}
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{544}{section*.1084}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{544}{section*.1085}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{544}{section*.1086}\protected@file@percent }
+\abx@aux@backref{358}{cho2014_gru}{0}{544}{544}
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{544}{section*.1080}\protected@file@percent }
+\abx@aux@backref{359}{cho2014_gru}{0}{544}{544}
+\BKM@entry{id=603,dest={73656374696F6E2A2E31303835},srcline={1398}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030345C3030303A5C3030305C3034305C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030475C303030525C303030555C30303073}
+\BKM@entry{id=604,dest={73656374696F6E2A2E31303836},srcline={1410}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030355C3030303A5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030615C303030725C303030695C303030735C3030306F5C3030306E5C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C3030304C5C303030535C303030545C3030304D5C30303073}
+\BKM@entry{id=605,dest={73656374696F6E2A2E31303837},srcline={1425}}{5C3337365C3337375C303030455C3030306E5C303030725C303030695C303030635C303030685C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030315C303030365C3030302E5C303030315C303030305C3030302E5C303030365C3030303A5C3030305C3034305C303030425C303030725C303030695C303030645C303030675C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C303030415C303030645C303030765C303030615C3030306E5C303030635C303030655C303030645C3030305C3034305C303030415C303030725C303030635C303030685C303030695C303030745C303030655C303030635C303030745C303030755C303030725C303030655C30303073}
+\BKM@entry{id=606,dest={73656374696F6E2E31362E3131},srcline={1435}}{5C3337365C3337375C303030535C303030755C3030306D5C3030306D5C303030615C303030725C303030795C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030465C303030755C303030745C303030755C303030725C303030655C3030305C3034305C303030445C303030695C303030725C303030655C303030635C303030745C303030695C3030306F5C3030306E5C30303073}
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{545}{section*.1084}\protected@file@percent }
+\abx@aux@backref{360}{cho2014_gru}{0}{545}{545}
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{545}{section*.1085}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{545}{section*.1086}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{545}{section*.1087}\protected@file@percent }
 \abx@aux@cite{0}{zoph2017_nas}
 \abx@aux@segm{0}{0}{zoph2017_nas}
 \abx@aux@cite{0}{zoph2017_nas}
@@ -4221,20 +4209,20 @@
 \abx@aux@segm{0}{0}{Mahadi2024_GRU_Plasmonic}
 \abx@aux@cite{0}{Mahadi2024_GRU_Plasmonic}
 \abx@aux@segm{0}{0}{Mahadi2024_GRU_Plasmonic}
-\@writefile{toc}{\contentsline {section}{\numberline {16.11}Summary and Future Directions}{545}{section.16.11}\protected@file@percent }
-\newlabel{sec:chapter16_summary_future}{{16.11}{545}{Summary and Future Directions}{section.16.11}{}}
-\abx@aux@backref{366}{zoph2017_nas}{0}{545}{545}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.21}{\ignorespaces Neural Architecture Search (NAS) applied to recurrent neural network architectures, showcasing evolutionary exploration of candidate designs (adapted from \blx@tocontentsinit {0}\cite {zoph2017_nas}).}}{545}{figure.caption.1088}\protected@file@percent }
-\abx@aux@backref{368}{zoph2017_nas}{0}{545}{545}
-\newlabel{fig:chapter16_nas_rnn}{{16.21}{545}{Neural Architecture Search (NAS) applied to recurrent neural network architectures, showcasing evolutionary exploration of candidate designs (adapted from \cite {zoph2017_nas})}{figure.caption.1088}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.11}Summary and Future Directions}{546}{section.16.11}\protected@file@percent }
+\newlabel{sec:chapter16_summary_future}{{16.11}{546}{Summary and Future Directions}{section.16.11}{}}
+\abx@aux@backref{361}{zoph2017_nas}{0}{546}{546}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.21}{\ignorespaces Neural Architecture Search (NAS) applied to recurrent neural network architectures, showcasing evolutionary exploration of candidate designs (adapted from \blx@tocontentsinit {0}\cite {zoph2017_nas}).}}{546}{figure.caption.1089}\protected@file@percent }
+\abx@aux@backref{363}{zoph2017_nas}{0}{546}{546}
+\newlabel{fig:chapter16_nas_rnn}{{16.21}{546}{Neural Architecture Search (NAS) applied to recurrent neural network architectures, showcasing evolutionary exploration of candidate designs (adapted from \cite {zoph2017_nas})}{figure.caption.1089}{}}
 \abx@aux@cite{0}{vaswani2017_attention}
 \abx@aux@segm{0}{0}{vaswani2017_attention}
-\@writefile{lof}{\contentsline {figure}{\numberline {16.22}{\ignorespaces Comparison of Vanilla RNN, LSTM, and GRU architectures. Source: \blx@tocontentsinit {0}\cite {Mahadi2024_GRU_Plasmonic}.}}{546}{figure.caption.1090}\protected@file@percent }
-\abx@aux@backref{370}{Mahadi2024_GRU_Plasmonic}{0}{546}{546}
-\newlabel{fig:chapter16_rnn_lstm_gru_comparison}{{16.22}{546}{Comparison of Vanilla RNN, LSTM, and GRU architectures. Source: \cite {Mahadi2024_GRU_Plasmonic}}{figure.caption.1090}{}}
-\abx@aux@backref{371}{vaswani2017_attention}{0}{546}{546}
+\@writefile{lof}{\contentsline {figure}{\numberline {16.22}{\ignorespaces Comparison of Vanilla RNN, LSTM, and GRU architectures. Source: \blx@tocontentsinit {0}\cite {Mahadi2024_GRU_Plasmonic}.}}{547}{figure.caption.1091}\protected@file@percent }
+\abx@aux@backref{365}{Mahadi2024_GRU_Plasmonic}{0}{547}{547}
+\newlabel{fig:chapter16_rnn_lstm_gru_comparison}{{16.22}{547}{Comparison of Vanilla RNN, LSTM, and GRU architectures. Source: \cite {Mahadi2024_GRU_Plasmonic}}{figure.caption.1091}{}}
+\abx@aux@backref{366}{vaswani2017_attention}{0}{547}{547}
 \BKM@entry{id=607,dest={636861707465722E3137},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030375C3030303A5C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{547}{chapter.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{548}{chapter.17}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@16}}
@@ -4242,7 +4230,7 @@
 \pgfsyspdfmark {pgfid76}{0}{52099153}
 \pgfsyspdfmark {pgfid75}{5966969}{45620378}
 \BKM@entry{id=608,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{548}{chapter.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{549}{chapter.18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@17}}
@@ -4250,7 +4238,7 @@
 \pgfsyspdfmark {pgfid78}{0}{52099153}
 \pgfsyspdfmark {pgfid77}{5966969}{45620378}
 \BKM@entry{id=609,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{549}{chapter.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{550}{chapter.19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@18}}
@@ -4258,7 +4246,7 @@
 \pgfsyspdfmark {pgfid80}{0}{52099153}
 \pgfsyspdfmark {pgfid79}{5966969}{45620378}
 \BKM@entry{id=610,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{550}{chapter.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{551}{chapter.20}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@19}}
@@ -4266,7 +4254,7 @@
 \pgfsyspdfmark {pgfid82}{0}{52099153}
 \pgfsyspdfmark {pgfid81}{5966969}{45620378}
 \BKM@entry{id=611,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{551}{chapter.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{552}{chapter.21}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@20}}
@@ -4274,7 +4262,7 @@
 \pgfsyspdfmark {pgfid84}{0}{52099153}
 \pgfsyspdfmark {pgfid83}{5966969}{45620378}
 \BKM@entry{id=612,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{552}{chapter.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{553}{chapter.22}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@21}}
@@ -4282,7 +4270,7 @@
 \pgfsyspdfmark {pgfid86}{0}{52099153}
 \pgfsyspdfmark {pgfid85}{5966969}{45620378}
 \BKM@entry{id=613,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{553}{chapter.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{554}{chapter.23}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@22}}
@@ -4290,7 +4278,7 @@
 \pgfsyspdfmark {pgfid88}{0}{52099153}
 \pgfsyspdfmark {pgfid87}{5966969}{45620378}
 \BKM@entry{id=614,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{554}{chapter.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{555}{chapter.24}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@23}}
@@ -4298,7 +4286,7 @@
 \pgfsyspdfmark {pgfid90}{0}{52099153}
 \pgfsyspdfmark {pgfid89}{5966969}{45620378}
 \BKM@entry{id=615,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{555}{chapter.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{556}{chapter.25}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@24}}
@@ -4306,7 +4294,7 @@
 \pgfsyspdfmark {pgfid92}{0}{52099153}
 \pgfsyspdfmark {pgfid91}{5966969}{45620378}
 \BKM@entry{id=616,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{556}{chapter.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{557}{chapter.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@25}}
@@ -4314,7 +4302,7 @@
 \pgfsyspdfmark {pgfid94}{0}{52099153}
 \pgfsyspdfmark {pgfid93}{5966969}{45620378}
 \BKM@entry{id=617,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{557}{chapter.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{558}{chapter.27}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@26}}
@@ -4482,4 +4470,4 @@
 \abx@aux@defaultrefcontext{0}{zoph2017_nas}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2018_learning}{nty/global//global/global/global}
 \xdef \mintedoldcachechecksum{\detokenize{C16A9A7F725C62A4367BF5775A53163F:32}}
-\gdef \@abspage@last{568}
+\gdef \@abspage@last{569}

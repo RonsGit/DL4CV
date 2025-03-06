@@ -1027,111 +1027,145 @@ where:
 \subsection{Gradient Flow in LSTMs}
 \label{sec:chapter16_gradient_flow_lstm}
 
-\noindent
-Long Short-Term Memory (\textbf{LSTM}) networks produce a hidden state \(\mathbf{h}_t\) at each timestep, much like vanilla RNNs. However, they also maintain an internal \emph{cell state} \(\mathbf{c}_t\) that offers a \textbf{stable gradient pathway} across long sequences. By relying on an \emph{additive} update to \(\mathbf{c}_t\), LSTMs significantly reduce the vanishing gradient problem common to standard RNNs.
+\noindent Long Short-Term Memory (\textbf{LSTM}) networks maintain two states at each timestep: the \textbf{hidden state} \(\mathbf{h}_t\), which captures short-term dependencies, and the \textbf{cell state} \(\mathbf{c}_t\), which is responsible for long-term memory retention. Unlike vanilla RNNs, where the gradient flow is heavily dependent on \(\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}\), which is prone to exponential decay or explosion, LSTMs allow gradients to propagate primarily through the cell state \(\mathbf{c}_t\), providing a \textbf{stable learning pathway} over long sequences.
 
-\subsubsection{Why LSTMs Offer Stable Gradient Paths}
-\label{subsec:chapter16_lstm_gradient_paths}
+\subsubsection{Why the Cell State \texorpdfstring{$\mathbf{c}_t$}{c\_t} Preserves Long-Term Information}
+\label{subsec:chapter16_lstm_cell_state}
 
-\noindent
-At the core of LSTMs is the cell state \(\mathbf{c}_t\), updated by an \emph{additive} equation:
-\[
-\mathbf{c}_t 
-\;=\; 
-\mathbf{f}_t \odot \mathbf{c}_{t-1}
-\;+\; 
-\mathbf{i}_t \odot \mathbf{g}_t,
-\]
-where \(\mathbf{f}_t, \mathbf{i}_t \in [0,1]^d\) (the \emph{forget} gate and \emph{input} gate), and \(\mathbf{g}_t\) is often a \(\tanh\) candidate vector. This design means gradients can propagate along a near-identity path determined by \(\mathbf{f}_t\) rather than repeatedly multiplying by $\mathbf{W}_{hh}$ and activation derivatives.
+\noindent The fundamental update equation for \(\mathbf{c}_t\) in an LSTM is:
 
-\paragraph{Comparing to Vanilla RNNs}
-A vanilla RNN’s hidden state update is multiplicative:
 \[
-\mathbf{h}_t
-=
-\phi\!\bigl(\mathbf{W}_{hh}\,\mathbf{h}_{t-1} + \dots\bigr),
+\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \mathbf{g}_t
 \]
-so backpropagating from time \(T\) to \(t\) yields 
-$\prod_{j=t+1}^T \phi'(\dots)\,\mathbf{W}_{hh}$, 
-likely to vanish or explode if those factors differ from unity.  In contrast, LSTMs pass \emph{most of the gradient} through \(\mathbf{c}_t\) via $\partial \mathbf{c}_t/\partial \mathbf{c}_{t-1}\approx \mathbf{f}_t$—an additive chain that can remain near 1 if $\mathbf{f}_t$ is close to 1 
-\cite{medium_lstm_vanishing}.
 
-\subsubsection{Dominance of \texorpdfstring{$\mathbf{f}_t$}{f\_t} in the Cell State Derivative}
-\label{subsec:chapter16_forget_gate_stability}
+where:
+- \(\mathbf{f}_t\) is the forget gate, determining how much of \(\mathbf{c}_{t-1}\) is retained.
+- \(\mathbf{i}_t\) is the input gate, deciding how much new information \(\mathbf{g}_t\) should be incorporated.
+- \(\mathbf{g}_t\) is the candidate cell update, typically computed via \(\tanh(\cdot)\).
 
-\noindent
-An LSTM’s cell update:
-\[
-\mathbf{c}_t 
-\;=\; 
-\mathbf{f}_t \odot \mathbf{c}_{t-1} 
-\;+\; 
-\mathbf{i}_t \odot \mathbf{g}_t
-\]
-implies
-\[
-\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}} 
-\;=\; 
-\mathbf{f}_t 
-\;+\;
-\underbrace{
-	\Bigl(\text{terms from gates' derivative channels}\Bigr)
-}_{\text{often smaller}}
-\,.
-\]
-\textbf{Why call \(\mathbf{f}_t\) “dominant”?} Because $f_t$ directly multiplies $\mathbf{c}_{t-1}$, it exerts a large influence on $\mathbf{c}_t$. Meanwhile, the other gate-derivative terms typically involve chain factors such as $\sigma'(z)\le0.25$, $\tanh'(z)\le1$, and additional partial products 
-\cite{srivastava2015_training, medium_lstm_vanishing}.  Hence, those additional gates’ derivatives often \emph{multiply} small numbers together (e.g.\ $\sigma'(z)\tanh'(z)\cdots$), causing them to be overshadowed by $f_t$ in the sum.
+Importantly, \(\mathbf{f}_t\) is not a single scalar value, but a vector with dimensionality equal to the LSTM’s hidden size. Each element of \(\mathbf{f}_t\) independently controls the retention of the corresponding dimension in \(\mathbf{c}_t\), meaning that some components of \(\mathbf{c}_t\) can be preserved while others decay.
 
-\paragraph{Why \texorpdfstring{$\mathbf{f}_t \approx 1$}{f\_t near 1} for Long-Term Memory.}
-If retaining old information lowers the loss, the network learns to make:
+In long sequences (\(T \gg t\)), backpropagation through time (BPTT) accumulates gradients over many timesteps, and the stability of these gradients depends critically on the term:
+
 \[
-\mathbf{f}_t 
-\;=\; 
-\sigma(\mathbf{W}_f [\mathbf{h}_{t-1}, \mathbf{x}_t]+\mathbf{b}_f)
-\;\approx\;
-1,
+\frac{\partial \mathcal{L}}{\partial \mathbf{c}_t}
+= \sum_{k=t}^{T} \frac{\partial \mathcal{L}_k}{\partial \mathbf{c}_k} \prod_{j=t+1}^{k} \frac{\partial \mathbf{c}_j}{\partial \mathbf{c}_{j-1}}.
 \]
-so that the product
+
+Since the partial derivative of \(\mathbf{c}_t\) with respect to \(\mathbf{c}_{t-1}\) is dominated by \(\mathbf{f}_t\), we want \(\prod_{j=t+1}^{T} \mathbf{f}_j\) to remain near 1 to ensure long-term gradient preservation.
+
+\subsubsection{Why \texorpdfstring{$\mathbf{f}_t$}{f\_t} Prevents Vanishing Gradients}
+\label{subsec:chapter16_lstm_forget_gate}
+
+\noindent Differentiating both sides of the cell update equation with respect to \(\mathbf{c}_{t-1}\), we obtain:
+
 \[
-\frac{\partial \mathbf{c}_T}{\partial \mathbf{c}_t} 
-\;\approx\;
-\prod_{k=t+1}^{T} 
-f_k
-\;\approx\;1.
+\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}} = \mathbf{f}_t
++ \underbrace{\frac{\partial \mathbf{f}_t}{\partial \mathbf{c}_{t-1}} \odot \mathbf{c}_{t-1} + \frac{\partial \mathbf{i}_t}{\partial \mathbf{c}_{t-1}} \odot \mathbf{g}_t + \mathbf{i}_t \odot \frac{\partial \mathbf{g}_t}{\partial \mathbf{c}_{t-1}}}_{\text{additional terms, typically small}}.
 \]
-This near-identity chain preserves gradient magnitude over many timesteps. By contrast, vanilla RNNs repeatedly multiply by weight-matrix derivatives and saturating activations, leading to exponential decay or blow-up 
-\cite{hochreiter1997_lstm, medium_lstm_vanishing}.
+
+The Dominance of \(\mathbf{f}_t\) in Long Sequences
+The dominance of \(\mathbf{f}_t\) in this equation arises because:
+- The other terms involve multiplications of outputs of derivatives of sigmoids (\(\sigma'(z) \leq 0.25\)) and \(\tanh'(z) \leq 1\), which are small and further decay when multiplied through sequential timesteps.
+- The only direct scaling applied to \(\mathbf{c}_{t-1}\) is via \(\mathbf{f}_t\), ensuring that as long as \(\mathbf{f}_t \approx 1\), gradients remain stable.
+
+In contrast, in a vanilla RNN, the term analogous to \(\mathbf{f}_t\) is:
+
+\[
+\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}} = \mathbf{W}_{hh} \odot \phi'(\mathbf{W}_{hh} \mathbf{h}_{t-1} + \mathbf{x}_t),
+\]
+
+where \(\phi'(\cdot)\) represents the derivative of the activation function (e.g., \(\tanh'\)). These activation derivatives are often \(\ll 1\), leading to rapid gradient decay over long sequences. The key distinction is that LSTMs do not multiply \(\mathbf{c}_t\) by recurrent weights at each step, avoiding repeated small multiplications.
+
+\subsubsection{Why \texorpdfstring{$\mathbf{f}_t$}{f\_t} Can Be Learned to Stay Near 1}
+\label{subsec:chapter16_lstm_why_f_near_1}
+
+\noindent The forget gate is defined as:
+
+\[
+\mathbf{f}_t = \sigma(\mathbf{W}_f [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f),
+\]
+
+where \(\sigma(\cdot)\) is the sigmoid function, mapping values to the range \((0,1)\). If retaining long-term dependencies is advantageous, the network \textbf{learns} to set \(\mathbf{f}_t\) close to 1 by adjusting \(\mathbf{W}_f\) and \(\mathbf{b}_f\), ensuring:
+
+\[
+\prod_{j=t+1}^{T} \mathbf{f}_j \approx 1.
+\]
+
+This means that unlike in vanilla RNNs, where gradients decay exponentially due to repeated multiplication by small derivatives, LSTMs allow gradients to persist over many steps, preventing premature vanishing.
+
+Since \(\mathbf{f}_t\) is a vector, some of its elements may be trained to be close to 1 for memory retention, while others may be closer to 0 to allow forgetting. This mechanism allows the network to selectively determine which parts of the cell state should be preserved across long sequences.
+
+
+\subsubsection{Why Forget Gates Do Not Cause Exponential Decay Like RNN Activations}
+\label{subsec:chapter16_lstm_forget_gate_stability}
+
+\noindent While \(\mathbf{f}_t\) is bounded between 0 and 1 due to the sigmoid function, the gradient stability remains superior to vanilla RNNs because:
+
+\begin{itemize}
+	\item \textbf{No recurrent weight multiplication}: In vanilla RNNs, \(\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}\) involves repeated multiplication by \(\mathbf{W}_{hh}\), whose eigenvalues can lead to exponential decay or explosion. LSTMs avoid this.
+	\item \textbf{Multiplicative control via \(\mathbf{f}_t\)}: Unlike RNN activations, which multiply by non-learnable derivatives (\(\tanh'(z)\)), \(\mathbf{f}_t\) is learned to prevent excessive decay.
+	\item \textbf{No uncontrolled saturation}: While sigmoids suffer from saturation issues, their role in forget gates differs from their role in standard RNN activations. The network learns to adjust \(\mathbf{W}_f\) such that \(\mathbf{f}_t\) stays in a useful range.
+\end{itemize}
+
 
 \subsubsection{How Hidden-State Gradients Differ}
 \label{subsec:chapter16_hidden_grad_vanilla}
 
 \noindent
-Even though the LSTM hidden state is
-\(
-\mathbf{h}_t
-=
-\mathbf{o}_t \odot \tanh(\mathbf{c}_t),
-\)
-the derivative 
-$\partial \mathbf{h}_t/\partial \mathbf{h}_{t-1}$
-can still vanish/explode through repeated matrix multiplications.  \textbf{However}, the principal memory signal flows through $c_t$, meaning $\partial \mathbf{c}_t/\partial \mathbf{c}_{t-1}\approx f_t$ \emph{dominates the overall long-range error}.  Hence, diminishing hidden-state gradients do not necessarily destroy the model’s ability to learn long-term patterns 
-\cite{srivastava2015_training, medium_lstm_vanishing}.
+Recall that in an LSTM, each timestep produces:
+\[
+\mathbf{h}_t 
+\;=\; 
+\mathbf{o}_t \;\odot\; \tanh\!\bigl(\mathbf{c}_t\bigr),
+\]
+where \(\mathbf{o}_t = \sigma(\mathbf{W}_o[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_o)\). The hidden state \(\mathbf{h}_t\) still depends on matrix multiplications (via \(\mathbf{W}_o\) and partial influences from \(\mathbf{W}_{xh}\), \(\mathbf{W}_{hh}\), etc.). Consequently, the partial derivative
+\[
+\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}
+\]
+can, in theory, suffer from vanishing or exploding effects if repeatedly applied across many timesteps. However, \emph{LSTMs do not rely on this hidden-state gradient chain for long-range memory}. The \textbf{primary memory signal} is carried through the cell state \(\mathbf{c}_t\), whose derivative
+\(\partial \mathbf{c}_t / \partial \mathbf{c}_{t-1}\approx \mathbf{f}_t\)
+remains near unity whenever the network wishes to preserve long-term information 
+\cite{srivastava2015_training,medium_lstm_vanishing}.
+
+\paragraph{Consequence for Training}
+Even if 
+\(\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}\)
+occasionally becomes small or large, it does \emph{not} annihilate learning of extended temporal dependencies, because the \emph{dominant gradient path for long-term context} is the sequence
+\(\mathbf{c}_1\to \mathbf{c}_2\to\dots\to \mathbf{c}_T\),
+which is \emph{additive} and modulated by \(\mathbf{f}_t\) rather than multiplicatively repeated. Hence, moderate vanishing (or even local exploding) in the hidden-state chain is less catastrophic for remembering information across many timesteps.
+
 
 \subsubsection{Why Weight-Gradient Vanishing Is Less Critical}
 \label{subsec:chapter16_weights_gradients_lstm}
 
 \noindent
-Each LSTM weight update $\frac{\partial \mathcal{L}}{\partial \mathbf{W}}$ aggregates partial derivatives from $c_t$ and $h_t$. Although these partials can contain repeated matrix multiplications (risking typical vanishing), \emph{the additive pathway via $c_t$ ensures that the total gradient seldom collapses entirely}.  Specifically:
+During backpropagation through time (BPTT), the gradient of the total loss \(\mathcal{L}\) with respect to an LSTM’s parameters \(\mathbf{W}\) involves contributions from both \(\partial \mathbf{h}_t/\partial \mathbf{W}\) \emph{and} \(\partial \mathbf{c}_t/\partial \mathbf{W}\). While the hidden-state path 
+\(
+\partial \mathbf{h}_t/\partial \mathbf{W}
+\)
+can still diminish through repeated matrix multiplications, 
+\emph{the cell-state path} 
+\(
+\partial \mathbf{c}_t/\partial \mathbf{W}
+\)
+remains significantly more stable 
+\cite{hochreiter1997_lstm}. Specifically:
 
 \begin{itemize}
-	\item \textbf{Partial derivatives through $c_t$ remain significant.}  If $f_{t+1}, f_{t+2},\dots$ are near 1, then 
-	$\frac{\partial \mathbf{c}_T}{\partial \mathbf{c}_t}\!\approx1$ 
-	for a wide time range. So the gradient from $c_T$—and thus from $\mathcal{L}$—does not vanish when backpropagated to earlier timesteps.
-	\item \textbf{Moderate vanishing in other subpaths is not devastating.} Because the $c_t$ path preserves the “long-range backbone” of the error signal, local or moderate vanishing in the gate parameters or hidden states is less fatal to overall learning.
+	\item \textbf{Partial derivatives through $\mathbf{c}_t$ often stay substantial.}  
+	Since 
+	\(\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}}\approx \mathbf{f}_t\), 
+	and each coordinate of \(\mathbf{f}_t\) can remain near 1 if preserving memory is beneficial, the overall derivative 
+	\(\partial \mathbf{c}_T/\partial \mathbf{c}_t\approx 1\)  
+	over a large time window. Consequently, the gradient from $\mathbf{c}_T$ and hence $\mathcal{L}$ does not vanish when propagated to earlier timesteps.
+	
+	\item \textbf{Moderate vanishing elsewhere is less destructive.}  
+	Even if certain weight gradients or gate-parameter gradients shrink, the “long-range backbone” via $\mathbf{c}_t$ persists. This additive route ensures the model can learn extensive time-lag dependencies without requiring every subpath to maintain perfect gradient magnitude.
 \end{itemize}
 
-Thus, the LSTM can learn large time-lag dependencies even if certain weight gradients occasionally become small, because \emph{some portion of the error} is consistently carried by the near-identity transitions in $c_t$ 
-\cite{hochreiter1997_lstm}.
+\noindent
+Thus, the LSTM can capture long-range temporal structure despite occasional fading in matrix-based derivatives. The existence of a near-identity chain through $\mathbf{c}_t$ (modulated by gates in $[0,1]$) guarantees that \textbf{not all partial derivatives vanish simultaneously}, enabling robust training on tasks with large temporal spans 
 
 \subsubsection{Mitigating Exploding Gradients}
 \label{subsec:chapter16_exploding_gradients}

@@ -1174,40 +1174,41 @@
 \contentsline {subsection}{\numberline {16.7.2}LSTM Gate Computation}{534}{subsection.16.7.2}%
 \contentsline {subsection}{\numberline {16.7.3}LSTM State Updates}{535}{subsection.16.7.3}%
 \contentsline {subsection}{\numberline {16.7.4}Gradient Flow in LSTMs}{535}{subsection.16.7.4}%
-\contentsline {subsubsection}{Why LSTMs Offer Stable Gradient Paths}{536}{section*.1063}%
-\contentsline {paragraph}{Comparing to Vanilla RNNs}{536}{section*.1064}%
-\contentsline {subsubsection}{Dominance of $\mathbf {f}_t$ in the Cell State Derivative}{536}{section*.1065}%
-\contentsline {paragraph}{Why $\mathbf {f}_t \approx 1$ for Long-Term Memory.}{536}{section*.1066}%
+\contentsline {subsubsection}{Why the Cell State $\mathbf {c}_t$ Preserves Long-Term Information}{536}{section*.1063}%
+\contentsline {subsubsection}{Why $\mathbf {f}_t$ Prevents Vanishing Gradients}{536}{section*.1064}%
+\contentsline {subsubsection}{Why $\mathbf {f}_t$ Can Be Learned to Stay Near 1}{537}{section*.1065}%
+\contentsline {subsubsection}{Why Forget Gates Do Not Cause Exponential Decay Like RNN Activations}{537}{section*.1066}%
 \contentsline {subsubsection}{How Hidden-State Gradients Differ}{537}{section*.1067}%
-\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{537}{section*.1068}%
-\contentsline {subsubsection}{Mitigating Exploding Gradients}{537}{section*.1069}%
-\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{538}{section.16.8}%
-\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{538}{subsection.16.8.1}%
-\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{538}{subsection.16.8.2}%
-\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{538}{section*.1071}%
-\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{539}{subsection.16.8.3}%
-\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{540}{section.16.9}%
-\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{540}{subsection.16.9.1}%
-\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{541}{subsection.16.9.2}%
-\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{541}{subsection.16.9.3}%
-\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{542}{section*.1075}%
-\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{542}{section*.1076}%
-\contentsline {paragraph}{Key Observations:}{542}{section*.1078}%
-\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{543}{section*.1079}%
-\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{544}{section*.1083}%
-\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{544}{section*.1084}%
-\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{544}{section*.1085}%
-\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{544}{section*.1086}%
-\contentsline {section}{\numberline {16.11}Summary and Future Directions}{545}{section.16.11}%
-\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{547}{chapter.17}%
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{548}{chapter.18}%
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{549}{chapter.19}%
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{550}{chapter.20}%
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{551}{chapter.21}%
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{552}{chapter.22}%
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{553}{chapter.23}%
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{554}{chapter.24}%
-\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{555}{chapter.25}%
-\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{556}{chapter.26}%
-\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{557}{chapter.27}%
+\contentsline {paragraph}{Consequence for Training}{538}{section*.1068}%
+\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{538}{section*.1069}%
+\contentsline {subsubsection}{Mitigating Exploding Gradients}{538}{section*.1070}%
+\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{539}{section.16.8}%
+\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{539}{subsection.16.8.1}%
+\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{539}{subsection.16.8.2}%
+\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{540}{section*.1072}%
+\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{540}{subsection.16.8.3}%
+\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{541}{section.16.9}%
+\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{541}{subsection.16.9.1}%
+\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{542}{subsection.16.9.2}%
+\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{542}{subsection.16.9.3}%
+\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{543}{section*.1076}%
+\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{543}{section*.1077}%
+\contentsline {paragraph}{Key Observations:}{543}{section*.1079}%
+\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{544}{section*.1080}%
+\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{545}{section*.1084}%
+\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{545}{section*.1085}%
+\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{545}{section*.1086}%
+\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{545}{section*.1087}%
+\contentsline {section}{\numberline {16.11}Summary and Future Directions}{546}{section.16.11}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{548}{chapter.17}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{549}{chapter.18}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{550}{chapter.19}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{551}{chapter.20}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{552}{chapter.21}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{553}{chapter.22}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{554}{chapter.23}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{555}{chapter.24}%
+\contentsline {chapter}{\numberline {25}Model Compression: Quantization and Pruning}{556}{chapter.25}%
+\contentsline {chapter}{\numberline {26}Foundation Models in Computer Vision}{557}{chapter.26}%
+\contentsline {chapter}{\numberline {27}MAMBA: Multi-Agent Multi-Body Analysis}{558}{chapter.27}%
 \contentsfinish 

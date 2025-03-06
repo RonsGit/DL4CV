@@ -2720,29 +2720,24 @@
     <bcf:citekey order="326" intorder="1">pascanu2013_difficulty</bcf:citekey>
     <bcf:citekey order="327" intorder="1">karpathy2015_visualizing_rnns</bcf:citekey>
     <bcf:citekey order="328" intorder="1">hochreiter1997_lstm</bcf:citekey>
-    <bcf:citekey order="329" intorder="1">medium_lstm_vanishing</bcf:citekey>
-    <bcf:citekey order="330" intorder="1">srivastava2015_training</bcf:citekey>
-    <bcf:citekey order="330" intorder="2">medium_lstm_vanishing</bcf:citekey>
-    <bcf:citekey order="331" intorder="1">hochreiter1997_lstm</bcf:citekey>
-    <bcf:citekey order="331" intorder="2">medium_lstm_vanishing</bcf:citekey>
+    <bcf:citekey order="329" intorder="1">srivastava2015_training</bcf:citekey>
+    <bcf:citekey order="329" intorder="2">medium_lstm_vanishing</bcf:citekey>
+    <bcf:citekey order="330" intorder="1">hochreiter1997_lstm</bcf:citekey>
+    <bcf:citekey order="331" intorder="1">pascanu2013_difficulty</bcf:citekey>
     <bcf:citekey order="332" intorder="1">srivastava2015_training</bcf:citekey>
-    <bcf:citekey order="332" intorder="2">medium_lstm_vanishing</bcf:citekey>
-    <bcf:citekey order="333" intorder="1">hochreiter1997_lstm</bcf:citekey>
-    <bcf:citekey order="334" intorder="1">pascanu2013_difficulty</bcf:citekey>
-    <bcf:citekey order="335" intorder="1">srivastava2015_training</bcf:citekey>
-    <bcf:citekey order="336" intorder="1">he2016_resnet</bcf:citekey>
+    <bcf:citekey order="333" intorder="1">he2016_resnet</bcf:citekey>
+    <bcf:citekey order="334" intorder="1">cho2014_gru</bcf:citekey>
+    <bcf:citekey order="335" intorder="1">zhang2024_advanced</bcf:citekey>
+    <bcf:citekey order="336" intorder="1">zhang2024_advanced</bcf:citekey>
     <bcf:citekey order="337" intorder="1">cho2014_gru</bcf:citekey>
-    <bcf:citekey order="338" intorder="1">zhang2024_advanced</bcf:citekey>
-    <bcf:citekey order="339" intorder="1">zhang2024_advanced</bcf:citekey>
-    <bcf:citekey order="340" intorder="1">cho2014_gru</bcf:citekey>
-    <bcf:citekey order="341" intorder="1">cho2014_gru</bcf:citekey>
-    <bcf:citekey order="342" intorder="1">cho2014_gru</bcf:citekey>
-    <bcf:citekey order="343" intorder="1">zoph2017_nas</bcf:citekey>
-    <bcf:citekey order="344" intorder="1">zoph2017_nas</bcf:citekey>
-    <bcf:citekey order="345" intorder="1">zoph2017_nas</bcf:citekey>
-    <bcf:citekey order="346" intorder="1">Mahadi2024_GRU_Plasmonic</bcf:citekey>
-    <bcf:citekey order="347" intorder="1">Mahadi2024_GRU_Plasmonic</bcf:citekey>
-    <bcf:citekey order="348" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="338" intorder="1">cho2014_gru</bcf:citekey>
+    <bcf:citekey order="339" intorder="1">cho2014_gru</bcf:citekey>
+    <bcf:citekey order="340" intorder="1">zoph2017_nas</bcf:citekey>
+    <bcf:citekey order="341" intorder="1">zoph2017_nas</bcf:citekey>
+    <bcf:citekey order="342" intorder="1">zoph2017_nas</bcf:citekey>
+    <bcf:citekey order="343" intorder="1">Mahadi2024_GRU_Plasmonic</bcf:citekey>
+    <bcf:citekey order="344" intorder="1">Mahadi2024_GRU_Plasmonic</bcf:citekey>
+    <bcf:citekey order="345" intorder="1">vaswani2017_attention</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
