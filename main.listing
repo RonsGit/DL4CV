@@ -1,45 +1,15 @@
-	def bilinear_interpolate(img, x, y):
-		''' We are given a point (x,y) that might not be a pixel coordinate,
-		and we want to interpolate its feature value from the surrounding pixels.
-		'''
-		
-		# find the integer corners that surround (x, y)
-		x0 = torch.floor(x).type(torch.cuda.LongTensor)
-		x1 = x0 + 1
-		y0 = torch.floor(y).type(torch.cuda.LongTensor)
-		y1 = y0 + 1
-		
-		# clamp these coordinates to the image boundary to avoid indexing out of range
-		x0 = torch.clamp(x0, 0, img.shape[1] - 1)
-		x1 = torch.clamp(x1, 0, img.shape[1] - 1)
-		y0 = torch.clamp(y0, 0, img.shape[0] - 1)
-		y1 = torch.clamp(y1, 0, img.shape[0] - 1)
-		
-		# top-left, bottom-left, top-right, bottom-right corner values
-		Ia = img[y0, x0]
-		Ib = img[y1, x0]
-		Ic = img[y0, x1]
-		Id = img[y1, x1]
-		
-		'''
-		Next, we compute the weights for each corner. The idea:
-		- (x1 - x) -> how far we are from the right edge in the x direction
-		- (x - x0) -> how far we are from the left edge in the x direction
-		- (y1 - y) -> how far we are from the bottom edge in the y direction
-		- (y - y0) -> how far we are from the top edge in the y direction
-		
-		We multiply these "partial distances" and then normalize by the total "area"
-		( (x1 - x0)*(y1 - y0) ) so that wa+wb+wc+wd = 1.
-		'''
-		
-		norm_const = 1 / ((x1.type(torch.float32) - x0.type(torch.float32)) *
-		(y1.type(torch.float32) - y0.type(torch.float32)))
-		
-		wa = (x1.type(torch.float32) - x) * (y1.type(torch.float32) - y) * norm_const
-		wb = (x1.type(torch.float32) - x) * (y - y0.type(torch.float32)) * norm_const
-		wc = (x - x0.type(torch.float32)) * (y1.type(torch.float32) - y) * norm_const
-		wd = (x - x0.type(torch.float32)) * (y - y0.type(torch.float32)) * norm_const
-		
-		# final bilinear interpolation: weighted sum of the four corners
-		return torch.t(torch.t(Ia) * wa) + torch.t(torch.t(Ib) * wb) + \
-		torch.t(torch.t(Ic) * wc) + torch.t(torch.t(Id) * wd)
+	# Visualize the learned weights for each class
+	w = svm.W[:-1, :]  # Strip out the bias term
+	w = w.reshape(32, 32, 3, 10)  # Reshape rows into image format
+	w_min, w_max = np.min(w), np.max(w)
+	
+	classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+	
+	for i in range(10):
+		plt.subplot(2, 5, i + 1)
+		# Rescale weights to 0-255 range for visualization
+		wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
+		plt.imshow(wimg.astype('uint8'))
+		plt.axis('off')
+		plt.title(classes[i])
+		plt.show()

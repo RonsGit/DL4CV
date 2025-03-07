@@ -2231,7 +2231,7 @@ Despite its effectiveness, BatchNorm has several downsides:
 	
 	\noindent
 	\textbf{Question:} In a neural network layer of the form 
-	\(\mathbf{z} = \phi(\mathbf{W}\mathbf{x} + \mathbf{b})\), should we apply Batch Normalization (BN) before or after the activation \(\phi\)? Moreover, how should Dropout be ordered relative to BN?
+	\(\mathbf{z} = \phi(\mathbf{W}\mathbf{x} + \mathbf{b})\), should we apply Batch Normalization (BN) before or after the activation \(\phi\)?
 	
 	\subsubsection{Batch Normalization Placement: Typical Ordering}
 	
@@ -2260,63 +2260,7 @@ Despite its effectiveness, BatchNorm has several downsides:
 	Placing BN before \(\phi\) effectively keeps the distribution of pre-activation \(\mathbf{u}\) stable as training progresses, letting the subsequent nonlinearity see consistently normalized data.
 \end{enrichment}
 
-\begin{enrichment}[Ordering of Dropout and Batch Normalization][subsection]
-	
-	\noindent
-	Dropout and Batch Normalization (BN) are commonly used regularization techniques, but their order in the computational pipeline affects their effectiveness. This section examines the impact of their ordering and why BN is typically placed before Dropout.
-	
-	\begin{enrichment}[Impact of Dropout Placement on BN][subsubsection]
-		
-		\noindent The placement of Dropout relative to Batch Normalization (BN) can significantly affect training stability and performance. If Dropout is applied \emph{before} BN, it modifies activations stochastically, leading to inconsistent batch statistics:
-		\[
-		\mu_B = \mathbb{E}[\mathbf{m} \odot \mathbf{u}], \quad \sigma_B^2 = \mathbb{E}[(\mathbf{m} \odot \mathbf{u})^2] - \mathbb{E}[\mathbf{m} \odot \mathbf{u}]^2.
-		\]
-		Here, \(\mathbf{m}\) is a binary mask sampled independently per batch. Since different neurons are randomly dropped each forward pass, the estimated mean \(\mu_B\) and variance \(\sigma_B^2\) fluctuate across iterations, affecting BN’s ability to normalize effectively. This results in:
-		
-		\begin{itemize}
-			\item \textbf{Unstable batch statistics:} BN normalizes activations using batch-wide estimates of \(\mu_B, \sigma_B^2\). With Dropout applied first, the expected value of activations varies unpredictably due to random masking, introducing variance into these estimates. Mathematically, since \(\mathbb{E}[\mathbf{m}] = p\), where \(p\) is the Dropout retention probability, BN effectively normalizes over \(\mathbf{m} \odot \mathbf{u}\), distorting the expected statistics.
-			
-			\item \textbf{Inconsistent normalization:} BN aims to stabilize activations across training by ensuring a consistent distribution. However, when Dropout precedes BN, the latter adapts to a distribution affected by stochastic sparsity rather than the actual underlying feature distribution, leading to erratic normalization behavior.
-			
-			\item \textbf{Reduced Dropout effectiveness:} BN rescales activations based on mini-batch statistics. If Dropout zeros out activations before BN, BN may adjust its normalization parameters such that previously zeroed activations are shifted back to nonzero values. This undermines Dropout’s intended function of inducing sparsity and reducing co-adaptation between neurons.
-		\end{itemize}
-		
-	\end{enrichment}
-	
-	\begin{enrichment}[Why BN Before Dropout is Preferred][subsubsection]
-		
-		\noindent To maintain stable normalization while preserving Dropout’s regularization benefits, BN should be applied \emph{before} Dropout:
-		
-		\[
-		\mathbf{x} \;\xrightarrow{\quad\mathrm{Linear}\quad}\;
-		\mathbf{u} \;\xrightarrow{\quad\mathrm{BN}\quad}\;
-		\widehat{\mathbf{u}} \;\xrightarrow{\quad\phi(\cdot)\quad}\;
-		\mathbf{z} \;\xrightarrow{\quad\mathrm{Dropout}\quad}\;
-		\mathbf{\tilde{z}}.
-		\]
-		
-		This ordering ensures:
-		
-		\begin{itemize}
-			\item \textbf{Reliable batch statistics:} BN operates on unperturbed pre-activations, maintaining consistent estimates of \(\mu_B, \sigma_B^2\). Since BN relies on these running statistics for inference, applying it before Dropout prevents artificially induced variance that could degrade model stability.
-			
-			\item \textbf{Preserved Dropout effect:} Dropout is applied \emph{after} BN, ensuring that zeroed activations remain zeroed, rather than being rescaled. This allows Dropout to function as intended, improving regularization without interference from BN’s normalization step.
-			
-			\item \textbf{Smoother convergence:} When Dropout follows BN, the added stochasticity occurs \emph{after} stable normalization, preventing erratic gradient updates while still regularizing the network.
-		\end{itemize}
-		
-		\noindent The optimal placement of BN and Dropout can vary depending on the network architecture and task:
-		
-		\begin{itemize}
-			\item In \textbf{CNNs}, Dropout may be omitted entirely since BN alone can sufficiently regularize.
-			\item In \textbf{Transformers}, Dropout is typically applied to attention weights.
-			\item In \textbf{large-scale datasets} (e.g., ImageNet \cite{ioffe2015_batchnorm}), Dropout is often used only in deeper layers where BN alone may not provide enough regularization.
-		\end{itemize}
-		
-	\end{enrichment}
-	
-\end{enrichment}
-
+\newpage
 \subsubsection{Alternative Normalization Methods}
 \label{subsubsec:alt_norms}
 

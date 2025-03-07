@@ -406,6 +406,9 @@ innerbottommargin=5pt]{cBox}
 
 \NewDocumentEnvironment{enrichment}{ O{} O{subsection} }{%
 	\ifenrichment
+	% Save the current header marks before setting the enrichment header
+	\let\savedLeftMark\leftmark
+	\let\savedRightMark\rightmark
 	% Determine the level and update the appropriate counter
 	\ifthenelse{\equal{#2}{section}}{%
 		\refstepcounter{section}%
@@ -441,7 +444,8 @@ innerbottommargin=5pt]{cBox}
 	\fi
 }{%
 	\ifenrichment
-	% End of environment: no additional actions needed.
+	% Restore the previously saved header marks so subsequent pages display the correct header
+	\markboth{\savedLeftMark}{\savedRightMark}%
 	\fi
 }
 
