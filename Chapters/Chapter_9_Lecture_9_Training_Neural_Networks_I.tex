@@ -179,15 +179,17 @@ ReLU has several advantages over sigmoid and tanh:
 
 However, ReLU is not without its drawbacks.
 
+
+
 \subsubsection{Issues with ReLU}
 \label{subsubsec:chapter9_relu_issues}
 
-Despite its advantages, ReLU has two notable weaknesses:
+\noindent Despite its advantages, ReLU has several notable weaknesses that can impact training stability and model performance:
 
 \begin{enumerate}
-	\item \textbf{Not Zero-Centered:} Like sigmoid, ReLU outputs are strictly non-negative, leading to the same gradient imbalance issue where all weight gradients share the same sign, determined by the scalar upstream gradient.
+	\item \textbf{Not Zero-Centered:} Like sigmoid, ReLU outputs are strictly non-negative, leading to a gradient imbalance issue. Since negative inputs always map to zero, weight gradients for neurons processing only non-negative activations share the same sign, reducing the efficiency of gradient updates.
 	
-	\item \textbf{The "Dead ReLU" Problem:} If inputs to a neuron are always negative, the gradient is completely zero, preventing any updates—effectively killing the neuron. Unlike sigmoid, where the gradient is at least small in saturation regions, a dead ReLU neuron remains permanently inactive.
+	\item \textbf{The "Dead ReLU" Problem:} If a neuron consistently receives negative inputs, its activation is always zero, and its gradient remains zero, effectively preventing any updates—this is known as a "dead ReLU."
 	
 	\begin{figure}[H]
 		\centering
@@ -196,9 +198,25 @@ Despite its advantages, ReLU has two notable weaknesses:
 		\label{fig:chapter9_dead_relu}
 	\end{figure}
 	
-	This issue occurs when all training samples produce negative inputs for a particular neuron. If at least some samples lead to positive activations, the neuron remains active and learns normally. One common strategy to mitigate dead ReLUs is to initialize ReLU biases with small positive values (e.g., 0.01) to encourage early neuron activation.
+	This problem is particularly prevalent when using high learning rates or poor weight initialization. If all training samples produce negative pre-activations for a neuron, it remains inactive throughout training.
+	
+	\item \textbf{Exploding Activation Variance:} In deeper networks, ReLU activations can cause an increase in activation variance due to their unbounded positive outputs. This can lead to instability during training, particularly when combined with high learning rates.
+	
 \end{enumerate}
 
+\subsubsection{Mitigation Strategies for ReLU Issues}
+
+\noindent Several strategies exist to address these issues, some of which will be discussed in greater detail in later sections:
+
+\begin{itemize}
+	\item \textbf{Proper Weight Initialization:} Using He initialization \cite{he2015_delving} ensures that ReLU neurons receive diverse activations at the start of training, reducing the likelihood of dead neurons.
+	\item \textbf{Lower Learning Rates with Batch Normalization:} Applying batch normalization before or after the activation function helps control activation variance and stabilizes gradient updates, mitigating exploding activations.
+	\item \textbf{Alternative Activation Functions:} Other activation functions such as Leaky ReLU, Parametric ReLU (PReLU), and Exponential Linear Unit (ELU) address some of ReLU's limitations by modifying how negative inputs are handled. We will explore these alternatives in a later section.
+\end{itemize}
+
+\noindent While ReLU remains a popular activation function due to its simplicity and computational efficiency, understanding and addressing its limitations is crucial for designing stable and robust deep learning architectures.
+
+\newpage
 \subsubsection{Leaky ReLU and Parametric ReLU (PReLU)}
 \label{subsubsec:chapter9_leaky_prelu}
 
@@ -211,11 +229,7 @@ A modification to ReLU, called \textbf{Leaky ReLU}, prevents neurons from comple
 	\label{fig:chapter9_prelu}
 \end{figure}
 
-\[
-f(x) = \max(0.01x, x)
-\]
-
-This variant ensures that neurons never entirely deactivate, preserving gradient flow while maintaining computational efficiency. A further improvement, called \textbf{Parametric ReLU (PReLU)} \cite{he2015_delving}, makes the negative slope \(\alpha\) a learnable parameter:
+$f(x) = \max(0.01x, x)$ This variant ensures that neurons never entirely deactivate, preserving gradient flow while maintaining computational efficiency. A further improvement, called \textbf{Parametric ReLU (PReLU)} \cite{he2015_delving}, makes the negative slope \(\alpha\) a learnable parameter:
 
 \[
 f(x) = \max(\alpha x, x)
@@ -250,7 +264,6 @@ f(x) =
 	\label{fig:chapter9_elu}
 \end{figure}
 
-\newpage
 \noindent ELU has several advantages:
 \begin{itemize}
 	\item \textbf{Zero-Centered Outputs:} Unlike ReLU, ELU allows negative activations, leading to a mean output closer to zero. This reduces the gradient imbalance issue present in ReLU, where all activations are strictly non-negative. Since the weight updates in gradient descent depend on the activation sign, having outputs symmetrically distributed around zero helps avoid directional bias in weight updates, leading to more stable and efficient learning.

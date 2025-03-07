@@ -386,6 +386,34 @@ While the Universal Approximation Theorem demonstrates the capacity of neural ne
 
 As a comparison, \( k \)-Nearest Neighbors (kNN) is also a universal approximator, but this property alone does not make it the best model for most tasks. Universal approximation, while a nice property, is insufficient to declare neural networks superior.
 
+
+\begin{enrichment}[Deep Networks vs Shallow Networks][subsection]
+	A neural network with \textbf{one hidden layer} is theoretically sufficient to approximate any continuous function. This result highlights the expressive power of even shallow networks but does not imply practical feasibility.
+	
+	A natural question arises: \emph{Why not simply use one deep layer?} In other words, why not train only shallow networks to solve our desired tasks? There are several reasons why this is impractical:
+	
+	\begin{itemize}
+		\item \textbf{Memorization vs. Generalization}: Shallow networks can memorize training data effectively but empirically often fail to generalize well to unseen data.
+		\item \textbf{Scalability Issues}: While a single hidden layer can approximate any function, the required number of neurons grows exponentially with task complexity. More formally, for a function that requires a depth-\(D\) network with width \(W\), a depth-1 network may require width up to \(O(W^D)\) \cite{eldan2016_power, telgarsky2016_benefits}. This exponential growth makes training infeasible as the number of parameters and computations explode.
+		\item \textbf{Feature Hierarchies and Representation Learning}: Deeper networks naturally learn hierarchical representations, where each layer extracts increasingly abstract features \cite{bengio2013_representation}. Mathematically, many real-world functions are compositional in nature, meaning they can be expressed as a composition of simpler functions:
+		\begin{equation}
+			f(x) = f_L \circ f_{L-1} \circ \dots \circ f_1(x).
+		\end{equation}
+		A deep network explicitly models this hierarchical structure, making it exponentially more efficient than a shallow network in terms of representation capacity \cite{poggio2017_theory}.
+	\end{itemize}
+	
+	\begin{enrichment}[Why Not Just Use a Very Deep and Wide Network?][subsubsection]
+		\noindent While deep networks improve representation learning, increasing depth and width comes with trade-offs:
+		\begin{itemize}
+			\item \textbf{Overfitting}: More parameters increase the risk of overfitting, particularly in low-data regimes.
+			\item \textbf{Computational Costs}: Training deeper networks requires longer runtimes and significantly more memory, particularly as backpropagation scales linearly with depth.
+			\item \textbf{Optimization Challenges}: Deep networks suffer from vanishing and exploding gradients due to repeated matrix multiplications, making them harder to train \cite{hochreiter1997_lstm, pascanu2013_difficulty}.
+		\end{itemize}
+	\end{enrichment}
+	
+	\noindent Hence, while a single hidden layer is sufficient in theory, deeper networks provide better generalization, improved representation learning, and computational efficiency in practice. The choice of depth and width remains a crucial consideration, balancing expressivity, generalization, and computational cost.
+\end{enrichment}
+
 \section{Convex Functions: A Special Case}
 Convex functions exhibit desirable properties for optimization. 
 

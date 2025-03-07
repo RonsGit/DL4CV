@@ -3,6 +3,341 @@
 % Chapter-specific content starts here
 \chapter{Lecture 17: Attention}
 
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------------------
 %	CHAPTER 17 - Lecture 17: Attention
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------------------
+
+\section{Limitations of Sequence-to-Sequence with RNNs}
+
+Previously, recurrent neural networks (RNNs) were used for sequence-to-sequence tasks such as machine translation. The encoder processed the input sequence and produced:
+
+\begin{itemize}
+	\item \textbf{A final hidden state} $s_0$, used as the first hidden state of the decoder network.
+	\item \textbf{A single, finite context vector} $c$ (often $c = h_T$), used at each step as input to the decoder.
+\end{itemize}
+
+The decoder then used $s_0$ and $c$ to generate an output sequence, starting with a \texttt{<START>} token and continuing until a \texttt{<STOP>} token was produced. The context vector $c$ acted as a summary of the entire input sequence, transferring information from encoder to decoder.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_8.jpg}
+	\caption{Sequence-to-sequence with RNNs.}
+	\label{fig:chapter17_seq2seq_rnn}
+\end{figure}
+
+\newpage
+While effective for short sequences, this approach faces issues when processing long sequences, as the fixed-size context vector $c$ becomes a bottleneck, limiting the amount of information that can be retained and transferred.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_10.jpg}
+	\caption{The bottleneck problem in sequence-to-sequence RNNs.}
+	\label{fig:chapter17_bottleneck}
+\end{figure}
+
+Even more advanced architectures like Long Short-Term Memory (LSTM) networks suffer from this issue because they still rely on the fixed-size $c$ and $h_T$ representations that do not scale with sequence length.
+
+\section{Introducing the Attention Mechanism}
+
+To address the bottleneck issue, the Attention mechanism introduces dynamically computed context vectors at each decoder step, instead of a single fixed vector. The encoder still processes the sequence to generate hidden states $h_1, h_2, \dots, h_T$, but instead of passing only $h_T$, an alignment function is used to determine which encoder hidden states are most relevant at each decoder step.
+
+\textbf{The key idea:} Rather than using a single context vector for all decoder steps, the model computes a new context vector at each step by attending to different parts of the input sequence. This is done through a learnable alignment mechanism:
+
+\begin{equation}
+	e_{t,i} = f_{att}(s_{t-1}, h_i),
+\end{equation}
+where $f_{att}$ is a small, fully connected neural network. This function takes two inputs:
+\begin{itemize}
+	\item The current hidden state of the decoder $s_{t-1}$.
+	\item A hidden state of the encoder $h_i$.
+\end{itemize}
+
+By applying the function many times, over all encoder hidden states, it results in a set of alignment scores $e_{t,1}, e_{t,2}, \dots, e_{t,T}$, where each score represents how relevant the corresponding encoder hidden state is to the current decoder step.
+
+Applying the softmax function converts these alignment scores into attention weights:
+\begin{equation}
+	a_{t,i} = \frac{\exp(e_{t,i})}{\sum_{j=1}^{T} \exp(e_{t,j})},
+\end{equation}
+which ensures all attention weights are between $[0,1]$ and sum to $1$.
+
+The new context vector $c_t$ is computed as a weighted sum of encoder hidden states:
+\begin{equation}
+	c_t = \sum_{i=1}^{T} a_{t,i} h_i.
+\end{equation}
+
+This means that at every decoding step, the decoder dynamically attends to different parts of the input sequence, adapting its focus based on the content being generated.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_15.jpg}
+	\caption{Attention mechanism in sequence-to-sequence models.}
+	\label{fig:chapter17_attention}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_19.jpg}
+	\caption{Illustration of attention weights for translating \texttt{"we are eating bread"} to \texttt{"estamos comiendo pan"}.}
+	\label{fig:chapter17_attention_example}
+\end{figure}
+
+\subsubsection{Intuition Behind Attention}
+
+Instead of relying on a single compressed context vector, attention allows the model to focus on the most relevant parts of the input sequence dynamically. For example, when translating \texttt{"we are eating bread"} to \texttt{"estamos comiendo pan"}, the attention weights at the first step might be:
+\begin{equation}
+	a_{11} = a_{12} = 0.45, \quad a_{13} = a_{14} = 0.05.
+\end{equation}
+This means the model places greater emphasis on the words \texttt{"we are"} when producing \texttt{"estamos"}, and will shift attention accordingly as it generates more words.
+
+\subsection{Benefits of Attention}
+
+Attention mechanisms improve sequence-to-sequence models in several ways:
+
+\begin{itemize}
+	\item \textbf{Eliminates the bottleneck:} The input sequence is no longer constrained by a single fixed-size context vector.
+	\item \textbf{Dynamic focus:} Each decoder step attends to different parts of the input, rather than relying on a static summary.
+	\item \textbf{Improved alignment:} The model learns to associate corresponding elements in input and output sequences automatically.
+\end{itemize}
+
+Additionally, attention mechanisms are fully differentiable, meaning they can be trained end-to-end via backpropagation without explicit supervision of attention weights.
+
+\subsection{Attention Interpretability}
+
+The introduction of attention mechanisms has revolutionized sequence-to-sequence learning by addressing the limitations of a fixed-size context vector. Rather than relying on a static summary of the input, attention dynamically selects relevant information at each decoding step, significantly improving performance on long sequences and enabling models to learn meaningful alignments between input and output sequences.
+
+One of the key advantages of attention is its \textbf{interpretability}. By visualizing \textbf{attention maps}, we can gain deeper insight into how the model aligns different parts of the input with the generated output. These maps illustrate how the network distributes its focus across the input sequence at each step, offering a way to diagnose errors and refine architectures for specific tasks.
+
+\subsubsection{Attention Maps: Visualizing Model Decisions}
+
+A particularly interesting property of attention is that it provides an interpretable way to analyze how different parts of the input sequence influence each predicted output token. This is achieved through \textbf{attention maps}, which depict the attention weights as a structured matrix.
+
+To see this in action, let us revisit our sequence-to-sequence translation example, but now translating from English to French using the attention mechanism proposed by Bahdanau et al. \cite{bahdanau2016_neural}. Consider the following English sentence:
+
+\begin{center}
+	\texttt{``The agreement on the European Economic Area was signed in August 1992 . <end>''}
+\end{center}
+
+which the model translates to French as:
+
+\begin{center}
+	\texttt{``L'accord sur la zone économique européenne a été signé en août 1992 . <end>''}
+\end{center}
+
+By constructing a matrix of size $T' \times T$ (where $T'$ is the number of output tokens and $T$ is the number of input tokens), we can visualize the attention weights $a_{i,j}$, which quantify how much attention the decoder assigns to each encoder hidden state when generating an output token. A higher weight corresponds to a stronger influence of the encoder hidden state $h_j$ on the decoder state $s_i$, which then produces the output token $y_i$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_23.jpg}
+	\caption{Visualization of attention weights in the form of an attention map, offering insight into the seq2seq model's alignment process.}
+	\label{fig:chapter17_attention_map}
+\end{figure}
+
+In this visualization, each cell represents an attention weight $a_{i,j}$, where a brighter color corresponds to a higher weight (i.e., stronger attention), and a darker color corresponds to a lower weight (weaker attention). The map reveals how the model distributes its focus while generating each output word.
+
+\subsubsection{Understanding Attention Patterns}
+
+Observing the attention map, we notice an almost diagonal alignment. This makes sense, as words in one language typically correspond to words in the other in the same order. For example, the English word \texttt{``The''} aligns with the French \texttt{``L' ''}, and \texttt{``agreement''} aligns with \texttt{``accord''}. This pattern suggests that the model has learned a reasonable alignment between source and target words.
+
+However, not all words align perfectly in the same order. Some phrases require reordering due to syntactic differences between languages. A notable example is the phrase:
+
+\begin{center}
+	\texttt{``European Economic Area''} $\rightarrow$ \texttt{``zone économique européenne''}
+\end{center}
+
+Here, the attention map reveals that the model adjusts its focus dynamically, attending to different words at different decoding steps. In English, adjectives precede nouns, while in French, they follow. The attention map correctly assigns a higher weight to \texttt{``zone''} when generating the French \texttt{``zone''}, then shifts attention to \texttt{``economic''} and \texttt{``European''} at appropriate steps.
+
+This behavior shows that the model is not merely copying words but has learned meaningful language structure. Importantly, \textbf{we did not explicitly tell the model these word alignments—it learned them from data alone}. The ability to extract these patterns purely from training data without human supervision is a major advantage of attention-based architectures.
+
+\subsubsection{Why Attention Interpretability Matters}
+
+The interpretability provided by attention maps allows us to:
+\begin{itemize}
+	\item \textbf{Understand model predictions}: By visualizing attention distributions, we can verify whether the model is focusing on the right input words for each output token.
+	\item \textbf{Debug model errors}: If a translation error occurs, the attention map can reveal whether it was due to misaligned attention weights.
+	\item \textbf{Gain linguistic insights}: The learned alignments sometimes uncover grammatical and syntactic relationships across languages that may not be immediately obvious.
+\end{itemize}
+
+This ability to interpret how neural networks make decisions was largely missing from previous architectures, making attention a crucial development in deep learning. As we move forward, we will explore even more advanced forms of attention, such as \textbf{self-attention} in Transformers, which allows models to process entire sequences in parallel rather than sequentially.
+
+\subsection{Applying Attention to Image Captioning}
+
+\noindent The ability of attention mechanisms to work on unordered sets enables their extension to computer vision tasks, particularly image captioning. This was demonstrated in the seminal work by Xu et al. \cite{xu2015_showattend}, \textit{“Show, Attend, and Tell: Neural Image Caption Generation with Visual Attention”}. In this approach, a CNN extracts a grid of feature vectors from an input image, and an attention-based decoder generates a natural language description by attending to different parts of the image at each step.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_35.jpg}
+	\caption{Image captioning using RNNs and attention. A CNN extracts spatial feature vectors, and the decoder dynamically attends to different image regions at each timestep.}
+	\label{fig:chapter17_image_captioning}
+\end{figure}
+
+\subsubsection{Feature Representation and Attention Computation}
+
+\noindent The image is first processed by a CNN, producing a feature map of shape \( C_{\text{out}} \times H' \times W' \), where \( C_{\text{out}} \) is the number of feature channels and \( H' \times W' \) corresponds to spatial locations in the original image. Each of these spatial locations provides a feature vector \( h_{i,j} \) representing a different receptive field in the image.
+
+\noindent These extracted feature vectors serve as the input set for the attention mechanism, similar to hidden states in an RNN. Unlike sequential processing, however, the decoder treats them as an unordered collection and dynamically selects which features to focus on at each timestep.
+
+\noindent At the first decoding step (\( t=1 \)), the model initializes the decoder hidden state \( s_0 \) using a function \( g(\cdot) \), such as an MLP applied to the image feature vectors extracted by the CNN. Unlike in recurrent architectures, where the first hidden state is typically based on an initial token, here, \( s_0 \) is constructed using the full set of feature vectors:
+
+\begin{equation}
+	s_0 = g(\{h_{i,j}\})
+\end{equation}
+
+\noindent This means that rather than using a single hidden state as a starting point, the model aggregates information from all spatial locations in the CNN feature map. This is crucial for grounding the decoding process in a global understanding of the image.
+
+\noindent Recall from \textbf{object detection} that by computing the downsampling factor of a fully convolutional network, we can map each spatial position in the output feature map (i.e., a \textbf{hidden state} in this context) to a corresponding receptive field in the input image. Similarly, in \textbf{image captioning}, each spatial position \( (i,j) \) in the CNN feature map corresponds to a specific region of the image, which serves as the basis for attention-based feature selection.
+
+\noindent The model then computes alignment scores for each spatial feature vector \( h_{i,j} \) using a learnable attention function:
+
+\begin{equation}
+	e_{1, i, j} = f_{att}(s_0, h_{i,j})
+\end{equation}
+
+\noindent These scores form an \textbf{alignment weight matrix} \( E \), where each element represents the model’s predicted importance for the corresponding feature vector. We then apply \textbf{softmax} to normalize these scores into a probability distribution, forming the \textbf{attention weight matrix} \( A \):
+
+\begin{equation}
+	a_{1, i, j} = \frac{\exp(e_{1, i, j})}{\sum_{m,n} \exp(e_{1, m, n})}
+\end{equation}
+
+\noindent The \textbf{context vector} \( c_1 \) is computed as a weighted sum of the spatial feature vectors:
+
+\begin{equation}
+	c_1 = \sum_{i,j} a_{1,i,j} h_{i,j}
+\end{equation}
+
+\noindent This context vector \( c_1 \), along with the decoder hidden state \( s_0 \) and the <START> token, is used to generate the first word \( y_1 \) of the caption. The decoder also updates its hidden state to \( s_1 \):
+
+\begin{equation}
+	s_1 = g(s_0, y_1, c_1)
+\end{equation}
+
+\noindent At the second decoding step (\( t=2 \)), the model repeats this process:
+\begin{itemize}
+	\item It computes a new set of alignment scores \( e_{2,i,j} \) using \( s_1 \) and \( h_{i,j} \).
+	\item It normalizes these scores via \textbf{softmax} to obtain attention weights \( a_{2,i,j} \).
+	\item It forms a new \textbf{context vector} \( c_2 \) as a weighted sum of feature vectors.
+	\item It generates the second word \( y_2 \) and updates the decoder hidden state to \( s_2 \).
+\end{itemize}
+
+\noindent This iterative mechanism continues until the model generates the <END> token.
+
+\subsubsection{Generalizing to Any Timestep \( t \)}
+
+\noindent The general formulation for any timestep \( t \) follows the same iterative pattern:
+
+\begin{equation}
+	e_{t,i,j} = f_{att}(s_{t-1}, h_{i,j})
+\end{equation}
+\begin{equation}
+	a_{t,:,:} = \text{softmax}(e_{t,:,:})
+\end{equation}
+\begin{equation}
+	c_t = \sum_{i,j} a_{t,i,j} h_{i,j}
+\end{equation}
+\begin{equation}
+	s_t = g(s_{t-1}, y_{t-1}, c_t)
+\end{equation}
+
+\noindent where \( t \in [1, ..., T'] \), with \( T' \) being the length of the generated caption.
+
+\subsubsection{Example: Captioning an Image of a Cat Sitting in Front of Trees}
+
+\noindent To illustrate this process, consider an image where a \textbf{cat is sitting in front of trees}, as shown in \autoref{fig:chapter17_image_captioning}. The expected caption might be:
+
+\begin{center}
+	\texttt{"A cat is sitting in front of trees . <END>"}
+\end{center}
+
+\noindent The caption is generated one token at a time, with each timestep \( t \) corresponding to the prediction of a single word. At each step, the attention mechanism dynamically shifts focus to different regions of the image based on the previously generated word and the decoder's internal state.
+
+\noindent Some key moments in the decoding process include:
+
+\begin{itemize}
+	\item At \( t=1 \), the decoder attends to a broad region of the image, focusing on the general structure of the scene, and predicts \texttt{"A"}.
+	\item At \( t=2 \), attention shifts more directly to the region where the \textbf{cat} is most prominent, leading to the prediction of \texttt{"cat"}.
+	\item At \( t=5 \), while generating \texttt{"in"}, the model attends to the spatial positioning of the cat relative to its surroundings.
+	\item At \( t=7 \), when predicting \texttt{"trees"}, attention expands to capture the background, recognizing the presence of trees behind the cat.
+\end{itemize}
+
+\noindent This process ensures that each token is generated based on a dynamically computed context, allowing the model to progressively describe different elements in the image.
+
+\noindent This dynamic shifting of focus is \textbf{learned through attention}, allowing the model to describe not only the primary object but also its surroundings.
+
+\noindent Moreover, this approach does not only \textbf{generate captions}—it also provides a way to \textbf{validate and interpret how captions are generated}. By examining the \textbf{attention maps} corresponding to each captioned word, we can verify:
+\begin{itemize}
+	\item Whether the model is attending to the \textbf{correct parts of the image} when producing each word.
+	\item Whether the generated caption \textbf{aligns with human expectations}.
+	\item How the model behaves in cases of \textbf{ambiguity, occlusion}, or \textbf{visually complex scenes}.
+\end{itemize}
+
+\noindent This ability to \textbf{visualize the decision-making process} was largely absent in previous image captioning methods, making attention-based architectures not only more effective but also more \textbf{explainable}. We will explore this interpretability further in the next sections.
+
+\subsection{Visualizing Attention in Image Captioning}
+
+\noindent The use of attention in image captioning offers strong interpretability, as seen in the attention maps produced at each decoding step. These maps highlight the regions of the image the model focuses on when generating each word in the caption. Consider the example in \autoref{fig:chapter17_attention_map}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_36.jpg}
+	\caption{Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights.}
+	\label{fig:chapter17_attention_map}
+\end{figure}
+
+\noindent Observations:
+\begin{itemize}
+	\item When the word \textit{"bird"} is produced, the entire bird area has high attention weights, as expected.
+	\item When the word \textit{"water"} is generated, the attention shifts to the background, especially the water surface below the bird.
+\end{itemize}
+
+\subsubsection{Hard vs. Soft Attention}
+
+\noindent The attention maps shown above correspond to \textbf{soft attention}, where the model computes a weighted probability distribution over all image regions. An alternative is \textbf{hard attention}, which selects a single most relevant image region at each timestep. Hard attention requires reinforcement learning techniques, which will be explored later. Such examples can be seen in the paper \cite{xu2015_showattend}. 
+
+\newpage
+\subsection{Biological Inspiration: Saccades in Human Vision}
+
+\noindent An interesting question we can ask ourselves is: \textbf{How similar is this mechanism to how humans perceive the world?} As it turns out, the resemblance is quite significant.
+
+\noindent The \textbf{retina}, the light-sensitive layer inside our eye, is responsible for converting incoming light into neural signals that our brain processes. However, not all parts of the retina contribute equally to our vision. The central region, known as the \textbf{fovea}, is a specialized area that provides \textbf{high-acuity vision} but covers only a small portion of our total visual field.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_39.jpg}
+	\caption{Illustration of the retina (left) and a graph of visual acuity across different retinal positions (right). The x-axis represents retinal position, while the y-axis represents acuity (ranging from 0 to 1).}
+	\label{fig:chapter17_retina_acuity}
+\end{figure}
+
+\noindent As seen in \autoref{fig:chapter17_retina_acuity}, only a small region of the retina provides clear, detailed vision. The rest of our visual field consists of lower-resolution perception. To compensate for this, human eyes perform rapid, unconscious movements called \textbf{saccades}, dynamically shifting the fovea to different areas of interest in a fraction of a second.
+
+\noindent \textbf{Attention-based image captioning mimics this biological mechanism}. Just as our eyes adjust their focus to capture different parts of a scene, attention in RNN-based captioning models selectively attends to different image regions at each timestep. The model does not process the entire image at once; instead, it dynamically "looks" at relevant portions as it generates each word in the caption.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_41.jpg}
+	\caption{Illustration of saccades in human vision and their relation to attention-based image captioning.}
+	\label{fig:chapter17_saccades_captioning}
+\end{figure}
+
+\noindent In \autoref{fig:chapter17_saccades_captioning}, we can see how attention weights at each timestep act like \textbf{saccades} in the human eye. Rather than maintaining a static focus, the model dynamically shifts its attention across different image regions, much like our eyes scan a scene.
+
+\noindent \textbf{Key parallels between saccades and attention-based image captioning:}
+\begin{itemize}
+	\item \textbf{Selective focus:} Human vision relies on the fovea to process high-resolution details, while peripheral vision provides contextual information. Similarly, attention assigns higher weights to relevant image regions while keeping a broader, low-weighted awareness of the rest.
+	\item \textbf{Dynamic adjustment:} Just as saccades allow humans to explore different parts of a scene, attention-based models shift focus across image regions as new words are generated.
+	\item \textbf{Efficient processing:} The brain does not process an entire scene at once; instead, it strategically selects important details. Attention mechanisms follow the same principle by prioritizing certain regions rather than treating all pixels equally.
+\end{itemize}
+
+\noindent This biological inspiration helps explain why \textbf{attention mechanisms are so effective in vision tasks}—they leverage a principle that human perception has refined over millions of years. The next section will explore how this interpretability can be visualized through attention maps.
+
+\subsection{Beyond Image Captioning: Generalizing Attention Mechanisms}
+
+\noindent The power of attention extends beyond image captioning. Inspired by "Show, Attend, and Tell," numerous works have applied similar mechanisms to diverse tasks:
+
+\begin{itemize}
+	\item \textbf{Visual Question Answering (VQA)} \cite{xu2016_askattend}: Attend to image regions relevant to answering a given question.
+	\item \textbf{Speech Recognition} \cite{chan2016_listenattend}: Attend to audio frames while generating text transcriptions.
+	\item \textbf{Robot Navigation} \cite{mei2016_listenwalk}: Attend to textual instructions to guide robotic movement.
+\end{itemize}
+
+\noindent These applications demonstrate that attention is not merely a tool for sequential processing—it is a powerful and general framework for learning relationships between different modalities. This leads naturally to the development of \textbf{Attention Layers}, which we will explore next.
+
+

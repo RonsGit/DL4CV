@@ -433,6 +433,33 @@ The introduction of SE blocks in 2017 marked a turning point in the history of d
 \noindent With SENet achieving a \textbf{top-5 error rate of 2.251\%}, nearly matching human-level performance on ImageNet, it became clear that further improvements in classification accuracy would yield diminishing returns. The focus of research started shifting away from pure classification improvements and toward \textbf{efficiency}, enabling CNNs to be deployed on real-world devices.
 
 \newpage
+
+
+\subsection{Challenges and Solutions for SE Networks}
+
+\subsubsection{Challenges of SE Networks}
+
+\noindent While Squeeze-and-Excitation (SE) blocks offer performance improvements, they introduce certain limitations that can impact their effectiveness in deep learning architectures:
+
+\begin{itemize}
+	\item \textbf{Loss of Spatial Information:} Since SE blocks operate exclusively on channel-wise statistics, they ignore spatial relationships between pixels. This is particularly problematic for tasks requiring fine-grained spatial awareness, such as semantic segmentation or object detection.
+	\item \textbf{Increased Computational Cost:} The excitation step involves two fully connected layers, introducing additional parameters and increasing inference time, which can be a concern in real-time applications or mobile deployments.
+	\item \textbf{Feature Over-suppression:} If the learned channel-wise attention weights are improperly calibrated, they may suppress essential features, degrading model performance by eliminating useful information.
+\end{itemize}
+
+\subsubsection{Solutions to SE Network Challenges}
+
+\noindent To address these challenges, several modifications and enhancements have been proposed:
+
+\begin{itemize}
+	\item \textbf{Combining SE with Spatial Attention:} To mitigate the loss of spatial information, SE blocks can be integrated with spatial attention mechanisms, such as CBAM (Convolutional Block Attention Module) \cite{woo2018_cbam}, which applies both channel-wise and spatial attention to improve feature selection. We will explore attention mechanisms in more detail in a later part of the course.
+	\item \textbf{Lightweight Excitation Mechanisms:} The computational cost of SE blocks can be reduced by using depthwise separable convolutions instead of fully connected layers, as demonstrated in MobileNetV3 \cite{howard2019_mobilenetv3}. This allows for efficient feature recalibration without a significant increase in parameters.
+	\item \textbf{Normalization-Based Calibration:} Applying normalization techniques, such as BatchNorm or GroupNorm, in the excitation step can help stabilize activations and prevent over-suppression of important features, leading to more balanced feature scaling.
+\end{itemize}
+
+\noindent Despite these challenges, SE blocks remain a widely used technique for enhancing neural network performance, particularly in mobile architectures where efficiency and accuracy need to be balanced carefully.
+
+\newpage
 \subsubsection{Shifting Research Directions: Efficiency and Mobile Deployability}
 While deeper and more powerful models like SENet were being developed, practical applications demanded \textbf{lightweight and efficient networks} that could run on resource-constrained devices such as mobile phones, embedded systems, and edge devices. This need led to a new era of model design, emphasizing:
 \begin{itemize}

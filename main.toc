@@ -1,0 +1,1261 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Preface}{20}{chapter*.2}%
+\contentsline {section}{\numberline {0.1}Getting Started: About the Project and How to Navigate It}{20}{section.0.1}%
+\contentsline {subsection}{\numberline {0.1.1}Why This Document?}{20}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {0.1.2}Acknowledgments and Contributions}{20}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {0.1.3}Your Feedback Matters}{21}{subsection.0.1.3}%
+\contentsline {subsection}{\numberline {0.1.4}How to Navigate This Document}{21}{subsection.0.1.4}%
+\contentsline {subsection}{\numberline {0.1.5}Staying Updated in the Field}{21}{subsection.0.1.5}%
+\contentsline {subsection}{\numberline {0.1.6}The Importance of Practice}{21}{subsection.0.1.6}%
+\contentsline {chapter}{\numberline {1}Lecture 1: Course Introduction}{22}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Core Terms in the Field}{22}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Artificial Intelligence (AI)}{22}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Machine Learning (ML)}{22}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Deep Learning (DL)}{23}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}Computer Vision (CV)}{24}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}Connecting the Dots}{24}{subsection.1.1.5}%
+\contentsline {section}{\numberline {1.2}Why Study Deep Learning for Computer Vision?}{24}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Motivation for Deep Learning in Computer Vision}{25}{subsection.1.2.1}%
+\contentsline {section}{\numberline {1.3}Historical Milestones}{25}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Hubel and Wiesel (1959): How Vision Works?}{25}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Larry Roberts (1963): From Edges to Keypoints}{26}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}David Marr (1970s): From Features to a 3D Model}{27}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Recognition via Parts (1970s)}{28}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}Recognition via Edge Detection (1980s)}{29}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}Recognition via Grouping (1990s)}{30}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.7}Recognition via Matching and Benchmarking (2000s)}{31}{subsection.1.3.7}%
+\contentsline {subsection}{\numberline {1.3.8}The ImageNet Dataset and Classification Challenge}{33}{subsection.1.3.8}%
+\contentsline {subsection}{\numberline {1.3.9}AlexNet: A Revolution in Computer Vision (2012)}{34}{subsection.1.3.9}%
+\contentsline {subsubsection}{Building on AlexNet: Evolution of CNNs and Beyond}{35}{section*.16}%
+\contentsline {section}{\numberline {1.4}Milestones in the Evolution of Learning in Computer Vision}{37}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}The Perceptron (1958)}{37}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}The AI Winter and Multilayer Perceptrons (1969)}{38}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}The Neocognitron (1980)}{38}{subsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.4.4}Backpropagation and the Revival of Neural Networks (1986)}{39}{subsection.1.4.4}%
+\contentsline {subsection}{\numberline {1.4.5}LeNet and the Emergence of Convolutional Networks (1998)}{40}{subsection.1.4.5}%
+\contentsline {subsection}{\numberline {1.4.6}The 2000s: The Era of Deep Learning}{40}{subsection.1.4.6}%
+\contentsline {subsection}{\numberline {1.4.7}Deep Learning Explosion (2007-2020)}{41}{subsection.1.4.7}%
+\contentsline {subsection}{\numberline {1.4.8}2012 to Present: Deep Learning is Everywhere}{41}{subsection.1.4.8}%
+\contentsline {subsubsection}{Core Vision Tasks}{42}{section*.24}%
+\contentsline {subsubsection}{Video and Temporal Analysis}{42}{section*.25}%
+\contentsline {subsubsection}{Generative and Multimodal Models}{42}{section*.26}%
+\contentsline {subsubsection}{Specialized Domains}{42}{section*.27}%
+\contentsline {subsubsection}{State-of-the-Art Foundation Models}{42}{section*.28}%
+\contentsline {subsubsection}{Computation is Cheaper: More GFLOPs per Dollar}{43}{section*.31}%
+\contentsline {section}{\numberline {1.5}Key Challenges in CV and Future Directions}{44}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Lecture 2: Image Classification}{47}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction to Image Classification}{47}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Image Classification Challenges}{48}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The Semantic Gap}{48}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Robustness to Camera Movement}{48}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Intra-Class Variation}{49}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Fine-Grained Classification}{49}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Background Clutter}{50}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Illumination Changes}{50}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}Deformation and Object Scale}{51}{subsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.2.8}Occlusions}{51}{subsection.2.2.8}%
+\contentsline {subsection}{\numberline {2.2.9}Summary of Challenges}{52}{subsection.2.2.9}%
+\contentsline {section}{\numberline {2.3}Image Classification as a Building Block for Other Tasks}{52}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Object Detection}{53}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Image Captioning}{54}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Decision-Making in Board Games}{55}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Summary: Leveraging Image Classification}{56}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Constructing an Image Classifier}{56}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Feature-Based Image Classification: The Classical Approach}{56}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}From Hand-Crafted Rules to Data-Driven Learning}{57}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Programming with Data: The Modern Paradigm}{58}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Data-Driven Machine Learning: The New Frontier}{58}{subsection.2.4.4}%
+\contentsline {section}{\numberline {2.5}Datasets in Image Classification}{59}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}MNIST: The Toy Dataset}{59}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}CIFAR: Real-World Object Recognition}{60}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}ImageNet: The Gold Standard}{61}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}MIT Places: Scene Recognition}{62}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Comparing Dataset Sizes}{62}{subsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.5.6}Omniglot: Few-Shot Learning}{63}{subsection.2.5.6}%
+\contentsline {subsection}{\numberline {2.5.7}Conclusion: Datasets Driving Progress}{63}{subsection.2.5.7}%
+\contentsline {section}{\numberline {2.6}Nearest Neighbor Classifier: A Gateway to Understanding Classification}{64}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Why Begin with Nearest Neighbor?}{64}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Setting the Stage: From Pixels to Predictions}{64}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Algorithm Description}{64}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}Distance Metrics: The Core of Nearest Neighbor}{65}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}Extending Nearest Neighbor: Applications Beyond Images}{67}{subsection.2.6.5}%
+\contentsline {subsubsection}{Using Nearest Neighbor for Non-Image Data}{67}{section*.67}%
+\contentsline {subsubsection}{Academic Paper Recommendation Example}{68}{section*.68}%
+\contentsline {subsubsection}{Key Insights}{68}{section*.70}%
+\contentsline {subsection}{\numberline {2.6.6}Hyperparameters in Nearest Neighbor}{68}{subsection.2.6.6}%
+\contentsline {subsection}{\numberline {2.6.7}Cross-Validation}{69}{subsection.2.6.7}%
+\contentsline {subsection}{\numberline {2.6.8}Implementation and Complexity}{70}{subsection.2.6.8}%
+\contentsline {subsection}{\numberline {2.6.9}Visualization of Decision Boundaries}{71}{subsection.2.6.9}%
+\contentsline {subsection}{\numberline {2.6.10}Improvements: k-Nearest Neighbors}{72}{subsection.2.6.10}%
+\contentsline {subsection}{\numberline {2.6.11}Limitations and Universal Approximation}{73}{subsection.2.6.11}%
+\contentsline {subsection}{\numberline {2.6.12}Using CNN Features for Nearest Neighbor Classification}{74}{subsection.2.6.12}%
+\contentsline {subsection}{\numberline {2.6.13}Conclusion: From Nearest Neighbor to Advanced ML Frontiers}{75}{subsection.2.6.13}%
+\contentsline {chapter}{\numberline {3}Lecture 3: Linear Classifiers}{76}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Linear Classifiers: A Foundation for Neural Networks}{76}{section.3.1}%
+\contentsline {subsection}{Enrichment 3.1.1: Understanding the Role of Bias in Linear Classifiers}{79}{section*.84}%
+\contentsline {paragraph}{Without Bias (\(b=0\)):}{79}{section*.85}%
+\contentsline {paragraph}{With Bias (\(b = 3\)):}{79}{section*.86}%
+\contentsline {subsection}{\numberline {3.1.2}A Toy Example: Grayscale Cat Image}{80}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}The Bias Trick}{81}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Linear Classifiers: The Algebraic Viewpoint}{83}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Scaling Properties and Insights}{83}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}From Algebra to Visual Interpretability}{84}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Linear Classifiers: The Visual Viewpoint}{84}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Template Matching Perspective}{85}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Interpreting Templates}{86}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Python Code Example: Visualizing Learned Templates}{86}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Template Limitations: Multiple Modes}{87}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Looking Ahead}{87}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Linear Classifiers: The Geometric Viewpoint}{87}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Images as High-Dimensional Points}{87}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Limitations of Linear Classifiers}{88}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Historical Context: The Perceptron and XOR Limitation}{89}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Challenges of High-Dimensional Geometry}{89}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Summary: Shortcomings of Linear Classifiers}{90}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Algebraic Viewpoint}{90}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Visual Viewpoint}{90}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Geometric Viewpoint}{90}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Conclusion: Linear Classifiers Aren't Enough}{90}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Choosing the Weights for Linear Classifiers}{90}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Loss Functions}{90}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Cross-Entropy Loss}{91}{subsection.3.7.1}%
+\contentsline {subsubsection}{Softmax Function}{91}{section*.97}%
+\contentsline {paragraph}{Advanced Note: Boltzmann Perspective.}{91}{section*.98}%
+\contentsline {subsubsection}{Loss Computation}{91}{section*.99}%
+\contentsline {paragraph}{Example: CIFAR-10 Image Classification}{91}{section*.100}%
+\contentsline {paragraph}{Properties of Cross-Entropy Loss}{92}{section*.102}%
+\contentsline {subsubsection}{Why "Cross-Entropy"?}{92}{section*.103}%
+\contentsline {subsection}{\numberline {3.7.2}Multiclass SVM Loss}{92}{subsection.3.7.2}%
+\contentsline {subsubsection}{Loss Definition}{93}{section*.104}%
+\contentsline {subsubsection}{Example Computation}{93}{section*.105}%
+\contentsline {paragraph}{Loss for the Cat Image}{93}{section*.106}%
+\contentsline {paragraph}{Loss for the Car Image}{94}{section*.108}%
+\contentsline {paragraph}{Loss for the Frog Image}{94}{section*.110}%
+\contentsline {paragraph}{Total Loss}{95}{section*.112}%
+\contentsline {subsubsection}{Key Questions and Insights}{95}{section*.114}%
+\contentsline {subsection}{\numberline {3.7.3}Comparison of Cross-Entropy and Multiclass SVM Losses}{96}{subsection.3.7.3}%
+\contentsline {subsubsection}{Conclusion: SVM, Cross Entropy, and the Evolving Landscape of Loss Functions}{96}{section*.116}%
+\contentsline {chapter}{\numberline {4}Lecture 4: Regularization \& Optimization}{97}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction to Regularization}{97}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}How Regularization is Used?}{98}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Regularization: Simpler Models Are Preferred}{98}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Types of Regularization: L1 and L2}{99}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}L1 Regularization (Lasso)}{99}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}L2 Regularization (Ridge)}{99}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Choosing Between L1 and L2 Regularization}{99}{subsection.4.2.3}%
+\contentsline {subsection}{Enrichment 4.2.4: Can We Combine L1 and L2 Regularization?}{100}{section*.118}%
+\contentsline {paragraph}{When to Use Elastic Net?}{100}{section*.119}%
+\contentsline {paragraph}{Summary:}{100}{section*.120}%
+\contentsline {subsection}{\numberline {4.2.5}Expressing Preferences Through Regularization}{100}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}Impact of Feature Scaling on Regularization}{100}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Practical Implication}{101}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Example: Rescaling and Lasso Regression.}{101}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Regularization as a Catalyst for Better Optimization}{101}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Regularization as Part of Optimization}{101}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Augmenting the Loss Surface with Curvature}{101}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Mitigating Instability in High Dimensions}{102}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Improving Conditioning for Faster Convergence}{102}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}Optimization: Traversing the Loss Landscape}{102}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}The Loss Landscape Intuition}{103}{subsection.4.5.1}%
+\contentsline {subsection}{Enrichment 4.5.2: Why Explicit Analytical Solutions Are Often Impractical}{103}{section*.123}%
+\contentsline {subsubsection}{Enrichment 4.5.2.1: High Dimensionality}{103}{section*.124}%
+\contentsline {subsubsection}{Enrichment 4.5.2.2: Non-Convexity of the Loss Landscape}{103}{section*.125}%
+\contentsline {subsubsection}{Enrichment 4.5.2.3: Complexity of Regularization Terms}{104}{section*.126}%
+\contentsline {subsubsection}{Enrichment 4.5.2.4: Lack of Generalizability and Flexibility}{104}{section*.127}%
+\contentsline {subsubsection}{Enrichment 4.5.2.5: Memory and Computational Cost}{104}{section*.128}%
+\contentsline {subsection}{\numberline {4.5.3}Optimization Idea \#1: Random Search}{104}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Optimization Idea \#2: Following the Slope}{105}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Gradients: The Mathematical Basis}{106}{subsection.4.5.5}%
+\contentsline {subsubsection}{Why Does the Gradient Point to the Steepest Ascent?}{106}{section*.131}%
+\contentsline {subsubsection}{Why Does the Negative Gradient Indicate the Steepest Descent?}{107}{section*.132}%
+\contentsline {section}{\numberline {4.6}From Gradient Computation to Gradient Descent}{108}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Gradient Computation Methods}{108}{subsection.4.6.1}%
+\contentsline {subsubsection}{Numerical Gradient: Approximating Gradients via Finite Differences}{108}{section*.134}%
+\contentsline {paragraph}{Process:}{108}{section*.135}%
+\contentsline {paragraph}{Advantages:}{109}{section*.137}%
+\contentsline {paragraph}{Disadvantages:}{109}{section*.138}%
+\contentsline {subsubsection}{Analytical Gradient: Exact Gradients via Calculus}{109}{section*.139}%
+\contentsline {paragraph}{Advantages:}{109}{section*.141}%
+\contentsline {paragraph}{Relation to Gradient Descent:}{109}{section*.142}%
+\contentsline {subsection}{\numberline {4.6.2}Gradient Descent: The Iterative Optimization Algorithm}{110}{subsection.4.6.2}%
+\contentsline {subsubsection}{Motivation and Concept}{110}{section*.143}%
+\contentsline {paragraph}{Steps of Gradient Descent:}{110}{section*.144}%
+\contentsline {subsubsection}{Hyperparameters of Gradient Descent}{110}{section*.146}%
+\contentsline {paragraph}{1. Learning Rate (\( \eta \)):}{110}{section*.147}%
+\contentsline {paragraph}{2. Weight Initialization:}{110}{section*.148}%
+\contentsline {paragraph}{3. Stopping Criterion:}{111}{section*.149}%
+\contentsline {section}{\numberline {4.7}Visualizing Gradient Descent}{111}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Understanding Gradient Descent Through Visualization}{111}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Properties of Gradient Descent}{111}{subsection.4.7.2}%
+\contentsline {subsubsection}{Curved Paths Toward the Minimum}{111}{section*.151}%
+\contentsline {subsubsection}{Slowing Down Near the Minimum}{112}{section*.152}%
+\contentsline {subsection}{\numberline {4.7.3}Batch Gradient Descent}{112}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}Stochastic Gradient Descent (SGD)}{112}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}Introduction to Stochastic Gradient Descent}{112}{subsection.4.8.1}%
+\contentsline {subsubsection}{Minibatch Gradient Computation}{112}{section*.153}%
+\contentsline {subsubsection}{Data Sampling and Epochs}{113}{section*.155}%
+\contentsline {subsubsection}{Why "Stochastic"?}{113}{section*.156}%
+\contentsline {subsection}{\numberline {4.8.2}Advantages and Challenges of SGD}{114}{subsection.4.8.2}%
+\contentsline {subsubsection}{Advantages}{114}{section*.158}%
+\contentsline {subsubsection}{Challenges of SGD}{114}{section*.159}%
+\contentsline {paragraph}{High Condition Numbers}{114}{section*.160}%
+\contentsline {paragraph}{Saddle Points and Local Minima}{114}{section*.162}%
+\contentsline {paragraph}{Noisy Gradients}{115}{section*.164}%
+\contentsline {subsection}{\numberline {4.8.3}Looking Ahead: Improving SGD}{116}{subsection.4.8.3}%
+\contentsline {section}{\numberline {4.9}SGD with Momentum}{116}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Motivation}{116}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}How SGD with Momentum Works}{116}{subsection.4.9.2}%
+\contentsline {subsubsection}{Update Equations}{116}{section*.166}%
+\contentsline {subsection}{\numberline {4.9.3}Intuition Behind Momentum}{117}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}Benefits of Momentum}{117}{subsection.4.9.4}%
+\contentsline {subsection}{\numberline {4.9.5}Downsides of Momentum}{118}{subsection.4.9.5}%
+\contentsline {subsection}{\numberline {4.9.6}Nesterov Momentum: A Look-Ahead Strategy}{118}{subsection.4.9.6}%
+\contentsline {subsubsection}{Overview}{118}{section*.170}%
+\contentsline {subsubsection}{Mathematical Formulation}{118}{section*.171}%
+\contentsline {subsubsection}{Motivation and Advantages}{119}{section*.173}%
+\contentsline {subsubsection}{Reformulation for Practical Implementation}{120}{section*.174}%
+\contentsline {subsubsection}{Comparison with SGD and SGD+Momentum}{120}{section*.175}%
+\contentsline {subsubsection}{Limitations of Nesterov Momentum and the Need for Adaptivity}{120}{section*.176}%
+\contentsline {paragraph}{Motivation for a Better Optimizer: AdaGrad}{121}{section*.177}%
+\contentsline {section}{\numberline {4.10}AdaGrad: Adaptive Gradient Algorithm}{121}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}How AdaGrad Works}{121}{subsection.4.10.1}%
+\contentsline {paragraph}{Updating the Weight Matrix Components}{122}{section*.179}%
+\contentsline {paragraph}{Why Does This Work?}{122}{section*.180}%
+\contentsline {subsection}{\numberline {4.10.2}Advantages of AdaGrad}{122}{subsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.10.3}Disadvantages of AdaGrad}{122}{subsection.4.10.3}%
+\contentsline {section}{\numberline {4.11}RMSProp: Root Mean Square Propagation}{123}{section.4.11}%
+\contentsline {subsection}{\numberline {4.11.1}Motivation for RMSProp}{123}{subsection.4.11.1}%
+\contentsline {subsection}{\numberline {4.11.2}How RMSProp Works}{123}{subsection.4.11.2}%
+\contentsline {subsection}{\numberline {4.11.3}Updating the Weight Matrix Components}{123}{subsection.4.11.3}%
+\contentsline {subsection}{\numberline {4.11.4}Advantages of RMSProp}{124}{subsection.4.11.4}%
+\contentsline {subsection}{\numberline {4.11.5}Downsides of RMSProp}{124}{subsection.4.11.5}%
+\contentsline {subsubsection}{No Momentum Carry-Over}{124}{section*.182}%
+\contentsline {subsubsection}{Bias in Early Updates}{125}{section*.183}%
+\contentsline {subsubsection}{Sensitivity to Hyperparameters}{125}{section*.184}%
+\contentsline {subsection}{\numberline {4.11.6}Motivation for Adam, a SOTA Optimizer}{125}{subsection.4.11.6}%
+\contentsline {section}{\numberline {4.12}Adam: Adaptive Moment Estimation}{126}{section.4.12}%
+\contentsline {subsection}{\numberline {4.12.1}Motivation for Adam}{126}{subsection.4.12.1}%
+\contentsline {subsection}{\numberline {4.12.2}How Adam Works}{126}{subsection.4.12.2}%
+\contentsline {subsection}{\numberline {4.12.3}Bias Correction}{127}{subsection.4.12.3}%
+\contentsline {subsection}{\numberline {4.12.4}Why Adam Works Well in Practice}{128}{subsection.4.12.4}%
+\contentsline {subsection}{\numberline {4.12.5}Comparison with Other Optimizers}{129}{subsection.4.12.5}%
+\contentsline {subsection}{\numberline {4.12.6}Advantages of Adam}{129}{subsection.4.12.6}%
+\contentsline {subsection}{\numberline {4.12.7}Limitations of Adam}{129}{subsection.4.12.7}%
+\contentsline {paragraph}{Looking Ahead}{129}{section*.189}%
+\contentsline {section}{\numberline {4.13}AdamW: Decoupling Weight Decay from L2 Regularization}{130}{section.4.13}%
+\contentsline {subsection}{\numberline {4.13.1}Motivation for AdamW}{130}{subsection.4.13.1}%
+\contentsline {subsection}{\numberline {4.13.2}How AdamW Works}{130}{subsection.4.13.2}%
+\contentsline {subsection}{\numberline {4.13.3}Note on Weight Decay in AdamW}{131}{subsection.4.13.3}%
+\contentsline {subsection}{\numberline {4.13.4}The AdamW Improvement}{131}{subsection.4.13.4}%
+\contentsline {subsection}{\numberline {4.13.5}Advantages of AdamW}{132}{subsection.4.13.5}%
+\contentsline {subsection}{\numberline {4.13.6}Why AdamW is the Default Optimizer}{132}{subsection.4.13.6}%
+\contentsline {subsection}{\numberline {4.13.7}Limitations of AdamW}{132}{subsection.4.13.7}%
+\contentsline {section}{\numberline {4.14}Second-Order Optimization}{132}{section.4.14}%
+\contentsline {subsection}{\numberline {4.14.1}Overview of Second-Order Optimization}{132}{subsection.4.14.1}%
+\contentsline {subsection}{\numberline {4.14.2}Quadratic Approximation Using the Hessian}{133}{subsection.4.14.2}%
+\contentsline {subsection}{\numberline {4.14.3}Practical Challenges of Second-Order Methods}{133}{subsection.4.14.3}%
+\contentsline {subsection}{\numberline {4.14.4}First-Order Methods Approximating Second-Order Behavior}{134}{subsection.4.14.4}%
+\contentsline {subsection}{\numberline {4.14.5}Improving Second-Order Optimization: BFGS and L-BFGS}{134}{subsection.4.14.5}%
+\contentsline {subsubsection}{BFGS: An Approximation of the Hessian Matrix}{135}{section*.195}%
+\contentsline {subsubsection}{L-BFGS: Reducing Memory Requirements}{135}{section*.196}%
+\contentsline {subsubsection}{Advantages and Limitations of BFGS and L-BFGS}{136}{section*.197}%
+\contentsline {paragraph}{Advantages:}{136}{section*.198}%
+\contentsline {paragraph}{Limitations:}{136}{section*.199}%
+\contentsline {subsubsection}{Applications of L-BFGS}{136}{section*.200}%
+\contentsline {subsection}{\numberline {4.14.6}Summary of Second-Order Optimization Approaches}{136}{subsection.4.14.6}%
+\contentsline {chapter}{\numberline {5}Lecture 5: Neural Networks}{137}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction to Neural Networks}{137}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Limitations of Linear Classifiers}{137}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Feature Transforms as a Solution}{137}{subsection.5.1.2}%
+\contentsline {subsubsection}{Feature Transforms in Action}{137}{section*.201}%
+\contentsline {subsection}{\numberline {5.1.3}Challenges in Manual Feature Transformations}{139}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Data-Driven Feature Transformations}{139}{subsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.1.5}Combining Multiple Representations}{140}{subsection.5.1.5}%
+\contentsline {subsection}{\numberline {5.1.6}Real-World Example: 2011 ImageNet Winner}{140}{subsection.5.1.6}%
+\contentsline {section}{\numberline {5.2}Neural Networks: The Basics}{141}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Motivation for Neural Networks}{141}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Fully Connected Networks}{142}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Interpreting Neural Networks}{143}{subsection.5.2.3}%
+\contentsline {paragraph}{Network Pruning: Pruning Redundant Representations}{144}{section*.212}%
+\contentsline {section}{\numberline {5.3}Building Neural Networks}{144}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Activation Functions: Non-Linear Bridges Between Layers}{145}{subsection.5.3.1}%
+\contentsline {paragraph}{Why Non-Linearity Matters.}{145}{section*.215}%
+\contentsline {subsection}{\numberline {5.3.2}A Simple Neural Network in 20 Lines}{146}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Biological Inspiration}{147}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Biological Analogy: a Loose Analogy}{148}{subsection.5.4.1}%
+\contentsline {section}{\numberline {5.5}Space Warping: Another Motivation for Artificial Neural Networks}{148}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Linear Transformations and Their Limitations}{148}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Introducing Non-Linearity with ReLU}{149}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Making Data Linearly Separable}{150}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Scaling Up: Increasing Representation Power}{150}{subsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.5.5}Regularizing Neural Networks}{151}{subsection.5.5.5}%
+\contentsline {section}{\numberline {5.6}Universal Approximation Theorem}{151}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Practical Context: The Bump Function}{151}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Questions for Further Exploration}{152}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Reality Check: Universal Approximation is Not Enough}{152}{subsection.5.6.3}%
+\contentsline {subsection}{Enrichment 5.6.4: Deep Networks vs Shallow Networks}{153}{section*.228}%
+\contentsline {subsubsection}{Enrichment 5.6.4.1: Why Not Just Use a Very Deep and Wide Network?}{154}{section*.229}%
+\contentsline {section}{\numberline {5.7}Convex Functions: A Special Case}{154}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Non-Convex Functions}{155}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Convex Optimization in Linear Classifiers}{155}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}Challenges with Neural Networks}{156}{subsection.5.7.3}%
+\contentsline {subsection}{\numberline {5.7.4}Bridging to Backpropagation: Efficient Gradient Computation}{156}{subsection.5.7.4}%
+\contentsline {chapter}{\numberline {6}Lecture 6: Backpropagation}{157}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction: The Challenge of Computing Gradients}{157}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}A Bad Idea: Manually Deriving Gradients}{158}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}A Better Idea: Utilizing Computational Graphs (Backpropagation)}{158}{subsection.6.1.2}%
+\contentsline {paragraph}{Why Use Computational Graphs?}{159}{section*.235}%
+\contentsline {section}{\numberline {6.2}Toy Example of Backpropagation: $f(x,y,z) = (x + y)\,z$}{159}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Forward Pass}{160}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Backward Pass: Computing Gradients}{160}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Why Backpropagation?}{160}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Local \& Scalable Gradients Computation}{160}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Pairing Backpropagation Gradients \& Optimizers is Easy}{161}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Modularity and Custom Nodes}{162}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Utilizing Patterns in Gradient Flow}{162}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.5}Addition Gate: The Gradient Distributor}{162}{subsection.6.3.5}%
+\contentsline {subsection}{\numberline {6.3.6}Copy Gate: The Gradient Adder}{163}{subsection.6.3.6}%
+\contentsline {subsection}{\numberline {6.3.7}Multiplication Gate: The Gradient Swapper}{163}{subsection.6.3.7}%
+\contentsline {subsection}{\numberline {6.3.8}Max Gate: The Gradient Router}{163}{subsection.6.3.8}%
+\contentsline {section}{\numberline {6.4}Implementing Backpropagation in Code}{164}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Flat Backpropagation: A Direct Approach}{165}{subsection.6.4.1}%
+\contentsline {paragraph}{Why Flat Backpropagation Works Well.}{165}{section*.242}%
+\contentsline {section}{\numberline {6.5}A More Modular Approach: Computational Graphs in Practice}{165}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Topological Ordering in Computational Graphs}{166}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}The API: Forward and Backward Methods}{166}{subsection.6.5.2}%
+\contentsline {subsection}{\numberline {6.5.3}Advantages of a Modular Computational Graph}{166}{subsection.6.5.3}%
+\contentsline {section}{\numberline {6.6}Implementing Backpropagation with PyTorch Autograd}{167}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Example: Multiplication Gate in Autograd}{167}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Extending Autograd for Custom Functions}{167}{subsection.6.6.2}%
+\contentsline {section}{\numberline {6.7}Beyond Scalars: Backpropagation for Vectors and Tensors}{168}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Gradients vs.\ Jacobians}{169}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Extending Backpropagation to Vectors}{169}{subsection.6.7.2}%
+\contentsline {subsection}{\numberline {6.7.3}Example: Backpropagation for Elementwise ReLU}{170}{subsection.6.7.3}%
+\contentsline {subsection}{\numberline {6.7.4}Efficient Computation via Local Gradient Slices}{172}{subsection.6.7.4}%
+\contentsline {subsection}{\numberline {6.7.5}Backpropagation with Matrices: A Concrete Example}{172}{subsection.6.7.5}%
+\contentsline {paragraph}{Numerical Setup.}{172}{section*.250}%
+\contentsline {paragraph}{Slice Logic for One Input Element.}{173}{section*.252}%
+\contentsline {paragraph}{Another Example: \(\mathbf {X}_{2,3}\).}{173}{section*.254}%
+\contentsline {subsection}{\numberline {6.7.6}Implicit Multiplication for the Entire Gradient}{174}{subsection.6.7.6}%
+\contentsline {paragraph}{Why Slices Are the Solution.}{175}{section*.257}%
+\contentsline {subsection}{\numberline {6.7.7}A Chain View of Backpropagation}{175}{subsection.6.7.7}%
+\contentsline {subsubsection}{Reverse-Mode Automatic Differentiation}{175}{section*.258}%
+\contentsline {subsubsection}{Forward-Mode Automatic Differentiation}{176}{section*.260}%
+\contentsline {paragraph}{When Is Forward-Mode Automatic Differentiation is Useful?}{176}{section*.262}%
+\contentsline {subsection}{\numberline {6.7.8}Computing Higher-Order Derivatives with Backpropagation}{177}{subsection.6.7.8}%
+\contentsline {paragraph}{Why Compute Hessians?}{177}{section*.264}%
+\contentsline {paragraph}{Efficient Hessian Computation: Hessian-Vector Products}{177}{section*.265}%
+\contentsline {subsection}{\numberline {6.7.9}Application: Gradient-Norm Regularization}{178}{subsection.6.7.9}%
+\contentsline {subsection}{\numberline {6.7.10}Automatic Differentiation: Summary of Key Insights}{178}{subsection.6.7.10}%
+\contentsline {chapter}{\numberline {7}Lecture 7: Convolutional Networks}{179}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Introduction: The Limitations of Fully-Connected Networks}{179}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Components of Convolutional Neural Networks}{180}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Convolutional Layers: Preserving Spatial Structure}{180}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Input and Output Dimensions}{181}{subsection.7.3.1}%
+\contentsline {paragraph}{Common Filter Sizes}{181}{section*.270}%
+\contentsline {paragraph}{Why Are Kernel Sizes Typically Odd?}{182}{section*.271}%
+\contentsline {subsection}{\numberline {7.3.2}Filter Application and Output Calculation}{182}{subsection.7.3.2}%
+\contentsline {subsection}{Enrichment 7.3.3: Understanding Convolution Through the Sobel Operator}{183}{section*.273}%
+\contentsline {subsubsection}{Enrichment 7.3.3.1: Using the Sobel Kernel for Edge Detection}{183}{section*.275}%
+\contentsline {paragraph}{Approximating Image Gradients with the Sobel Operator}{183}{section*.276}%
+\contentsline {paragraph}{Basic Difference Operators}{184}{section*.277}%
+\contentsline {paragraph}{The Sobel Filters: Adding Robustness}{184}{section*.278}%
+\contentsline {subsubsection}{Enrichment 7.3.3.2: Why Does the Sobel Filter Use These Weights?}{184}{section*.279}%
+\contentsline {subsubsection}{Enrichment 7.3.3.3: Computing the Gradient Magnitude}{184}{section*.280}%
+\contentsline {paragraph}{Hands-On Exploration}{186}{section*.285}%
+\contentsline {section}{Enrichment 7.4: Convolutional Layers with Multi-Channel Filters}{187}{section*.286}%
+\contentsline {subsection}{Enrichment 7.4.1: Extending Convolution to Multi-Channel Inputs}{188}{section*.288}%
+\contentsline {paragraph}{Multi-Channel Convolution Process}{189}{section*.291}%
+\contentsline {paragraph}{Sliding the Filter Across the Image}{189}{section*.293}%
+\contentsline {paragraph}{From Single Filters to Complete Convolutional Layers}{190}{section*.295}%
+\contentsline {paragraph}{What Our Example Missed: Padding and Stride}{190}{section*.296}%
+\contentsline {paragraph}{Are Kernel Values Restricted?}{190}{section*.297}%
+\contentsline {paragraph}{Negative and Large Output Values}{190}{section*.298}%
+\contentsline {subsection}{\numberline {7.4.2}Multiple Filters and Output Channels}{191}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Two Interpretations of Convolutional Outputs}{191}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Batch Processing with Convolutional Layers}{191}{subsection.7.4.4}%
+\contentsline {section}{\numberline {7.5}Building Convolutional Neural Networks}{192}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Stacking Convolutional Layers}{192}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Adding Fully Connected Layers for Classification}{193}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}The Need for Non-Linearity}{193}{subsection.7.5.3}%
+\contentsline {subsection}{\numberline {7.5.4}Summary}{194}{subsection.7.5.4}%
+\contentsline {section}{\numberline {7.6}Controlling Spatial Dimensions in Convolutional Layers}{194}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}How Convolution Affects Spatial Size}{194}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}Mitigating Shrinking Feature Maps: Padding}{195}{subsection.7.6.2}%
+\contentsline {paragraph}{Choosing the Padding Size}{195}{section*.304}%
+\contentsline {paragraph}{Preserving Border Information with Padding}{195}{section*.305}%
+\contentsline {subsection}{\numberline {7.6.3}Receptive Fields: Understanding What Each Pixel Sees}{196}{subsection.7.6.3}%
+\contentsline {paragraph}{The Problem of Limited Receptive Field Growth}{197}{section*.307}%
+\contentsline {subsection}{\numberline {7.6.4}Controlling Spatial Reduction with Strides}{198}{subsection.7.6.4}%
+\contentsline {section}{\numberline {7.7}Understanding What Convolutional Filters Learn}{198}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}MLPs vs. CNNs: Learning Spatial Structure}{198}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}Learning Local Features: The First Layer}{198}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}Building More Complex Patterns in Deeper Layers}{199}{subsection.7.7.3}%
+\contentsline {paragraph}{Hierarchical Learning via Composition}{199}{section*.311}%
+\contentsline {section}{\numberline {7.8}Parameters and Computational Complexity in Convolutional Networks}{199}{section.7.8}%
+\contentsline {subsection}{\numberline {7.8.1}Example: Convolutional Layer Setup}{200}{subsection.7.8.1}%
+\contentsline {subsection}{\numberline {7.8.2}Output Volume Calculation}{200}{subsection.7.8.2}%
+\contentsline {subsection}{\numberline {7.8.3}Number of Learnable Parameters}{200}{subsection.7.8.3}%
+\contentsline {subsection}{\numberline {7.8.4}Multiply-Accumulate Operations (MACs)}{201}{subsection.7.8.4}%
+\contentsline {paragraph}{MACs Calculation:}{201}{section*.313}%
+\contentsline {subsection}{\numberline {7.8.5}MACs and FLOPs}{201}{subsection.7.8.5}%
+\contentsline {subsection}{\numberline {7.8.6}Why Multiply-Add Operations (MACs) Matter}{201}{subsection.7.8.6}%
+\contentsline {subsection}{Enrichment 7.8.7: Backpropagation for Convolutional Neural Networks}{201}{section*.314}%
+\contentsline {paragraph}{Key Idea: Convolution as a Graph Node}{201}{section*.315}%
+\contentsline {paragraph}{Computing \(\tfrac {dO}{dF}\)}{202}{section*.317}%
+\contentsline {paragraph}{Computing \(\tfrac {dL}{dX}\)}{203}{section*.318}%
+\contentsline {section}{Enrichment 7.9: Parameter Sharing in Convolutional Neural Networks}{204}{section*.320}%
+\contentsline {subsection}{Enrichment 7.9.1: Parameter Sharing in CNNs vs. MLPs}{204}{section*.321}%
+\contentsline {subsection}{Enrichment 7.9.2: Motivation for Parameter Sharing}{204}{section*.322}%
+\contentsline {subsection}{Enrichment 7.9.3: How Parameter Sharing Works}{204}{section*.323}%
+\contentsline {subsection}{Enrichment 7.9.4: When Does Parameter Sharing Not Make Complete Sense?}{204}{section*.324}%
+\contentsline {subsection}{Enrichment 7.9.5: Alternative Approaches When Parameter Sharing Fails}{205}{section*.325}%
+\contentsline {subsubsection}{Enrichment 7.9.5.1: Locally-Connected Layers}{205}{section*.326}%
+\contentsline {subsubsection}{Enrichment 7.9.5.2: Understanding Locally-Connected Layers}{205}{section*.327}%
+\contentsline {subsubsection}{Enrichment 7.9.5.3: Limitations of Locally-Connected Layers}{205}{section*.328}%
+\contentsline {subsubsection}{Enrichment 7.9.5.4: Hybrid Approaches}{206}{section*.329}%
+\contentsline {subsubsection}{Enrichment 7.9.5.5: A Glimpse at Attention Mechanisms}{206}{section*.330}%
+\contentsline {section}{\numberline {7.10}Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}{207}{section.7.10}%
+\contentsline {subsection}{\numberline {7.10.1}1x1 Convolutions}{207}{subsection.7.10.1}%
+\contentsline {subsubsection}{Dimensionality Reduction and Feature Selection}{207}{section*.331}%
+\contentsline {subsubsection}{Efficiency of 1x1 Convolutions as a Bottleneck}{207}{section*.333}%
+\contentsline {paragraph}{Example: Transforming 256 Channels to 256 Channels with a 3x3 Kernel.}{208}{section*.334}%
+\contentsline {paragraph}{Parameter and FLOP Savings.}{208}{section*.335}%
+\contentsline {subsection}{\numberline {7.10.2}1D Convolutions}{208}{subsection.7.10.2}%
+\contentsline {paragraph}{Numerical Example: 1D Convolution on Multichannel Time Series Data}{208}{section*.336}%
+\contentsline {paragraph}{Computing the Output}{209}{section*.337}%
+\contentsline {paragraph}{Applications of 1D Convolutions}{209}{section*.338}%
+\contentsline {subsection}{\numberline {7.10.3}3D Convolutions}{210}{subsection.7.10.3}%
+\contentsline {paragraph}{Numerical Example: 3D Convolution on Volumetric Data}{210}{section*.340}%
+\contentsline {paragraph}{3D Convolution Formula}{211}{section*.341}%
+\contentsline {paragraph}{Computing the Output}{211}{section*.342}%
+\contentsline {paragraph}{Final Output Tensor}{212}{section*.343}%
+\contentsline {paragraph}{Applications of 3D Convolutions}{212}{section*.344}%
+\contentsline {paragraph}{Advantages of 3D Convolutions}{212}{section*.345}%
+\contentsline {paragraph}{Challenges of 3D Convolutions}{212}{section*.346}%
+\contentsline {subsection}{\numberline {7.10.4}Efficient Convolutions for Mobile and Embedded Systems}{212}{subsection.7.10.4}%
+\contentsline {subsection}{\numberline {7.10.5}Spatial Separable Convolutions}{212}{subsection.7.10.5}%
+\contentsline {paragraph}{Concept and Intuition}{212}{section*.347}%
+\contentsline {paragraph}{Limitations and Transition to Depthwise Separable Convolutions}{213}{section*.348}%
+\contentsline {subsection}{\numberline {7.10.6}Depthwise Separable Convolutions}{213}{subsection.7.10.6}%
+\contentsline {paragraph}{Concept and Motivation}{213}{section*.349}%
+\contentsline {paragraph}{Computational Efficiency}{214}{section*.350}%
+\contentsline {paragraph}{Standard \((K \times K)\) Convolution}{214}{section*.351}%
+\contentsline {paragraph}{Depthwise Separable Convolution}{214}{section*.352}%
+\contentsline {subsubsection}{Example: \((K=3,\tmspace +\thickmuskip {.2777em}C_{\mathrm {in}}=128,\tmspace +\thickmuskip {.2777em}C_{\mathrm {out}}=256,\tmspace +\thickmuskip {.2777em}H=W=32)\)}{214}{section*.353}%
+\contentsline {paragraph}{Reduction Factor}{216}{section*.355}%
+\contentsline {paragraph}{Practical Usage and Examples}{216}{section*.356}%
+\contentsline {paragraph}{Trade-Offs}{216}{section*.357}%
+\contentsline {subsection}{\numberline {7.10.7}Summary of Specialized Convolutions}{216}{subsection.7.10.7}%
+\contentsline {section}{\numberline {7.11}Pooling Layers}{218}{section.7.11}%
+\contentsline {subsection}{\numberline {7.11.1}Types of Pooling}{218}{subsection.7.11.1}%
+\contentsline {paragraph}{Pooling Methods}{218}{section*.360}%
+\contentsline {subsection}{\numberline {7.11.2}Effect of Pooling}{218}{subsection.7.11.2}%
+\contentsline {subsection}{Enrichment 7.11.3: Pooling Layers in Backpropagation}{219}{section*.363}%
+\contentsline {subsubsection}{Forward Pass of Pooling Layers}{219}{section*.364}%
+\contentsline {paragraph}{Example of Forward Pass}{219}{section*.365}%
+\contentsline {subsubsection}{Backpropagation Through Pooling Layers}{220}{section*.366}%
+\contentsline {paragraph}{Max Pooling Backpropagation}{220}{section*.367}%
+\contentsline {paragraph}{Impact on Gradient Flow}{220}{section*.368}%
+\contentsline {paragraph}{Mitigation Strategies}{220}{section*.369}%
+\contentsline {paragraph}{Average Pooling Backpropagation}{221}{section*.370}%
+\contentsline {subsubsection}{Generalization of Backpropagation for Pooling}{221}{section*.371}%
+\contentsline {subsection}{\numberline {7.11.4}Global Pooling Layers}{221}{subsection.7.11.4}%
+\contentsline {subsubsection}{General Advantages}{221}{section*.372}%
+\contentsline {subsubsection}{Global Average Pooling (GAP)}{221}{section*.373}%
+\contentsline {paragraph}{Operation.}{221}{section*.374}%
+\contentsline {paragraph}{Upsides.}{222}{section*.375}%
+\contentsline {paragraph}{Downsides.}{222}{section*.376}%
+\contentsline {paragraph}{Backpropagation.}{222}{section*.377}%
+\contentsline {subsubsection}{Global Max Pooling (GMP)}{222}{section*.378}%
+\contentsline {paragraph}{Operation.}{222}{section*.379}%
+\contentsline {paragraph}{Upsides.}{222}{section*.380}%
+\contentsline {paragraph}{Downsides.}{222}{section*.381}%
+\contentsline {paragraph}{Backpropagation.}{222}{section*.382}%
+\contentsline {subsubsection}{Comparison of GAP and GMP}{222}{section*.383}%
+\contentsline {subsubsection}{Contrasting with Regular Pooling}{223}{section*.384}%
+\contentsline {paragraph}{Window Size.}{223}{section*.385}%
+\contentsline {paragraph}{When to Use Global Pooling.}{223}{section*.386}%
+\contentsline {paragraph}{When to Use Regular Pooling.}{223}{section*.387}%
+\contentsline {section}{\numberline {7.12}Classical CNN Architectures}{224}{section.7.12}%
+\contentsline {subsection}{\numberline {7.12.1}LeNet-5 Architecture}{224}{subsection.7.12.1}%
+\contentsline {subsubsection}{Detailed Layer Breakdown}{225}{section*.389}%
+\contentsline {subsubsection}{Summary of LeNet-5}{226}{section*.390}%
+\contentsline {subsubsection}{Key Architectural Trends in CNNs, Illustrated by LeNet-5}{226}{section*.391}%
+\contentsline {paragraph}{Hierarchical Feature Learning.}{226}{section*.392}%
+\contentsline {paragraph}{Alternating Convolution and Pooling.}{226}{section*.393}%
+\contentsline {paragraph}{Transition to Fully Connected (FC) Layers.}{226}{section*.394}%
+\contentsline {subsection}{\numberline {7.12.2}How Are CNN Architectures Designed?}{226}{subsection.7.12.2}%
+\contentsline {section}{Enrichment 7.13: Vanishing \& Exploding Gradients: A Barrier to DL}{227}{section*.395}%
+\contentsline {paragraph}{Context}{227}{section*.396}%
+\contentsline {subsection}{Enrichment 7.13.1: Understanding the Problem}{227}{section*.397}%
+\contentsline {subsubsection}{The Role of Gradients in Deep Networks}{227}{section*.398}%
+\contentsline {subsubsection}{Gradient Computation in Deep Networks}{227}{section*.399}%
+\contentsline {paragraph}{Key Components of Gradient Propagation}{227}{section*.400}%
+\contentsline {subsubsection}{Impact of Depth in Neural Networks}{228}{section*.401}%
+\contentsline {subsubsection}{Practical Example: Vanishing Gradients with Sigmoid Activation}{230}{section*.402}%
+\contentsline {subsubsection}{Effect of Activation Gradients}{231}{section*.404}%
+\contentsline {subsubsection}{Effect of Weight Multiplications}{231}{section*.405}%
+\contentsline {subsubsection}{Conclusion: Vanishing Gradients}{231}{section*.406}%
+\contentsline {section}{\numberline {7.14}Batch Normalization}{233}{section.7.14}%
+\contentsline {subsection}{\numberline {7.14.1}Understanding Mean, Variance, and Normalization}{233}{subsection.7.14.1}%
+\contentsline {paragraph}{Mean:}{233}{section*.407}%
+\contentsline {paragraph}{Variance:}{233}{section*.408}%
+\contentsline {paragraph}{Standard Deviation:}{233}{section*.409}%
+\contentsline {paragraph}{Effect of Normalization:}{233}{section*.410}%
+\contentsline {subsection}{\numberline {7.14.2}Internal Covariate Shift and Batch Normalization’s Role}{234}{subsection.7.14.2}%
+\contentsline {paragraph}{What is Covariate Shift?}{234}{section*.411}%
+\contentsline {paragraph}{What is Internal Covariate Shift?}{234}{section*.412}%
+\contentsline {subsection}{\numberline {7.14.3}Batch Normalization Process}{234}{subsection.7.14.3}%
+\contentsline {subsubsection}{Batch Normalization for Convolutional Neural Networks (CNNs)}{235}{section*.414}%
+\contentsline {subsection}{\numberline {7.14.4}Batch Normalization and Optimization}{237}{subsection.7.14.4}%
+\contentsline {subsubsection}{Beyond Covariate Shift: Why Does BatchNorm Improve Training?}{237}{section*.416}%
+\contentsline {subsubsection}{Why Does BatchNorm Smooth the Loss Surface?}{238}{section*.419}%
+\contentsline {paragraph}{1. Hessian Eigenvalues and Loss Surface Curvature}{238}{section*.420}%
+\contentsline {paragraph}{Computing Eigenvalues}{238}{section*.421}%
+\contentsline {paragraph}{Interpretation of Eigenvalues}{238}{section*.422}%
+\contentsline {paragraph}{2. Reducing the Lipschitz Constant}{239}{section*.423}%
+\contentsline {paragraph}{3. Implicit Regularization via Mini-Batch Noise}{239}{section*.424}%
+\contentsline {subsubsection}{BN Helps Decoupling Weight Magnitude from Activation Scale}{240}{section*.425}%
+\contentsline {paragraph}{Mini Example: ReLU Dead Zone Prevention}{240}{section*.426}%
+\contentsline {subsubsection}{Conclusion: The Real Reason BatchNorm Works}{240}{section*.427}%
+\contentsline {subsubsection}{Batch Normalization in Test Time}{241}{section*.428}%
+\contentsline {subsubsection}{Limitations of BatchNorm}{241}{section*.430}%
+\contentsline {subsection}{Enrichment 7.14.5: Batch Normalization Placement}{242}{section*.431}%
+\contentsline {subsubsection}{Batch Normalization Placement: Typical Ordering}{242}{section*.432}%
+\contentsline {paragraph}{Mathematical Rationale}{242}{section*.433}%
+\contentsline {subsubsection}{Alternative Normalization Methods}{243}{section*.434}%
+\contentsline {subsubsection}{Layer Normalization (LN)}{243}{section*.435}%
+\contentsline {paragraph}{Core Idea}{243}{section*.436}%
+\contentsline {paragraph}{Definition}{243}{section*.438}%
+\contentsline {subsubsection}{Layer Normalization (LN)}{244}{section*.439}%
+\contentsline {paragraph}{Definition (Fully Connected Layers).}{244}{section*.441}%
+\contentsline {paragraph}{Extension to Convolutional Layers}{244}{section*.442}%
+\contentsline {paragraph}{Interpretation}{245}{section*.444}%
+\contentsline {paragraph}{Advantages of LN}{245}{section*.445}%
+\contentsline {subsubsection}{Instance Normalization (IN)}{245}{section*.446}%
+\contentsline {paragraph}{Interpretation}{246}{section*.448}%
+\contentsline {paragraph}{Advantages of Instance Normalization}{246}{section*.449}%
+\contentsline {subsubsection}{Group Normalization (GN)}{247}{section*.450}%
+\contentsline {paragraph}{Interpretation}{247}{section*.452}%
+\contentsline {paragraph}{Advantages of Group Normalization}{247}{section*.453}%
+\contentsline {subsubsection}{Why Do IN, LN, and GN Improve Optimization?}{248}{section*.454}%
+\contentsline {paragraph}{Common Benefits Across IN, LN, and GN}{248}{section*.455}%
+\contentsline {paragraph}{Summary: How These Methods Enhance Training}{248}{section*.456}%
+\contentsline {subsection}{Enrichment 7.14.6: Backpropagation for Batch Normalization}{248}{section*.457}%
+\contentsline {paragraph}{Chain Rule in the Graph}{249}{section*.458}%
+\contentsline {subparagraph}{Gradients w.r.t.\ \(\gamma \) and \(\beta \)}{249}{subparagraph*.459}%
+\contentsline {subparagraph}{Gradient w.r.t.\ \(\hat {x}_i\)}{249}{subparagraph*.460}%
+\contentsline {paragraph}{Gradients Involving \(\mu \) and \(\sigma ^2\)}{249}{section*.461}%
+\contentsline {paragraph}{Final: Gradients w.r.t.\ Each \(x_i\)}{250}{section*.462}%
+\contentsline {paragraph}{Computational Efficiency}{250}{section*.463}%
+\contentsline {paragraph}{Extension to LN, IN, GN}{250}{section*.464}%
+\contentsline {paragraph}{Conclusion}{250}{section*.465}%
+\contentsline {subsection}{Enrichment 7.14.7: BatchNorm and \(L_2\) Regularization}{251}{section*.466}%
+\contentsline {paragraph}{Context and Motivation}{251}{section*.467}%
+\contentsline {paragraph}{Why Combine Them?}{251}{section*.468}%
+\contentsline {paragraph}{Key Interaction: BN Masks the Scale of Weights}{251}{section*.469}%
+\contentsline {subparagraph}{Invariance to Weight Scaling}{251}{subparagraph*.470}%
+\contentsline {subparagraph}{Shifting Role of \(L_2\)}{251}{subparagraph*.471}%
+\contentsline {paragraph}{Practical Pitfalls}{251}{section*.472}%
+\contentsline {subparagraph}{(1) Excluding \(\gamma ,\beta \) from Decay}{251}{subparagraph*.473}%
+\contentsline {subparagraph}{(2) Small Batches}{251}{subparagraph*.474}%
+\contentsline {paragraph}{Recommendations}{251}{section*.475}%
+\contentsline {paragraph}{Summary}{252}{section*.476}%
+\contentsline {chapter}{\numberline {8}Lecture 8: CNN Architectures I}{253}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Introduction: From Building Blocks to SOTA CNNs}{253}{section.8.1}%
+\contentsline {section}{\numberline {8.2}AlexNet}{253}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Architecture Details}{254}{subsection.8.2.1}%
+\contentsline {paragraph}{First Convolutional Layer (Conv1)}{254}{section*.477}%
+\contentsline {paragraph}{Memory Requirements}{254}{section*.478}%
+\contentsline {paragraph}{Number of Learnable Parameters}{254}{section*.479}%
+\contentsline {paragraph}{Computational Cost}{254}{section*.480}%
+\contentsline {paragraph}{Max Pooling Layer}{254}{section*.481}%
+\contentsline {paragraph}{Memory and Computational Cost}{255}{section*.482}%
+\contentsline {subsection}{\numberline {8.2.2}Final Fully Connected Layers}{255}{subsection.8.2.2}%
+\contentsline {paragraph}{Computational Cost}{255}{section*.483}%
+\contentsline {subsection}{\numberline {8.2.3}Key Takeaways from AlexNet}{256}{subsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.2.4}ZFNet: An Improvement on AlexNet}{256}{subsection.8.2.4}%
+\contentsline {subsubsection}{Key Modifications in ZFNet}{257}{section*.487}%
+\contentsline {section}{\numberline {8.3}VGG: A Principled CNN Architecture}{257}{section.8.3}%
+\contentsline {paragraph}{Historical Context.}{257}{section*.488}%
+\contentsline {paragraph}{Core Design Principles.}{257}{section*.490}%
+\contentsline {subsection}{\numberline {8.3.1}Network Structure}{257}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Key Architectural Insights}{258}{subsection.8.3.2}%
+\contentsline {subsubsection}{Small-Kernel Convolutions (\(3\times 3\))}{258}{section*.492}%
+\contentsline {subsubsection}{Pooling \(\,2\times 2\), Stride=2, No Padding}{258}{section*.493}%
+\contentsline {subsubsection}{Doubling Channels After Each Pool}{258}{section*.494}%
+\contentsline {subsection}{\numberline {8.3.3}Why This Strategy Works}{259}{subsection.8.3.3}%
+\contentsline {paragraph}{Balanced Computation.}{259}{section*.495}%
+\contentsline {paragraph}{Influence on Later Architectures.}{259}{section*.496}%
+\contentsline {subsection}{\numberline {8.3.4}Practical Observations}{259}{subsection.8.3.4}%
+\contentsline {subsection}{\numberline {8.3.5}Training Very Deep Networks: The VGG Approach}{259}{subsection.8.3.5}%
+\contentsline {subsubsection}{Incremental Training Strategy}{259}{section*.497}%
+\contentsline {subsubsection}{Optimization and Training Details}{260}{section*.498}%
+\contentsline {subsubsection}{Effectiveness of the Approach}{260}{section*.499}%
+\contentsline {section}{\numberline {8.4}GoogLeNet: Efficiency and Parallelism}{260}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}Stem Network: Efficient Early Downsampling}{261}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}The Inception Module: Parallel Feature Extraction}{261}{subsection.8.4.2}%
+\contentsline {subsubsection}{Why Does the Inception Module Improve Gradient Flow?}{262}{section*.503}%
+\contentsline {paragraph}{Structure of the Inception Module}{263}{section*.504}%
+\contentsline {subsection}{\numberline {8.4.3}Global Average Pooling (GAP)}{263}{subsection.8.4.3}%
+\contentsline {subsection}{\numberline {8.4.4}Auxiliary Classifiers: A Workaround for Vanishing Gradients}{264}{subsection.8.4.4}%
+\contentsline {paragraph}{Why Were Auxiliary Classifiers Needed?}{264}{section*.506}%
+\contentsline {paragraph}{How Do They Help?}{264}{section*.507}%
+\contentsline {paragraph}{Auxiliary Classifier Design}{264}{section*.508}%
+\contentsline {paragraph}{Gradient Flow and Regularization}{265}{section*.510}%
+\contentsline {paragraph}{Relevance Today}{265}{section*.511}%
+\contentsline {paragraph}{Conclusion}{265}{section*.512}%
+\contentsline {section}{\numberline {8.5}The Rise of Residual Networks (ResNets)}{266}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}Challenges in Training Deep Neural Networks}{266}{subsection.8.5.1}%
+\contentsline {subsection}{\numberline {8.5.2}The Need for Residual Connections}{266}{subsection.8.5.2}%
+\contentsline {subsection}{\numberline {8.5.3}Introducing Residual Blocks}{267}{subsection.8.5.3}%
+\contentsline {paragraph}{Intuition Behind Residual Connections}{268}{section*.516}%
+\contentsline {subsection}{\numberline {8.5.4}Architectural Design of ResNets}{268}{subsection.8.5.4}%
+\contentsline {subsection}{\numberline {8.5.5}Bottleneck Blocks for Deeper Networks}{269}{subsection.8.5.5}%
+\contentsline {subsection}{\numberline {8.5.6}ResNet Winning Streak and Continued Influence}{270}{subsection.8.5.6}%
+\contentsline {subsection}{\numberline {8.5.7}Further Improvements: Pre-Activation Blocks}{270}{subsection.8.5.7}%
+\contentsline {subsection}{\numberline {8.5.8}Architectural Comparisons and Evolution Beyond ResNet}{271}{subsection.8.5.8}%
+\contentsline {subsubsection}{The 2016 ImageNet Challenge: Lack of Novelty}{271}{section*.521}%
+\contentsline {subsubsection}{Comparing Model Complexity and Efficiency}{271}{section*.522}%
+\contentsline {subsubsection}{Beyond ResNets: Refinements and Lightweight Models}{272}{section*.524}%
+\contentsline {chapter}{\numberline {9}Lecture 9: Training Neural Networks I}{273}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Introduction to Training Neural Networks}{273}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}Categories of Practical Training Subjects}{273}{subsection.9.1.1}%
+\contentsline {section}{\numberline {9.2}Activation Functions}{274}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Sigmoid Activation Function}{274}{subsection.9.2.1}%
+\contentsline {subsubsection}{Issues with the Sigmoid Function}{274}{section*.525}%
+\contentsline {subsubsection}{The Tanh Activation Function}{276}{section*.528}%
+\contentsline {subsection}{\numberline {9.2.2}Rectified Linear Units (ReLU) and Its Variants}{277}{subsection.9.2.2}%
+\contentsline {subsubsection}{Issues with ReLU}{277}{section*.530}%
+\contentsline {subsubsection}{Mitigation Strategies for ReLU Issues}{278}{section*.532}%
+\contentsline {subsubsection}{Leaky ReLU and Parametric ReLU (PReLU)}{279}{section*.533}%
+\contentsline {subsubsection}{Exponential Linear Unit (ELU)}{279}{section*.535}%
+\contentsline {subsubsection}{Scaled Exponential Linear Unit (SELU)}{280}{section*.537}%
+\contentsline {paragraph}{Definition and Self-Normalization Properties}{281}{section*.538}%
+\contentsline {paragraph}{Derivation of \(\alpha \) and \(\lambda \)}{281}{section*.539}%
+\contentsline {paragraph}{Weight Initialization and Network Architecture Considerations}{281}{section*.540}%
+\contentsline {paragraph}{Practical Considerations and Limitations}{281}{section*.541}%
+\contentsline {subsubsection}{Gaussian Error Linear Unit (GELU)}{282}{section*.543}%
+\contentsline {paragraph}{Definition}{282}{section*.544}%
+\contentsline {paragraph}{Advantages of GELU}{283}{section*.546}%
+\contentsline {paragraph}{Comparisons with ReLU and ELU}{283}{section*.547}%
+\contentsline {paragraph}{Computational Considerations}{284}{section*.548}%
+\contentsline {subsection}{Enrichment 9.2.3: Swish: A Self-Gated Activation Function}{284}{section*.549}%
+\contentsline {subsubsection}{Advantages of Swish}{285}{section*.551}%
+\contentsline {subsubsection}{Disadvantages of Swish}{285}{section*.552}%
+\contentsline {subsubsection}{Comparison to Other Top-Tier Activations}{285}{section*.553}%
+\contentsline {subsubsection}{Conclusion}{286}{section*.554}%
+\contentsline {subsection}{\numberline {9.2.4}Choosing the Right Activation Function}{286}{subsection.9.2.4}%
+\contentsline {subsubsection}{General Guidelines for Choosing an Activation Function}{286}{section*.556}%
+\contentsline {section}{\numberline {9.3}Data Pre-Processing}{287}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}Why Pre-Processing Matters}{287}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}Avoiding Poor Training Dynamics}{287}{subsection.9.3.2}%
+\contentsline {subsection}{\numberline {9.3.3}Common Pre-Processing Techniques}{288}{subsection.9.3.3}%
+\contentsline {subsection}{\numberline {9.3.4}Normalization for Robust Optimization}{289}{subsection.9.3.4}%
+\contentsline {subsection}{\numberline {9.3.5}Maintaining Consistency During Inference}{289}{subsection.9.3.5}%
+\contentsline {subsection}{\numberline {9.3.6}Pre-Processing in Well-Known Architectures}{289}{subsection.9.3.6}%
+\contentsline {section}{\numberline {9.4}Weight Initialization}{290}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Constant Initialization}{290}{subsection.9.4.1}%
+\contentsline {subsubsection}{Zero Initialization}{290}{section*.560}%
+\contentsline {subsubsection}{Nonzero Constant Initialization}{291}{section*.561}%
+\contentsline {paragraph}{Forward Pass Analysis}{291}{section*.562}%
+\contentsline {paragraph}{Backpropagation and Gradient Symmetry}{291}{section*.563}%
+\contentsline {paragraph}{Implications and Conclusion}{292}{section*.564}%
+\contentsline {subsection}{\numberline {9.4.2}Breaking Symmetry: Random Initialization}{292}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}Variance-Based Initialization: Ensuring Stable Information Flow}{292}{subsection.9.4.3}%
+\contentsline {paragraph}{Key Requirements for Stable Propagation}{293}{section*.565}%
+\contentsline {paragraph}{Forward Pass Analysis}{293}{section*.566}%
+\contentsline {paragraph}{Why Is This Important?}{293}{section*.567}%
+\contentsline {paragraph}{Why Does Forward Signal Variance Also Matter?}{293}{section*.568}%
+\contentsline {paragraph}{Challenges in Achieving Stable Variance}{294}{section*.569}%
+\contentsline {subsection}{\numberline {9.4.4}Xavier Initialization}{294}{subsection.9.4.4}%
+\contentsline {subsubsection}{Motivation}{294}{section*.570}%
+\contentsline {subsubsection}{Mathematical Formulation}{295}{section*.572}%
+\contentsline {subsubsection}{Assumptions}{295}{section*.573}%
+\contentsline {subsubsection}{Derivation of Xavier Initialization}{296}{section*.574}%
+\contentsline {paragraph}{Forward Pass: Maintaining Activation Variance}{296}{section*.575}%
+\contentsline {paragraph}{Backward Pass: Maintaining Gradient Variance}{296}{section*.576}%
+\contentsline {paragraph}{Balancing Forward and Backward Variance}{297}{section*.577}%
+\contentsline {subsubsection}{Final Xavier Initialization Formulation}{298}{section*.578}%
+\contentsline {subsubsection}{Limitations of Xavier Initialization}{298}{section*.579}%
+\contentsline {subsection}{\numberline {9.4.5}Kaiming He Initialization}{299}{subsection.9.4.5}%
+\contentsline {subsubsection}{Motivation}{299}{section*.580}%
+\contentsline {paragraph}{Mathematical Notation}{300}{section*.583}%
+\contentsline {subsubsection}{Assumptions}{300}{section*.584}%
+\contentsline {subsubsection}{Forward and Backward Pass Derivation}{301}{section*.585}%
+\contentsline {paragraph}{Forward Pass Analysis}{301}{section*.586}%
+\contentsline {paragraph}{Backward Pass Analysis}{302}{section*.587}%
+\contentsline {subsubsection}{Final Kaiming Initialization Formulation}{302}{section*.588}%
+\contentsline {subsubsection}{Implementation in Deep Learning Frameworks}{302}{section*.589}%
+\contentsline {subsubsection}{Initialization in Residual Networks (ResNets)}{303}{section*.590}%
+\contentsline {paragraph}{Why Doesn't Kaiming Initialization Work for ResNets?}{303}{section*.591}%
+\contentsline {paragraph}{Fixup Initialization}{303}{section*.592}%
+\contentsline {subsection}{\numberline {9.4.6}Conclusion: Choosing the Right Initialization Strategy}{304}{subsection.9.4.6}%
+\contentsline {subsubsection}{Ongoing Research and Open Questions}{304}{section*.594}%
+\contentsline {section}{\numberline {9.5}Regularization Techniques}{305}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}Dropout}{305}{subsection.9.5.1}%
+\contentsline {subsubsection}{Why Does Dropout Work?}{306}{section*.597}%
+\contentsline {subsubsection}{Dropout at Test Time}{307}{section*.599}%
+\contentsline {subsubsection}{Inverted Dropout}{309}{section*.603}%
+\contentsline {subsubsection}{Where is Dropout Used in CNNs?}{310}{section*.605}%
+\contentsline {subsection}{Enrichment 9.5.2: Ordering of Dropout and Batch Normalization}{310}{section*.607}%
+\contentsline {subsubsection}{Enrichment 9.5.2.1: Impact of Dropout Placement on BN}{311}{section*.608}%
+\contentsline {subsubsection}{Enrichment 9.5.2.2: Why BN Before Dropout is Preferred}{311}{section*.609}%
+\contentsline {subsection}{\numberline {9.5.3}Other Regularization Techniques}{312}{subsection.9.5.3}%
+\contentsline {subsubsection}{Data Augmentation as Implicit Regularization}{312}{section*.610}%
+\contentsline {subsubsection}{DropConnect}{314}{section*.614}%
+\contentsline {paragraph}{Comparison Between Dropout and DropConnect}{314}{section*.616}%
+\contentsline {paragraph}{Effectiveness and Use Cases}{315}{section*.617}%
+\contentsline {paragraph}{Summary}{315}{section*.618}%
+\contentsline {subsubsection}{Fractional Max Pooling}{315}{section*.619}%
+\contentsline {subsubsection}{Stochastic Depth}{316}{section*.621}%
+\contentsline {subsubsection}{CutOut}{316}{section*.623}%
+\contentsline {subsubsection}{MixUp}{317}{section*.625}%
+\contentsline {subsubsection}{Summary and Regularization Guidelines}{318}{section*.627}%
+\contentsline {chapter}{\numberline {10}Lecture 10: Training Neural Networks II}{319}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Learning Rate Schedules}{319}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}The Importance of Learning Rate Selection}{319}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}Step Learning Rate Schedule}{320}{subsection.10.1.2}%
+\contentsline {subsubsection}{Practical Considerations}{321}{section*.630}%
+\contentsline {subsection}{\numberline {10.1.3}Cosine Learning Rate Decay}{321}{subsection.10.1.3}%
+\contentsline {subsection}{\numberline {10.1.4}Linear Learning Rate Decay}{322}{subsection.10.1.4}%
+\contentsline {subsection}{\numberline {10.1.5}Inverse Square Root Decay}{323}{subsection.10.1.5}%
+\contentsline {subsection}{\numberline {10.1.6}Constant Learning Rate}{324}{subsection.10.1.6}%
+\contentsline {subsection}{\numberline {10.1.7}Adaptive Learning Rate Mechanisms}{325}{subsection.10.1.7}%
+\contentsline {subsection}{\numberline {10.1.8}Early Stopping}{325}{subsection.10.1.8}%
+\contentsline {section}{\numberline {10.2}Hyperparameter Selection}{326}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}Grid Search}{326}{subsection.10.2.1}%
+\contentsline {subsection}{\numberline {10.2.2}Random Search}{326}{subsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.2.3}Steps for Hyperparameter Tuning}{327}{subsection.10.2.3}%
+\contentsline {subsection}{\numberline {10.2.4}Interpreting Learning Curves}{329}{subsection.10.2.4}%
+\contentsline {subsection}{\numberline {10.2.5}Model Ensembles and Averaging Techniques}{333}{subsection.10.2.5}%
+\contentsline {subsection}{\numberline {10.2.6}Exponential Moving Average (EMA) and Polyak Averaging}{334}{subsection.10.2.6}%
+\contentsline {section}{\numberline {10.3}Transfer Learning}{334}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}How to Perform Transfer Learning with CNNs?}{338}{subsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.3.2}Transfer Learning Beyond Classification}{339}{subsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.3.3}Does Transfer Learning Always Win?}{340}{subsection.10.3.3}%
+\contentsline {chapter}{\numberline {11}Lecture 11: CNN Architectures II}{341}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Post-ResNet Architectures}{341}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Grouped Convolutions}{342}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}Grouped Convolutions in PyTorch}{347}{subsection.11.2.1}%
+\contentsline {subsubsection}{Key Observations}{348}{section*.667}%
+\contentsline {subsubsection}{When to Use Grouped Convolutions?}{348}{section*.668}%
+\contentsline {section}{\numberline {11.3}ResNeXt: Next-Generation Residual Networks}{348}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Motivation: Why ResNeXt?}{349}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Key Innovation: Aggregated Transformations}{349}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}ResNeXt and Grouped Convolutions}{350}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}Advantages of ResNeXt Over ResNet}{350}{subsection.11.3.4}%
+\contentsline {subsection}{\numberline {11.3.5}ResNeXt Model Naming Convention}{351}{subsection.11.3.5}%
+\contentsline {section}{\numberline {11.4}Squeeze-and-Excitation Networks (SENet)}{351}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}Squeeze-and-Excitation (SE) Block}{352}{subsection.11.4.1}%
+\contentsline {subsubsection}{Squeeze: Global Information Embedding}{352}{section*.672}%
+\contentsline {subsubsection}{Excitation: Adaptive Recalibration}{352}{section*.673}%
+\contentsline {subsubsection}{Channel Recalibration}{353}{section*.674}%
+\contentsline {subsubsection}{How SE Blocks Enhance ResNet Bottleneck Blocks}{353}{section*.676}%
+\contentsline {subsubsection}{Why Does SE Improve Performance?}{354}{section*.677}%
+\contentsline {subsubsection}{Performance Gains, Scalability, and Integration of SE Blocks}{354}{section*.678}%
+\contentsline {subsubsection}{Impact on Various Tasks}{354}{section*.680}%
+\contentsline {subsubsection}{Practical Applications and Widespread Adoption}{355}{section*.681}%
+\contentsline {subsection}{\numberline {11.4.2}SE Blocks and the End of the ImageNet Classification Challenge}{355}{subsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.4.3}Challenges and Solutions for SE Networks}{356}{subsection.11.4.3}%
+\contentsline {subsubsection}{Challenges of SE Networks}{356}{section*.683}%
+\contentsline {subsubsection}{Solutions to SE Network Challenges}{356}{section*.684}%
+\contentsline {subsubsection}{Shifting Research Directions: Efficiency and Mobile Deployability}{357}{section*.685}%
+\contentsline {subsubsection}{What Comes Next?}{357}{section*.686}%
+\contentsline {section}{\numberline {11.5}Efficient Architectures for Edge Devices}{357}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}MobileNet: Depthwise Separable Convolutions}{358}{subsection.11.5.1}%
+\contentsline {subsubsection}{Width Multiplier: Thinner Models}{359}{section*.689}%
+\contentsline {subsubsection}{Resolution Multiplier: Reduced Representations}{359}{section*.690}%
+\contentsline {subsubsection}{Computational Cost of Depthwise Separable Convolutions}{359}{section*.691}%
+\contentsline {paragraph}{Summary of Multipliers}{360}{section*.692}%
+\contentsline {subsubsection}{MobileNetV1 vs. Traditional Architectures}{360}{section*.693}%
+\contentsline {subsubsection}{Depthwise Separable vs. Standard Convolutions in MobileNet}{360}{section*.695}%
+\contentsline {subsubsection}{Summary and Next Steps}{360}{section*.697}%
+\contentsline {subsection}{\numberline {11.5.2}ShuffleNet: Efficient Channel Mixing via Grouped Convolutions}{361}{subsection.11.5.2}%
+\contentsline {subsubsection}{The ShuffleNet Unit}{362}{section*.700}%
+\contentsline {paragraph}{Core Design Features}{362}{section*.701}%
+\contentsline {paragraph}{Structure of a ShuffleNet Unit}{362}{section*.702}%
+\contentsline {paragraph}{Stride-2 Modification}{363}{section*.704}%
+\contentsline {subsubsection}{ShuffleNet Architecture}{363}{section*.705}%
+\contentsline {paragraph}{Stage-wise Construction:}{363}{section*.706}%
+\contentsline {paragraph}{Scaling Factor}{364}{section*.707}%
+\contentsline {paragraph}{Design Rationale}{364}{section*.708}%
+\contentsline {subsubsection}{Computational Efficiency of ShuffleNet}{364}{section*.709}%
+\contentsline {subsubsection}{Inference Speed and Practical Performance}{364}{section*.710}%
+\contentsline {subsubsection}{Performance Comparison: ShuffleNet vs. MobileNet}{365}{section*.711}%
+\contentsline {subsubsection}{Beyond ShuffleNet: Evolution of Efficient CNN Architectures}{365}{section*.713}%
+\contentsline {subsection}{\numberline {11.5.3}MobileNetV2: Inverted Bottleneck and Linear Residual}{365}{subsection.11.5.3}%
+\contentsline {paragraph}{Understanding Feature Representations and Manifolds}{365}{section*.714}%
+\contentsline {paragraph}{ReLU and Information Collapse}{365}{section*.715}%
+\contentsline {subsubsection}{The MobileNetV2 Block: Inverted Residuals and Linear Bottleneck}{366}{section*.717}%
+\contentsline {paragraph}{Detailed Block Architecture}{366}{section*.718}%
+\contentsline {subsubsection}{Why is the Inverted Block Fitting to Efficient Networks?}{367}{section*.720}%
+\contentsline {paragraph}{1. Depthwise Convolutions Maintain Low Computational Cost}{367}{section*.721}%
+\contentsline {paragraph}{2. Moderate Expansion Factor \((t)\) Balances Efficiency}{367}{section*.722}%
+\contentsline {paragraph}{3. Comparison to MobileNetV1}{367}{section*.723}%
+\contentsline {paragraph}{4. Comparison to ResNet Bottleneck Blocks}{368}{section*.724}%
+\contentsline {paragraph}{5. Linear Bottleneck Preserves Subtle Features}{368}{section*.725}%
+\contentsline {paragraph}{Summary}{368}{section*.726}%
+\contentsline {subsubsection}{ReLU6 and Its Role in Low-Precision Inference}{368}{section*.727}%
+\contentsline {paragraph}{Practical Observations and Alternatives}{369}{section*.728}%
+\contentsline {subsubsection}{MobileNetV2 Architecture and Performance}{369}{section*.730}%
+\contentsline {subsubsection}{Comparison to MobileNetV1, ShuffleNet, and NASNet}{370}{section*.732}%
+\contentsline {subsection}{\numberline {11.5.4}Neural Architecture Search (NAS) and MobileNetV3}{371}{subsection.11.5.4}%
+\contentsline {subsubsection}{How NAS Works? Policy Gradient Optimization}{371}{section*.734}%
+\contentsline {paragraph}{What is a Policy Gradient?}{371}{section*.735}%
+\contentsline {paragraph}{Updating the Controller Using Policy Gradients}{371}{section*.736}%
+\contentsline {paragraph}{Searching for Reusable Block Designs}{372}{section*.738}%
+\contentsline {subsubsection}{MobileNetV3: NAS-Optimized Mobile Network}{373}{section*.740}%
+\contentsline {subsubsection}{The MobileNetV3 Block Architecture and Refinements}{373}{section*.741}%
+\contentsline {paragraph}{Structure of the MobileNetV3 Block}{373}{section*.742}%
+\contentsline {paragraph}{Differences from Previous MobileNet Blocks}{373}{section*.743}%
+\contentsline {subsubsection}{Why is MobileNetV3 More Efficient?}{373}{section*.744}%
+\contentsline {paragraph}{Key Optimizations That Improve Efficiency}{374}{section*.745}%
+\contentsline {subsubsection}{The Computational Cost of NAS and Its Limitations}{375}{section*.748}%
+\contentsline {paragraph}{Why is NAS Expensive?}{375}{section*.749}%
+\contentsline {subsubsection}{ShuffleNetV2 and Practical Design Rules}{376}{section*.751}%
+\contentsline {paragraph}{Why ShuffleNetV2?}{376}{section*.752}%
+\contentsline {paragraph}{Four Key Guidelines for Practical Efficiency}{376}{section*.753}%
+\contentsline {paragraph}{From ShuffleNetV1 to ShuffleNetV2}{376}{section*.754}%
+\contentsline {paragraph}{Performance vs.\ MobileNetV3}{377}{section*.755}%
+\contentsline {subsubsection}{The Need for Model Scaling and EfficientNets}{377}{section*.756}%
+\contentsline {paragraph}{Beyond Hand-Designed and NAS-Optimized Models}{377}{section*.757}%
+\contentsline {paragraph}{Introducing EfficientNet}{377}{section*.758}%
+\contentsline {section}{\numberline {11.6}EfficientNet Compound Model Scaling}{378}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}How Should We Scale a Model}{378}{subsection.11.6.1}%
+\contentsline {paragraph}{The Problem with Independent Scaling}{378}{section*.760}%
+\contentsline {subsection}{\numberline {11.6.2}How EfficientNet Works}{379}{subsection.11.6.2}%
+\contentsline {paragraph}{Step 1: Designing a Baseline Architecture}{379}{section*.762}%
+\contentsline {paragraph}{EfficientNet-B0 Architecture}{380}{section*.763}%
+\contentsline {paragraph}{Step 2: Finding Optimal Scaling Factors}{380}{section*.765}%
+\contentsline {paragraph}{Step 3: Scaling to Different Model Sizes}{380}{section*.766}%
+\contentsline {subsection}{\numberline {11.6.3}Why is EfficientNet More Effective}{380}{subsection.11.6.3}%
+\contentsline {paragraph}{Balanced Scaling Improves Efficiency}{380}{section*.767}%
+\contentsline {paragraph}{Comparison with MobileNetV3}{381}{section*.768}%
+\contentsline {paragraph}{Comparison with Other Networks}{381}{section*.769}%
+\contentsline {subsection}{\numberline {11.6.4}Limitations of EfficientNet}{381}{subsection.11.6.4}%
+\contentsline {paragraph}{What’s Next? EfficientNetV2 and Beyond}{382}{section*.771}%
+\contentsline {paragraph}{Conclusion}{382}{section*.772}%
+\contentsline {section}{\numberline {11.7}EfficientNet-Lite Optimizing EfficientNet for Edge Devices}{382}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}Motivation for EfficientNet-Lite}{382}{subsection.11.7.1}%
+\contentsline {subsection}{\numberline {11.7.2}EfficientNet-Lite Architecture}{382}{subsection.11.7.2}%
+\contentsline {subsection}{\numberline {11.7.3}Performance and Comparison with Other Models}{382}{subsection.11.7.3}%
+\contentsline {paragraph}{Model Size vs. Accuracy Trade-off}{383}{section*.774}%
+\contentsline {section}{\numberline {11.8}EfficientNetV2: Faster Training and Improved Efficiency}{384}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}Motivation for EfficientNetV2}{384}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}Fused-MBConv: Improving Early Layers}{384}{subsection.11.8.2}%
+\contentsline {subsection}{\numberline {11.8.3}Progressive Learning: Efficient Training with Smaller Images}{385}{subsection.11.8.3}%
+\contentsline {subsection}{\numberline {11.8.4}FixRes: Addressing Train-Test Resolution Discrepancy}{385}{subsection.11.8.4}%
+\contentsline {paragraph}{The Problem: Region of Classification (RoC) Mismatch}{385}{section*.777}%
+\contentsline {paragraph}{FixRes Solution}{386}{section*.778}%
+\contentsline {paragraph}{Implementation in EfficientNetV2}{386}{section*.780}%
+\contentsline {subsection}{\numberline {11.8.5}Non-Uniform Scaling for Improved Efficiency}{386}{subsection.11.8.5}%
+\contentsline {subsection}{\numberline {11.8.6}EfficientNetV2 Architecture}{387}{subsection.11.8.6}%
+\contentsline {subsection}{\numberline {11.8.7}EfficientNetV2 vs. EfficientNetV1}{387}{subsection.11.8.7}%
+\contentsline {subsection}{\numberline {11.8.8}EfficientNetV2 vs. Other Models}{387}{subsection.11.8.8}%
+\contentsline {paragraph}{Comparison in Accuracy, FLOPs, and Parameters}{388}{section*.782}%
+\contentsline {paragraph}{Training Speed and Efficiency}{389}{section*.784}%
+\contentsline {paragraph}{Key Takeaways}{389}{section*.786}%
+\contentsline {section}{\numberline {11.9}NFNets: Normalizer-Free ResNets}{390}{section.11.9}%
+\contentsline {subsection}{\numberline {11.9.1}Motivation: Why Do We Need NFNets?}{390}{subsection.11.9.1}%
+\contentsline {subsection}{\numberline {11.9.2}Variance Explosion Without BatchNorm}{390}{subsection.11.9.2}%
+\contentsline {paragraph}{Variance Scaling in Residual Networks}{390}{section*.787}%
+\contentsline {paragraph}{Role of Weight Initialization}{390}{section*.788}%
+\contentsline {subsection}{\numberline {11.9.3}Why Not Rescale the Residual Branch?}{390}{subsection.11.9.3}%
+\contentsline {subsection}{\numberline {11.9.4}NFNets: Weight Normalization Instead of BN}{391}{subsection.11.9.4}%
+\contentsline {paragraph}{Why This Works}{391}{section*.789}%
+\contentsline {paragraph}{Relation to Earlier Weight Standardization}{391}{section*.790}%
+\contentsline {subsection}{\numberline {11.9.5}NFNets Architecture and ResNet-D}{392}{subsection.11.9.5}%
+\contentsline {subsection}{\numberline {11.9.6}Comparison Across Diverse Architectures}{392}{subsection.11.9.6}%
+\contentsline {paragraph}{Key Takeaways}{392}{section*.792}%
+\contentsline {subsection}{\numberline {11.9.7}Further Reading and Resources}{393}{subsection.11.9.7}%
+\contentsline {section}{\numberline {11.10}Revisiting ResNets: Improved Training and Scaling Strategies}{394}{section.11.10}%
+\contentsline {subsection}{\numberline {11.10.1}Training Enhancements for ResNets}{394}{subsection.11.10.1}%
+\contentsline {paragraph}{Key Enhancements}{394}{section*.794}%
+\contentsline {subsection}{\numberline {11.10.2}Scaling ResNets for Efficient Training}{394}{subsection.11.10.2}%
+\contentsline {subsection}{\numberline {11.10.3}ResNet-RS vs. EfficientNet: A Re-Evaluation}{395}{subsection.11.10.3}%
+\contentsline {paragraph}{Comparison of ResNet-RS and EfficientNet}{395}{section*.796}%
+\contentsline {paragraph}{Key Observations}{395}{section*.798}%
+\contentsline {paragraph}{Conclusion}{396}{section*.799}%
+\contentsline {section}{\numberline {11.11}RegNets: Network Design Spaces}{396}{section.11.11}%
+\contentsline {subsection}{\numberline {11.11.1}RegNet Architecture}{396}{subsection.11.11.1}%
+\contentsline {paragraph}{Block Design: Generalizing ResNeXt}{397}{section*.801}%
+\contentsline {subsection}{\numberline {11.11.2}Optimizing the Design Space}{397}{subsection.11.11.2}%
+\contentsline {paragraph}{Random Sampling and Performance Trends}{397}{section*.803}%
+\contentsline {paragraph}{Reducing the Design Space}{398}{section*.804}%
+\contentsline {paragraph}{Final Six Parameters}{398}{section*.805}%
+\contentsline {paragraph}{Why This Works}{398}{section*.807}%
+\contentsline {paragraph}{Conclusion}{399}{section*.808}%
+\contentsline {subsection}{\numberline {11.11.3}Performance and Applications}{399}{subsection.11.11.3}%
+\contentsline {paragraph}{Key Takeaways}{400}{section*.811}%
+\contentsline {paragraph}{Conclusion}{400}{section*.812}%
+\contentsline {section}{\numberline {11.12}Summary of Efficient Network Architectures}{401}{section.11.12}%
+\contentsline {subsubsection}{Grouped Convolutions and ResNeXt}{401}{section*.813}%
+\contentsline {subsubsection}{Squeeze-and-Excitation (SE) Blocks}{401}{section*.814}%
+\contentsline {subsubsection}{MobileNet and ShuffleNet: Depthwise Separable Convolutions and Channel Mixing}{401}{section*.815}%
+\contentsline {subsubsection}{MobileNetV2: Inverted Residual Blocks}{401}{section*.816}%
+\contentsline {subsubsection}{NAS and MobileNetV3, ShuffleNetV2 Insights}{401}{section*.817}%
+\contentsline {subsubsection}{EfficientNet: Compound Scaling}{401}{section*.818}%
+\contentsline {subsubsection}{EfficientNet-Lite and EfficientNetV2}{402}{section*.819}%
+\contentsline {subsubsection}{NFNets: BN-Free Training}{402}{section*.820}%
+\contentsline {subsubsection}{Revisiting ResNets: Scaling and Training Recipes}{402}{section*.821}%
+\contentsline {subsubsection}{RegNets: Optimizing the Design Space}{402}{section*.822}%
+\contentsline {subsubsection}{Key Takeaways}{402}{section*.823}%
+\contentsline {chapter}{\numberline {12}Lecture 12: Deep Learning Software}{403}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Deep Learning Frameworks: Evolution and Landscape}{403}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}The Purpose of Deep Learning Frameworks}{404}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}Recall: Computational Graphs}{404}{subsection.12.1.2}%
+\contentsline {section}{\numberline {12.2}PyTorch: Fundamental Concepts}{405}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}Tensors and Basic Computation}{405}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}Autograd: Automatic Differentiation}{406}{subsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.2.3}Computational Graphs and Modular Computation}{407}{subsection.12.2.3}%
+\contentsline {subsubsection}{Building the Computational Graph}{407}{section*.826}%
+\contentsline {subsubsection}{Loss Computation and Backpropagation}{408}{section*.830}%
+\contentsline {subsubsection}{Extending Computational Graphs with Python Functions}{409}{section*.832}%
+\contentsline {subsubsection}{Custom Autograd Functions}{410}{section*.833}%
+\contentsline {subsubsection}{Summary: Backpropagation and Graph Optimization}{411}{section*.835}%
+\contentsline {subsection}{\numberline {12.2.4}High-Level Abstractions in PyTorch: \texttt {torch.nn} and Optimizers}{411}{subsection.12.2.4}%
+\contentsline {subsubsection}{Using \texttt {torch.nn.Sequential}}{411}{section*.836}%
+\contentsline {subsubsection}{Using Optimizers: Automating Gradient Descent}{412}{section*.837}%
+\contentsline {subsubsection}{Defining Custom \texttt {nn.Module} Subclasses}{413}{section*.838}%
+\contentsline {subsubsection}{Key Takeaways}{413}{section*.839}%
+\contentsline {subsection}{\numberline {12.2.5}Combining Custom Modules with Sequential Models}{413}{subsection.12.2.5}%
+\contentsline {subsubsection}{Example: Parallel Block}{414}{section*.840}%
+\contentsline {subsection}{\numberline {12.2.6}Efficient Data Loading with \texttt {torch.utils.data}}{415}{subsection.12.2.6}%
+\contentsline {subsubsection}{Example: Using \texttt {DataLoader} for Mini-batching}{415}{section*.843}%
+\contentsline {subsection}{\numberline {12.2.7}Using Pretrained Models with TorchVision}{416}{subsection.12.2.7}%
+\contentsline {subsubsection}{Key Takeaways}{416}{section*.844}%
+\contentsline {section}{\numberline {12.3}Dynamic vs. Static Computational Graphs in PyTorch}{417}{section.12.3}%
+\contentsline {subsubsection}{Example: Dynamic Graph Construction}{417}{section*.845}%
+\contentsline {subsection}{\numberline {12.3.1}Static Graphs and Just-in-Time (JIT) Compilation}{417}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Using JIT to Create Static Graphs}{418}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}Handling Conditionals in Static Graphs}{418}{subsection.12.3.3}%
+\contentsline {subsection}{\numberline {12.3.4}Optimizing Computation Graphs with JIT}{419}{subsection.12.3.4}%
+\contentsline {subsection}{\numberline {12.3.5}Benefits and Limitations of Static Graphs}{420}{subsection.12.3.5}%
+\contentsline {subsection}{\numberline {12.3.6}When Are Dynamic Graphs Necessary?}{420}{subsection.12.3.6}%
+\contentsline {section}{\numberline {12.4}TensorFlow: Dynamic and Static Computational Graphs}{420}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}Defining Computational Graphs in TensorFlow 2.0}{420}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}Static Graphs with \texttt {tf.function}}{421}{subsection.12.4.2}%
+\contentsline {section}{\numberline {12.5}Keras: High-Level API for TensorFlow}{421}{section.12.5}%
+\contentsline {section}{\numberline {12.6}TensorBoard: Visualizing Training Metrics}{422}{section.12.6}%
+\contentsline {section}{\numberline {12.7}Comparison: PyTorch vs. TensorFlow}{423}{section.12.7}%
+\contentsline {paragraph}{Conclusion}{423}{section*.851}%
+\contentsline {chapter}{\numberline {13}Lecture 13: Object Detection}{424}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Object Detection: Introduction}{424}{section.13.1}%
+\contentsline {subsection}{\numberline {13.1.1}Computer Vision Tasks: Beyond Classification}{424}{subsection.13.1.1}%
+\contentsline {subsection}{\numberline {13.1.2}What is Object Detection?}{425}{subsection.13.1.2}%
+\contentsline {subsection}{\numberline {13.1.3}Challenges in Object Detection}{425}{subsection.13.1.3}%
+\contentsline {subsection}{\numberline {13.1.4}Bounding Boxes and Intersection over Union (IoU)}{425}{subsection.13.1.4}%
+\contentsline {subsection}{\numberline {13.1.5}Evaluating Bounding Boxes: Intersection over Union (IoU)}{426}{subsection.13.1.5}%
+\contentsline {subsection}{\numberline {13.1.6}Multitask Loss: Classification and Regression}{427}{subsection.13.1.6}%
+\contentsline {section}{\numberline {13.2}From Single-Object to Multi-Object Detection}{427}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}Challenges in Detecting Multiple Objects}{428}{subsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.2.2}Sliding Window Approach}{428}{subsection.13.2.2}%
+\contentsline {subsection}{\numberline {13.2.3}Region Proposal Methods}{429}{subsection.13.2.3}%
+\contentsline {section}{\numberline {13.3}Naive Solution: Region-Based CNN (R-CNN)}{430}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}Bounding Box Regression: Refining Object Localization}{431}{subsection.13.3.1}%
+\contentsline {paragraph}{Why a Logarithmic Transformation?}{432}{section*.863}%
+\contentsline {subsection}{\numberline {13.3.2}Training R-CNN}{433}{subsection.13.3.2}%
+\contentsline {paragraph}{1) Collecting Positive and Negative Examples}{433}{section*.864}%
+\contentsline {paragraph}{2) Fine-Tuning the CNN on Region Proposals (Classification Only)}{433}{section*.866}%
+\contentsline {paragraph}{3) Training the Bounding Box Regressors}{434}{section*.867}%
+\contentsline {paragraph}{4) Forming the Final Detector}{435}{section*.868}%
+\contentsline {subsubsection}{Training Considerations for Object Detection}{435}{section*.869}%
+\contentsline {subsection}{\numberline {13.3.3}Selecting Final Predictions for Object Detection}{436}{subsection.13.3.3}%
+\contentsline {section}{\numberline {13.4}Non-Maximum Suppression (NMS)}{436}{section.13.4}%
+\contentsline {subsection}{\numberline {13.4.1}Motivation: The Need for NMS}{436}{subsection.13.4.1}%
+\contentsline {subsection}{\numberline {13.4.2}NMS Algorithm}{437}{subsection.13.4.2}%
+\contentsline {subsection}{\numberline {13.4.3}Example: Step-by-Step Execution}{437}{subsection.13.4.3}%
+\contentsline {subsection}{\numberline {13.4.4}Limitations of NMS}{438}{subsection.13.4.4}%
+\contentsline {subsection}{\numberline {13.4.5}Refining NMS for Overlapping Objects}{438}{subsection.13.4.5}%
+\contentsline {section}{\numberline {13.5}Evaluating Object Detectors: Mean Average Precision (mAP)}{438}{section.13.5}%
+\contentsline {subsection}{\numberline {13.5.1}Key Evaluation Metrics}{439}{subsection.13.5.1}%
+\contentsline {paragraph}{Precision and Recall}{439}{section*.873}%
+\contentsline {paragraph}{\textbf {Trade-offs Between Precision and Recall}}{439}{section*.874}%
+\contentsline {paragraph}{\textbf {Isn't F1 Score Suffice?}}{439}{section*.875}%
+\contentsline {paragraph}{\textbf {Precision-Recall (PR) Curve and Average Precision (AP)}}{440}{section*.876}%
+\contentsline {paragraph}{\textbf {Why the 0.5 IoU Threshold?}}{440}{section*.877}%
+\contentsline {paragraph}{\textbf {Why AP is Preferable to the F1 Score:}}{440}{section*.878}%
+\contentsline {subsection}{\numberline {13.5.2}Step-by-Step Example: Computing AP for a Single Class}{441}{subsection.13.5.2}%
+\contentsline {subsection}{\numberline {13.5.3}Mean Average Precision (mAP)}{444}{subsection.13.5.3}%
+\contentsline {subsection}{\numberline {13.5.4}COCO mAP: A Stricter Measure}{444}{subsection.13.5.4}%
+\contentsline {subsubsection}{COCO mAP for Different Object Sizes}{444}{section*.885}%
+\contentsline {paragraph}{When and Why Object Size-Specific mAP Matters}{445}{section*.887}%
+\contentsline {subsubsection}{Prioritizing Specific Classes in Object Detection}{445}{section*.888}%
+\contentsline {subsection}{\numberline {13.5.5}Evaluating Object Detectors: Key Takeaways}{446}{subsection.13.5.5}%
+\contentsline {chapter}{\numberline {14}Lecture 14: Object Detectors}{447}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Beyond R-CNN: Advancing Object Detection}{447}{section.14.1}%
+\contentsline {subsection}{\numberline {14.1.1}Looking Ahead: Beyond CNN-Based Object Detectors}{447}{subsection.14.1.1}%
+\contentsline {section}{\numberline {14.2}Fast R-CNN: Accelerating Object Detection}{448}{section.14.2}%
+\contentsline {subsection}{\numberline {14.2.1}Key Idea: Shared Feature Extraction}{448}{subsection.14.2.1}%
+\contentsline {subsection}{\numberline {14.2.2}Using Fully Convolutional Deep Backbones for Feature Extraction}{449}{subsection.14.2.2}%
+\contentsline {subsection}{\numberline {14.2.3}Region of Interest (RoI) Pooling}{450}{subsection.14.2.3}%
+\contentsline {paragraph}{Mapping Region Proposals onto the Feature Map}{450}{section*.892}%
+\contentsline {paragraph}{Dividing the Region into Fixed Bins}{450}{section*.893}%
+\contentsline {paragraph}{Max Pooling within Each Bin}{450}{section*.894}%
+\contentsline {paragraph}{Summary: Key Steps in RoI Pooling}{451}{section*.896}%
+\contentsline {paragraph}{Limitations of RoI Pooling}{451}{section*.897}%
+\contentsline {subsection}{\numberline {14.2.4}RoIAlign}{452}{subsection.14.2.4}%
+\contentsline {subsubsection}{RoIAlign: A Visual Example}{453}{section*.899}%
+\contentsline {paragraph}{Step 1: Projection of Region Proposal onto the Feature Map}{453}{section*.900}%
+\contentsline {paragraph}{Step 2: Selecting Interpolation Points in Each Bin}{453}{section*.902}%
+\contentsline {subparagraph}{Why Choose 0.25 and 0.75 for Sampling?}{454}{subparagraph*.904}%
+\contentsline {paragraph}{Step 3: Mapping Sampled Points onto the Feature Grid}{455}{section*.905}%
+\contentsline {paragraph}{Step 4: Computing Bilinear Interpolation Weights}{456}{section*.907}%
+\contentsline {subparagraph}{Normalization Constant and Its Interpretation}{456}{subparagraph*.908}%
+\contentsline {subparagraph}{Weight Computation for Each Corner}{456}{subparagraph*.909}%
+\contentsline {paragraph}{Step 5: Computing the Interpolated Feature Value}{459}{section*.914}%
+\contentsline {subparagraph}{\textbf {Example Computation}}{459}{subparagraph*.915}%
+\contentsline {paragraph}{Step 6: Aggregating Interpolated Values}{460}{section*.916}%
+\contentsline {subparagraph}{\textbf {Final Output}}{460}{subparagraph*.917}%
+\contentsline {paragraph}{Key Takeaways}{460}{section*.919}%
+\contentsline {paragraph}{RoIAlign Important Implementation Parts in PyTorch}{461}{section*.920}%
+\contentsline {section}{\numberline {14.3}Faster R-CNN: Faster Proposals Using RPNs}{464}{section.14.3}%
+\contentsline {subsection}{\numberline {14.3.1}Fast R-CNN Bottleneck: Region Proposal Computation}{464}{subsection.14.3.1}%
+\contentsline {subsection}{\numberline {14.3.2}Towards Faster Region Proposals: Learning Proposals with CNNs}{464}{subsection.14.3.2}%
+\contentsline {subsection}{\numberline {14.3.3}Region Proposal Networks (RPNs)}{465}{subsection.14.3.3}%
+\contentsline {paragraph}{\textbf {How RPNs Work}}{465}{section*.922}%
+\contentsline {paragraph}{\textbf {Anchor Boxes: Handling Scale and Aspect Ratio Variations}}{465}{section*.923}%
+\contentsline {paragraph}{\textbf {Bounding Box Refinement: Aligning Anchors to Objects}}{467}{section*.927}%
+\contentsline {paragraph}{\textbf {Training RPNs: Assigning Labels to Anchors}}{467}{section*.929}%
+\contentsline {paragraph}{\textbf {Loss Function for RPN Training}}{468}{section*.930}%
+\contentsline {subparagraph}{\textbf {Assigning Ground-Truth Bounding Boxes to Anchors}}{468}{subparagraph*.931}%
+\contentsline {paragraph}{\textbf {Smooth \( L_1 \) Loss for Bounding Box Regression}}{468}{section*.932}%
+\contentsline {paragraph}{\textbf {Why Use Negative Anchors?}}{469}{section*.933}%
+\contentsline {paragraph}{\textbf {Inference: Generating Region Proposals}}{469}{section*.934}%
+\contentsline {paragraph}{\textbf {RPNs Improve Region Proposal Generation}}{469}{section*.935}%
+\contentsline {subsection}{\numberline {14.3.4}Faster R-CNN Loss in Practice: Joint Training with Four Losses}{470}{subsection.14.3.4}%
+\contentsline {paragraph}{\textbf {Joint Training in Faster R-CNN}}{470}{section*.936}%
+\contentsline {paragraph}{\textbf {How RPN Improves Inference Speed}}{470}{section*.937}%
+\contentsline {subsection}{\numberline {14.3.5}Feature Pyramid Networks (FPNs): Multi-Scale Feature Learning}{471}{subsection.14.3.5}%
+\contentsline {subsubsection}{Feature Pyramid Networks: A More Efficient Approach}{471}{section*.940}%
+\contentsline {subsubsection}{Enhancing Low-Level Features with High-Level Semantics}{472}{section*.942}%
+\contentsline {paragraph}{How Upsampling Works in FPNs}{473}{section*.944}%
+\contentsline {subsubsection}{Combining Results from Multiple Feature Levels}{473}{section*.945}%
+\contentsline {paragraph}{Advantages of FPNs}{473}{section*.946}%
+\contentsline {paragraph}{\textbf {The Two-Stage Object Detection Pipeline}}{474}{section*.947}%
+\contentsline {section}{\numberline {14.4}RetinaNet: A Breakthrough in Single-Stage Object Detection}{475}{section.14.4}%
+\contentsline {subsection}{\numberline {14.4.1}Why Single-Stage Detectors Can Be Faster}{475}{subsection.14.4.1}%
+\contentsline {subsection}{\numberline {14.4.2}The Class Imbalance Problem in Dense Detection}{475}{subsection.14.4.2}%
+\contentsline {subsection}{\numberline {14.4.3}Focal Loss: Addressing Class Imbalance}{476}{subsection.14.4.3}%
+\contentsline {subsection}{\numberline {14.4.4}RetinaNet Architecture and Pipeline}{478}{subsection.14.4.4}%
+\contentsline {section}{\numberline {14.5}FCOS: An Anchor-Free, Fully Convolutional Detector}{479}{section.14.5}%
+\contentsline {subsection}{\numberline {14.5.1}Core Pipeline and Feature Map Interpretation}{479}{subsection.14.5.1}%
+\contentsline {subsection}{\numberline {14.5.2}Bounding Box Regression}{481}{subsection.14.5.2}%
+\contentsline {subsection}{\numberline {14.5.3}Centerness: Filtering Low-Quality Predictions}{481}{subsection.14.5.3}%
+\contentsline {subsection}{\numberline {14.5.4}Multi-Level Feature Prediction with FPN}{482}{subsection.14.5.4}%
+\contentsline {subsection}{\numberline {14.5.5}Loss Function: Focal Loss and IoU Loss}{483}{subsection.14.5.5}%
+\contentsline {subsection}{\numberline {14.5.6}Inference: Selecting Final Detections}{483}{subsection.14.5.6}%
+\contentsline {subsection}{\numberline {14.5.7}Advantages of FCOS}{483}{subsection.14.5.7}%
+\contentsline {section}{Enrichment 14.6: YOLO - You Only Look Once}{484}{section*.956}%
+\contentsline {subsection}{Enrichment 14.6.1: Background}{484}{section*.957}%
+\contentsline {subsection}{Enrichment 14.6.2: Step-by-Step: How YOLOv1 Processes an Input Image}{484}{section*.958}%
+\contentsline {paragraph}{1. Input Image and Preprocessing}{484}{section*.959}%
+\contentsline {paragraph}{2. Feature Extraction (DarkNet + Additional Convolution Layers)}{484}{section*.960}%
+\contentsline {paragraph}{3. Flattening and Fully Connected Layers}{484}{section*.961}%
+\contentsline {paragraph}{4. Understanding the Output Format}{485}{section*.962}%
+\contentsline {paragraph}{5. Why a Sigmoid?}{485}{section*.963}%
+\contentsline {paragraph}{6. Converting Predictions to Actual Bounding Boxes}{485}{section*.964}%
+\contentsline {paragraph}{7. Loss and Training (High Level)}{486}{section*.965}%
+\contentsline {paragraph}{8. Why It Works (and Its Trade-offs)}{486}{section*.966}%
+\contentsline {paragraph}{9. Final Detections and NMS}{486}{section*.967}%
+\contentsline {paragraph}{Summary}{487}{section*.968}%
+\contentsline {subsection}{Enrichment 14.6.3: Evolution of YOLO}{487}{section*.970}%
+\contentsline {section}{\numberline {14.7}Conclusion: The Evolution of Object Detection}{489}{section.14.7}%
+\contentsline {paragraph}{From R-CNN to Faster R-CNN: Learning Region Proposals}{489}{section*.971}%
+\contentsline {paragraph}{Improving Multi-Scale Detection: Feature Pyramid Networks (FPN)}{489}{section*.972}%
+\contentsline {paragraph}{RetinaNet: A Breakthrough for One-Stage Detectors}{489}{section*.973}%
+\contentsline {paragraph}{FCOS: Moving Toward Anchor-Free Detection}{489}{section*.974}%
+\contentsline {paragraph}{YOLO: A Widely Used Real-Time Detector}{490}{section*.975}%
+\contentsline {paragraph}{Looking Ahead: Transformers and SOTA Detectors}{490}{section*.976}%
+\contentsline {paragraph}{Summary}{490}{section*.977}%
+\contentsline {chapter}{\numberline {15}Lecture 15: Image Segmentation}{491}{chapter.15}%
+\contentsline {section}{\numberline {15.1}From Object Detection to Segmentation}{491}{section.15.1}%
+\contentsline {section}{Enrichment 15.2: Why is Object Detection Not Enough?}{492}{section*.979}%
+\contentsline {section}{\numberline {15.3}Advancements in Semantic Segmentation}{493}{section.15.3}%
+\contentsline {subsection}{\numberline {15.3.1}Early Approaches: Sliding Window Method}{493}{subsection.15.3.1}%
+\contentsline {subsection}{\numberline {15.3.2}Fully Convolutional Networks (FCNs)}{493}{subsection.15.3.2}%
+\contentsline {subsection}{\numberline {15.3.3}Challenges in FCNs for Semantic Segmentation}{494}{subsection.15.3.3}%
+\contentsline {subsection}{\numberline {15.3.4}Encoder-Decoder Architectures}{494}{subsection.15.3.4}%
+\contentsline {section}{\numberline {15.4}Upsampling and Unpooling}{495}{section.15.4}%
+\contentsline {subsection}{\numberline {15.4.1}Bed of Nails Unpooling}{496}{subsection.15.4.1}%
+\contentsline {paragraph}{Limitations of Bed of Nails Unpooling}{496}{section*.984}%
+\contentsline {subsection}{\numberline {15.4.2}Nearest-Neighbor Unpooling}{497}{subsection.15.4.2}%
+\contentsline {subsection}{\numberline {15.4.3}Bilinear Interpolation for Upsampling}{498}{subsection.15.4.3}%
+\contentsline {subsubsection}{Bilinear Interpolation: Generalized Case}{498}{section*.987}%
+\contentsline {subsubsection}{Advantages of Bilinear Interpolation}{500}{section*.989}%
+\contentsline {subsubsection}{Limitations and Transition to Bicubic Interpolation}{500}{section*.990}%
+\contentsline {subsection}{\numberline {15.4.4}Bicubic Interpolation for Upsampling}{500}{subsection.15.4.4}%
+\contentsline {subsubsection}{Why Bicubic Interpolation?}{500}{section*.991}%
+\contentsline {subsubsection}{Mathematical Reasoning}{500}{section*.992}%
+\contentsline {subsubsection}{Bicubic Interpolation: Generalized Case}{501}{section*.993}%
+\contentsline {subsubsection}{Advantages and Limitations}{502}{section*.995}%
+\contentsline {subsection}{\numberline {15.4.5}Max Unpooling}{502}{subsection.15.4.5}%
+\contentsline {subsubsection}{Max Unpooling in the Context of Noh et al. (ICCV 2015)}{502}{section*.996}%
+\contentsline {subsubsection}{Why Max Unpooling is More Effective Than Bed of Nails Unpooling}{503}{section*.998}%
+\contentsline {subsubsection}{Bridging to Transposed Convolution}{503}{section*.999}%
+\contentsline {subsection}{\numberline {15.4.6}Transposed Convolution}{504}{subsection.15.4.6}%
+\contentsline {subsubsection}{Understanding the Similarity to Standard Convolution}{504}{section*.1000}%
+\contentsline {subsubsection}{Step-by-Step Process of Transposed Convolution}{504}{section*.1001}%
+\contentsline {subsubsection}{1D Transposed Convolution}{506}{section*.1005}%
+\contentsline {subsubsection}{Advantages of Transposed Convolution}{507}{section*.1007}%
+\contentsline {subsubsection}{Connection to Standard Convolution}{507}{section*.1008}%
+\contentsline {subsection}{\numberline {15.4.7}Convolution and Transposed Convolution as Matrix Multiplication}{507}{subsection.15.4.7}%
+\contentsline {subsubsection}{Convolution via Matrix Multiplication}{507}{section*.1009}%
+\contentsline {subsubsection}{Transposed Convolution via Matrix Multiplication (Stride = 1)}{508}{section*.1011}%
+\contentsline {subsubsection}{Transposed Convolution and Gradient Derivation}{509}{section*.1013}%
+\contentsline {subsubsection}{Advantages of Transposed Convolution}{510}{section*.1014}%
+\contentsline {subsubsection}{Challenges and Considerations}{510}{section*.1015}%
+\contentsline {subsection}{\numberline {15.4.8}Conclusion: Choosing the Right Upsampling Method}{510}{subsection.15.4.8}%
+\contentsline {subsubsection}{Guidelines for Choosing an Upsampling Method}{510}{section*.1017}%
+\contentsline {subsubsection}{Final Thoughts}{511}{section*.1018}%
+\contentsline {section}{\numberline {15.5}Instance Segmentation}{511}{section.15.5}%
+\contentsline {subsection}{\numberline {15.5.1}Mask R-CNN: A Two-Stage Framework for Instance Segmentation}{512}{subsection.15.5.1}%
+\contentsline {subsubsection}{Faster R-CNN Backbone}{512}{section*.1019}%
+\contentsline {subsubsection}{Key Additions in Mask R-CNN}{512}{section*.1020}%
+\contentsline {subsubsection}{Segmentation Mask Prediction: Fixed Size Output}{512}{section*.1021}%
+\contentsline {subsubsection}{Training Mask R-CNN and Loss Functions}{512}{section*.1022}%
+\contentsline {subsubsection}{Bilinear Interpolation vs. Bicubic Interpolation}{513}{section*.1023}%
+\contentsline {subsubsection}{Class-Aware Mask Selection}{513}{section*.1024}%
+\contentsline {subsubsection}{Gradient Flow in Mask R-CNN}{513}{section*.1025}%
+\contentsline {subsubsection}{Summary}{514}{section*.1026}%
+\contentsline {subsection}{\numberline {15.5.2}Extending the Object Detection Paradigm}{514}{subsection.15.5.2}%
+\contentsline {section}{Enrichment 15.6: U-Net: A Fully Conv Architecture for Segmentation}{517}{section*.1031}%
+\contentsline {subsection}{Enrichment 15.6.1: Overview}{517}{section*.1032}%
+\contentsline {subsection}{Enrichment 15.6.2: U-Net Architecture}{517}{section*.1033}%
+\contentsline {subsection}{Enrichment 15.6.3: Skip Connections and Concatenation}{518}{section*.1035}%
+\contentsline {subsection}{Enrichment 15.6.4: Training U-Net}{518}{section*.1036}%
+\contentsline {subsection}{Enrichment 15.6.5: Comparison with Mask R-CNN}{518}{section*.1037}%
+\contentsline {subsection}{Enrichment 15.6.6: Impact and Evolution of U-Net}{519}{section*.1038}%
+\contentsline {chapter}{\numberline {16}Lecture 16: Recurrent Networks}{520}{chapter.16}%
+\contentsline {section}{\numberline {16.1}Introduction to Recurrent Neural Networks (RNNs)}{520}{section.16.1}%
+\contentsline {subsection}{\numberline {16.1.1}Why Study Sequential Models?}{520}{subsection.16.1.1}%
+\contentsline {subsection}{\numberline {16.1.2}RNNs as a General-Purpose Sequence Model}{521}{subsection.16.1.2}%
+\contentsline {subsection}{\numberline {16.1.3}RNNs for Visual Attention and Image Generation}{521}{subsection.16.1.3}%
+\contentsline {subsubsection}{Visual Attention: Sequential Image Processing}{521}{section*.1040}%
+\contentsline {subsubsection}{Autoregressive Image Generation with RNNs}{522}{section*.1041}%
+\contentsline {subsection}{\numberline {16.1.4}Limitations of Traditional Neural Networks for Sequential Data}{522}{subsection.16.1.4}%
+\contentsline {subsection}{\numberline {16.1.5}Overview of Recurrent Neural Networks (RNNs) and Their Evolution}{522}{subsection.16.1.5}%
+\contentsline {subsubsection}{RNN Progression: From Vanilla to Gated Units}{522}{section*.1043}%
+\contentsline {paragraph}{Vanilla RNNs.}{522}{section*.1044}%
+\contentsline {paragraph}{Long Short-Term Memory (LSTM).}{522}{section*.1045}%
+\contentsline {paragraph}{Gated Recurrent Units (GRUs).}{523}{section*.1046}%
+\contentsline {paragraph}{Bidirectional RNNs.}{523}{section*.1047}%
+\contentsline {subsubsection}{Motivation Toward Transformers}{523}{section*.1048}%
+\contentsline {subsubsection}{Bridging to Detailed Explanations}{523}{section*.1049}%
+\contentsline {section}{\numberline {16.2}Recurrent Neural Networks (RNNs) - How They Work}{524}{section.16.2}%
+\contentsline {subsection}{\numberline {16.2.1}RNN Computational Graph}{524}{subsection.16.2.1}%
+\contentsline {subsubsection}{Many-to-Many}{524}{section*.1050}%
+\contentsline {subsubsection}{Many-to-One}{525}{section*.1052}%
+\contentsline {subsubsection}{One-to-Many}{526}{section*.1054}%
+\contentsline {subsection}{\numberline {16.2.2}Seq2Seq: Sequence-to-Sequence Learning}{526}{subsection.16.2.2}%
+\contentsline {subsubsection}{Significance of Seq2Seq Models}{528}{section*.1057}%
+\contentsline {section}{\numberline {16.3}Example Usage of Seq2Seq: Language Modeling}{528}{section.16.3}%
+\contentsline {subsection}{\numberline {16.3.1}Formulating the Problem}{528}{subsection.16.3.1}%
+\contentsline {subsection}{\numberline {16.3.2}One-Hot Encoding of Input Characters}{529}{subsection.16.3.2}%
+\contentsline {subsubsection}{Advantages of One-Hot Encoding}{529}{section*.1058}%
+\contentsline {subsection}{\numberline {16.3.3}Processing the First Character}{529}{subsection.16.3.3}%
+\contentsline {subsection}{\numberline {16.3.4}Computing Loss Across Time Steps}{530}{subsection.16.3.4}%
+\contentsline {subsection}{\numberline {16.3.5}Generating Text with a Trained RNN}{530}{subsection.16.3.5}%
+\contentsline {subsection}{\numberline {16.3.6}Using an Embedding Layer for Character Inputs}{531}{subsection.16.3.6}%
+\contentsline {subsection}{\numberline {16.3.7}Conclusion and Next Steps}{532}{subsection.16.3.7}%
+\contentsline {section}{\numberline {16.4}Backpropagation Through Time (BPTT)}{532}{section.16.4}%
+\contentsline {subsection}{\numberline {16.4.1}Mathematical Formulation of BPTT and Memory Constraints}{532}{subsection.16.4.1}%
+\contentsline {subsection}{\numberline {16.4.2}Truncated Backpropagation Through Time}{533}{subsection.16.4.2}%
+\contentsline {subsubsection}{Loss Processing in Truncated BPTT}{533}{section*.1062}%
+\contentsline {subsection}{\numberline {16.4.3}Why BPTT Fails for Long Sequences}{534}{subsection.16.4.3}%
+\contentsline {section}{\numberline {16.5}Why RNNs Use \textit {tanh} Instead of ReLU}{534}{section.16.5}%
+\contentsline {subsection}{\numberline {16.5.1}Recurrent Computation and Gradient Behavior}{534}{subsection.16.5.1}%
+\contentsline {subsubsection}{Repeated Multiplication and the Hidden State}{534}{section*.1063}%
+\contentsline {paragraph}{Spectral Properties of \(\mathbf {W}_{hh}\).}{535}{section*.1064}%
+\contentsline {subsubsection}{How Large or Small States Affect Gradients}{535}{section*.1065}%
+\contentsline {paragraph}{Effect of Activation Function}{535}{section*.1066}%
+\contentsline {subsection}{\numberline {16.5.2}Mathematical Rationale for \textit {tanh} in RNNs}{535}{subsection.16.5.2}%
+\contentsline {subsubsection}{How \textit {tanh} Curbs Exploding Gradients}{536}{section*.1067}%
+\contentsline {paragraph}{1. Bounded Outputs:}{536}{section*.1068}%
+\contentsline {paragraph}{2. Derivative Control:}{536}{section*.1069}%
+\contentsline {paragraph}{3. Zero-Centered Activation:}{536}{section*.1070}%
+\contentsline {paragraph}{A Caveat: Vanishing Gradients Still Remain}{536}{section*.1071}%
+\contentsline {subsection}{\numberline {16.5.3}Why ReLU6 or Leaky ReLU Are Not a Full Remedy}{537}{subsection.16.5.3}%
+\contentsline {paragraph}{ReLU6: The Saturation Issue}{537}{section*.1072}%
+\contentsline {paragraph}{Leaky ReLU: A Partial Fix with Remaining Instability}{537}{section*.1073}%
+\contentsline {subsection}{\numberline {16.5.4}Why Gradient Clipping Alone is Insufficient}{537}{subsection.16.5.4}%
+\contentsline {paragraph}{Clipping Does Not Prevent Hidden State Growth}{538}{section*.1074}%
+\contentsline {section}{\numberline {16.6}Example Usages of Recurrent Neural Networks}{539}{section.16.6}%
+\contentsline {subsection}{\numberline {16.6.1}RNNs for Text-Based Tasks}{539}{subsection.16.6.1}%
+\contentsline {subsubsection}{Generating Text with RNNs}{539}{section*.1075}%
+\contentsline {subsection}{\numberline {16.6.2}Understanding What RNNs Learn}{539}{subsection.16.6.2}%
+\contentsline {paragraph}{Visualization of Hidden State Activations}{539}{section*.1076}%
+\contentsline {subsubsection}{Interpretable Hidden Units}{540}{section*.1078}%
+\contentsline {paragraph}{Quote Detection Cell}{540}{section*.1079}%
+\contentsline {paragraph}{Line Length Tracking Cell}{541}{section*.1081}%
+\contentsline {paragraph}{Other Interpretable Hidden Units}{541}{section*.1083}%
+\contentsline {subsubsection}{Key Takeaways from Interpretable Units}{541}{section*.1084}%
+\contentsline {subsection}{\numberline {16.6.3}Image Captioning}{542}{subsection.16.6.3}%
+\contentsline {subsection}{\numberline {16.6.4}Image Captioning Results}{543}{subsection.16.6.4}%
+\contentsline {subsection}{\numberline {16.6.5}Failure Cases in Image Captioning}{543}{subsection.16.6.5}%
+\contentsline {subsection}{\numberline {16.6.6}Bridging to LSTMs and GRUs: The Need for Gated Memory}{544}{subsection.16.6.6}%
+\contentsline {section}{\numberline {16.7}Long Short-Term Memory (LSTM) Overview}{545}{section.16.7}%
+\contentsline {subsection}{\numberline {16.7.1}LSTM Gating Mechanism}{545}{subsection.16.7.1}%
+\contentsline {subsection}{\numberline {16.7.2}LSTM Gate Computation}{545}{subsection.16.7.2}%
+\contentsline {subsection}{\numberline {16.7.3}LSTM State Updates}{546}{subsection.16.7.3}%
+\contentsline {subsection}{\numberline {16.7.4}Gradient Flow in LSTMs}{546}{subsection.16.7.4}%
+\contentsline {subsubsection}{Why the Cell State $\mathbf {c}_t$ Preserves Long-Term Information}{547}{section*.1089}%
+\contentsline {subsubsection}{Why $\mathbf {f}_t$ Prevents Vanishing Gradients}{547}{section*.1090}%
+\contentsline {subsubsection}{Why $\mathbf {f}_t$ Can Be Learned to Stay Near 1}{548}{section*.1091}%
+\contentsline {subsubsection}{Why Forget Gates Do Not Cause Exponential Decay Like RNN Activations}{548}{section*.1092}%
+\contentsline {subsubsection}{How Hidden-State Gradients Differ}{548}{section*.1093}%
+\contentsline {paragraph}{Consequence for Training}{549}{section*.1094}%
+\contentsline {subsubsection}{Why Weight-Gradient Vanishing Is Less Critical}{549}{section*.1095}%
+\contentsline {subsubsection}{Mitigating Exploding Gradients}{549}{section*.1096}%
+\contentsline {section}{\numberline {16.8}Resemblance of LSTMs to Highway Networks and ResNets}{550}{section.16.8}%
+\contentsline {subsection}{\numberline {16.8.1}Highway Networks and LSTMs}{550}{subsection.16.8.1}%
+\contentsline {subsection}{\numberline {16.8.2}ResNets and LSTMs}{550}{subsection.16.8.2}%
+\contentsline {paragraph}{Differences Between ResNets and Highway Networks}{551}{section*.1098}%
+\contentsline {subsection}{\numberline {16.8.3}Summary of LSTM, Highway, and ResNet Connections}{551}{subsection.16.8.3}%
+\contentsline {section}{\numberline {16.9}Stacking Layers in RNNs and LSTMs}{552}{section.16.9}%
+\contentsline {subsection}{\numberline {16.9.1}Architecture of Stacked RNNs and LSTMs}{552}{subsection.16.9.1}%
+\contentsline {subsection}{\numberline {16.9.2}Practical Limitations of Deep RNN Architectures}{553}{subsection.16.9.2}%
+\contentsline {subsection}{\numberline {16.9.3}Deep RNNs: Balancing Depth and Efficiency}{553}{subsection.16.9.3}%
+\contentsline {section}{Enrichment 16.10: Other RNN Variants: GRU}{554}{section*.1102}%
+\contentsline {subsection}{Enrichment 16.10.1: GRU Architecture}{554}{section*.1103}%
+\contentsline {paragraph}{Key Observations:}{555}{section*.1105}%
+\contentsline {subsection}{Enrichment 16.10.2: Gradient Flow in GRUs}{555}{section*.1106}%
+\contentsline {subsection}{Enrichment 16.10.3: Advantages of GRUs over LSTMs}{556}{section*.1110}%
+\contentsline {subsection}{Enrichment 16.10.4: Limitations of GRUs}{556}{section*.1111}%
+\contentsline {subsection}{Enrichment 16.10.5: Comparison with LSTMs}{556}{section*.1112}%
+\contentsline {subsection}{Enrichment 16.10.6: Bridging to Advanced Architectures}{557}{section*.1113}%
+\contentsline {section}{\numberline {16.11}Summary and Future Directions}{558}{section.16.11}%
+\contentsline {subsection}{\numberline {16.11.1}Neural Architecture Search for Improved RNNs}{558}{subsection.16.11.1}%
+\contentsline {subsection}{\numberline {16.11.2}Summary of RNN Architectures}{558}{subsection.16.11.2}%
+\contentsline {subsection}{\numberline {16.11.3}Beyond RNNs: From Recurrence to Attention}{559}{subsection.16.11.3}%
+\contentsline {chapter}{\numberline {17}Lecture 17: Attention}{560}{chapter.17}%
+\contentsline {section}{\numberline {17.1}Limitations of Sequence-to-Sequence with RNNs}{560}{section.17.1}%
+\contentsline {section}{\numberline {17.2}Introducing the Attention Mechanism}{561}{section.17.2}%
+\contentsline {subsubsection}{Intuition Behind Attention}{563}{section*.1120}%
+\contentsline {subsection}{\numberline {17.2.1}Benefits of Attention}{563}{subsection.17.2.1}%
+\contentsline {subsection}{\numberline {17.2.2}Attention Interpretability}{563}{subsection.17.2.2}%
+\contentsline {subsubsection}{Attention Maps: Visualizing Model Decisions}{563}{section*.1121}%
+\contentsline {subsubsection}{Understanding Attention Patterns}{564}{section*.1123}%
+\contentsline {subsubsection}{Why Attention Interpretability Matters}{565}{section*.1124}%
+\contentsline {subsection}{\numberline {17.2.3}Applying Attention to Image Captioning}{565}{subsection.17.2.3}%
+\contentsline {subsubsection}{Feature Representation and Attention Computation}{565}{section*.1126}%
+\contentsline {subsubsection}{Generalizing to Any Timestep \( t \)}{567}{section*.1127}%
+\contentsline {subsubsection}{Example: Captioning an Image of a Cat Sitting in Front of Trees}{567}{section*.1128}%
+\contentsline {subsection}{\numberline {17.2.4}Visualizing Attention in Image Captioning}{568}{subsection.17.2.4}%
+\contentsline {subsubsection}{Hard vs. Soft Attention}{568}{section*.1130}%
+\contentsline {subsection}{\numberline {17.2.5}Biological Inspiration: Saccades in Human Vision}{569}{subsection.17.2.5}%
+\contentsline {subsection}{\numberline {17.2.6}Beyond Image Captioning: Generalizing Attention Mechanisms}{570}{subsection.17.2.6}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{571}{chapter.18}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{572}{chapter.19}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{573}{chapter.20}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{574}{chapter.21}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{575}{chapter.22}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{576}{chapter.23}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{577}{chapter.24}%
+\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{578}{chapter.25}%
+\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{579}{chapter.26}%
+\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{580}{chapter.27}%
+\contentsline {chapter}{\numberline {28}MAMBA: Multi-Agent Multi-Body Analysis}{581}{chapter.28}%
+\contentsfinish 

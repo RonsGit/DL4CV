@@ -488,6 +488,7 @@ For example, when we previously examined a \( 5 \times 5 \) patch of the Lotus i
 \]
 This reduction in spatial size can become problematic as feature maps continue to shrink with deeper layers. If no corrective measures are taken, images may spatially collapse to an unrecognizable form, limiting the depth of our network.
 
+
 \subsection{Mitigating Shrinking Feature Maps: Padding}
 A common solution to prevent excessive spatial shrinkage is \textbf{padding}, where extra pixels are added around the borders of the input image before applying convolution. The most widely used approach is \emph{zero-padding}, where padding pixels are filled with zeros. More advanced techniques, such as \emph{replication padding} (copying the values of edge pixels) or \emph{reflection padding} (mirroring the border values), are sometimes used in practice as well.
 
@@ -508,6 +509,16 @@ This choice ensures that the output retains the same spatial dimensions as the i
 W' = W - K + 1 + 2P.
 \]
 For instance, using a \( 3 \times 3 \) filter with \( P = 1 \) ensures that a \( W \times W \) input produces a \( W \times W \) output. This technique, known as \textbf{same padding}, is widely used in deep convolutional architectures.
+
+\paragraph{Preserving Border Information with Padding}
+Another crucial role of padding is ensuring that the information at the borders of the image is not \textbf{washed away} as convolutional layers stack deeper in a network. Without padding, pixels near the borders of an image are involved in fewer computations than those in the center, leading to a loss of information at the edges. By adding padding, we allow convolutional filters to access meaningful contextual information even for edge pixels, improving feature extraction and preventing a bias toward central regions.
+
+\noindent This effect is particularly relevant in tasks such as:
+\begin{itemize}
+	\item \textbf{Object Detection}: Key features of an object may appear near the image borders, and padding ensures these features are processed adequately.
+	\item \textbf{Medical Imaging}: In scans such as MRIs or X-rays, abnormalities may be located near the periphery. Padding helps ensure these regions receive equal importance.
+	\item \textbf{Segmentation Tasks}: When performing image segmentation, retaining spatial consistency across the entire image is essential. Padding prevents distortions that could affect segmentation accuracy near the edges.
+\end{itemize}
 
 \subsection{Receptive Fields: Understanding What Each Pixel Sees}
 \begin{figure}[H]
@@ -538,6 +549,7 @@ For deep networks, we want each output pixel to have access to a large portion o
 \noindent
 Hence, we need to perform a more aggressive \emph{downsampling} along the neural network. Some of the tools we can use for that purpose are \textbf{strides} and \textbf{pooling layers}. We'll now cover both of these tools, starting with strides. As pooling layers are a different type of layer in the neural network, we'll touch them after finishing with convolutions first. 
 
+\newpage
 \subsection{Controlling Spatial Reduction with Strides}
 \textbf{Stride} is another technique for managing spatial dimensions in convolutional networks. Instead of moving the filter one pixel at a time, we can define a \textbf{stride} \( S \), which determines how many pixels the filter shifts per step. Increasing the stride results in downsampling, reducing the output’s spatial dimensions:
 \[
@@ -594,6 +606,7 @@ Deeper networks enhance representational capacity by progressively composing fea
 
 Thus far, we have examined how convolutional layers operate, but an equally important consideration is their computational cost and learnable parameters. Unlike fully connected layers, it's intuitive that convolutional layers significantly reduce the number of parameters, but what about computational operations? 
 
+\newpage
 \subsection{Example: Convolutional Layer Setup}
 To understand these calculations, consider a single convolutional layer with the following configuration:
 \begin{itemize}
@@ -757,6 +770,85 @@ Even though convolutional networks use fewer parameters than fully connected net
 	
 	Full details and visual examples can be found in \cite{solai2023_backpropconv}, which provide additional insights into the math and coding approach for convolutional backprop.
 \end{enrichment}
+\newpage
+
+\begin{enrichment}[Parameter Sharing in Convolutional Neural Networks][section]
+	
+	\noindent Convolutional Neural Networks (CNNs) leverage \textbf{parameter sharing} to drastically reduce the number of parameters while maintaining high representational power. The key assumption behind parameter sharing is that features learned at one spatial location are also useful at other locations, which is particularly beneficial for images with translational invariance.
+	
+	\begin{enrichment}[Parameter Sharing in CNNs vs. MLPs][subsection]
+		\noindent Unlike \textbf{Multilayer Perceptrons (MLPs)}, which assign independent weights to each input neuron, CNNs apply the same set of weights across different spatial locations. In an MLP, each layer has a fully connected structure, leading to a number of parameters that scales quadratically with input size. In contrast, CNNs use \textbf{convolutional filters} that slide across the image, sharing parameters across spatial positions. This difference enables CNNs to efficiently learn spatial hierarchies while significantly reducing computational complexity.
+	\end{enrichment}
+	
+	\begin{enrichment}[Motivation for Parameter Sharing][subsection]
+		\noindent Parameter sharing is motivated by several key advantages:
+		\begin{itemize}
+			\item \textbf{Reducing Parameters}: Instead of learning independent weights for every neuron, CNNs share a common set of weights across the spatial dimensions. This significantly reduces the number of parameters and makes training more efficient.
+			\item \textbf{Translational Invariance}: If detecting a specific feature (e.g., an edge, a texture) is useful in one part of the image, it should also be useful elsewhere. This property aligns well with the structure of natural images.
+			\item \textbf{Learning Efficient Representations}: By sharing parameters across spatial locations, the model learns generalized feature detectors that work across an image rather than overfitting to specific pixel locations.
+		\end{itemize}
+	\end{enrichment}
+	
+	\begin{enrichment}[How Parameter Sharing Works][subsection]
+		\noindent The neurons in a convolutional layer are constrained to use the same set of weights and biases across different spatial locations.
+		\begin{itemize}
+			\item Mathematically, for an input image \( X \), a convolutional kernel \( W \), and a bias term \( b \), the convolution operation at location \( (i,j) \) is computed as:
+			\begin{equation}
+				Y_{ij} = \sum_{m} \sum_{n} W_{mn} X_{i+m, j+n} + b.
+			\end{equation}
+			\item The same filter \( W \) is applied across all positions, ensuring that the network learns spatially invariant representations.
+		\end{itemize}
+	\end{enrichment}
+	
+	\begin{enrichment}[When Does Parameter Sharing Not Make Complete Sense?][subsection]
+		\noindent While parameter sharing is a powerful technique, there are scenarios where it may not be fully appropriate:
+		\begin{itemize}
+			\item \textbf{Structured Inputs}: If the input images have a specific centered structure, different spatial locations may require distinct features. For example, in datasets where objects (e.g., faces) are always centered, features extracted from the left and right sides of an image may need to be different.
+			\item \textbf{Example: Face Recognition}: In facial recognition, eyes, noses, and mouths appear in predictable locations. It may be beneficial to learn different filters for different regions (e.g., eye-specific features vs. mouth-specific features), rather than enforcing parameter sharing across all positions. An example:  \cite{taigman2014_deepface}.
+			\item \textbf{Medical Imaging}: In medical scans (e.g., MRIs or CT scans), abnormalities may occur at specific spatial locations. Detecting a tumor in a specific organ may require distinct filters tailored to that region rather than using the same features everywhere. An example: \cite{litjens2017_medicalcnn}.
+			\item \textbf{Autonomous Driving}: Road scenes contain structured components such as sky, road, and vehicles, each of which may require specialized filters based on their typical locations in the image.
+		\end{itemize}
+	\end{enrichment}
+	
+	\begin{enrichment}[Alternative Approaches When Parameter Sharing Fails][subsection]
+		\noindent In cases where parameter sharing is not ideal, alternative architectures can be used:
+		
+
+\begin{enrichment}[Locally-Connected Layers][subsubsection]
+	\noindent Unlike standard convolutional layers, \textbf{locally-connected layers} do not share weights across spatial positions. Instead, each neuron in the layer learns a unique set of weights, allowing the network to specialize different feature detectors for different spatial regions. This is particularly useful when spatial position conveys meaning, such as in medical imaging, facial recognition, and structured object recognition.
+	
+	\begin{enrichment}[Understanding Locally-Connected Layers][subsubsection]
+		\noindent The concept of locally-connected layers extends from convolutional layers but removes the translational invariance constraint. Instead of applying the same filter everywhere, each spatial position has its own learnable filter. Mathematically, this is represented as:
+		\begin{equation}
+			Y_{ij} = \sum_{m} \sum_{n} W_{mn}^{(ij)} X_{i+m, j+n} + b_{ij},
+		\end{equation}
+		where each weight matrix \( W^{(ij)} \) and bias \( b_{ij} \) is unique to its corresponding spatial position \( (i,j) \). This allows for  \textbf{spatially varying feature extraction}.
+	\end{enrichment}
+	
+	\begin{enrichment}[Limitations of Locally-Connected Layers][subsubsection]
+		\noindent Despite their advantages, locally-connected layers come with several drawbacks:
+		\begin{itemize}
+			\item \textbf{Increased Parameter Count}: Unlike convolutional layers, where the same filters are reused, locally-connected layers require separate filters for each spatial position, leading to a substantial increase in parameters.
+			\item \textbf{Higher Computational Cost}: Training and inference become more expensive due to the increased number of independent weights.
+			\item \textbf{Reduced Generalization}: By removing parameter sharing, the model may require more data to learn robust features that generalize well.
+		\end{itemize}
+	\end{enrichment}
+	
+	\noindent While locally-connected layers can be powerful for structured image processing tasks, they are often used selectively in deep learning architectures. In practice, hybrid models that combine convolutional and locally-connected layers provide a balance between generalization and spatial specificity, and are sometimes used in practice for the particular situations in which full parameter-sharing approach doesn't make total sense.
+\end{enrichment}
+		
+		\begin{enrichment}[Hybrid Approaches][subsubsection]
+			\noindent Some architectures combine parameter-sharing layers with locally-connected layers to balance generalization and location-specific feature learning. For example, early layers may use standard convolutional layers to learn general features, while later layers may incorporate locally-connected layers to capture region-specific information.
+		\end{enrichment}
+		
+		\begin{enrichment}[A Glimpse at Attention Mechanisms][subsubsection]
+			\noindent Another alternative to parameter sharing is \textbf{self-attention}, which dynamically determines how important different regions of an input are to each other. This mechanism, employed in Vision Transformers (ViTs), allows for flexible representation learning beyond the fixed structure of convolutional filters. We will explore self-attention in detail in later chapters.
+		\end{enrichment}
+	\end{enrichment}
+	
+	Parameter sharing is a key ingredient in the success of CNNs, enabling them to generalize effectively while keeping models computationally efficient. However, in cases where spatial locations carry distinct feature importance, alternative approaches such as locally-connected layers or attention mechanisms may be required.
+\end{enrichment}
+
 \newpage
 \section{Special Types of Convolutions: 1x1, 1D, and 3D Convolutions}
 \label{sec:special_convs}
@@ -1325,9 +1417,10 @@ Pooling layers play a crucial role in convolutional neural networks (CNNs) by re
 \subsection{Types of Pooling}
 The most common types of pooling operations are:
 
+\paragraph{Pooling Methods}
 \begin{itemize}
 	\item \textbf{Max Pooling:} Selects the maximum value within each window, preserving the most prominent feature in the region.
-	\item \textbf{Average Pooling:} Computes the average of values within each window, providing a smoothed representation of the feature map.
+	\item \textbf{Average Pooling:} Computes the average of values within each window, providing a \textbf{smoothed representation} of the feature map. However, this can be problematic in certain cases, such as when tiny details in the image might be lost due to excessive smoothing.
 \end{itemize}
 
 Pooling operates similarly to convolutions: a window of predefined size scans the input tensor, moving according to the stride. If the stride equals the kernel size, the pooling regions do not overlap. Within each region, the pooling function is applied, producing a single output value per region.
@@ -1402,10 +1495,11 @@ Applying a \(2 \times 2\) filter with stride 2:
 \subsubsection{Backpropagation Through Pooling Layers}
 Backpropagation propagates gradients from the output back to the input. The process differs for max pooling and average pooling.
 
-\paragraph{Max Pooling Backpropagation}
-For max pooling, the gradient is passed only to the maximum value in each window; all other values receive a gradient of zero.
 
-\textbf{Example:}
+\paragraph{Max Pooling Backpropagation}
+For max pooling, the gradient is passed only to the maximum value in each window, while all other values receive a gradient of zero. This selective propagation introduces a key limitation: many neurons do not contribute to the gradient flow, which can slow learning and contribute to the \textbf{vanishing gradient problem} in deep networks.
+
+\noindent \textbf{Example:}
 Let the upstream gradient be:
 \[
 \begin{bmatrix} 
@@ -1414,8 +1508,7 @@ Let the upstream gradient be:
 \end{bmatrix}
 \]
 
-The original \(4 \times 4\) input matrix receives the following gradients:
-
+\noindent The original \(4 \times 4\) input matrix receives the following gradients:
 \[
 \begin{bmatrix} 
 	0 & 0 & 0 & 0 \\ 
@@ -1424,6 +1517,22 @@ The original \(4 \times 4\) input matrix receives the following gradients:
 	0 & 0.1 & 0 & 0 
 \end{bmatrix}
 \]
+
+\paragraph{Impact on Gradient Flow}
+\begin{itemize}
+	\item \textbf{Sparse Gradient Updates}: Because gradients are assigned only to the maximum values in each pooling window, many neurons receive zero gradients. This can significantly slow down learning in deeper networks.
+	\item \textbf{Vanishing Gradient Problem}: Since pooling layers discard non-maximum activations, error signals may fail to propagate effectively. This is particularly problematic in very deep architectures where repeated pooling leads to fewer contributing gradients at earlier layers.
+	\item \textbf{Loss of Fine-Grained Spatial Information}: Pooling reduces resolution by downsampling feature maps, making it harder for deeper layers to reconstruct precise spatial details, potentially weakening feature representation.
+\end{itemize}
+
+\paragraph{Mitigation Strategies}
+\begin{itemize}
+	\item \textbf{Overlapping Pooling}: Using overlapping pooling windows ensures more neurons contribute to the gradient flow, reducing the sparsity of updates.
+	\item \textbf{Trainable Pooling Layers}: Techniques such as \textit{learnable pooling} adaptively weight the contributions of different neurons, allowing for more effective gradient distribution.
+	\item \textbf{Replacing Pooling with Strided Convolutions}: Using strided convolutions instead of max pooling allows gradients to flow through all neurons rather than just the maximum activations.
+\end{itemize}
+
+\noindent While max pooling remains a widely used technique due to its ability to enforce translational invariance and reduce computation, understanding its effect on gradient propagation is crucial for designing deep architectures that avoid excessive gradient loss.
 
 \paragraph{Average Pooling Backpropagation}
 For average pooling, the gradient is distributed equally among all elements in the window.
@@ -1542,6 +1651,7 @@ Only the maximum entry obtains a nonzero derivative:
 	\end{tabular}
 \end{center}
 
+\newpage
 \subsubsection{Contrasting with Regular Pooling}
 \paragraph{Window Size.}
 \begin{itemize}
