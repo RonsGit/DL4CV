@@ -436,7 +436,7 @@ Although softmax is invariant to adding or subtracting a constant from all its i
 \end{equation}
 
 \noindent
-By scaling by \(\sqrt{D_Q}\), we ensure that the attention distribution remains well-calibrated. If we divided by a value smaller than 1, softmax would become highly peaked, reinforcing dominant values and reducing attention diversity. Conversely, dividing by an excessively large value (and \(\sqrt{D_Q}\) usually is one, for deep and wide neural networks) would make softmax nearly uniform, diluting meaningful distinctions in attention weights.
+By scaling by \(\sqrt{D_Q}\), we ensure that the attention distribution remains well-calibrated. If we divided by a value smaller than 1, softmax would become highly peaked, reinforcing dominant values and reducing attention diversity. Conversely, dividing by an excessively large value (hopefully \(\sqrt{D_Q}\) is not that large, even for deep and wide neural networks) would make softmax nearly uniform, diluting meaningful distinctions in attention weights.
 
 \newpage
 \paragraph{Why Dot Product?}
@@ -474,7 +474,7 @@ Hence, the \emph{scaled dot-product attention} is both mathematically justified 
 
 \paragraph{Benefits of Multiple Queries:}
 \begin{itemize}
-	\item \textbf{Parallel Computation:} Enables efficient batch processing through matrix-matrix multiplications.
+	\item \textbf{Parallel Computation:} Multiple queries benefit from the efficient processing through matrix-matrix multiplications of scaled-dot product self-attention. Hence, we can use them to increase our per-layer representational capacity. 
 	\item \textbf{Richer Representations:} Allows capturing diverse relationships between inputs and queries.
 	\item \textbf{Token-Wise Attention:} Essential for self-attention layers (covered later), where each token in a sequence attends to others independently.
 \end{itemize}
@@ -544,7 +544,7 @@ Hence, the \emph{scaled dot-product attention} is both mathematically justified 
 \noindent Separating queries, keys, and values provides:
 
 \begin{itemize}
-	\item \textbf{Efficiency:} Enables fast retrieval without processing all inputs.
+	\item \textbf{Efficiency:} Enables fast retrieval without processing all inputs sequentially.
 	\item \textbf{Flexibility:} Allows different queries to focus on various input aspects.
 	\item \textbf{Generalization:} Adapts across tasks without modifying the entire model.
 \end{itemize}

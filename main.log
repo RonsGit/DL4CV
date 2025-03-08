@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  8 MAR 2025 23:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.5)  8 MAR 2025 23:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2428,12 +2428,12 @@ Package pdftex.def Info: Figures/Chapter_3/Slide_22.jpg  used on input line 271
 \pydata@fh@_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted=\write8
 \openout8 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250308233221 FAD58DE7366495DB4650CF
+runsystem(latexminted config  --timestamp 20250308234655 FAD58DE7366495DB4650CF
 EFAC2FCD61)...executed safely (allowed).
 
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250308233221 FAD58DE7366495DB4
+runsystem(latexminted cleanconfig  --timestamp 20250308234655 FAD58DE7366495DB4
 650CFEFAC2FCD61)...executed safely (allowed).
 
 
@@ -6674,7 +6674,7 @@ xmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2024/texmf-dist/fonts/type
 pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2
 024/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2024/texmf-dist/fon
 ts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (619 pages, 229561692 bytes).
+Output written on main.pdf (619 pages, 229561802 bytes).
 PDF statistics:
  10579 PDF objects out of 10688 (max. 8388607)
  8640 compressed objects within 87 object streams
