@@ -1530,7 +1530,6 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{https://erdem.pl}
-      \field{month}{2}
       \field{title}{Understanding Region of Interest - Part 2 (RoI Align)}
       \field{year}{2020}
       \verb{urlraw}
@@ -3113,6 +3112,71 @@
       \field{pages}{1725\bibrangedash 1732}
       \range{pages}{8}
     \endentry
+    \entry{kazemnejad2019_pencoding}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=3128915543d274ea8c7fe523d25a9bcc}{%
+           family={Kazemnejad},
+           familyi={K\bibinitperiod},
+           given={Amirhossein},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{fullhash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{fullhashraw}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{bibnamehash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{authorbibnamehash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{authornamehash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{authorfullhash}{3128915543d274ea8c7fe523d25a9bcc}
+      \strng{authorfullhashraw}{3128915543d274ea8c7fe523d25a9bcc}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{kazemnejad.com}
+      \field{title}{Transformer Architecture: The Positional Encoding}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
+      \endverb
+      \verb{url}
+      \verb https://kazemnejad.com/blog/transformer_architecture_positional_encoding/
+      \endverb
+    \endentry
+    \entry{ke2021rethinking_position}{misc}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{2}{}{%
+        {{hash=dadd87e1dad07728ce408894042b277e}{%
+           family={Ke},
+           familyi={K\bibinitperiod},
+           given={Guolin},
+           giveni={G\bibinitperiod}}}%
+        {{hash=3a38e94b931e1376e2d1175473ce67ec}{%
+           family={He},
+           familyi={H\bibinitperiod},
+           given={Di},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{fullhash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{fullhashraw}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{bibnamehash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{authorbibnamehash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{authornamehash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{authorfullhash}{0423686d4ea893c7e81d41fc6fbed246}
+      \strng{authorfullhashraw}{0423686d4ea893c7e81d41fc6fbed246}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CL}
+      \field{eprinttype}{arXiv}
+      \field{title}{Rethinking Positional Encoding in Language Pre-training}
+      \field{year}{2021}
+      \verb{eprint}
+      \verb 2006.15595
+      \endverb
+    \endentry
     \entry{sam2023_segmentation}{article}{}{}
       \name{author}{12}{}{%
         {{hash=28c5859f568975f174c8668976ed369d}{%
@@ -4645,6 +4709,62 @@
       \verb https://doi.org/10.1137/0330046
       \endverb
     \endentry
+    \entry{radford2019_language}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{6}{}{%
+        {{hash=a812c46caad94fc8701be37871f303ba}{%
+           family={Radford},
+           familyi={R\bibinitperiod},
+           given={Alec},
+           giveni={A\bibinitperiod}}}%
+        {{hash=495187f3a2c93ddb8083bd18a5702527}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Jeffrey},
+           giveni={J\bibinitperiod}}}%
+        {{hash=5c2f5c2e6d4a9ec8681377f8a8e5e6af}{%
+           family={Child},
+           familyi={C\bibinitperiod},
+           given={Rewon},
+           giveni={R\bibinitperiod}}}%
+        {{hash=63b32614460a4ab72dbbbbfe223220ea}{%
+           family={Luan},
+           familyi={L\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=1e6adbf36ab730cd5fdadb838b4d2667}{%
+           family={Amodei},
+           familyi={A\bibinitperiod},
+           given={Dario},
+           giveni={D\bibinitperiod}}}%
+        {{hash=8d569d1d5b8b5a7836017a98b430f959}{%
+           family={Sutskever},
+           familyi={S\bibinitperiod},
+           given={Ilya},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{ca3baa5a22057195db1c71be39b4c922}
+      \strng{fullhash}{98ae7a33b0eb684f6b8d70d816ea3c06}
+      \strng{fullhashraw}{98ae7a33b0eb684f6b8d70d816ea3c06}
+      \strng{bibnamehash}{ca3baa5a22057195db1c71be39b4c922}
+      \strng{authorbibnamehash}{ca3baa5a22057195db1c71be39b4c922}
+      \strng{authornamehash}{ca3baa5a22057195db1c71be39b4c922}
+      \strng{authorfullhash}{98ae7a33b0eb684f6b8d70d816ea3c06}
+      \strng{authorfullhashraw}{98ae7a33b0eb684f6b8d70d816ea3c06}
+      \field{extraname}{1}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{OpenAI blog}
+      \field{number}{8}
+      \field{title}{Language models are unsupervised multitask learners}
+      \field{volume}{1}
+      \field{year}{2019}
+      \field{pages}{9}
+      \range{pages}{1}
+    \endentry
     \entry{clip2021_multimodal}{article}{}{}
       \name{author}{12}{}{%
         {{hash=a812c46caad94fc8701be37871f303ba}{%
@@ -4716,6 +4836,7 @@
       \strng{authornamehash}{ca3baa5a22057195db1c71be39b4c922}
       \strng{authorfullhash}{de02402f48bd17333411ead3b5ca6de9}
       \strng{authorfullhashraw}{de02402f48bd17333411ead3b5ca6de9}
+      \field{extraname}{2}
       \field{sortinit}{R}
       \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
       \field{labelnamesource}{author}
@@ -5490,6 +5611,40 @@
       \verb https://medium.com/towards-data-science/a-basic-introduction-to-separable-convolutions-b99ec3102728
       \endverb
     \endentry
+    \entry{shaw2018selfrelative_pos}{misc}{}{}
+      \name{author}{3}{}{%
+        {{hash=ceeaea67125df5871dea8bc3aa7f4c6e}{%
+           family={Shaw},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=831027ee0ebf22375e2a86afc1881909}{%
+           family={Uszkoreit},
+           familyi={U\bibinitperiod},
+           given={Jakob},
+           giveni={J\bibinitperiod}}}%
+        {{hash=7f28e84700536646dd6620a0db07ad09}{%
+           family={Vaswani},
+           familyi={V\bibinitperiod},
+           given={Ashish},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{fullhash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{fullhashraw}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{bibnamehash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{authorbibnamehash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{authornamehash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{authorfullhash}{6db6eb79750629e49986ca7a62a3b97f}
+      \strng{authorfullhashraw}{6db6eb79750629e49986ca7a62a3b97f}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{NAACL-HLT}
+      \field{title}{Self-attention with relative position representations}
+      \field{year}{2018}
+    \endentry
     \entry{shi1997_normalizedcuts}{article}{}{}
       \name{author}{2}{}{%
         {{hash=159989720a07cffdf1f8afdcf19f925d}{%
@@ -5709,7 +5864,7 @@
       \field{pages}{2377\bibrangedash 2385}
       \range{pages}{9}
     \endentry
-    \entry{sutskever2014_seq2seq}{misc}{}{}
+    \entry{sutskever2014_seq2seq}{inproceedings}{}{}
       \name{author}{3}{}{%
         {{hash=8d569d1d5b8b5a7836017a98b430f959}{%
            family={Sutskever},
@@ -5724,7 +5879,7 @@
         {{hash=c636f146591d51579a8119b777394878}{%
            family={Le},
            familyi={L\bibinitperiod},
-           given={Quoc\bibnamedelima V.},
+           given={Quoc\bibnamedelima V},
            giveni={Q\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
       }
       \strng{namehash}{d60494862bf48faf76d925f3780a6aee}
@@ -5739,13 +5894,11 @@
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{eprintclass}{cs.LG}
-      \field{eprinttype}{arXiv}
-      \field{title}{Sequence to Sequence Learning with Neural Networks}
+      \field{booktitle}{Advances in neural information processing systems (NeurIPS)}
+      \field{title}{Sequence to sequence learning with neural networks}
       \field{year}{2014}
-      \verb{eprint}
-      \verb 1409.3215
-      \endverb
+      \field{pages}{3104\bibrangedash 3112}
+      \range{pages}{9}
     \endentry
     \entry{szegedy2015_googlenet}{inproceedings}{}{}
       \name{author}{9}{}{%
@@ -6400,6 +6553,50 @@
       \verb{doi}
       \verb 10.1109/CVPR.2001.990517
       \endverb
+    \endentry
+    \entry{voita2019_analyzing_heads}{misc}{}{}
+      \name{author}{5}{}{%
+        {{hash=973dc1e9a54af2863fc0897552758be3}{%
+           family={Voita},
+           familyi={V\bibinitperiod},
+           given={Elena},
+           giveni={E\bibinitperiod}}}%
+        {{hash=9039504923aa9cc9a01aa4ac6adb558a}{%
+           family={Talbot},
+           familyi={T\bibinitperiod},
+           given={Jean},
+           giveni={J\bibinitperiod}}}%
+        {{hash=86df39df6c551eab3c46134bc3ab8c89}{%
+           family={Moiseev},
+           familyi={M\bibinitperiod},
+           given={Fedor},
+           giveni={F\bibinitperiod}}}%
+        {{hash=dbb9225ae208939ef2c5eec31d16922a}{%
+           family={Sennrich},
+           familyi={S\bibinitperiod},
+           given={Rico},
+           giveni={R\bibinitperiod}}}%
+        {{hash=38c1cf91413109beb40bd024b86e0969}{%
+           family={Titov},
+           familyi={T\bibinitperiod},
+           given={Ivan},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{f17da4716bb35a740925ba1ba12791fd}
+      \strng{fullhash}{3c4c8e47e4a9b44d936dafdf90b16279}
+      \strng{fullhashraw}{3c4c8e47e4a9b44d936dafdf90b16279}
+      \strng{bibnamehash}{f17da4716bb35a740925ba1ba12791fd}
+      \strng{authorbibnamehash}{f17da4716bb35a740925ba1ba12791fd}
+      \strng{authornamehash}{f17da4716bb35a740925ba1ba12791fd}
+      \strng{authorfullhash}{3c4c8e47e4a9b44d936dafdf90b16279}
+      \strng{authorfullhashraw}{3c4c8e47e4a9b44d936dafdf90b16279}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{ACL}
+      \field{title}{Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned}
+      \field{year}{2019}
     \endentry
     \entry{wan2013_dropconnect}{inproceedings}{}{}
       \name{author}{5}{}{%

@@ -2760,6 +2760,25 @@
     <bcf:citekey order="362" intorder="1">xu2016_askattend</bcf:citekey>
     <bcf:citekey order="363" intorder="1">chan2016_listenattend</bcf:citekey>
     <bcf:citekey order="364" intorder="1">mei2016_listenwalk</bcf:citekey>
+    <bcf:citekey order="365" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="366" intorder="1">bahdanau2016_neural</bcf:citekey>
+    <bcf:citekey order="366" intorder="2">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="367" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="368" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="369" intorder="1">bahdanau2016_neural</bcf:citekey>
+    <bcf:citekey order="369" intorder="2">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="370" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="371" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="372" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="373" intorder="1">devlin2019_bert</bcf:citekey>
+    <bcf:citekey order="374" intorder="1">radford2019_language</bcf:citekey>
+    <bcf:citekey order="375" intorder="1">raffel2020_t5</bcf:citekey>
+    <bcf:citekey order="376" intorder="1">ke2021rethinking_position</bcf:citekey>
+    <bcf:citekey order="376" intorder="2">shaw2018selfrelative_pos</bcf:citekey>
+    <bcf:citekey order="377" intorder="1">kazemnejad2019_pencoding</bcf:citekey>
+    <bcf:citekey order="378" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="379" intorder="1">voita2019_analyzing_heads</bcf:citekey>
+    <bcf:citekey order="380" intorder="1">vaswani2017_attention</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

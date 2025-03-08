@@ -1,45 +1,34 @@
-	def bilinear_interpolate(img, x, y):
-		''' We are given a point (x,y) that might not be a pixel coordinate,
-		and we want to interpolate its feature value from the surrounding pixels.
-		'''
-		
-		# find the integer corners that surround (x, y)
-		x0 = torch.floor(x).type(torch.cuda.LongTensor)
-		x1 = x0 + 1
-		y0 = torch.floor(y).type(torch.cuda.LongTensor)
-		y1 = y0 + 1
-		
-		# clamp these coordinates to the image boundary to avoid indexing out of range
-		x0 = torch.clamp(x0, 0, img.shape[1] - 1)
-		x1 = torch.clamp(x1, 0, img.shape[1] - 1)
-		y0 = torch.clamp(y0, 0, img.shape[0] - 1)
-		y1 = torch.clamp(y1, 0, img.shape[0] - 1)
-		
-		# top-left, bottom-left, top-right, bottom-right corner values
-		Ia = img[y0, x0]
-		Ib = img[y1, x0]
-		Ic = img[y0, x1]
-		Id = img[y1, x1]
-		
-		'''
-		Next, we compute the weights for each corner. The idea:
-		- (x1 - x) -> how far we are from the right edge in the x direction
-		- (x - x0) -> how far we are from the left edge in the x direction
-		- (y1 - y) -> how far we are from the bottom edge in the y direction
-		- (y - y0) -> how far we are from the top edge in the y direction
-		
-		We multiply these "partial distances" and then normalize by the total "area"
-		( (x1 - x0)*(y1 - y0) ) so that wa+wb+wc+wd = 1.
-		'''
-		
-		norm_const = 1 / ((x1.type(torch.float32) - x0.type(torch.float32)) *
-		(y1.type(torch.float32) - y0.type(torch.float32)))
-		
-		wa = (x1.type(torch.float32) - x) * (y1.type(torch.float32) - y) * norm_const
-		wb = (x1.type(torch.float32) - x) * (y - y0.type(torch.float32)) * norm_const
-		wc = (x - x0.type(torch.float32)) * (y1.type(torch.float32) - y) * norm_const
-		wd = (x - x0.type(torch.float32)) * (y - y0.type(torch.float32)) * norm_const
-		
-		# final bilinear interpolation: weighted sum of the four corners
-		return torch.t(torch.t(Ia) * wa) + torch.t(torch.t(Ib) * wb) + \
-		torch.t(torch.t(Ic) * wc) + torch.t(torch.t(Id) * wd)
+	import torch
+	import torch.nn.functional as F
+	
+	class MultiHeadSelfAttention(torch.nn.Module):
+	def __init__(self, dim_model, num_heads):
+	super().__init__()
+	assert dim_model % num_heads == 0, "D_model must be divisible by num_heads"
+	self.num_heads = num_heads
+	self.d_head = dim_model // num_heads
+	
+	# Combine all heads' Q, K, V projections into a single large matrix
+	self.W_qkv = torch.nn.Linear(dim_model, dim_model * 3, bias=False)
+	self.W_o = torch.nn.Linear(dim_model, dim_model, bias=False)
+	
+	def forward(self, X):
+	batch_size, seq_len, dim_model = X.shape
+	
+	# Compute Q, K, V using a single matrix multiplication
+	QKV = self.W_qkv(X)  # Shape: [B, L, 3 * D_model]
+	Q, K, V = torch.chunk(QKV, 3, dim=-1)  # Split into three parts
+	
+	# Reshape for multi-head processing
+	Q = Q.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
+	K = K.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
+	V = V.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
+	
+	# Compute scaled dot-product attention
+	scores = torch.matmul(Q, K.transpose(-2, -1)) / self.d_head**0.5
+	weights = F.softmax(scores, dim=-1)
+	heads = torch.matmul(weights, V)  # Shape: [B, H, L, d_head]
+	
+	# Concatenate heads and apply final linear projection
+	heads = heads.transpose(1, 2).contiguous().view(batch_size, seq_len, dim_model)
+	return self.W_o(heads)  # Output shape: [B, L, D_model]

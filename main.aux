@@ -4345,134 +4345,290 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {17.5}{\ignorespaces Visualization of attention weights in the form of an attention map, offering insight into the seq2seq model's alignment process.}}{564}{figure.caption.1122}\protected@file@percent }
 \newlabel{fig:chapter17_attention_map}{{17.5}{564}{Visualization of attention weights in the form of an attention map, offering insight into the seq2seq model's alignment process}{figure.caption.1122}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Understanding Attention Patterns}{564}{section*.1123}\protected@file@percent }
-\BKM@entry{id=625,dest={73756273656374696F6E2E31372E322E33},srcline={162}}{5C3337365C3337375C303030415C303030705C303030705C3030306C5C303030795C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030745C3030306F5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
+\BKM@entry{id=625,dest={73656374696F6E2E31372E33},srcline={162}}{5C3337365C3337375C303030415C303030705C303030705C3030306C5C303030795C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030745C3030306F5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
 \abx@aux@cite{0}{xu2015_showattend}
 \abx@aux@segm{0}{0}{xu2015_showattend}
+\BKM@entry{id=626,dest={73756273656374696F6E2E31372E332E31},srcline={173}}{5C3337365C3337375C303030465C303030655C303030615C303030745C303030755C303030725C303030655C3030305C3034305C303030525C303030655C303030705C303030725C303030655C303030735C303030655C3030306E5C303030745C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030615C303030745C303030695C3030306F5C3030306E}
 \@writefile{toc}{\contentsline {subsubsection}{Why Attention Interpretability Matters}{565}{section*.1124}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.3}Applying Attention to Image Captioning}{565}{subsection.17.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {17.3}Applying Attention to Image Captioning}{565}{section.17.3}\protected@file@percent }
 \abx@aux@backref{384}{xu2015_showattend}{0}{565}{565}
 \@writefile{lof}{\contentsline {figure}{\numberline {17.6}{\ignorespaces Image captioning using RNNs and attention. A CNN extracts spatial feature vectors, and the decoder dynamically attends to different image regions at each timestep.}}{565}{figure.caption.1125}\protected@file@percent }
 \newlabel{fig:chapter17_image_captioning}{{17.6}{565}{Image captioning using RNNs and attention. A CNN extracts spatial feature vectors, and the decoder dynamically attends to different image regions at each timestep}{figure.caption.1125}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Feature Representation and Attention Computation}{565}{section*.1126}\protected@file@percent }
-\BKM@entry{id=626,dest={73756273656374696F6E2E31372E322E34},srcline={274}}{5C3337365C3337375C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030695C3030306E5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {subsubsection}{Generalizing to Any Timestep \( t \)}{567}{section*.1127}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Example: Captioning an Image of a Cat Sitting in Front of Trees}{567}{section*.1128}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.1}Feature Representation and Attention Computation}{565}{subsection.17.3.1}\protected@file@percent }
+\BKM@entry{id=627,dest={73756273656374696F6E2E31372E332E32},srcline={223}}{5C3337365C3337375C303030475C303030655C3030306E5C303030655C303030725C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C303030415C3030306E5C303030795C3030305C3034305C303030545C303030695C3030306D5C303030655C303030735C303030745C303030655C303030705C3030305C3034305C3030305C3034305C303030745C3030305C303430}
+\BKM@entry{id=628,dest={73756273656374696F6E2E31372E332E33},srcline={242}}{5C3337365C3337375C303030455C303030785C303030615C3030306D5C303030705C3030306C5C303030655C3030303A5C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C303030675C3030305C3034305C303030615C3030306E5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C303030615C3030305C3034305C303030435C303030615C30303074}
+\BKM@entry{id=629,dest={73756273656374696F6E2E31372E332E34},srcline={274}}{5C3337365C3337375C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030695C3030306E5C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.2}Generalizing to Any Timestep \( t \)}{567}{subsection.17.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.3}Example: Captioning an Image of a Cat}{567}{subsection.17.3.3}\protected@file@percent }
 \abx@aux@cite{0}{xu2015_showattend}
 \abx@aux@segm{0}{0}{xu2015_showattend}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.4}Visualizing Attention in Image Captioning}{568}{subsection.17.2.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17.7}{\ignorespaces Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights.}}{568}{figure.caption.1129}\protected@file@percent }
-\newlabel{fig:chapter17_attention_map}{{17.7}{568}{Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights}{figure.caption.1129}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Hard vs. Soft Attention}{568}{section*.1130}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.4}Visualizing Attention in Image Captioning}{568}{subsection.17.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.7}{\ignorespaces Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights.}}{568}{figure.caption.1126}\protected@file@percent }
+\newlabel{fig:chapter17_attention_map}{{17.7}{568}{Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights}{figure.caption.1126}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Hard vs. Soft Attention}{568}{section*.1127}\protected@file@percent }
 \abx@aux@backref{385}{xu2015_showattend}{0}{568}{568}
-\BKM@entry{id=627,dest={73756273656374696F6E2E31372E322E35},srcline={296}}{5C3337365C3337375C303030425C303030695C3030306F5C3030306C5C3030306F5C303030675C303030695C303030635C303030615C3030306C5C3030305C3034305C303030495C3030306E5C303030735C303030705C303030695C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030535C303030615C303030635C303030635C303030615C303030645C303030655C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030485C303030755C3030306D5C303030615C3030306E5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.5}Biological Inspiration: Saccades in Human Vision}{569}{subsection.17.2.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17.8}{\ignorespaces Illustration of the retina (left) and a graph of visual acuity across different retinal positions (right). The x-axis represents retinal position, while the y-axis represents acuity (ranging from 0 to 1).}}{569}{figure.caption.1131}\protected@file@percent }
-\newlabel{fig:chapter17_retina_acuity}{{17.8}{569}{Illustration of the retina (left) and a graph of visual acuity across different retinal positions (right). The x-axis represents retinal position, while the y-axis represents acuity (ranging from 0 to 1)}{figure.caption.1131}{}}
-\BKM@entry{id=628,dest={73756273656374696F6E2E31372E322E36},srcline={331}}{5C3337365C3337375C303030425C303030655C303030795C3030306F5C3030306E5C303030645C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C303030675C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C303030655C303030635C303030685C303030615C3030306E5C303030695C303030735C3030306D5C30303073}
+\BKM@entry{id=630,dest={73756273656374696F6E2E31372E332E35},srcline={296}}{5C3337365C3337375C303030425C303030695C3030306F5C3030306C5C3030306F5C303030675C303030695C303030635C303030615C3030306C5C3030305C3034305C303030495C3030306E5C303030735C303030705C303030695C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030535C303030615C303030635C303030635C303030615C303030645C303030655C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030485C303030755C3030306D5C303030615C3030306E5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.5}Biological Inspiration: Saccades in Human Vision}{569}{subsection.17.3.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.8}{\ignorespaces Illustration of the retina (left) and a graph of visual acuity across different retinal positions (right). The x-axis represents retinal position, while the y-axis represents acuity (ranging from 0 to 1).}}{569}{figure.caption.1128}\protected@file@percent }
+\newlabel{fig:chapter17_retina_acuity}{{17.8}{569}{Illustration of the retina (left) and a graph of visual acuity across different retinal positions (right). The x-axis represents retinal position, while the y-axis represents acuity (ranging from 0 to 1)}{figure.caption.1128}{}}
+\BKM@entry{id=631,dest={73756273656374696F6E2E31372E332E36},srcline={331}}{5C3337365C3337375C303030425C303030655C303030795C3030306F5C3030306E5C303030645C3030305C3034305C303030435C303030615C303030705C303030745C303030695C3030306F5C3030306E5C303030695C3030306E5C303030675C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C303030655C303030635C303030685C303030615C3030306E5C303030695C303030735C3030306D5C30303073}
 \abx@aux@cite{0}{xu2016_askattend}
 \abx@aux@segm{0}{0}{xu2016_askattend}
 \abx@aux@cite{0}{chan2016_listenattend}
 \abx@aux@segm{0}{0}{chan2016_listenattend}
 \abx@aux@cite{0}{mei2016_listenwalk}
 \abx@aux@segm{0}{0}{mei2016_listenwalk}
-\@writefile{lof}{\contentsline {figure}{\numberline {17.9}{\ignorespaces Illustration of saccades in human vision and their relation to attention-based image captioning.}}{570}{figure.caption.1132}\protected@file@percent }
-\newlabel{fig:chapter17_saccades_captioning}{{17.9}{570}{Illustration of saccades in human vision and their relation to attention-based image captioning}{figure.caption.1132}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.6}Beyond Image Captioning: Generalizing Attention Mechanisms}{570}{subsection.17.2.6}\protected@file@percent }
+\BKM@entry{id=632,dest={73656374696F6E2E31372E34},srcline={343}}{5C3337365C3337375C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.9}{\ignorespaces Illustration of saccades in human vision and their relation to attention-based image captioning.}}{570}{figure.caption.1129}\protected@file@percent }
+\newlabel{fig:chapter17_saccades_captioning}{{17.9}{570}{Illustration of saccades in human vision and their relation to attention-based image captioning}{figure.caption.1129}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.6}Beyond Captioning: Generalizing Attention Mechanisms}{570}{subsection.17.3.6}\protected@file@percent }
 \abx@aux@backref{386}{xu2016_askattend}{0}{570}{570}
 \abx@aux@backref{387}{chan2016_listenattend}{0}{570}{570}
 \abx@aux@backref{388}{mei2016_listenwalk}{0}{570}{570}
-\BKM@entry{id=629,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{571}{chapter.18}\protected@file@percent }
+\BKM@entry{id=633,dest={73756273656374696F6E2E31372E342E31},srcline={375}}{5C3337365C3337375C303030535C303030635C303030615C3030306C5C303030655C303030645C3030305C3034305C303030445C3030306F5C303030745C3030302D5C303030505C303030725C3030306F5C303030645C303030755C303030635C303030745C3030305C3034305C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {section}{\numberline {17.4}Attention Layer}{571}{section.17.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.1}Scaled Dot-Product Attention}{571}{subsection.17.4.1}\protected@file@percent }
+\newlabel{sec:chapter17_scaled_dot_product}{{17.4.1}{571}{Scaled Dot-Product Attention}{subsection.17.4.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why Scale by \(\sqrt  {D_Q}\)?}{572}{section*.1130}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scaling and Softmax Temperature}{572}{section*.1131}\protected@file@percent }
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\abx@aux@cite{0}{bahdanau2016_neural}
+\abx@aux@segm{0}{0}{bahdanau2016_neural}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\BKM@entry{id=634,dest={73756273656374696F6E2E31372E342E32},srcline={455}}{5C3337365C3337375C303030455C303030785C303030745C303030655C3030306E5C303030645C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C303030705C3030306C5C303030655C3030305C3034305C303030515C303030755C303030655C303030725C303030795C3030305C3034305C303030565C303030655C303030635C303030745C3030306F5C303030725C30303073}
+\@writefile{toc}{\contentsline {paragraph}{Why Dot Product?}{573}{section*.1132}\protected@file@percent }
+\abx@aux@backref{389}{vaswani2017_attention}{0}{573}{573}
+\abx@aux@backref{390}{bahdanau2016_neural}{0}{573}{573}
+\abx@aux@backref{391}{vaswani2017_attention}{0}{573}{573}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.2}Extending to Multiple Query Vectors}{573}{subsection.17.4.2}\protected@file@percent }
+\newlabel{sec:chapter17_multiple_queries}{{17.4.2}{573}{Extending to Multiple Query Vectors}{subsection.17.4.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Benefits of Multiple Queries:}{573}{section*.1133}\protected@file@percent }
+\BKM@entry{id=635,dest={73756273656374696F6E2E31372E342E33},srcline={483}}{5C3337365C3337375C303030495C3030306E5C303030745C303030725C3030306F5C303030645C303030755C303030635C303030695C3030306E5C303030675C3030305C3034305C3030304B5C303030655C303030795C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030565C303030615C3030306C5C303030755C303030655C3030305C3034305C303030565C303030655C303030635C303030745C3030306F5C303030725C30303073}
+\BKM@entry{id=636,dest={73756273656374696F6E2E31372E342E34},srcline={511}}{5C3337365C3337375C303030415C3030306E5C3030305C3034305C303030415C3030306E5C303030615C3030306C5C3030306F5C303030675C303030795C3030303A5C3030305C3034305C303030535C303030655C303030615C303030725C303030635C303030685C3030305C3034305C303030455C3030306E5C303030675C303030695C3030306E5C303030655C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.3}Introducing Key and Value Vectors}{574}{subsection.17.4.3}\protected@file@percent }
+\newlabel{sec:chapter17_keys_values}{{17.4.3}{574}{Introducing Key and Value Vectors}{subsection.17.4.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why Separate Keys and Values?}{574}{section*.1134}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.4}An Analogy: Search Engines}{574}{subsection.17.4.4}\protected@file@percent }
+\newlabel{sec:chapter17_search_engine_analogy}{{17.4.4}{574}{An Analogy: Search Engines}{subsection.17.4.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Empire State Building Example}{574}{section*.1135}\protected@file@percent }
+\BKM@entry{id=637,dest={73756273656374696F6E2E31372E342E35},srcline={552}}{5C3337365C3337375C303030425C303030725C303030695C303030645C303030675C303030695C3030306E5C303030675C3030305C3034305C303030745C3030306F5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030465C303030755C303030725C303030745C303030685C303030655C303030725C3030305C3034305C303030555C3030306E5C303030645C303030655C303030725C303030735C303030745C303030615C3030306E5C303030645C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {subsubsection}{Why This Separation Matters}{575}{section*.1136}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.5}Bridging to Visualization and Further Understanding}{575}{subsection.17.4.5}\protected@file@percent }
+\newlabel{sec:chapter17_attention_visualization}{{17.4.5}{575}{Bridging to Visualization and Further Understanding}{subsection.17.4.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Overview of the Attention Layer Steps}{575}{section*.1137}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.10}{\ignorespaces Visualization of the Attention Layer. The input vectors \(\textcolor [rgb]{0.267,0.447,0.769}{X}\) and query vectors \(\textcolor [rgb]{0.471,0.694,0.318}{Q}\) are transformed into key vectors \(\textcolor [rgb]{0.929,0.502,0.212}{K}\) and value vectors \(\textcolor [rgb]{0.769,0.369,0.800}{V}\). The similarity scores \(\textcolor [rgb]{0.236,0.236,0.236}{E}\), attention weights \(\textcolor [rgb]{0.236,0.236,0.236}{A}\), and final outputs \(\textcolor [rgb]{1.0,0.816,0.267}{Y}\) illustrate the attention process. Each column in \(\textcolor [rgb]{0.236,0.236,0.236}{E^T}\) and \(\textcolor [rgb]{0.236,0.236,0.236}{A^T}\) corresponds to a query vector, aligning visually with its associated output.}}{576}{figure.caption.1138}\protected@file@percent }
+\newlabel{fig:chapter17_attention_visualization}{{17.10}{576}{Visualization of the Attention Layer. The input vectors \(\textcolor [rgb]{0.267,0.447,0.769}{X}\) and query vectors \(\textcolor [rgb]{0.471,0.694,0.318}{Q}\) are transformed into key vectors \(\textcolor [rgb]{0.929,0.502,0.212}{K}\) and value vectors \(\textcolor [rgb]{0.769,0.369,0.800}{V}\). The similarity scores \(\textcolor [rgb]{0.236,0.236,0.236}{E}\), attention weights \(\textcolor [rgb]{0.236,0.236,0.236}{A}\), and final outputs \(\textcolor [rgb]{1.0,0.816,0.267}{Y}\) illustrate the attention process. Each column in \(\textcolor [rgb]{0.236,0.236,0.236}{E^T}\) and \(\textcolor [rgb]{0.236,0.236,0.236}{A^T}\) corresponds to a query vector, aligning visually with its associated output}{figure.caption.1138}{}}
+\BKM@entry{id=638,dest={73756273656374696F6E2E31372E342E36},srcline={666}}{5C3337365C3337375C303030545C3030306F5C303030775C303030615C303030725C303030645C303030735C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.4.6}Towards Self-Attention}{577}{subsection.17.4.6}\protected@file@percent }
+\abx@aux@backref{392}{vaswani2017_attention}{0}{577}{577}
+\BKM@entry{id=639,dest={73656374696F6E2E31372E35},srcline={682}}{5C3337365C3337375C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\BKM@entry{id=640,dest={73756273656374696F6E2E31372E352E31},srcline={689}}{5C3337365C3337375C3030304D5C303030615C303030745C303030685C303030655C3030306D5C303030615C303030745C303030695C303030635C303030615C3030306C5C3030305C3034305C303030465C3030306F5C303030725C3030306D5C303030755C3030306C5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030306F5C303030665C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\BKM@entry{id=641,dest={73756273656374696F6E2E31372E352E32},srcline={720}}{5C3337365C3337375C3030304E5C3030306F5C3030306E5C3030302D5C3030304C5C303030695C3030306E5C303030655C303030615C303030725C303030695C303030745C303030795C3030305C3034305C303030695C3030306E5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {section}{\numberline {17.5}Self-Attention}{578}{section.17.5}\protected@file@percent }
+\newlabel{sec:chapter17_self_attention}{{17.5}{578}{Self-Attention}{section.17.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.1}Mathematical Formulation of Self-Attention}{578}{subsection.17.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.11}{\ignorespaces Visualization of the Self-Attention Layer without positional encoding. The input vectors \(\textcolor [rgb]{0.267,0.447,0.769}{X}\) are transformed into \(\textcolor [rgb]{0.471,0.694,0.318}{Q}\), \(\textcolor [rgb]{0.929,0.502,0.212}{K}\), and \(\textcolor [rgb]{0.769,0.369,0.800}{V}\), and the final outputs are computed via weighted summation.}}{578}{figure.caption.1139}\protected@file@percent }
+\newlabel{fig:chapter17_self_attention}{{17.11}{578}{Visualization of the Self-Attention Layer without positional encoding. The input vectors \(\textcolor [rgb]{0.267,0.447,0.769}{X}\) are transformed into \(\textcolor [rgb]{0.471,0.694,0.318}{Q}\), \(\textcolor [rgb]{0.929,0.502,0.212}{K}\), and \(\textcolor [rgb]{0.769,0.369,0.800}{V}\), and the final outputs are computed via weighted summation}{figure.caption.1139}{}}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\abx@aux@cite{0}{bahdanau2016_neural}
+\abx@aux@segm{0}{0}{bahdanau2016_neural}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.2}Non-Linearity in Self-Attention}{579}{subsection.17.5.2}\protected@file@percent }
+\newlabel{sec:chapter17_non_linearity_self_attention}{{17.5.2}{579}{Non-Linearity in Self-Attention}{subsection.17.5.2}{}}
+\abx@aux@backref{393}{vaswani2017_attention}{0}{579}{579}
+\abx@aux@backref{394}{bahdanau2016_neural}{0}{579}{579}
+\abx@aux@backref{395}{vaswani2017_attention}{0}{579}{579}
+\abx@aux@backref{396}{vaswani2017_attention}{0}{579}{579}
+\BKM@entry{id=642,dest={73756273656374696F6E2E31372E352E33},srcline={743}}{5C3337365C3337375C303030505C303030655C303030725C3030306D5C303030755C303030745C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030455C303030715C303030755C303030695C303030765C303030615C303030725C303030695C303030615C3030306E5C303030635C303030655C3030305C3034305C303030695C3030306E5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\BKM@entry{id=643,dest={73756273656374696F6E2E31372E352E34},srcline={773}}{5C3337365C3337375C303030505C3030306F5C303030735C303030695C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030455C3030306E5C303030635C3030306F5C303030645C303030695C3030306E5C303030675C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.3}Permutation Equivariance in Self-Attention}{580}{subsection.17.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.12}{\ignorespaces Self-Attention is permutation equivariant: permuting the input vectors results in permuted outputs, demonstrating that the layer treats inputs as an unordered set.}}{580}{figure.caption.1140}\protected@file@percent }
+\newlabel{fig:chapter17_permutation_equivariance}{{17.12}{580}{Self-Attention is permutation equivariant: permuting the input vectors results in permuted outputs, demonstrating that the layer treats inputs as an unordered set}{figure.caption.1140}{}}
+\@writefile{toc}{\contentsline {subsubsection}{When is Permutation Equivariance a Problem?}{580}{section*.1141}\protected@file@percent }
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.4}Positional Encodings}{581}{subsection.17.5.4}\protected@file@percent }
+\newlabel{sec:chapter17_positional_encodings}{{17.5.4}{581}{Positional Encodings}{subsection.17.5.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why Not Use Simple Positional Indices?}{581}{section*.1142}\protected@file@percent }
+\newlabel{par:chapter17_why_not_positional_indices}{{17.5.4}{581}{Why Not Use Simple Positional Indices?}{section*.1142}{}}
+\abx@aux@backref{397}{vaswani2017_attention}{0}{581}{581}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {subsubsection}{Sinusoidal Positional Encoding: Definition and Properties}{582}{section*.1143}\protected@file@percent }
+\abx@aux@backref{398}{vaswani2017_attention}{0}{582}{582}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.13}{\ignorespaces Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences.}}{583}{figure.caption.1144}\protected@file@percent }
+\newlabel{fig:chapter17_positional_encoding}{{17.13}{583}{Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences}{figure.caption.1144}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Intuition Behind Sinusoidal Encoding}{583}{section*.1145}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why Use Both Sine and Cosine?}{583}{section*.1146}\protected@file@percent }
+\abx@aux@cite{0}{devlin2019_bert}
+\abx@aux@segm{0}{0}{devlin2019_bert}
+\abx@aux@cite{0}{radford2019_language}
+\abx@aux@segm{0}{0}{radford2019_language}
+\abx@aux@cite{0}{raffel2020_t5}
+\abx@aux@segm{0}{0}{raffel2020_t5}
+\@writefile{toc}{\contentsline {subsubsection}{Does Positional Information Vanish in Deeper Layers?}{584}{section*.1147}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Learned Positional Encodings: An Alternative Approach}{584}{section*.1148}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Definition}{584}{section*.1149}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples of Learned Positional Encodings}{584}{section*.1150}\protected@file@percent }
+\abx@aux@backref{399}{devlin2019_bert}{0}{584}{584}
+\abx@aux@backref{400}{radford2019_language}{0}{584}{584}
+\abx@aux@backref{401}{raffel2020_t5}{0}{584}{584}
+\@writefile{toc}{\contentsline {paragraph}{Advantages and Disadvantages of Learned Positional Embeddings}{584}{section*.1151}\protected@file@percent }
+\abx@aux@cite{0}{ke2021rethinking_position}
+\abx@aux@segm{0}{0}{ke2021rethinking_position}
+\abx@aux@cite{0}{shaw2018selfrelative_pos}
+\abx@aux@segm{0}{0}{shaw2018selfrelative_pos}
+\abx@aux@cite{0}{kazemnejad2019_pencoding}
+\abx@aux@segm{0}{0}{kazemnejad2019_pencoding}
+\abx@aux@backref{402}{ke2021rethinking_position}{0}{585}{585}
+\abx@aux@backref{403}{shaw2018selfrelative_pos}{0}{585}{585}
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{585}{section*.1152}\protected@file@percent }
+\abx@aux@backref{404}{kazemnejad2019_pencoding}{0}{585}{585}
+\BKM@entry{id=644,dest={73756273656374696F6E2E31372E352E35},srcline={947}}{5C3337365C3337375C3030304D5C303030615C303030735C3030306B5C303030655C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.5}Masked Self-Attention Layer}{586}{subsection.17.5.5}\protected@file@percent }
+\newlabel{sec:chapter17_masked_self_attention}{{17.5.5}{586}{Masked Self-Attention Layer}{subsection.17.5.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Why Do We Need Masking?}{586}{section*.1153}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Applying the Mask in Attention Computation}{586}{section*.1154}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{How Masking Affects the Attention Weights}{586}{section*.1155}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.14}{\ignorespaces Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs.}}{587}{figure.caption.1156}\protected@file@percent }
+\newlabel{fig:chapter17_masked_self_attention}{{17.14}{587}{Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs}{figure.caption.1156}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Example of Masking in a Short Sequence}{587}{section*.1157}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handling Batches with Variable-Length Sequences}{587}{section*.1158}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why is Padding Necessary?}{587}{section*.1159}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Moving on to Input Processing with Self-Attention}{588}{section*.1160}\protected@file@percent }
+\BKM@entry{id=645,dest={73756273656374696F6E2E31372E352E36},srcline={1052}}{5C3337365C3337375C303030505C303030725C3030306F5C303030635C303030655C303030735C303030735C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306E5C303030705C303030755C303030745C303030735C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.6}Processing Inputs with Self-Attention}{589}{subsection.17.5.6}\protected@file@percent }
+\newlabel{sec:chapter17_processing_inputs}{{17.5.6}{589}{Processing Inputs with Self-Attention}{subsection.17.5.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Parallelization in Self-Attention}{589}{section*.1161}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handling Batches of Sequences with Different Lengths}{590}{section*.1162}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why is Self-Attention Parallelizable?}{591}{section*.1163}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Computational Complexity of Self-Attention, RNNs, and Convolutions}{591}{section*.1164}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{When is Self-Attention Computationally Efficient?}{591}{section*.1165}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Conclusion: When to Use Self-Attention?}{592}{section*.1166}\protected@file@percent }
+\BKM@entry{id=646,dest={73756273656374696F6E2E31372E352E37},srcline={1216}}{5C3337365C3337375C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030485C303030655C303030615C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\abx@aux@cite{0}{voita2019_analyzing_heads}
+\abx@aux@segm{0}{0}{voita2019_analyzing_heads}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.7}Multi-Head Self-Attention Layer}{593}{subsection.17.5.7}\protected@file@percent }
+\newlabel{sec:chapter17_multihead_self_attention}{{17.5.7}{593}{Multi-Head Self-Attention Layer}{subsection.17.5.7}{}}
+\abx@aux@backref{405}{vaswani2017_attention}{0}{593}{593}
+\@writefile{toc}{\contentsline {subsubsection}{Motivation}{593}{section*.1167}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Analogy with Convolutional Kernels}{593}{section*.1168}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diversity in Attention Patterns}{593}{section*.1169}\protected@file@percent }
+\abx@aux@backref{406}{voita2019_analyzing_heads}{0}{593}{593}
+\@writefile{toc}{\contentsline {subsubsection}{How Multi-Head Attention Works}{593}{section*.1170}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Splitting Dimensions}{593}{section*.1171}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Computing Multi-Head Attention}{594}{section*.1172}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Concatenation and Output Projection}{594}{section*.1173}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.15}{\ignorespaces Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships.}}{594}{figure.caption.1174}\protected@file@percent }
+\newlabel{fig:chapter17_multihead_self_attention}{{17.15}{594}{Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships}{figure.caption.1174}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Optimized Implementation and Linear Projection}{595}{section*.1175}\protected@file@percent }
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {subsubsection}{PyTorch Implementation of Multi-Head Attention}{596}{section*.1176}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Stepping Stone to Transformers}{596}{section*.1177}\protected@file@percent }
+\abx@aux@backref{407}{vaswani2017_attention}{0}{596}{596}
+\BKM@entry{id=647,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{597}{chapter.18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@17}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@18}}
-\pgfsyspdfmark {pgfid78}{0}{52099153}
-\pgfsyspdfmark {pgfid77}{5966969}{45620378}
-\BKM@entry{id=630,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{572}{chapter.19}\protected@file@percent }
+\pgfsyspdfmark {pgfid81}{0}{52099153}
+\pgfsyspdfmark {pgfid80}{5966969}{45620378}
+\BKM@entry{id=648,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{598}{chapter.19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@18}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@19}}
-\pgfsyspdfmark {pgfid80}{0}{52099153}
-\pgfsyspdfmark {pgfid79}{5966969}{45620378}
-\BKM@entry{id=631,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{573}{chapter.20}\protected@file@percent }
+\pgfsyspdfmark {pgfid83}{0}{52099153}
+\pgfsyspdfmark {pgfid82}{5966969}{45620378}
+\BKM@entry{id=649,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{599}{chapter.20}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@19}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@20}}
-\pgfsyspdfmark {pgfid82}{0}{52099153}
-\pgfsyspdfmark {pgfid81}{5966969}{45620378}
-\BKM@entry{id=632,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{574}{chapter.21}\protected@file@percent }
+\pgfsyspdfmark {pgfid85}{0}{52099153}
+\pgfsyspdfmark {pgfid84}{5966969}{45620378}
+\BKM@entry{id=650,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{600}{chapter.21}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@20}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@21}}
-\pgfsyspdfmark {pgfid84}{0}{52099153}
-\pgfsyspdfmark {pgfid83}{5966969}{45620378}
-\BKM@entry{id=633,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{575}{chapter.22}\protected@file@percent }
+\pgfsyspdfmark {pgfid87}{0}{52099153}
+\pgfsyspdfmark {pgfid86}{5966969}{45620378}
+\BKM@entry{id=651,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{601}{chapter.22}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@21}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@22}}
-\pgfsyspdfmark {pgfid86}{0}{52099153}
-\pgfsyspdfmark {pgfid85}{5966969}{45620378}
-\BKM@entry{id=634,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{576}{chapter.23}\protected@file@percent }
+\pgfsyspdfmark {pgfid89}{0}{52099153}
+\pgfsyspdfmark {pgfid88}{5966969}{45620378}
+\BKM@entry{id=652,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{602}{chapter.23}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@22}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@23}}
-\pgfsyspdfmark {pgfid88}{0}{52099153}
-\pgfsyspdfmark {pgfid87}{5966969}{45620378}
-\BKM@entry{id=635,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{577}{chapter.24}\protected@file@percent }
+\pgfsyspdfmark {pgfid91}{0}{52099153}
+\pgfsyspdfmark {pgfid90}{5966969}{45620378}
+\BKM@entry{id=653,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{603}{chapter.24}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@23}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@24}}
-\pgfsyspdfmark {pgfid90}{0}{52099153}
-\pgfsyspdfmark {pgfid89}{5966969}{45620378}
-\BKM@entry{id=636,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030355C3030303A5C3030305C3034305C303030525C303030655C303030695C3030306E5C303030665C3030306F5C303030725C303030635C303030655C3030306D5C303030655C3030306E5C303030745C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{578}{chapter.25}\protected@file@percent }
+\pgfsyspdfmark {pgfid93}{0}{52099153}
+\pgfsyspdfmark {pgfid92}{5966969}{45620378}
+\BKM@entry{id=654,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030355C3030303A5C3030305C3034305C303030525C303030655C303030695C3030306E5C303030665C3030306F5C303030725C303030635C303030655C3030306D5C303030655C3030306E5C303030745C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{604}{chapter.25}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@24}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@25}}
-\pgfsyspdfmark {pgfid92}{0}{52099153}
-\pgfsyspdfmark {pgfid91}{5966969}{45620378}
-\BKM@entry{id=637,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{579}{chapter.26}\protected@file@percent }
+\pgfsyspdfmark {pgfid95}{0}{52099153}
+\pgfsyspdfmark {pgfid94}{5966969}{45620378}
+\BKM@entry{id=655,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{605}{chapter.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@25}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@26}}
-\pgfsyspdfmark {pgfid94}{0}{52099153}
-\pgfsyspdfmark {pgfid93}{5966969}{45620378}
-\BKM@entry{id=638,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{580}{chapter.27}\protected@file@percent }
+\pgfsyspdfmark {pgfid97}{0}{52099153}
+\pgfsyspdfmark {pgfid96}{5966969}{45620378}
+\BKM@entry{id=656,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{606}{chapter.27}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@26}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@27}}
-\pgfsyspdfmark {pgfid96}{0}{52099153}
-\pgfsyspdfmark {pgfid95}{5966969}{45620378}
-\BKM@entry{id=639,dest={636861707465722E3238},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {28}MAMBA: Multi-Agent Multi-Body Analysis}{581}{chapter.28}\protected@file@percent }
+\pgfsyspdfmark {pgfid99}{0}{52099153}
+\pgfsyspdfmark {pgfid98}{5966969}{45620378}
+\BKM@entry{id=657,dest={636861707465722E3238},srcline={4}}{5C3337365C3337375C3030304D5C303030415C3030304D5C303030425C303030415C3030303A5C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030415C303030675C303030655C3030306E5C303030745C3030305C3034305C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030425C3030306F5C303030645C303030795C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {28}MAMBA: Multi-Agent Multi-Body Analysis}{607}{chapter.28}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@27}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@28}}
-\pgfsyspdfmark {pgfid98}{0}{52099153}
-\pgfsyspdfmark {pgfid97}{5966969}{45620378}
-\pgfsyspdfmark {pgfid100}{0}{52099153}
-\pgfsyspdfmark {pgfid99}{5966969}{45620378}
+\pgfsyspdfmark {pgfid101}{0}{52099153}
+\pgfsyspdfmark {pgfid100}{5966969}{45620378}
+\pgfsyspdfmark {pgfid103}{0}{52099153}
+\pgfsyspdfmark {pgfid102}{5966969}{45620378}
 \ttl@finishall
-\abx@aux@read@bbl@mdfivesum{5254E4831AB366E4C3BF3BD79858C57A}
+\abx@aux@read@bbl@mdfivesum{2BAF72A6996B4A3C0CBEB3B03408FC47}
 \abx@aux@defaultrefcontext{0}{flamingo2022_fewshot}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{alexe2012_objectness}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{alger2019_data}{nty/global//global/global/global}
@@ -4545,6 +4701,8 @@
 \abx@aux@defaultrefcontext{0}{karpathy2015_visualsemantic}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{karpathy2015_visualizing_rnns}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{karpathy2014_largevideo}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{kazemnejad2019_pencoding}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{ke2021rethinking_position}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{sam2023_segmentation}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{klambauer2017_selu}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{krishnamoorthi2018_quantizing}{nty/global//global/global/global}
@@ -4576,6 +4734,7 @@
 \abx@aux@defaultrefcontext{0}{patnaik2020_roi_pool}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{poggio2017_theory}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{polyak1992_averagegradient}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{radford2019_language}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{clip2021_multimodal}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{radosavovic2020_regnet}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{raffel2020_t5}{nty/global//global/global/global}
@@ -4595,6 +4754,7 @@
 \abx@aux@defaultrefcontext{0}{sandler2018_mobilenetv2}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{santurkar2018_howdoesbatchnormhelp}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{blog2023_separable_convolutions}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{shaw2018selfrelative_pos}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{shi1997_normalizedcuts}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{simonyan2014_twostream}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{simonyan2014_vgg}{nty/global//global/global/global}
@@ -4617,6 +4777,7 @@
 \abx@aux@defaultrefcontext{0}{vaswani2017_attention}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{vinyals2015_showtell}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{viola2001_boosteddetection}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{voita2019_analyzing_heads}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{wan2013_dropconnect}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{wiki_Aliasing}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{williams1992_simple}{nty/global//global/global/global}
@@ -4640,5 +4801,5 @@
 \abx@aux@defaultrefcontext{0}{zitnick2014_edgeboxes}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2017_nas}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2018_learning}{nty/global//global/global/global}
-\xdef \mintedoldcachechecksum{\detokenize{C16A9A7F725C62A4367BF5775A53163F:32}}
-\gdef \@abspage@last{593}
+\xdef \mintedoldcachechecksum{\detokenize{97864AE1C5C796DC3A9FEB9DFAF0ACE3:35}}
+\gdef \@abspage@last{619}
