@@ -4448,187 +4448,291 @@
 \abx@aux@backref{395}{vaswani2017_attention}{0}{579}{579}
 \abx@aux@backref{396}{vaswani2017_attention}{0}{579}{579}
 \BKM@entry{id=642,dest={73756273656374696F6E2E31372E352E33},srcline={743}}{5C3337365C3337375C303030505C303030655C303030725C3030306D5C303030755C303030745C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030455C303030715C303030755C303030695C303030765C303030615C303030725C303030695C303030615C3030306E5C303030635C303030655C3030305C3034305C303030695C3030306E5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
-\BKM@entry{id=643,dest={73756273656374696F6E2E31372E352E34},srcline={773}}{5C3337365C3337375C303030505C3030306F5C303030735C303030695C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030455C3030306E5C303030635C3030306F5C303030645C303030695C3030306E5C303030675C30303073}
 \@writefile{toc}{\contentsline {subsection}{\numberline {17.5.3}Permutation Equivariance in Self-Attention}{580}{subsection.17.5.3}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {17.12}{\ignorespaces Self-Attention is permutation equivariant: permuting the input vectors results in permuted outputs, demonstrating that the layer treats inputs as an unordered set.}}{580}{figure.caption.1140}\protected@file@percent }
 \newlabel{fig:chapter17_permutation_equivariance}{{17.12}{580}{Self-Attention is permutation equivariant: permuting the input vectors results in permuted outputs, demonstrating that the layer treats inputs as an unordered set}{figure.caption.1140}{}}
 \@writefile{toc}{\contentsline {subsubsection}{When is Permutation Equivariance a Problem?}{580}{section*.1141}\protected@file@percent }
+\BKM@entry{id=643,dest={73756273656374696F6E2E31372E352E34},srcline={781}}{5C3337365C3337375C303030505C3030306F5C303030735C303030695C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030455C3030306E5C303030635C3030306F5C303030645C303030695C3030306E5C303030675C303030735C3030303A5C3030305C3034305C303030495C3030306E5C303030745C303030725C3030306F5C303030645C303030755C303030635C303030745C303030695C3030306F5C3030306E}
+\BKM@entry{id=644,dest={73756273656374696F6E2E31372E352E35},srcline={819}}{5C3337365C3337375C303030535C303030695C3030306E5C303030755C303030735C3030306F5C303030695C303030645C303030615C3030306C5C3030305C3034305C303030505C3030306F5C303030735C303030695C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030455C3030306E5C303030635C3030306F5C303030645C303030695C3030306E5C30303067}
 \abx@aux@cite{0}{vaswani2017_attention}
 \abx@aux@segm{0}{0}{vaswani2017_attention}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.4}Positional Encodings}{581}{subsection.17.5.4}\protected@file@percent }
-\newlabel{sec:chapter17_positional_encodings}{{17.5.4}{581}{Positional Encodings}{subsection.17.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.4}Positional Encodings: Introduction}{581}{subsection.17.5.4}\protected@file@percent }
+\newlabel{sec:chapter17_positional_encodings}{{17.5.4}{581}{Positional Encodings: Introduction}{subsection.17.5.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Why Not Use Simple Positional Indices?}{581}{section*.1142}\protected@file@percent }
 \newlabel{par:chapter17_why_not_positional_indices}{{17.5.4}{581}{Why Not Use Simple Positional Indices?}{section*.1142}{}}
+\newlabel{eq:simple_index}{{17.44}{581}{Why Not Use Simple Positional Indices?}{equation.17.44}{}}
+\newlabel{eq:normalized_index}{{17.45}{581}{Why Not Use Simple Positional Indices?}{equation.17.45}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.5}Sinusoidal Positional Encoding}{581}{subsection.17.5.5}\protected@file@percent }
+\newlabel{sec:chapter17_sinusoidal_encoding}{{17.5.5}{581}{Sinusoidal Positional Encoding}{subsection.17.5.5}{}}
 \abx@aux@backref{397}{vaswani2017_attention}{0}{581}{581}
-\abx@aux@cite{0}{vaswani2017_attention}
-\abx@aux@segm{0}{0}{vaswani2017_attention}
-\@writefile{toc}{\contentsline {subsubsection}{Sinusoidal Positional Encoding: Definition and Properties}{582}{section*.1143}\protected@file@percent }
-\abx@aux@backref{398}{vaswani2017_attention}{0}{582}{582}
-\@writefile{lof}{\contentsline {figure}{\numberline {17.13}{\ignorespaces Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences.}}{583}{figure.caption.1144}\protected@file@percent }
-\newlabel{fig:chapter17_positional_encoding}{{17.13}{583}{Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences}{figure.caption.1144}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Intuition Behind Sinusoidal Encoding}{583}{section*.1145}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Why Use Both Sine and Cosine?}{583}{section*.1146}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Mathematical Definition}{582}{section*.1143}\protected@file@percent }
+\newlabel{eq:chapter17_sinusoidal_encoding}{{17.46}{582}{Mathematical Definition}{equation.17.46}{}}
+\@writefile{toc}{\contentsline {paragraph}{Intuition: Multiple Frequencies for Local \& Global Positioning}{582}{section*.1144}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.13}{\ignorespaces Sinusoidal positional encoding visualization where \(t\) denotes the position index and \(d\) the embedding dimension. The encoding reflects multiple frequency scales, facilitating both local and global dependency modeling.}}{582}{figure.caption.1145}\protected@file@percent }
+\newlabel{fig:chapter17_positional_encoding}{{17.13}{582}{Sinusoidal positional encoding visualization where \(t\) denotes the position index and \(d\) the embedding dimension. The encoding reflects multiple frequency scales, facilitating both local and global dependency modeling}{figure.caption.1145}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Removing Ambiguity with Sine and Cosine}{582}{section*.1146}\protected@file@percent }
+\abx@aux@cite{0}{wiki_sine_cosine}
+\abx@aux@segm{0}{0}{wiki_sine_cosine}
+\abx@aux@cite{0}{wiki_sine_cosine}
+\abx@aux@segm{0}{0}{wiki_sine_cosine}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.14}{\ignorespaces Sine and cosine functions over one period. The phase shift of 90° ensures that when the sine value repeats, the cosine value differs, reducing the chance of ambiguity in positional encoding. Image source: \blx@tocontentsinit {0}\cite {wiki_sine_cosine}.}}{583}{figure.caption.1147}\protected@file@percent }
+\abx@aux@backref{399}{wiki_sine_cosine}{0}{583}{583}
+\newlabel{fig:sine_cosine_period}{{17.14}{583}{Sine and cosine functions over one period. The phase shift of 90° ensures that when the sine value repeats, the cosine value differs, reducing the chance of ambiguity in positional encoding. Image source: \cite {wiki_sine_cosine}}{figure.caption.1147}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Why Use \(\displaystyle 10000\) in the Denominator?}{583}{section*.1148}\protected@file@percent }
+\newlabel{par:why_10000_sin_encoding}{{17.5.5}{583}{Why Use \(\displaystyle 10000\) in the Denominator?}{section*.1148}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Frequency Variation and Intuition}{583}{section*.1149}\protected@file@percent }
+\newlabel{sec:chapter17_freq_var_intuition}{{17.5.5}{583}{Frequency Variation and Intuition}{section*.1149}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.15}{\ignorespaces Comparison of sinusoidal positional encodings for positions \(t=1\), \(t=2\), \(t=50\), and \(t=500\). The x-axis represents the embedding dimension index \(i\) (ranging from \(0\) to \(511\) for an embedding dimension \(d=512\)). The y-axis shows the corresponding encoded value for each \(p_t(i)\). For each \(i\), if \(i=2k\), then \(p_t(i) = \sin (\omega _k \cdot t)\), and if \(i=2k+1\), then \(p_t(i) = \cos (\omega _k \cdot t)\), where \(k = \frac  {i}{2}\) and \(\omega _k = \frac  {1}{10000^{2k/d}}\). Positions that are close (\(1\) and \(2\)) primarily differ in their high-frequency dimensions, while distant positions (\(50\) and \(500\)) show more pronounced differences in the lower-frequency dimensions in comparison.}}{584}{figure.caption.1150}\protected@file@percent }
+\newlabel{fig:chapter17_positional_encoding_comparison_no_t1000}{{17.15}{584}{Comparison of sinusoidal positional encodings for positions \(t=1\), \(t=2\), \(t=50\), and \(t=500\). The x-axis represents the embedding dimension index \(i\) (ranging from \(0\) to \(511\) for an embedding dimension \(d=512\)). The y-axis shows the corresponding encoded value for each \(p_t(i)\). For each \(i\), if \(i=2k\), then \(p_t(i) = \sin (\omega _k \cdot t)\), and if \(i=2k+1\), then \(p_t(i) = \cos (\omega _k \cdot t)\), where \(k = \frac {i}{2}\) and \(\omega _k = \frac {1}{10000^{2k/d}}\). Positions that are close (\(1\) and \(2\)) primarily differ in their high-frequency dimensions, while distant positions (\(50\) and \(500\)) show more pronounced differences in the lower-frequency dimensions in comparison}{figure.caption.1150}{}}
+\@writefile{toc}{\contentsline {paragraph}{Concrete Example:}{585}{section*.1151}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{How Relative Position Awareness Emerges}{585}{section*.1152}\protected@file@percent }
+\newlabel{sec:chapter17_relpos_sinusoids}{{17.5.5}{585}{How Relative Position Awareness Emerges}{section*.1152}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why This Matters for Relative Positioning}{585}{section*.1153}\protected@file@percent }
+\BKM@entry{id=645,dest={73756273656374696F6E2E31372E352E36},srcline={1031}}{5C3337365C3337375C3030304C5C303030655C303030615C303030725C3030306E5C303030655C303030645C3030305C3034305C303030505C3030306F5C303030735C303030695C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030455C3030306E5C303030635C3030306F5C303030645C303030695C3030306E5C303030675C303030735C3030303A5C3030305C3034305C303030415C3030306E5C3030305C3034305C303030415C3030306C5C303030745C303030655C303030725C3030306E5C303030615C303030745C303030695C303030765C303030655C3030305C3034305C303030415C303030705C303030705C303030725C3030306F5C303030615C303030635C30303068}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.16}{\ignorespaces Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences.}}{586}{figure.caption.1154}\protected@file@percent }
+\newlabel{fig:chapter17_positional_encoding}{{17.16}{586}{Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences}{figure.caption.1154}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Does Positional Information Vanish in Deeper Layers?}{586}{section*.1155}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why Sinusoidal Encoding Solves Previous Limitations}{586}{section*.1156}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Conclusion on Sinusoidal Positional Encoding}{586}{section*.1157}\protected@file@percent }
 \abx@aux@cite{0}{devlin2019_bert}
 \abx@aux@segm{0}{0}{devlin2019_bert}
 \abx@aux@cite{0}{radford2019_language}
 \abx@aux@segm{0}{0}{radford2019_language}
 \abx@aux@cite{0}{raffel2020_t5}
 \abx@aux@segm{0}{0}{raffel2020_t5}
-\@writefile{toc}{\contentsline {subsubsection}{Does Positional Information Vanish in Deeper Layers?}{584}{section*.1147}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Learned Positional Encodings: An Alternative Approach}{584}{section*.1148}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Definition}{584}{section*.1149}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Examples of Learned Positional Encodings}{584}{section*.1150}\protected@file@percent }
-\abx@aux@backref{399}{devlin2019_bert}{0}{584}{584}
-\abx@aux@backref{400}{radford2019_language}{0}{584}{584}
-\abx@aux@backref{401}{raffel2020_t5}{0}{584}{584}
-\@writefile{toc}{\contentsline {paragraph}{Advantages and Disadvantages of Learned Positional Embeddings}{584}{section*.1151}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.6}Learned Positional Encodings: An Alternative Approach}{587}{subsection.17.5.6}\protected@file@percent }
+\newlabel{sec:chapter17_learned_pe}{{17.5.6}{587}{Learned Positional Encodings: An Alternative Approach}{subsection.17.5.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Definition and Mechanics}{587}{section*.1158}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples of Learned Positional Encodings}{587}{section*.1159}\protected@file@percent }
+\abx@aux@backref{400}{devlin2019_bert}{0}{587}{587}
+\abx@aux@backref{401}{radford2019_language}{0}{587}{587}
+\abx@aux@backref{402}{raffel2020_t5}{0}{587}{587}
+\@writefile{toc}{\contentsline {subparagraph}{Highlighting Crucial Positions or Transitions}{587}{subparagraph*.1160}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why Task-Specific Optimization of Position is Useful}{587}{section*.1161}\protected@file@percent }
 \abx@aux@cite{0}{ke2021rethinking_position}
 \abx@aux@segm{0}{0}{ke2021rethinking_position}
 \abx@aux@cite{0}{shaw2018selfrelative_pos}
 \abx@aux@segm{0}{0}{shaw2018selfrelative_pos}
+\@writefile{toc}{\contentsline {subsubsection}{Pros \& Cons of Learned Positional Embeddings}{588}{section*.1162}\protected@file@percent }
+\abx@aux@backref{403}{ke2021rethinking_position}{0}{588}{588}
+\abx@aux@backref{404}{shaw2018selfrelative_pos}{0}{588}{588}
 \abx@aux@cite{0}{kazemnejad2019_pencoding}
 \abx@aux@segm{0}{0}{kazemnejad2019_pencoding}
-\abx@aux@backref{402}{ke2021rethinking_position}{0}{585}{585}
-\abx@aux@backref{403}{shaw2018selfrelative_pos}{0}{585}{585}
-\@writefile{toc}{\contentsline {paragraph}{Conclusion}{585}{section*.1152}\protected@file@percent }
-\abx@aux@backref{404}{kazemnejad2019_pencoding}{0}{585}{585}
-\BKM@entry{id=644,dest={73756273656374696F6E2E31372E352E35},srcline={947}}{5C3337365C3337375C3030304D5C303030615C303030735C3030306B5C303030655C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.5}Masked Self-Attention Layer}{586}{subsection.17.5.5}\protected@file@percent }
-\newlabel{sec:chapter17_masked_self_attention}{{17.5.5}{586}{Masked Self-Attention Layer}{subsection.17.5.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Why Do We Need Masking?}{586}{section*.1153}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Applying the Mask in Attention Computation}{586}{section*.1154}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{How Masking Affects the Attention Weights}{586}{section*.1155}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17.14}{\ignorespaces Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs.}}{587}{figure.caption.1156}\protected@file@percent }
-\newlabel{fig:chapter17_masked_self_attention}{{17.14}{587}{Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs}{figure.caption.1156}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Example of Masking in a Short Sequence}{587}{section*.1157}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Handling Batches with Variable-Length Sequences}{587}{section*.1158}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Why is Padding Necessary?}{587}{section*.1159}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Moving on to Input Processing with Self-Attention}{588}{section*.1160}\protected@file@percent }
-\BKM@entry{id=645,dest={73756273656374696F6E2E31372E352E36},srcline={1052}}{5C3337365C3337375C303030505C303030725C3030306F5C303030635C303030655C303030735C303030735C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306E5C303030705C303030755C303030745C303030735C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.6}Processing Inputs with Self-Attention}{589}{subsection.17.5.6}\protected@file@percent }
-\newlabel{sec:chapter17_processing_inputs}{{17.5.6}{589}{Processing Inputs with Self-Attention}{subsection.17.5.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Parallelization in Self-Attention}{589}{section*.1161}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Handling Batches of Sequences with Different Lengths}{590}{section*.1162}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Why is Self-Attention Parallelizable?}{591}{section*.1163}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Computational Complexity of Self-Attention, RNNs, and Convolutions}{591}{section*.1164}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{When is Self-Attention Computationally Efficient?}{591}{section*.1165}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Conclusion: When to Use Self-Attention?}{592}{section*.1166}\protected@file@percent }
-\BKM@entry{id=646,dest={73756273656374696F6E2E31372E352E37},srcline={1216}}{5C3337365C3337375C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030485C303030655C303030615C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
+\@writefile{toc}{\contentsline {paragraph}{Conclusion on Learned Positional Embeddings}{589}{section*.1163}\protected@file@percent }
+\abx@aux@backref{405}{kazemnejad2019_pencoding}{0}{589}{589}
+\BKM@entry{id=646,dest={73756273656374696F6E2E31372E352E37},srcline={1111}}{5C3337365C3337375C3030304D5C303030615C303030735C3030306B5C303030655C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.7}Masked Self-Attention Layer}{590}{subsection.17.5.7}\protected@file@percent }
+\newlabel{sec:chapter17_masked_self_attention}{{17.5.7}{590}{Masked Self-Attention Layer}{subsection.17.5.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Why Do We Need Masking?}{590}{section*.1164}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Applying the Mask in Attention Computation}{590}{section*.1165}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{How Masking Affects the Attention Weights}{590}{section*.1166}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.17}{\ignorespaces Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs.}}{591}{figure.caption.1167}\protected@file@percent }
+\newlabel{fig:chapter17_masked_self_attention}{{17.17}{591}{Masked Self-Attention Layer. The mask prevents tokens from attending to future positions, ensuring that each prediction depends only on past inputs}{figure.caption.1167}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Example of Masking in a Short Sequence}{591}{section*.1168}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handling Batches with Variable-Length Sequences}{591}{section*.1169}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why is Padding Necessary?}{591}{section*.1170}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Moving on to Input Processing with Self-Attention}{592}{section*.1171}\protected@file@percent }
+\BKM@entry{id=647,dest={73756273656374696F6E2E31372E352E38},srcline={1216}}{5C3337365C3337375C303030505C303030725C3030306F5C303030635C303030655C303030735C303030735C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306E5C303030705C303030755C303030745C303030735C3030305C3034305C303030775C303030695C303030745C303030685C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.8}Processing Inputs with Self-Attention}{593}{subsection.17.5.8}\protected@file@percent }
+\newlabel{sec:chapter17_processing_inputs}{{17.5.8}{593}{Processing Inputs with Self-Attention}{subsection.17.5.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Parallelization in Self-Attention}{593}{section*.1172}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handling Batches of Sequences with Different Lengths}{594}{section*.1173}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why is Self-Attention Parallelizable?}{595}{section*.1174}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Computational Complexity of Self-Attention, RNNs, and Convolutions}{595}{section*.1175}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{When is Self-Attention Computationally Efficient?}{595}{section*.1176}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Conclusion: When to Use Self-Attention?}{596}{section*.1177}\protected@file@percent }
+\BKM@entry{id=648,dest={73756273656374696F6E2E31372E352E39},srcline={1380}}{5C3337365C3337375C3030304D5C303030755C3030306C5C303030745C303030695C3030302D5C303030485C303030655C303030615C303030645C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304C5C303030615C303030795C303030655C30303072}
 \abx@aux@cite{0}{vaswani2017_attention}
 \abx@aux@segm{0}{0}{vaswani2017_attention}
 \abx@aux@cite{0}{voita2019_analyzing_heads}
 \abx@aux@segm{0}{0}{voita2019_analyzing_heads}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.7}Multi-Head Self-Attention Layer}{593}{subsection.17.5.7}\protected@file@percent }
-\newlabel{sec:chapter17_multihead_self_attention}{{17.5.7}{593}{Multi-Head Self-Attention Layer}{subsection.17.5.7}{}}
-\abx@aux@backref{405}{vaswani2017_attention}{0}{593}{593}
-\@writefile{toc}{\contentsline {subsubsection}{Motivation}{593}{section*.1167}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Analogy with Convolutional Kernels}{593}{section*.1168}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Diversity in Attention Patterns}{593}{section*.1169}\protected@file@percent }
-\abx@aux@backref{406}{voita2019_analyzing_heads}{0}{593}{593}
-\@writefile{toc}{\contentsline {subsubsection}{How Multi-Head Attention Works}{593}{section*.1170}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Splitting Dimensions}{593}{section*.1171}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Computing Multi-Head Attention}{594}{section*.1172}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Concatenation and Output Projection}{594}{section*.1173}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17.15}{\ignorespaces Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships.}}{594}{figure.caption.1174}\protected@file@percent }
-\newlabel{fig:chapter17_multihead_self_attention}{{17.15}{594}{Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships}{figure.caption.1174}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Optimized Implementation and Linear Projection}{595}{section*.1175}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.9}Multi-Head Self-Attention Layer}{597}{subsection.17.5.9}\protected@file@percent }
+\newlabel{sec:chapter17_multihead_self_attention}{{17.5.9}{597}{Multi-Head Self-Attention Layer}{subsection.17.5.9}{}}
+\abx@aux@backref{406}{vaswani2017_attention}{0}{597}{597}
+\@writefile{toc}{\contentsline {subsubsection}{Motivation}{597}{section*.1178}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Analogy with Convolutional Kernels}{597}{section*.1179}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diversity in Attention Patterns}{597}{section*.1180}\protected@file@percent }
+\abx@aux@backref{407}{voita2019_analyzing_heads}{0}{597}{597}
+\@writefile{toc}{\contentsline {subsubsection}{How Multi-Head Attention Works}{597}{section*.1181}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Splitting Dimensions}{597}{section*.1182}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Computing Multi-Head Attention}{598}{section*.1183}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Concatenation and Output Projection}{598}{section*.1184}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.18}{\ignorespaces Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships.}}{598}{figure.caption.1185}\protected@file@percent }
+\newlabel{fig:chapter17_multihead_self_attention}{{17.18}{598}{Multi-Head Self-Attention. Each head learns a different attention pattern, capturing diverse sequence-level relationships}{figure.caption.1185}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Optimized Implementation and Linear Projection}{599}{section*.1186}\protected@file@percent }
 \abx@aux@cite{0}{vaswani2017_attention}
 \abx@aux@segm{0}{0}{vaswani2017_attention}
-\@writefile{toc}{\contentsline {subsubsection}{PyTorch Implementation of Multi-Head Attention}{596}{section*.1176}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Stepping Stone to Transformers}{596}{section*.1177}\protected@file@percent }
-\abx@aux@backref{407}{vaswani2017_attention}{0}{596}{596}
-\BKM@entry{id=647,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{597}{chapter.18}\protected@file@percent }
+\BKM@entry{id=649,dest={73756273656374696F6E2E31372E352E3130},srcline={1519}}{5C3337365C3337375C303030535C303030655C3030306C5C303030665C3030302D5C303030415C303030745C303030745C303030655C3030306E5C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030415C303030705C303030705C3030306C5C303030695C303030635C303030615C303030745C303030695C3030306F5C3030306E5C30303073}
+\@writefile{toc}{\contentsline {subsubsection}{PyTorch Implementation of Multi-Head Attention}{600}{section*.1187}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Stepping Stone to Transformers and Vision Applications}{600}{section*.1188}\protected@file@percent }
+\abx@aux@backref{408}{vaswani2017_attention}{0}{600}{600}
+\abx@aux@cite{0}{zhang2019_self_attention_gan}
+\abx@aux@segm{0}{0}{zhang2019_self_attention_gan}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.5.10}Self-Attention for Vision Applications}{601}{subsection.17.5.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Generating Queries, Keys, and Values}{601}{section*.1189}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reshaping for Attention Computation}{601}{section*.1190}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Computing Attention Scores}{601}{section*.1191}\protected@file@percent }
+\abx@aux@backref{409}{zhang2019_self_attention_gan}{0}{602}{602}
+\@writefile{toc}{\contentsline {paragraph}{Normalizing Attention Weights}{602}{section*.1192}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Computing the Attention Output}{602}{section*.1193}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reshaping, Final Projection, and Residual Connection}{602}{section*.1194}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.19}{\ignorespaces Self-Attention Module integrated within a CNN framework. The figure illustrates the generation of \(Q\), \(K\), \(V\), computation of attention, and the final residual connection.}}{603}{figure.caption.1195}\protected@file@percent }
+\newlabel{fig:chapter17_self_attention_module}{{17.19}{603}{Self-Attention Module integrated within a CNN framework. The figure illustrates the generation of \(Q\), \(K\), \(V\), computation of attention, and the final residual connection}{figure.caption.1195}{}}
+\@writefile{toc}{\contentsline {paragraph}{Summary}{603}{section*.1196}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bridging Towards Transformers}{603}{section*.1197}\protected@file@percent }
+\BKM@entry{id=650,dest={73656374696F6E2E31372E36},srcline={1625}}{5C3337365C3337375C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C30303072}
+\BKM@entry{id=651,dest={73756273656374696F6E2E31372E362E31},srcline={1626}}{5C3337365C3337375C3030304D5C3030306F5C303030745C303030695C303030765C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030495C3030306E5C303030745C303030725C3030306F5C303030645C303030755C303030635C303030745C303030695C3030306F5C3030306E}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {section}{\numberline {17.6}Transformer}{604}{section.17.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.6.1}Motivation and Introduction}{604}{subsection.17.6.1}\protected@file@percent }
+\newlabel{sec:chapter17_transformer_motivation}{{17.6.1}{604}{Motivation and Introduction}{subsection.17.6.1}{}}
+\abx@aux@backref{410}{vaswani2017_attention}{0}{604}{604}
+\@writefile{toc}{\contentsline {subsubsection}{Three Ways of Processing Sequences}{604}{section*.1198}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Recurrent Neural Networks (RNNs)}{604}{section*.1199}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{1D Convolution for Sequence Processing}{604}{section*.1200}\protected@file@percent }
+\BKM@entry{id=652,dest={73756273656374696F6E2E31372E362E32},srcline={1678}}{5C3337365C3337375C303030575C303030685C303030795C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C3030303F}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{toc}{\contentsline {paragraph}{Self-Attention Mechanism}{605}{section*.1201}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.20}{\ignorespaces Comparison of sequence processing methods: RNNs, 1D Convolutions, and Self-Attention. Each approach has distinct advantages and drawbacks concerning long-range dependencies, parallelization, and computational efficiency.}}{605}{figure.caption.1202}\protected@file@percent }
+\newlabel{fig:chapter17_sequence_processing_comparison}{{17.20}{605}{Comparison of sequence processing methods: RNNs, 1D Convolutions, and Self-Attention. Each approach has distinct advantages and drawbacks concerning long-range dependencies, parallelization, and computational efficiency}{figure.caption.1202}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.6.2}Why the Transformer?}{605}{subsection.17.6.2}\protected@file@percent }
+\abx@aux@backref{411}{vaswani2017_attention}{0}{605}{605}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\BKM@entry{id=653,dest={73756273656374696F6E2E31372E362E33},srcline={1695}}{5C3337365C3337375C303030535C303030655C303030715C303030325C303030535C303030655C303030715C3030305C3034305C3030304F5C303030725C303030695C303030675C303030695C3030306E5C303030615C3030306C5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C3030305C3034305C303030575C3030306F5C303030725C3030306B5C303030665C3030306C5C3030306F5C30303077}
+\abx@aux@cite{0}{vaswani2017_attention}
+\abx@aux@segm{0}{0}{vaswani2017_attention}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.21}{\ignorespaces The original transformer architecture adapted from \blx@tocontentsinit {0}\cite {vaswani2017_attention}.}}{606}{figure.caption.1203}\protected@file@percent }
+\abx@aux@backref{413}{vaswani2017_attention}{0}{606}{606}
+\newlabel{fig:chapter17_transformer_architecture}{{17.21}{606}{The original transformer architecture adapted from \cite {vaswani2017_attention}}{figure.caption.1203}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.6.3}Seq2Seq Original Transformer Workflow}{607}{subsection.17.6.3}\protected@file@percent }
+\newlabel{sec:chapter17_seq2seq_workflow}{{17.6.3}{607}{Seq2Seq Original Transformer Workflow}{subsection.17.6.3}{}}
+\abx@aux@backref{414}{vaswani2017_attention}{0}{607}{607}
+\abx@aux@cite{0}{jalammar2018_illustrated}
+\abx@aux@segm{0}{0}{jalammar2018_illustrated}
+\abx@aux@cite{0}{jalammar2018_illustrated}
+\abx@aux@segm{0}{0}{jalammar2018_illustrated}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.22}{\ignorespaces  Illustration of the final step in 'Machine Translation' task using the encoder-decoder transformer. The input French sentence is fully encoded, and the decoder autoregressively generates the English translation token by token. Each generated token is embedded and combined with positional encoding before being fed into the next decoder step. This process repeats until an EOS token is reached, signaling completion. For the full animation of the decoding process, refer to \blx@tocontentsinit {0}\cite {jalammar2018_illustrated}. }}{608}{figure.caption.1204}\protected@file@percent }
+\abx@aux@backref{416}{jalammar2018_illustrated}{0}{608}{608}
+\newlabel{fig:chapter17_transformer_decoding_process}{{17.22}{608}{Illustration of the final step in 'Machine Translation' task using the encoder-decoder transformer. The input French sentence is fully encoded, and the decoder autoregressively generates the English translation token by token. Each generated token is embedded and combined with positional encoding before being fed into the next decoder step. This process repeats until an EOS token is reached, signaling completion. For the full animation of the decoding process, refer to \cite {jalammar2018_illustrated}}{figure.caption.1204}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformer Encoder Block: Structure and Reasoning}{609}{section*.1205}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Transformer Decoder Block: Structure and Reasoning}{610}{section*.1206}\protected@file@percent }
+\BKM@entry{id=654,dest={73756273656374696F6E2E31372E362E34},srcline={1908}}{5C3337365C3337375C303030545C303030685C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C303030725C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C3030305C3034305C303030425C3030306C5C3030306F5C303030635C3030306B}
+\@writefile{toc}{\contentsline {subsubsection}{Transitioning to Unified Transformer Blocks}{611}{section*.1207}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.6.4}The Modern Transformer Block}{612}{subsection.17.6.4}\protected@file@percent }
+\newlabel{sec:chapter17_modern_transformer_block}{{17.6.4}{612}{The Modern Transformer Block}{subsection.17.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.23}{\ignorespaces Modern Transformer Block: The input is a set of vectors \(X\), and the output is a refined set of vectors \(Y\). Self-attention is the only component enabling interaction between vectors. All other operations (layer normalization and MLP) are applied independently to each vector. This design ensures high scalability and parallelizability.}}{612}{figure.caption.1208}\protected@file@percent }
+\newlabel{fig:chapter17_modern_transformer_block}{{17.23}{612}{Modern Transformer Block: The input is a set of vectors \(X\), and the output is a refined set of vectors \(Y\). Self-attention is the only component enabling interaction between vectors. All other operations (layer normalization and MLP) are applied independently to each vector. This design ensures high scalability and parallelizability}{figure.caption.1208}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Structure of the Modern Transformer Block}{612}{section*.1209}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{PyTorch Implementation}{613}{section*.1210}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Why the Modern Transformer Block?}{614}{section*.1211}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.24}{\ignorespaces The Transformer architecture revolutionized NLP by introducing a unified block structure. Models like BERT exemplify how stacking multiple Transformer blocks facilitates transfer learning across a wide range of language understanding tasks.}}{614}{figure.caption.1212}\protected@file@percent }
+\newlabel{fig:chapter17_transformer_transfer_learning}{{17.24}{614}{The Transformer architecture revolutionized NLP by introducing a unified block structure. Models like BERT exemplify how stacking multiple Transformer blocks facilitates transfer learning across a wide range of language understanding tasks}{figure.caption.1212}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Key Benefits of the Modern Transformer Block}{614}{section*.1213}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17.25}{\ignorespaces Overview of modern transformer architectures, their training data, resources, and computational costs. For instance, Gopher (Rae et al., 2021) reportedly cost around \$3,768,320 to train on Google Cloud (evaluation pricing).}}{615}{figure.caption.1214}\protected@file@percent }
+\newlabel{fig:chapter17_transformer_architectures}{{17.25}{615}{Overview of modern transformer architectures, their training data, resources, and computational costs. For instance, Gopher (Rae et al., 2021) reportedly cost around \$3,768,320 to train on Google Cloud (evaluation pricing)}{figure.caption.1214}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17.26}{\ignorespaces GPT-3 demonstrates style transfer by emulating various literary styles—including an Ernest Hemingway-style parody of the Harry Potter series—showcasing complex, stylistic language generation.}}{615}{figure.caption.1215}\protected@file@percent }
+\newlabel{fig:chapter17_gpt3_style_transfer}{{17.26}{615}{GPT-3 demonstrates style transfer by emulating various literary styles—including an Ernest Hemingway-style parody of the Harry Potter series—showcasing complex, stylistic language generation}{figure.caption.1215}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Further Reading and Resources}{616}{section*.1216}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Bridging Towards Vision Transformers}{616}{section*.1217}\protected@file@percent }
+\BKM@entry{id=655,dest={636861707465722E3138},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030385C3030303A5C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{617}{chapter.18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@17}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@18}}
-\pgfsyspdfmark {pgfid81}{0}{52099153}
-\pgfsyspdfmark {pgfid80}{5966969}{45620378}
-\BKM@entry{id=648,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{598}{chapter.19}\protected@file@percent }
+\pgfsyspdfmark {pgfid82}{0}{52099153}
+\pgfsyspdfmark {pgfid81}{5966969}{45620378}
+\BKM@entry{id=656,dest={636861707465722E3139},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030315C303030395C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{618}{chapter.19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@18}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@19}}
-\pgfsyspdfmark {pgfid83}{0}{52099153}
-\pgfsyspdfmark {pgfid82}{5966969}{45620378}
-\BKM@entry{id=649,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{599}{chapter.20}\protected@file@percent }
+\pgfsyspdfmark {pgfid84}{0}{52099153}
+\pgfsyspdfmark {pgfid83}{5966969}{45620378}
+\BKM@entry{id=657,dest={636861707465722E3230},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030305C3030303A5C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C303030765C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030495C30303049}
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{619}{chapter.20}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@19}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@20}}
-\pgfsyspdfmark {pgfid85}{0}{52099153}
-\pgfsyspdfmark {pgfid84}{5966969}{45620378}
-\BKM@entry{id=650,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{600}{chapter.21}\protected@file@percent }
+\pgfsyspdfmark {pgfid86}{0}{52099153}
+\pgfsyspdfmark {pgfid85}{5966969}{45620378}
+\BKM@entry{id=658,dest={636861707465722E3231},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030315C3030303A5C3030305C3034305C303030565C303030695C303030735C303030755C303030615C3030306C5C303030695C3030307A5C303030695C3030306E5C303030675C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C3030305C3034365C3030305C3034305C303030475C303030655C3030306E5C303030655C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030495C3030306D5C303030615C303030675C303030655C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{620}{chapter.21}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@20}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@21}}
-\pgfsyspdfmark {pgfid87}{0}{52099153}
-\pgfsyspdfmark {pgfid86}{5966969}{45620378}
-\BKM@entry{id=651,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{601}{chapter.22}\protected@file@percent }
+\pgfsyspdfmark {pgfid88}{0}{52099153}
+\pgfsyspdfmark {pgfid87}{5966969}{45620378}
+\BKM@entry{id=659,dest={636861707465722E3232},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030325C3030303A5C3030305C3034305C303030535C303030655C3030306C5C303030665C3030302D5C303030535C303030755C303030705C303030655C303030725C303030765C303030695C303030735C303030655C303030645C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{621}{chapter.22}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@21}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@22}}
-\pgfsyspdfmark {pgfid89}{0}{52099153}
-\pgfsyspdfmark {pgfid88}{5966969}{45620378}
-\BKM@entry{id=652,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{602}{chapter.23}\protected@file@percent }
+\pgfsyspdfmark {pgfid90}{0}{52099153}
+\pgfsyspdfmark {pgfid89}{5966969}{45620378}
+\BKM@entry{id=660,dest={636861707465722E3233},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030335C3030303A5C3030305C3034305C303030335C303030445C3030305C3034305C303030765C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{622}{chapter.23}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@22}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@23}}
-\pgfsyspdfmark {pgfid91}{0}{52099153}
-\pgfsyspdfmark {pgfid90}{5966969}{45620378}
-\BKM@entry{id=653,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
-\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{603}{chapter.24}\protected@file@percent }
+\pgfsyspdfmark {pgfid92}{0}{52099153}
+\pgfsyspdfmark {pgfid91}{5966969}{45620378}
+\BKM@entry{id=661,dest={636861707465722E3234},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030345C3030303A5C3030305C3034305C303030565C303030695C303030645C303030655C3030306F5C30303073}
+\@writefile{toc}{\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{623}{chapter.24}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@23}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@24}}
-\pgfsyspdfmark {pgfid93}{0}{52099153}
-\pgfsyspdfmark {pgfid92}{5966969}{45620378}
-\BKM@entry{id=654,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030355C3030303A5C3030305C3034305C303030525C303030655C303030695C3030306E5C303030665C3030306F5C303030725C303030635C303030655C3030306D5C303030655C3030306E5C303030745C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{604}{chapter.25}\protected@file@percent }
+\pgfsyspdfmark {pgfid94}{0}{52099153}
+\pgfsyspdfmark {pgfid93}{5966969}{45620378}
+\BKM@entry{id=662,dest={636861707465722E3235},srcline={4}}{5C3337365C3337375C3030304C5C303030655C303030635C303030745C303030755C303030725C303030655C3030305C3034305C303030325C303030355C3030303A5C3030305C3034305C303030525C303030655C303030695C3030306E5C303030665C3030306F5C303030725C303030635C303030655C3030306D5C303030655C3030306E5C303030745C3030305C3034305C3030304C5C303030655C303030615C303030725C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{624}{chapter.25}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@24}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@25}}
-\pgfsyspdfmark {pgfid95}{0}{52099153}
-\pgfsyspdfmark {pgfid94}{5966969}{45620378}
-\BKM@entry{id=655,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
-\@writefile{toc}{\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{605}{chapter.26}\protected@file@percent }
+\pgfsyspdfmark {pgfid96}{0}{52099153}
+\pgfsyspdfmark {pgfid95}{5966969}{45620378}
+\BKM@entry{id=663,dest={636861707465722E3236},srcline={4}}{5C3337365C3337375C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030725C303030655C303030735C303030735C303030695C3030306F5C3030306E5C3030303A5C3030305C3034305C303030515C303030755C303030615C3030306E5C303030745C303030695C3030307A5C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030505C303030725C303030755C3030306E5C303030695C3030306E5C30303067}
+\@writefile{toc}{\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{625}{chapter.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@25}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@26}}
-\pgfsyspdfmark {pgfid97}{0}{52099153}
-\pgfsyspdfmark {pgfid96}{5966969}{45620378}
-\BKM@entry{id=656,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
-\@writefile{toc}{\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{606}{chapter.27}\protected@file@percent }
+\pgfsyspdfmark {pgfid98}{0}{52099153}
+\pgfsyspdfmark {pgfid97}{5966969}{45620378}
+\BKM@entry{id=664,dest={636861707465722E3237},srcline={4}}{5C3337365C3337375C303030465C3030306F5C303030755C3030306E5C303030645C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C303030735C3030305C3034305C303030695C3030306E5C3030305C3034305C303030435C3030306F5C3030306D5C303030705C303030755C303030745C303030655C303030725C3030305C3034305C303030565C303030695C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{626}{chapter.27}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@26}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@27}}
-\pgfsyspdfmark {pgfid99}{0}{52099153}
-\pgfsyspdfmark {pgfid98}{5966969}{45620378}
-\BKM@entry{id=657,dest={636861707465722E3238},srcline={4}}{5C3337365C3337375C3030304D5C303030615C3030306D5C303030625C303030615C3030303A5C3030305C3034305C303030535C303030745C303030615C303030745C303030655C3030305C3034305C303030535C303030705C303030615C303030635C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C3030305C3035305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C3030305C3034305C303030415C3030306C5C303030745C303030655C303030725C3030306E5C303030615C303030745C303030695C303030765C303030655C3030303F5C3030305C303531}
-\@writefile{toc}{\contentsline {chapter}{\numberline {28}Mamba: State Space Model (Transformer Alternative?)}{607}{chapter.28}\protected@file@percent }
+\pgfsyspdfmark {pgfid100}{0}{52099153}
+\pgfsyspdfmark {pgfid99}{5966969}{45620378}
+\BKM@entry{id=665,dest={636861707465722E3238},srcline={4}}{5C3337365C3337375C3030304D5C303030615C3030306D5C303030625C303030615C3030303A5C3030305C3034305C303030535C303030745C303030615C303030745C303030655C3030305C3034305C303030535C303030705C303030615C303030635C303030655C3030305C3034305C3030304D5C3030306F5C303030645C303030655C3030306C5C3030305C3034305C3030305C3035305C303030545C303030725C303030615C3030306E5C303030735C303030665C3030306F5C303030725C3030306D5C303030655C303030725C3030305C3034305C303030415C3030306C5C303030745C303030655C303030725C3030306E5C303030615C303030745C303030695C303030765C303030655C3030303F5C3030305C303531}
+\@writefile{toc}{\contentsline {chapter}{\numberline {28}Mamba: State Space Model (Transformer Alternative?)}{627}{chapter.28}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \ttl@writefile{ptc}{\ttl@stoptoc{default@27}}
 \ttl@writefile{ptc}{\ttl@starttoc{default@28}}
-\pgfsyspdfmark {pgfid101}{0}{52099153}
-\pgfsyspdfmark {pgfid100}{5966969}{45620378}
-\pgfsyspdfmark {pgfid103}{0}{52099153}
-\pgfsyspdfmark {pgfid102}{5966969}{45620378}
+\pgfsyspdfmark {pgfid102}{0}{52099153}
+\pgfsyspdfmark {pgfid101}{5966969}{45620378}
+\pgfsyspdfmark {pgfid104}{0}{52099153}
+\pgfsyspdfmark {pgfid103}{5966969}{45620378}
 \ttl@finishall
-\abx@aux@read@bbl@mdfivesum{2BAF72A6996B4A3C0CBEB3B03408FC47}
+\abx@aux@read@bbl@mdfivesum{E4CBDF1DBF7BB88C3590CCDEB10A7DAF}
+\abx@aux@read@bblrerun
+\abx@aux@defaultrefcontext{0}{jalammar2018_illustrated}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{flamingo2022_fewshot}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{alexe2012_objectness}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{alger2019_data}{nty/global//global/global/global}
@@ -4780,6 +4884,7 @@
 \abx@aux@defaultrefcontext{0}{voita2019_analyzing_heads}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{wan2013_dropconnect}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{wiki_Aliasing}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{wiki_sine_cosine}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{williams1992_simple}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{woo2018_cbam}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{guo2014_atari}{nty/global//global/global/global}
@@ -4790,6 +4895,7 @@
 \abx@aux@defaultrefcontext{0}{yenigun_overfitting}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zakka2016_batchnorm}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zeiler2014_visualizing}{nty/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{zhang2019_self_attention_gan}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zhang2020_resnest}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zhang2019_fixup}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zhang2018_mixup}{nty/global//global/global/global}
@@ -4801,5 +4907,5 @@
 \abx@aux@defaultrefcontext{0}{zitnick2014_edgeboxes}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2017_nas}{nty/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{zoph2018_learning}{nty/global//global/global/global}
-\xdef \mintedoldcachechecksum{\detokenize{97864AE1C5C796DC3A9FEB9DFAF0ACE3:35}}
-\gdef \@abspage@last{619}
+\xdef \mintedoldcachechecksum{\detokenize{C07FA90367CF94760D30E6A33744BA1B:36}}
+\gdef \@abspage@last{640}

@@ -742,11 +742,20 @@ Hence, while self-attention does not apply an explicit activation function (like
 \newpage
 \subsection{Permutation Equivariance in Self-Attention}
 
-\noindent A notable property of self-attention is that it is \textbf{permutation equivariant}. This means that if we permute the input sequence, the outputs will be permuted in the same way:
+\noindent Self-attention is inherently \textbf{permutation equivariant}, meaning that permuting the input sequence results in the outputs being permuted in the same way. Formally, let:
+
+\begin{itemize}
+	\item \( f \) be the self-attention function mapping inputs to outputs.
+	\item \( s \) be a permutation function reordering the input sequence.
+\end{itemize}
+
+\noindent The property is expressed as:
 
 \begin{equation}
 	f(s(\textcolor[rgb]{0.267,0.447,0.769}{X})) = s(f(\textcolor[rgb]{0.267,0.447,0.769}{X})).
 \end{equation}
+
+\noindent This means that permuting the inputs and then applying self-attention yields the same result as applying self-attention first and then permuting the outputs.
 
 \begin{figure}[H]
 	\centering
@@ -755,7 +764,7 @@ Hence, while self-attention does not apply an explicit activation function (like
 	\label{fig:chapter17_permutation_equivariance}
 \end{figure}
 
-\noindent In \autoref{fig:chapter17_permutation_equivariance}, we illustrate this by permuting the input vectors from \(\{X_1, X_2, X_3\}\) to \(\{X_3, X_2, X_1\}\). The self-attention layer processes them identically, producing \(\{Y_1, Y_2, Y_3\}\), but in a different order: \(\{Y_3, Y_2, Y_1\}\).
+\noindent For instance, in \autoref{fig:chapter17_permutation_equivariance}, permuting the input sequence from \(\{X_1, X_2, X_3\}\) to \(\{X_3, X_2, X_1\}\) results in the outputs being permuted to \(\{Y_3, Y_2, Y_1\}\).
 
 \subsubsection{When is Permutation Equivariance a Problem?}
 
@@ -769,8 +778,7 @@ Hence, while self-attention does not apply an explicit activation function (like
 
 \noindent To address this, we introduce \textbf{positional encodings}, which explicitly encode sequence order into self-attention models, ensuring that position-dependent tasks retain meaningful structure. Hence, we'll now explore how positional encodings are designed and integrated into self-attention mechanisms.
 
-
-\subsection{Positional Encodings}
+\subsection{Positional Encodings: Introduction}
 \label{sec:chapter17_positional_encodings}
 
 \noindent
@@ -779,74 +787,204 @@ Hence, while self-attention does not apply an explicit activation function (like
 \paragraph{Why Not Use Simple Positional Indices?}
 \label{par:chapter17_why_not_positional_indices}
 
-\noindent A straightforward approach to incorporating order would be to assign a numerical index to each position, such as:
-\begin{equation}
-	P_t = t, \quad t \in [1, N],
-\end{equation}
-where \( N \) is the sequence length.
-
-\noindent While this allows each token to have a unique identifier, it has several drawbacks:
 \begin{itemize}
-	\item \textbf{Numerical Instability:} Large positional indices may lead to gradient explosion or saturation in deep networks.
-	\item \textbf{Poor Generalization:} If training sequences are shorter than test sequences, the model may fail to generalize to unseen positions.
+	\item \textbf{Simple Positional Indexing:}
+	\begin{equation}
+		\label{eq:simple_index}
+		P_t = t, \quad t \in [1, N],
+	\end{equation}
+	where \( N \) is the sequence length.
 	
-	\item \textbf{Lack of Relative Positioning:} With absolute indexing, each token receives a unique position identifier (e.g., positions 5 and 7). Although the difference in indices is trivially 2, the model itself must \emph{learn from scratch} how that difference influences attention and context. These raw position numbers do not encode any inherent notion of “distance,” forcing the network to rediscover consistent spatial relationships across tokens for each new sequence.
-	
-	\noindent
-	In contrast, \textbf{sinusoidal positional encodings} map positions into continuous, multi-frequency sine/cosine patterns \cite{vaswani2017_attention}. Because each position \(i\) is represented by a combination of waveforms of different frequencies, shifting from \(i\) to \(j\) produces a predictable transformation in these sine/cosine values. This property:
-	
+	\item \textbf{Drawbacks of Simple Indexing:}
 	\begin{itemize}
-		\item \textbf{Facilitates relative distance modeling.} Instead of memorizing absolute indices, the model observes how sinusoidal components change when moving from one position to another. A consistent sinusoidal shift results in a uniform interpretation of the distance between tokens, regardless of their absolute positions.
-		\item \textbf{Captures both local and global offsets.} 
-		\begin{itemize}
-			\item \textit{High-frequency (short wavelength)} parts encode small positional differences, enabling fine-grained attention for nearby tokens.
-			\item \textit{Low-frequency (long wavelength)} parts represent large positional gaps, preserving long-range dependencies for distant tokens.
-		\end{itemize}
-		\item \textbf{Reduces the need for learned position embeddings.} The sinusoidal approach ensures a multi-scale representation of position shifts, letting the self-attention mechanism focus on how distances between tokens affect the attention weights rather than learning ad-hoc index manipulations.
+		\item \textbf{Numerical Instability:} Large positional indices may lead to gradient explosion or saturation in deep networks.
+		\item \textbf{Poor Generalization:} If training sequences are shorter than test sequences, the model may fail to generalize to unseen positions.
+		\item \textbf{Lack of Relative Positioning:} Absolute indexing requires the model to learn how index differences influence attention from scratch. The model does not inherently recognize distance relationships, making it inefficient for learning spatial dependencies.
 	\end{itemize}
 	
-	\noindent
-	Hence, sinusoidal encodings enable a more structured and generalizable way to interpret \emph{relative} positions, improving the model’s capacity to handle varied sequence lengths without collapsing into purely absolute or memorized positional mappings.
+	\item \textbf{Normalized Positional Indexing:} \\ 
+	As an alternative to simple positional indices, one could normalize the indices to a fixed range. This approach scales positions within a standard interval, aiming to mitigate the instability from large index values.
+	\begin{equation}
+		\label{eq:normalized_index}
+		P_t = \frac{t}{N-1}, \quad t \in [0, N-1].
+	\end{equation}
+	
+	\item \textbf{Drawbacks of Normalized Indexing:}
+	\begin{itemize}
+		\item \textbf{Inconsistency Across Lengths:} Sequences of different lengths will have inconsistent positional embeddings for the same relative positions.
+		\item \textbf{Variable Relative Distances:} Relative distances between tokens will be inconsistent across sequences of varying lengths.
+	\end{itemize}
 \end{itemize}
+
+\subsection{Sinusoidal Positional Encoding}
+\label{sec:chapter17_sinusoidal_encoding}
+
+\noindent
+When \citeauthor{vaswani2017_attention} introduced the Transformer architecture, they needed an efficient way to provide \emph{positional} information to a self-attention mechanism that is otherwise invariant to token order. Their solution was a \textbf{sinusoidal positional encoding}:
+
+\[
+\text{PosEncoding}(t) \;=\; \mathbf{p}_t \;\in\; \mathbb{R}^d,
+\]
+where each element of \(\mathbf{p}_t\) is generated by sine or cosine at a specific frequency. The resulting vector \(\mathbf{p}_t\) is then \emph{added} to the token embedding \(\mathbf{x}_t\) prior to self-attention, giving the model a sense of which token is at position \(t\).
+
+\subsubsection{Mathematical Definition}
+\noindent
+For each dimension index \(i\in \{0,1,\dots,d-1\}\), define
+\begin{equation}
+	\label{eq:chapter17_sinusoidal_encoding}
+	\mathbf{p}_t(i)=
+	\begin{cases}
+		\sin\bigl(\omega_k\,t\bigr), &\text{if } i=2k, \\
+		\cos\bigl(\omega_k\,t\bigr), &\text{if } i=2k+1,
+	\end{cases}
+	\quad
+	\text{where}\;\;
+	\omega_k=\frac{1}{10000^{\frac{2k}{d}}}.
+\end{equation}
+
+\begin{itemize}
+	\item \(\displaystyle t\) is the position index within the sequence (e.g.\ 0,1,2,\dots).
+	\item \(\displaystyle d\) is the dimensionality of the sinusoidal encoding, matching the embedding dimension typically used in the model (usually, $d=512$).
+	\item \(\displaystyle i\) indexes the dimension of the encoding vector, from 0 up to \(d-1\).
+	\item \(\displaystyle k=i/2\) pairs up \(\sin\) and \(\cos\) in dimension pairs.
+\end{itemize}
+
+\paragraph{Intuition: Multiple Frequencies for Local \& Global Positioning}
+\noindent
+Each pair of dimensions corresponds to a particular angular frequency \(\omega_k\). For small \(k\), \(\omega_k\) is relatively large, so $\sin(\omega_k t)$ and $\cos(\omega_k t)$ oscillate quickly with increasing $t$, capturing \emph{fine-grained or local} positional differences (e.g.\ neighboring tokens). For larger \(k\), \(\omega_k\) becomes small, yielding slower, more global oscillations that help the network detect broader distances. By combining all frequencies, the model obtains a \textbf{multi-scale} representation of position, letting it reason about both local and far-apart token relationships.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/Positional_Encoding_Visualized.png}
+	\caption{Sinusoidal positional encoding visualization where \(t\) denotes the position index and \(d\) the embedding dimension. The encoding reflects multiple frequency scales, facilitating both local and global dependency modeling.}
+	\label{fig:chapter17_positional_encoding}
+\end{figure}
+
+\subsubsection{Removing Ambiguity with Sine and Cosine}
+Using only a sine function for positional encoding introduces ambiguity due to its periodic nature. For example, \(\sin(\pi/6) = \sin(5\pi/6)\), meaning that different positions could share the same encoding. Similarly, cosine has the property \(\cos(0) = \cos(2\pi)\). This ambiguity arises when two different positions \(t \neq t'\) result in the same positional encoding component for a given frequency, such that:
+\[
+\sin\left(\frac{t}{10000^{i/d}}\right) = \sin\left(\frac{t'}{10000^{i/d}}\right).
+\]
+While overlaps in a few dimensions are acceptable, periodicity can cause overlaps across multiple frequencies, leading to non-unique vector representations. By combining sine and cosine functions—shifted by 90°—this overlap is avoided. The phase difference ensures that if the sine components overlap, the cosine components will likely differ, providing distinct and unique positional encodings and reducing ambiguity in position representation.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/Sine_cosine_one_period.png}
+	\caption{Sine and cosine functions over one period. The phase shift of 90° ensures that when the sine value repeats, the cosine value differs, reducing the chance of ambiguity in positional encoding. Image source: \cite{wiki_sine_cosine}.}
+	\label{fig:sine_cosine_period}
+\end{figure}
+
+\subsubsection{Why Use \(\displaystyle 10000\) in the Denominator?}
+\label{par:why_10000_sin_encoding}
+
+\noindent
+The constant $\displaystyle 10000$ is chosen to produce a well-spaced range of frequencies that remain numerically stable and do not excessively overlap:
+
+\begin{itemize}
+	\item \textbf{Exponential Scaling:}
+	Because the exponent $\frac{2k}{d}$ grows with $k$, frequencies $\omega_k$ shrink exponentially. This ensures some dimensions represent short-wavelength signals, while others track long-wavelength signals, covering different positional “resolutions.”
+	
+	\item \textbf{Numerical Stability Across Sequence Lengths:}
+	For typical maximum sequence lengths (e.g. a few thousand tokens), frequencies from $\omega_0 = 1$ to $\omega_{\text{max}} \approx \frac{1}{10000}$ span a wide yet manageable range. A smaller base might produce extremely large frequencies causing rapid oscillations; a significantly larger base could yield only tiny differences across positions.
+	
+	\item \textbf{Generalization \& Phase Patterns:}
+	By spanning a broad set of wave frequencies, the encoding helps the model maintain consistent phase patterns even for sequences slightly longer than training. Each dimension smoothly extends to new positions by continuing its sine/cosine cycle, letting the model interpret newly seen positions in a consistent manner.
+\end{itemize}
+
+\noindent
+Thus, $\displaystyle 10000$ is a practical compromise between coverage of frequencies and numerical safety for standard sequence lengths (thousands of tokens).
+
+\subsubsection{Frequency Variation and Intuition}
+\label{sec:chapter17_freq_var_intuition}
+
+\noindent
+In sinusoidal positional encoding, each dimension corresponds to a particular \textit{frequency}:
+
+\begin{equation}
+	\omega_k = \frac{1}{10000^{\frac{2k}{d}}},
+\end{equation}
+
+\noindent
+where \(k\) indexes the frequency component (and is tied to the embedding dimension index \(i\)), while \(d\) is the total dimension of the positional encoding. This frequency \(\omega_{k}\) \textbf{decreases exponentially} as \(k\) increases, ensuring that the encoding captures both \emph{local} and \emph{global} positional relationships:
+
+\begin{itemize}
+	\item \textbf{High Frequencies (small \(k\)):}  
+	When \(k\) is small, \(\omega_{k}\) is relatively large, causing the sine and cosine functions to oscillate rapidly. Small increments in position (e.g., \(t \rightarrow t+1\)) can lead to large changes in the encoding for these dimensions, thereby distinguishing adjacent positions. This property is essential for modeling short-range dependencies and fine-grained local distinctions.
+	
+	\item \textbf{Low Frequencies (large \(k\)):}  
+	For large \(k\), \(\omega_{k}\) becomes small, resulting in slower oscillations over \(t\). Consecutive positions may appear only slightly different along these low-frequency dimensions, but \emph{distant} positions diverge more substantially, capturing broader, long-range structure in the sequence. Thus, these dimensions help encode global relations among positions far apart in the input sequence.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/Positional_Encoding_Zoomin.png}
+	\caption{Comparison of sinusoidal positional encodings for positions \(t=1\), \(t=2\), \(t=50\), and \(t=500\). The x-axis represents the embedding dimension index \(i\) (ranging from \(0\) to \(511\) for an embedding dimension \(d=512\)). The y-axis shows the corresponding encoded value for each \(p_t(i)\). For each \(i\), if \(i=2k\), then \(p_t(i) = \sin(\omega_k \cdot t)\), and if \(i=2k+1\), then \(p_t(i) = \cos(\omega_k \cdot t)\), where \(k = \frac{i}{2}\) and \(\omega_k = \frac{1}{10000^{2k/d}}\). Positions that are close (\(1\) and \(2\)) primarily differ in their high-frequency dimensions, while distant positions (\(50\) and \(500\)) show more pronounced differences in the lower-frequency dimensions in comparison.}
+	\label{fig:chapter17_positional_encoding_comparison_no_t1000}
+\end{figure}
+
+\noindent
+The encoding at position \(t\), denoted as \(\mathbf{p}_t\), combines multiple frequencies to encode both \textbf{local} and \textbf{global} positional information. Close positions differ mainly in high-frequency components, while differences between distant positions accumulate over the low-frequency dimensions. This ensures that the encoding remains unique and informative, regardless of sequence length.
 
 \newpage
-\noindent Another alternative is normalizing indices into the range \( [0,1] \) using:
-\begin{equation}
-	P_t = \frac{t}{N-1}, \quad t \in [0, N-1].
-\end{equation}
-\noindent However, this also introduces issues:
+\paragraph{Concrete Example:}
+
+\noindent For \(d = 8\) and positions \(t = 0, 1, 2, \ldots\), the first few frequency components are:
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\(k\) & Dimension Index \(i\) & Frequency Term \(\omega_k\) & Frequency Type \\
+		\hline
+		0 & 0 (sin) / 1 (cos) & \(1/10000^0 = 1\) & High Frequency \\
+		1 & 2 / 3 & \(1/10000^{0.25} \approx 1/18\) & Medium-High \\
+		2 & 4 / 5 & \(1/10000^{0.5} \approx 1/100\) & Medium-Low \\
+		3 & 6 / 7 & \(1/10000^{0.75} \approx 1/1780\) & Low Frequency \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\noindent The combination of sine and cosine functions across multiple frequencies enables the model to distinguish both fine-grained local differences and broad global ones.
+
+\subsubsection{How Relative Position Awareness Emerges}
+\label{sec:chapter17_relpos_sinusoids}
+
+\noindent
+A key advantage of \emph{sinusoidal} positional encodings is their capacity to represent \textbf{relative} as well as absolute positions. Specifically, for each frequency component at angular frequency \(\omega_k\), a shift by an offset \(o\) can be captured by a rotation matrix independent of the initial position \(t\). Concretely, recall that:
+\[
+\begin{bmatrix}
+	\sin(\omega_k (t + o)) \\[6pt]
+	\cos(\omega_k (t + o))
+\end{bmatrix}
+\;=\;
+\underbrace{\begin{bmatrix}
+		\cos(\omega_k o) & \quad \!-\sin(\omega_k o) \\[4pt]
+		\sin(\omega_k o) & \quad\;\;\cos(\omega_k o)
+\end{bmatrix}}_{\displaystyle M_o}
+\cdot
+\begin{bmatrix}
+	\sin(\omega_k t) \\[6pt]
+	\cos(\omega_k t)
+\end{bmatrix}.
+\]
+Here, \(M_o\) is a \emph{2D rotation matrix} encoding the phase shift \(\omega_k o\). Notice that \(M_o\) does \emph{not} depend on \(t\), only on the offset \(o\). Consequently, shifting from \(t\) to \(t + o\) in the encoded space is equivalent to applying a constant, frequency-specific linear transformation.
+
+\paragraph{Why This Matters for Relative Positioning}
+\noindent
+Because each dimension of the sinusoidal encoding is composed of such sine/cosine pairs, \emph{any} offset \(o\) translates to a straightforward rotation in each pair’s subspace. As a result:
+
 \begin{itemize}
-	\item Sequences of different lengths will have different positional embeddings for the same relative positions.
-	\item The relative distances between tokens will be inconsistent across sequences of varying lengths.
+	\item \textbf{Consistent Relative Differences:}
+	The network sees that going from index \(t\) to \(t+o\) is always the same operation \(M_o\). Thus, the difference \(\mathbf{p}_{t+o} - \mathbf{p}_t\) (or more precisely, how to map one encoding to the other) is stable across the entire sequence. This provides a direct, built-in handle for interpreting \emph{distances} or \emph{offsets} between tokens.
+	
+	\item \textbf{Linear Shift = Easier to Learn:}
+	In a self-attention or feed-forward sub-layer, discovering that “position \(t+2\) is 2 steps ahead of \(t\)” is simpler when it corresponds to a consistent rotation in the embedding space. The network can learn linear filters or gating that exploit these transformations without requiring complicated parameterization.
+	
+	\item \textbf{Reduced Overhead for Distance Encoding:}
+	The model does not have to “invent” a scheme from random embedding vectors for expressing that “10 is 5 steps further than 5.” Instead, the sinusoid’s well-defined phase shifts ensure a predictable pattern for all offsets, giving the model a natural mechanism for \emph{relative} position awareness.
 \end{itemize}
 
-\noindent To overcome these limitations, we use \textbf{sinusoidal positional encoding}, which provides a fixed, consistent representation of positions while preserving relative ordering.
-
-\subsubsection{Sinusoidal Positional Encoding: Definition and Properties}
-
-\noindent The encoding proposed in \cite{vaswani2017_attention} is a simple yet effective technique for incorporating positional information in transformers. Rather than being a single scalar value, each position in the input sequence is mapped to a \( d \)-dimensional vector, \( \overrightarrow{p_t} \), where \( d \) is the embedding dimension. This vector is then added to the corresponding token embedding to inject positional information into the model input.
-
-\noindent Let \( t \) be the position in an input sequence, \( \overrightarrow{p_t} \in \mathbb{R}^d \) be its corresponding encoding, and \( d \) be the embedding dimension (where \( d \) is even). The encoding function is defined as follows:
-
-\begin{equation}
-	\overrightarrow{p_t}^{(i)} = P E(t, k) =
-	\begin{cases}
-		\sin\left(\omega_k \cdot t\right), & \text{if } i=2k \\
-		\cos\left(\omega_k \cdot t\right), & \text{if } i=2k+1
-	\end{cases}
-\end{equation}
-
-\noindent where:
-\begin{equation}
-	\omega_k = \frac{1}{10000^{2k/d}}, \quad k = \frac{i}{2}.
-\end{equation}
-
-\noindent Here, \( k \) indexes different frequency components, \( i \) represents the index within the encoding vector, and \( t \) is the position in the sequence. The term \( \omega_k \) determines the frequency of oscillation, ensuring that different dimensions of \( \overrightarrow{p_t} \) encode positional information at varying frequencies. These frequencies decrease exponentially with increasing index \( k \), forming a geometric progression in wavelength from \( 2\pi \) to \( 10000 \cdot 2\pi \). This structured variation allows the model to encode both fine-grained and long-range dependencies effectively:
-\begin{itemize}
-	\item \textbf{High-frequency components (shorter wavelengths):} These capture subtle variations in position and encode small positional differences, helping the model distinguish between nearby tokens.
-	\item \textbf{Low-frequency components (longer wavelengths):} These encode broader positional trends, enabling the model to recognize structural relationships between distant tokens, such as sentence boundaries or clause dependencies.
-\end{itemize}
-By encoding position using multiple frequency scales, the model can generalize across different sequence lengths and recognize relative positioning effectively without requiring learned position embeddings.
+\noindent
+In essence, the \emph{rotation matrix} viewpoint shows that sinusoidal encodings embed each position \(t\) in such a way that moving to \(t+o\) is a constant, offset-dependent linear transformation. This built-in linearity can significantly aid the network’s capacity to interpret relative position differences—one of the main goals of positional encoding in self-attention-based models.
 
 \begin{figure}[H]
 	\centering
@@ -855,95 +993,121 @@ By encoding position using multiple frequency scales, the model can generalize a
 	\label{fig:chapter17_positional_encoding}
 \end{figure}
 
-\subsubsection{Intuition Behind Sinusoidal Encoding}
-
-\noindent A useful way to understand sinusoidal encodings is by drawing an analogy to binary number representations. Consider the binary encodings of numbers starting from 0, with each bit column color-coded:
-
-\begin{center}
-	\begin{tabular}{c c c c c}
-		\textbf{Decimal} & \textbf{Bit 3} & \textbf{Bit 2} & \textbf{Bit 1} & \textbf{Bit 0} \\
-		0 & \textcolor[rgb]{1,0.5,0}{0} & \textcolor[rgb]{0.3,0.8,0.3}{0} & \textcolor[rgb]{0.2,0.4,1}{0} & \textcolor[rgb]{1,0,0}{0} \\
-		1 & \textcolor[rgb]{1,0.5,0}{0} & \textcolor[rgb]{0.3,0.8,0.3}{0} & \textcolor[rgb]{0.2,0.4,1}{0} & \textcolor[rgb]{1,0,0}{1} \\
-		2 & \textcolor[rgb]{1,0.5,0}{0} & \textcolor[rgb]{0.3,0.8,0.3}{0} & \textcolor[rgb]{0.2,0.4,1}{1} & \textcolor[rgb]{1,0,0}{0} \\
-		3 & \textcolor[rgb]{1,0.5,0}{0} & \textcolor[rgb]{0.3,0.8,0.3}{0} & \textcolor[rgb]{0.2,0.4,1}{1} & \textcolor[rgb]{1,0,0}{1} \\
-		4 & \textcolor[rgb]{1,0.5,0}{0} & \textcolor[rgb]{0.3,0.8,0.3}{1} & \textcolor[rgb]{0.2,0.4,1}{0} & \textcolor[rgb]{1,0,0}{0} \\
-		... & ... & ... & ... & ...
-	\end{tabular}
-\end{center}
-
-\noindent The lowest bit alternates at every step, the second bit at every two steps, and so on. Instead of using discrete bit-flipping, sinusoidal encoding provides a continuous alternative. The oscillatory nature of sine and cosine functions mimics the alternating patterns in binary encoding but in a way that is well-suited for floating-point computations.
-
-\noindent \textbf{Why not use binary encoding directly?} While binary encoding effectively captures positional structure, it is not well-suited for neural networks that operate on floating-point values. Using binary representations would introduce discontinuities, requiring networks to learn discrete jumps in values. In contrast, sinusoidal encoding smoothly represents position in a continuous space, making it easier for gradient-based optimization methods to leverage positional information.
-
-\subsubsection{Why Use Both Sine and Cosine?}
-
-\noindent The use of both sine and cosine functions ensures that positional encodings remain expressive and easily transformable. Specifically, for every sine-cosine pair corresponding to frequency \( \omega_k \), there exists a linear transformation matrix \( M \) such that:
-
-\begin{equation}
-	M \cdot \begin{bmatrix} \sin (\omega_k \cdot t) \\ \cos (\omega_k \cdot t) \end{bmatrix} = \begin{bmatrix} \sin (\omega_k \cdot (t+o)) \\ \cos (\omega_k \cdot (t+o)) \end{bmatrix}.
-\end{equation}
-
-\noindent This transformation allows positional encodings to maintain relative positional relationships across different positions in a sequence, making them inherently suitable for self-attention mechanisms.
-
 \subsubsection{Does Positional Information Vanish in Deeper Layers?}
 
-\noindent A common concern is whether positional encodings persist across multiple layers. In deep transformer models, this issue is mitigated by:
+\noindent Deep transformer models mitigate the risk of positional information vanishing through:
+
 \begin{itemize}
-	\item \textbf{Residual Connections:} These allow information to propagate efficiently across layers.
-	\item \textbf{Layer Normalization:} Helps maintain numerical stability and prevents information loss.
+	\item \textbf{Residual Connections:} These ensure that positional signals persist through layers.
+	\item \textbf{Layer Normalization:} Maintains stability, preserving positional cues during deep processing.
 \end{itemize}
 
-\subsubsection{Learned Positional Encodings: An Alternative Approach}
+\noindent These design choices ensure that positional information remains accessible throughout the network.
 
-\noindent While sinusoidal positional encodings offer a deterministic way to encode sequence positions, another approach is to use \textbf{learned positional embeddings}, where each position in the sequence is assigned a unique trainable vector. This method allows the model to learn task-specific positional representations rather than relying on a fixed mathematical function.
+\subsubsection{Why Sinusoidal Encoding Solves Previous Limitations}
 
-\paragraph{Definition}
-Learned positional encodings are implemented as a lookup table where each position  is mapped to a trainable embedding vector . These embeddings are initialized randomly and updated during training alongside other network parameters.
+\noindent Simpler positional encodings, like raw indices or normalized values, struggle with generalization and relative positioning. Sinusoidal encoding addresses these challenges:
+
+\begin{itemize}
+	\item \textbf{Facilitates Relative Distance Modeling:}  
+	The predictable shift in sine and cosine values with increasing \(t\) enables the model to infer relative distances, improving its ability to reason about positional differences.
+	
+	\item \textbf{Captures Local and Global Relationships:}  
+	High-frequency components are sensitive to nearby tokens, while low-frequency components capture longer-range dependencies, providing a comprehensive representation of position.
+	
+	\item \textbf{Parameter-Free and Generalizable:}  
+	Sinusoidal encodings are fixed and parameter-free, ensuring consistency across varying sequence lengths and reducing overfitting risks.
+	
+	\item \textbf{Stable for Variable-Length Sequences:}  
+	The continuous and periodic nature ensures robustness when encountering sequences longer than those seen during training.
+\end{itemize}
+
+\subsubsection{Conclusion on Sinusoidal Positional Encoding}
+
+\noindent Sinusoidal positional encoding is an efficient, parameter-free method for embedding positional information into sequences. Its multi-frequency structure captures both local and global relationships, generalizes well to variable-length inputs, and simplifies the model by reducing parameters.
+
+\noindent However, while sinusoidal encodings are robust, they are fixed and non-adaptive. In the next section, we explore \textbf{learnable positional encodings}, which allow the model to tailor positional representations to the training data, enhancing flexibility and potentially improving performance for complex tasks.
+
+\subsection{Learned Positional Encodings: An Alternative Approach}
+\label{sec:chapter17_learned_pe}
+
+\noindent
+While sinusoidal encodings provide a fixed, mathematically interpretable scheme, another strategy is to \emph{learn} a set of positional embedding vectors. In this method, each position \(t \in \{0,\dots,N_{\max}-1\}\) has its own trainable embedding \(\mathbf{P}_t \in \mathbb{R}^d\). These embeddings are added to the token embeddings \(\mathbf{x}_t\) before entering the self-attention layer. This section details \emph{why} learned embeddings can be advantageous in certain domains, and clarifies how they allow the model to highlight particular positional “special cases” that simpler parametric forms may not capture.
+
+\paragraph{Definition and Mechanics}
+\noindent
+For each discrete position \(t\), the model learns:
+\[
+\mathbf{P}_t = \text{EmbeddingTable}[t], \quad \mathbf{P}_t \in \mathbb{R}^d.
+\]
+During training, these \(\mathbf{P}_t\) vectors are updated alongside the rest of the network parameters (e.g.\ in a Transformer). The final input at position \(t\) becomes
+\[
+\mathbf{x}_t + \mathbf{P}_t,
+\]
+injecting task-driven positional information directly into the model’s attention pipeline.
 
 \paragraph{Examples of Learned Positional Encodings}
 \begin{itemize}
-	\item \textbf{BERT (Bidirectional Encoder Representations from Transformers)} \cite{devlin2019_bert}: Uses learned position embeddings to allow the model to adapt positional information specific to natural language understanding tasks.
-	\item \textbf{GPT (Generative Pre-trained Transformer)} \cite{radford2019_language}: Employs learned positional embeddings to handle causal sequence modeling effectively.
-	\item \textbf{T5 (Text-to-Text Transfer Transformer)} \cite{raffel2020_t5}: Implements learned embeddings to adjust position representations dynamically based on input context.
+	\item \textbf{BERT (Bidirectional Encoder Representations from Transformers)} \cite{devlin2019_bert}:
+	Incorporates trainable position embeddings to adapt to language modeling tasks that require subtle positional cues (e.g.\ near sentence boundaries or structure).
+	
+	\item \textbf{GPT (Generative Pre-trained Transformer)} \cite{radford2019_language}:
+	Uses learned embeddings for causal sequence modeling, letting it tune each position vector to handle next-token prediction effectively.
+	
+	\item \textbf{T5 (Text-to-Text Transfer Transformer)} \cite{raffel2020_t5}:
+	Relies on learned embeddings so it can dynamically handle positions in tasks like translation, summarization, or question answering, adjusting them to specialized text structures or domain signals.
 \end{itemize}
 
-\paragraph{Advantages and Disadvantages of Learned Positional Embeddings}
+\subparagraph{Highlighting Crucial Positions or Transitions}
+\noindent
+One motivation for learned embeddings is that they can \emph{sharply} differentiate certain positions. For instance, if line 50 in code is consistently the start of a “main” function, the embedding \(\mathbf{P}_{50}\) might become distinctly different from \(\mathbf{P}_{49}\). This difference can “activate” certain attention behaviors or network channels, effectively \emph{highlighting} that boundary. By contrast, sinusoidal or purely numeric indices are smooth and rely on subsequent network layers to interpret or magnify special positions, which can be more cumbersome. 
+
+Hence, learned embeddings grant direct control: The network can “spike” a position’s embedding if that index is crucial for the task (e.g.\ domain boundaries, significant turn points). This adaptiveness can be critical in specialized tasks like structured text or protein modeling, where certain positions carry \emph{local “jumps” in meaning} rather than continuous wave-like patterns.
+
+\paragraph{Why Task-Specific Optimization of Position is Useful}
+\noindent
+One might ask: “Cannot the model interpret fixed sinusoids in domain-specific ways anyway?” In principle, yes—but at the cost of forcing deeper transformations to re-map a continuous wave to, say, a boundary jump. Learned embeddings simplify that by letting the network directly store an embedding “this is a boundary” at a certain position $t$. Key points:
+\begin{enumerate}
+	\item \textbf{Mandatory Positional Signal:}
+	Self-attention alone is order-invariant, so we must \emph{somehow} feed it position info. A purely numeric index or sinusoid can suffice for many tasks. But if the domain has special local offsets or abrupt transitions, the network might use a large portion of its capacity to “warp” sinusoidal signals to fit those intricacies.
+	\item \textbf{Direct vs.\ Indirect:}
+	With learned embeddings, we supply \(\mathbf{P}_t\) that precisely indicates “position $t$ is special,” if needed. This can be more direct than expecting the deeper layers to craft the same effect from a monotonic or wave-based input.
+\end{enumerate}
+Thus, \emph{task-specific optimization} means we let the embedding table itself store domain or dataset alignment so that the rest of the architecture can more easily exploit positional cues.
+
+\subsubsection{Pros \& Cons of Learned Positional Embeddings}
 
 \noindent
 \textbf{Pros:}
 \begin{itemize}
-	\item \textbf{Adaptable to Complex Positional Semantics:} 
-	Unlike fixed sinusoidal functions, a learned embedding $\mathbf{P}_i\in \mathbb{R}^D$ (for position $i$) can parameterize \emph{any} mapping from the discrete position $i$ to a continuous vector. In principle, the model can discover position-dependent phenomena more complex than linear or sinusoidal shifts—e.g., local “jumps” in meaning at boundaries, domain-specific transitions, or hierarchical structures. This capacity is valuable in tasks where position interacts intricately with semantic or structural constraints (e.g., protein sequences, where positions might indicate specific folding patterns).
+	\item \textbf{Adaptable to Complex Positional Semantics:}  
+	Since each position index $t$ has its own vector $\mathbf{P}_t$, the model can embed idiosyncratic “spikes” or domain-coded transitions—for instance, segment boundaries, specialized pivot points, or known anchor sites in proteins. It is \emph{not} restricted to the wave-like progression inherent to sinusoidal encodings.
 	
 	\item \textbf{Task-Specific Optimization:}
-	Because position embeddings $\{\mathbf{P}_1, \mathbf{P}_2, \dots, \mathbf{P}_{N_{\max}}\}$ are trained jointly with the rest of the model (e.g., the Transformer), the network can tailor these embeddings to capture domain-specific cues about how positions affect local or global dependencies. For instance, in specialized tasks (like structured text or code formatting), positions near line beginnings/endings might gain a distinctive learned representation that a generic sinusoidal approach might fail to emphasize.
+	The embeddings $\{\mathbf{P}_0,\dots,\mathbf{P}_{N_{\max}-1}\}$ are learned \emph{together} with the model’s main parameters, letting the network easily calibrate how positions shape local or global dependencies. If line boundaries or column positions matter in a domain, the model can reflect that directly in the embeddings. This typically requires fewer transformations in subsequent layers to achieve the same “positional emphasis.”
 	
-	\newpage
-	\item \textbf{Empirical Gains in Some Settings:} 
-	Empirical work suggests that for tasks with unique structural dependencies, learned embeddings can outperform fixed encodings \cite{ke2021rethinking_position,shaw2018selfrelative_pos}. The additional model degrees of freedom let the network discover \textbf{non-trivial positional interactions} (e.g., a turning point in a protein chain or a pivot in a code sequence) that fixed trigonometric patterns may not reflect. 
+	\item \textbf{Empirical Gains in Some Settings:}
+	Empirical studies show that for certain tasks—especially with structural quirks or hierarchical contexts—learned embeddings outperform fixed sinusoids \cite{ke2021rethinking_position,shaw2018selfrelative_pos}. The additional degrees of freedom help represent specialized offset patterns that might be cumbersome to glean from a purely wave-based function.
 \end{itemize}
 
-\noindent
+\newpage \noindent
 \textbf{Cons:}
 \begin{itemize}
 	\item \textbf{Limited Extrapolation to Longer Sequences:}
-	Beyond the largest position index encountered during training $N_{\text{train}}$, no embedding $\mathbf{P}_k$ is learned for $k > N_{\text{train}}$. Even if we initialize new embeddings randomly or replicate the last known embedding, the model lacks an \emph{intrinsic} mechanism for graceful handling of positions above its training range. By contrast, sinusoidal encodings naturally generalize to any index $k$ by evaluating a known trigonometric function.
+	If the model is trained only up to $N_{\text{train}}$ and test sequences exceed $N_{\text{train}}$, there is no embedding for positions beyond that. By contrast, sinusoids define $\mathbf{p}_t$ for \emph{all} integer $t$.
 	
 	\item \textbf{Increased Parameterization and Memory:}
-	Learned embeddings require $N_{\text{max}}\times D$ parameters (for $N_{\text{max}}$ possible positions). This can become substantial for large $N_{\text{max}}$, especially in high-dimensional models, increasing memory usage and potential overfitting risk.
+	Storing a unique vector $\mathbf{P}_t$ for each position $t$ yields $N_{\max}\times d$ learned parameters. For large corpora or high-dimensional embeddings, this can become memory-intensive and risk overfitting if the dataset is not sufficiently large.
 	
-	\item \textbf{Reduced Interpretability:} 
-	Whereas sinusoidal embeddings cleanly encode relative displacements (the difference between positions $i$ and $j$ yields a predictable phase shift), learned embeddings do not, by default, provide a structured relative-distance measure. Any interpretability must come through post-hoc analysis of the embedding table, and there is no guarantee of consistent patterns across different positions.
+	\item \textbf{Reduced Interpretability:}
+	Unlike sinusoidal encodings, which maintain explicit relative phase shifts, learned embeddings do not intrinsically encode how distance $|i-j|$ affects attention. Interpreting $\mathbf{P}_i$ vs.\ $\mathbf{P}_j$ requires post-hoc analysis, and the difference $\mathbf{P}_i-\mathbf{P}_j$ has no guaranteed structure across positions.
 \end{itemize}
 
+\paragraph{Conclusion on Learned Positional Embeddings}
 \noindent
-In summary, learned positional embeddings can capture \emph{complex} or domain-specific position signals that a fixed function may miss, but they do so at the cost of more parameters, limited extrapolation, and less straightforward interpretability.
+Overall, \textbf{learned positional encodings} offer the capacity to represent complex or domain-specific position cues that we might not express using sinusoidal waves. For tasks with well-bounded sequence lengths or strong local conventions (e.g., code indentation, certain molecular domains), they can deliver better results. Yet they do so at the cost of limited extrapolation, higher parameter count, and reduced interpretability. Depending on the domain’s needs—particularly the importance of generalizing to unseen sequence lengths vs.\ capturing specialized position effects—one must choose between a robust fixed method (sinusoidal) or a more data-driven learned approach \cite{kazemnejad2019_pencoding}.
 
-\paragraph{Conclusion}
-
-\noindent Positional encodings are essential for sequence-based tasks using self-attention. Fixed sinusoidal encodings provide a deterministic, generalizable solution, while learnable embeddings offer task-specific adaptability. The choice between them depends on the dataset and application. For further reading, see \cite{kazemnejad2019_pencoding}.
 \newpage
-
 \subsection{Masked Self-Attention Layer}
 \label{sec:chapter17_masked_self_attention}
 
@@ -1346,9 +1510,553 @@ To integrate information across all heads, we apply a final linear transformatio
 	return self.W_o(heads)  # Output shape: [B, L, D_model]
 \end{mintedbox}
 
-\subsubsection{Stepping Stone to Transformers}
+\subsubsection{Stepping Stone to Transformers and Vision Applications}
 
-\noindent Multi-head self-attention is a fundamental component of modern deep learning models and serves as the core mechanism in the \textbf{Transformer} architecture \cite{vaswani2017_attention}. While self-attention allows a model to compute token interactions in parallel, multi-head attention enhances its capacity by attending to different parts of the sequence simultaneously. In the next section, we explore how \textbf{stacking multi-head attention layers with feed-forward networks} results in a powerful hierarchical sequence model, leading to state-of-the-art performance in various tasks.
+\noindent Multi-head self-attention is a fundamental component of modern deep learning models and serves as the core mechanism in the \textbf{Transformer} architecture \cite{vaswani2017_attention}. While self-attention allows a model to compute token interactions in parallel, multi-head attention enhances its capacity by attending to different parts of the sequence simultaneously. 
+
+\noindent However, before diving into how multi-head self-attention integrates into the Transformer, it is insightful to explore its applicability beyond sequence data. Especially in our domain, that is \textbf{computer vision}, where self-attention has been successfully integrated into convolutional architectures to enhance feature representation. This approach demonstrates the versatility of self-attention and offers valuable insights into its practical use cases.
+
+\subsection{Self-Attention for Vision Applications}
+
+\noindent Consider an input image processed by a convolutional neural network (CNN), yielding a feature map with dimensions \( C \times H \times W \), where \( C \) denotes the number of channels, and \( H \) and \( W \) represent the spatial height and width, respectively.
+
+\paragraph{Generating Queries, Keys, and Values}
+
+\noindent To apply self-attention within the CNN framework, we first generate the \emph{queries} (\(Q\)), \emph{keys} (\(K\)), and \emph{values} (\(V\)) using separate \(1 \times 1\) convolutional layers, each with its distinct set of weights and biases. This approach ensures that spatial information is preserved while enabling efficient projection to a lower-dimensional space for computational efficiency. The transformations are given by:
+
+\[
+Q = W_Q * X + b_Q, \quad K = W_K * X + b_K, \quad V = W_V * X + b_V,
+\]
+
+where:
+\begin{itemize}
+	\item \( X \in \mathbb{R}^{C \times H \times W} \) is the input feature map.
+	\item \( W_Q, W_K, W_V \in \mathbb{R}^{C' \times C \times 1 \times 1} \) are the convolutional weight matrices.
+	\item \( b_Q, b_K, b_V \in \mathbb{R}^{C'} \) are the corresponding biases.
+	\item \( C' \) is a reduced dimension for computational efficiency.
+\end{itemize}
+
+\noindent Notably, the spatial dimensions \(H\) and \(W\) remain unchanged, ensuring that each location in the query and key feature maps directly corresponds to a spatial location in the original input tensor. Each such location represents a specific window in the original image, as determined by the effective receptive field of the CNN layers.
+
+\paragraph{Reshaping for Attention Computation}
+
+\noindent After projection, each of \(Q\), \(K\), and \(V\) is reshaped to a two-dimensional form \( C' \times N \), where \( N = H \times W \) is the total number of spatial positions. This reshaping prepares the data for the attention computation:
+
+\[
+Q' \in \mathbb{R}^{C' \times N}, \quad K' \in \mathbb{R}^{C' \times N}, \quad V' \in \mathbb{R}^{C' \times N}.
+\]
+
+\paragraph{Computing Attention Scores}
+
+\noindent To compute attention, we transpose the queries along the spatial dimension, resulting in \( (Q')^\top \in \mathbb{R}^{N \times C'} \). This alignment ensures correct matrix multiplication for similarity computation. The attention score matrix is then calculated as:
+
+\[
+S = (Q')^\top K' \in \mathbb{R}^{N \times N},
+\]
+
+\noindent where each element \( S_{(i,j),(k,l)} \) measures the similarity between spatial position \((i,j)\) in the query and position \((k,l)\) in the key. 
+
+\noindent According to the dot-product attention formula, we scale the scores by \( \sqrt{C'} \) to mitigate the variance growth due to high-dimensional feature vectors:
+
+\[
+S = \frac{(Q')^\top K'}{\sqrt{C'}}.
+\]
+
+\noindent Each spatial location is represented by a feature vector of length \( C' \), and the dot product between two such vectors grows with \( C' \). Scaling by \( \sqrt{C'} \) ensures that the variance of the similarity scores remains stable, thereby preventing softmax saturation and enabling smoother gradient flows during training, as suggested by Zhang et al. \cite{zhang2019_self_attention_gan}.
+
+\paragraph{Normalizing Attention Weights}
+
+\noindent Applying the softmax function along the last dimension ensures that attention scores sum to one:
+
+\[
+A = \text{softmax}(S) \in \mathbb{R}^{N \times N}.
+\]
+
+\paragraph{Computing the Attention Output}
+
+\noindent The output of the self-attention mechanism is computed by weighting the value vectors using the attention matrix:
+
+\[
+O' = V' A^\top \in \mathbb{R}^{C' \times N}.
+\]
+
+\noindent This allows each spatial location to incorporate contextual information from all other locations, effectively capturing long-range dependencies that traditional convolutions might miss.
+
+\paragraph{Reshaping, Final Projection, and Residual Connection}
+
+\noindent The attention output \( O' \) is reshaped back to \( C' \times H \times W \). To align the dimensionality with the original feature map, we apply an additional \(1 \times 1\) convolution to project it back to \( C \) channels:
+
+\[
+O = W_O * \text{reshape}(O') + b_O \in \mathbb{R}^{C \times H \times W},
+\]
+
+where:
+\begin{itemize}
+	\item \( W_O \in \mathbb{R}^{C \times C' \times 1 \times 1} \) is the final projection matrix.
+	\item \( b_O \in \mathbb{R}^C \) is the corresponding bias.
+\end{itemize}
+
+\noindent Sometimes, a \textbf{residual connection} is added by summing the original input feature map \(X\) with the output of the attention mechanism:
+
+\[
+O_{\text{final}} = O + X.
+\]
+
+\noindent This addition helps the model to retain original low-level information and prevents degradation in deeper architectures. Residual connections are particularly beneficial when the attention mechanism might overly focus on irrelevant positions or when the model struggles to refine feature representations effectively.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_86.jpg}
+	\caption{Self-Attention Module integrated within a CNN framework. The figure illustrates the generation of \(Q\), \(K\), \(V\), computation of attention, and the final residual connection.}
+	\label{fig:chapter17_self_attention_module}
+\end{figure}
+
+\paragraph{Summary}
+
+\noindent This process effectively integrates self-attention into the CNN pipeline, enabling the model to capture long-range dependencies across spatial regions. By combining self-attention with convolution, the model benefits from both local feature extraction and global context awareness—qualities that are essential for tasks like image recognition and segmentation.
+
+\subsubsection{Bridging Towards Transformers}
+
+\noindent This example demonstrates the versatility of self-attention, extending its utility beyond sequences to spatial data. The ability to model complex relationships within an input—whether in sequences or images—highlights why self-attention has become a cornerstone of modern architectures. 
+
+\noindent In the next section, we explore how stacking multi-head self-attention layers with feed-forward networks forms the hierarchical structure of the \textbf{Transformer}. This architecture not only leverages the strengths of attention but also introduces mechanisms for deeper feature learning and improved generalization.
+
+\newpage
+\section{Transformer}
+\subsection{Motivation and Introduction}
+\label{sec:chapter17_transformer_motivation}
+
+\noindent The development of the \textbf{Transformer} architecture marked a pivotal moment in deep learning, fundamentally changing how models process sequential data. Introduced in the seminal paper \textit{"Attention is All You Need"} \cite{vaswani2017_attention}, Transformers replaced recurrence and convolutions with \textbf{self-attention mechanisms}, enabling unprecedented parallelism and flexibility in modeling long-range dependencies.
+
+\noindent Before delving into the architectural details of Transformers, it's important to understand the landscape of sequence processing methods that preceded them. In this section, we compare three prominent approaches for handling sequences: \textbf{Recurrent Neural Networks (RNNs)}, \textbf{1D Convolutions}, and \textbf{Self-Attention}. Each offers unique advantages and drawbacks, and understanding these will shed light on why the Transformer architecture was such a breakthrough.
+
+\subsubsection{Three Ways of Processing Sequences}
+
+\paragraph{Recurrent Neural Networks (RNNs)}
+
+\noindent RNNs have been a foundational approach for processing ordered sequential data, such as text, audio, or time-series. They process input sequences step by step, maintaining a hidden state that captures information from previous time steps.
+
+\begin{itemize}
+	\item \textcolor[rgb]{0.0, 0.5, 0.0}{\textbf{Access to Full Temporal Receptive Field:}} In a single forward pass, the final hidden state \( h_T \) theoretically has access to the entire sequence. Each hidden state \( h_t \) is conditioned on all previous states, granting RNNs a full temporal receptive field.
+	
+	\item \textcolor[rgb]{0.8, 0.0, 0.0}{\textbf{Limited Contextual Retention for Long Sequences:}} Despite this theoretical access, RNNs often struggle to retain long-range dependencies. The limited capacity of \( h_T \), combined with vanishing gradients, restricts the amount of earlier information that can be preserved, reducing the model’s ability to capture distant relationships effectively.
+	
+	\item \textcolor[rgb]{0.8, 0.0, 0.0}{\textbf{Not Parallelizable:}} RNNs process sequences sequentially, where each hidden state depends on the previous one. This inherent dependency restricts parallelism and slows down training and inference.
+\end{itemize}
+
+\paragraph{1D Convolution for Sequence Processing}
+
+\noindent 1D convolutions provide an efficient and parallelizable approach for handling sequential data, including time-series, audio signals, and natural language text. For scalar inputs like audio signals, 1D convolutions process sequences by sliding a filter across the sequence. For text, each word or token is first embedded into a high-dimensional vector. The convolutional filter then slides over this sequence of embeddings, applying learned weights to capture local patterns within subsequences of tokens. For example, a filter of size \(k\) processes \(k\)-length windows, enabling the model to detect local structures such as word pairs, phrases, or syntactic dependencies. This mechanism is analogous to how convolutional filters scan spatial regions in images, but adapted for sequential data.
+
+\begin{itemize}
+	\item \textcolor[rgb]{0.0, 0.5, 0.0}{\textbf{Highly Parallel:}} Unlike RNNs, convolutions process all positions in parallel. Each output can be computed independently, enabling efficient computation on modern hardware and accelerating both training and inference.
+	
+	\item \textcolor[rgb]{0.8, 0.0, 0.0}{\textbf{Limited Temporal Receptive Field for Long Sequences:}} A single convolutional layer can only capture patterns within its filter size, meaning it is restricted to short-range dependencies. To model long-range interactions, multiple layers must be stacked, gradually expanding the receptive field. However, this increases model depth and complexity. Even with deeper stacks, convolutions can still struggle with extremely long sequences unless techniques like dilation are applied.
+\end{itemize}
+
+\noindent While 1D convolutions offer significant parallelization advantages and excel at capturing local patterns, their inability to capture long-range dependencies efficiently poses challenges for tasks like language modeling. Understanding relationships across distant tokens requires deeper architectures or additional techniques. This limitation motivates the need for architectures like self-attention and Transformers, which can inherently model global dependencies in a single layer.
+
+\paragraph{Self-Attention Mechanism}
+
+\noindent Self-attention introduces a fundamentally different approach by treating inputs as sets of vectors and learning dependencies between them without relying on sequential processing.
+
+\begin{itemize}
+	\item \textcolor[rgb]{0.0, 0.5, 0.0}{\textbf{Good at Long Sequences:}} After just one self-attention layer, each output token has access to the entire input sequence. This makes self-attention highly effective at capturing long-range dependencies.
+	
+	\item \textcolor[rgb]{0.0, 0.5, 0.0}{\textbf{Highly Parallel:}} Self-attention operates through matrix multiplications, enabling all outputs to be computed in parallel. This dramatically accelerates training and inference.
+	
+	\item \textcolor[rgb]{0.8, 0.0, 0.0}{\textbf{Memory Intensive:}} The primary drawback of self-attention is its memory and computational cost. Since it computes pairwise interactions between all tokens, its complexity scales quadratically with sequence length, posing challenges for very long sequences.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_89.jpg}
+	\caption{Comparison of sequence processing methods: RNNs, 1D Convolutions, and Self-Attention. Each approach has distinct advantages and drawbacks concerning long-range dependencies, parallelization, and computational efficiency.}
+	\label{fig:chapter17_sequence_processing_comparison}
+\end{figure}
+
+\subsection{Why the Transformer?}
+
+\noindent Traditional sequence-to-sequence models follow an \textbf{encoder-decoder} architecture, where the \textbf{encoder} processes an input sequence into a latent representation, and the \textbf{decoder} autoregressively generates the output sequence using both this representation and previously generated tokens. 
+
+\noindent The \textbf{Transformer} architecture, introduced in \textit{“Attention is All You Need”} \cite{vaswani2017_attention}, eliminated recurrence and convolutions, replacing them with a \textbf{stack of self-attention-based encoder and decoder blocks}. This design enabled fully parallelized processing, significantly improving efficiency while maintaining the ability to model long-range dependencies.
+
+\noindent Later Transformer models, such as BERT and GPT, streamlined this approach by discarding the explicit encoder-decoder structure. Instead, they employed a \textbf{stack of identical Transformer blocks}—either \textbf{encoder-only} (e.g., BERT) for bidirectional representation learning or \textbf{decoder-only} (e.g., GPT) for autoregressive text generation. This evolution demonstrated that a single, unified \textbf{Transformer block}, rather than a separate encoder-decoder architecture, was sufficient for state-of-the-art performance across a wide range of sequence-based tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_17/transformer_architecture.jpg}
+	\caption{The original transformer architecture adapted from \cite{vaswani2017_attention}.}
+	\label{fig:chapter17_transformer_architecture}
+\end{figure}
+
+\noindent In the following parts, we first examine the original \textbf{encoder-decoder Transformer architecture} \ref{fig:chapter17_transformer_architecture} before proceeding to discuss the transition to the \textbf{Transformer block}, which serves as the foundation for modern architectures.
+
+\subsection{Seq2Seq Original Transformer Workflow}
+\label{sec:chapter17_seq2seq_workflow}
+
+\noindent
+The \textbf{original Transformer architecture}, as introduced in \cite{vaswani2017_attention}, follows a \textbf{sequence-to-sequence (seq2seq)} paradigm using an \textbf{encoder-decoder structure}. Unlike recurrent models, where the number of processing steps depends on sequence length, the Transformer employs a \textbf{fixed number} of stacked encoder and decoder blocks (\(N\)), processing sequences in parallel. 
+
+\noindent
+Each \textbf{encoder block} consists of multi-head self-attention and feed-forward layers, refining token embeddings by incorporating contextual dependencies. The \textbf{decoder blocks} introduce an additional \textbf{masked self-attention} mechanism, restricting future token visibility to ensure auto-regressive generation. The encoder’s final outputs serve as keys and values for \textbf{cross-attention} in the decoder, allowing alignment between input and output sequences (see Figure~\ref{fig:chapter17_transformer_architecture}).
+
+\noindent
+The Transformer follows these major processing steps:
+
+\begin{enumerate}
+	\item \textbf{Tokenization \& Embedding:} 
+	The input sentence (e.g., in French) is split into tokens. Each token is mapped to a vector in \(\mathbb{R}^{d_{\text{model}}}\) via an embedding layer. The goal is to position semantically similar words closer together in the embedding space while keeping dissimilar words distant. For example, \emph{"spoon"} should be near \emph{"fork"} but far from \emph{"soon"}, despite their small \textbf{Levenshtein Distance} (letter-wise similarity).
+	
+	\item \textbf{Positional Encoding:} 
+	As self-attention does not inherently encode sequence order, each embedded token is augmented with a \emph{positional encoding} (Section~\ref{sec:chapter17_positional_encodings}). This encoding differentiates tokens based on position, ensuring that identical tokens occurring at different locations are processed uniquely. 
+	
+	\noindent
+	This distinction is critical in tasks like machine translation. Consider the sentence: 
+	\begin{quote}
+		\emph{"The cat ate the mice."}
+	\end{quote}
+	Here, the word \emph{"the"} appears twice but refers to different nouns (\emph{"cat"} and \emph{"mice"}). Without positional encodings, self-attention would assign identical outputs to both instances, failing to capture contextual differences. The positional encoding resolves this by preserving order-based relationships.
+	
+\item \textbf{Encode (Full Input Sequence Processing):} 
+The entire sequence of embedded, position-encoded tokens is passed through a stack of \(N\) \textbf{encoder blocks}. Each block refines token representations using multi-head self-attention and feed-forward transformations, incorporating context from all input positions. The final encoder output provides contextualized embeddings for the entire input sequence, which will later be utilized by the decoder during generation.
+
+\item \textbf{Decode (Auto-Regressive Generation):} 
+The decoder stack, also comprising \(N\) blocks, processes the target sequence \emph{one token at a time} in an auto-regressive manner. Unlike the encoder, which sees the full input sequence simultaneously, the decoder generates each output token step by step, attending only to previously generated tokens.
+
+\begin{itemize}
+	\item \textbf{Masked Self-Attention:} 
+	During training, a masking mechanism prevents a token at position \(t\) from attending to tokens at \(t+1, t+2, \dots\), ensuring that predictions for each token do not depend on future tokens. This is necessary because, in training, the full output sequence is available, and the model must learn to predict each token using only prior context. However, during inference (generation at test time), tokens are predicted one by one, and the actual previously generated tokens are used as inputs for subsequent steps.
+	
+	\newpage
+	\item \textbf{Cross-Attention (Encoder-Decoder Attention):} 
+	While self-attention in the decoder captures dependencies within the partially generated output, cross-attention establishes alignment between the input sequence and the target sequence. Here, the encoder’s final representations serve as \textbf{keys} and \textbf{values}, while the decoder’s hidden states act as \textbf{queries}. 
+	
+	\noindent The reasoning behind this setup:
+	\begin{itemize}
+		\item The encoder extracts rich contextual embeddings for each input token, encoding both local and global relationships.
+		\item The decoder generates the target sequence step by step, using queries to selectively retrieve relevant input information at each decoding timestep.
+		\item This query-key-value mechanism allows the decoder to dynamically focus on different parts of the input sequence when predicting each output token, ensuring proper alignment and contextual coherence.
+	\end{itemize}
+\end{itemize}
+
+\item \textbf{Projection \& Softmax:} 
+The final output from the decoder stack is passed through a linear layer that projects it into the vocabulary space. A \textbf{softmax function} then converts this into a probability distribution over all possible next tokens. 
+
+\noindent \textbf{Teacher Forcing:} 
+During training, the decoder does not generate tokens purely based on its previous predictions. Instead, it is provided with the ground-truth target tokens from the training dataset at each step. This technique, known as \textbf{teacher forcing}, stabilizes learning by preventing the accumulation of errors over long sequences. However, during inference, the model must generate tokens sequentially, without access to ground-truth future tokens, making the decoding process fully auto-regressive.
+
+\noindent The model selects the next token via:
+\begin{itemize}
+	\item \textbf{Greedy Decoding:} Selecting the most probable next token at each step.
+	\item \textbf{Beam Search:} Exploring multiple possible sequences to maximize the overall likelihood of the output sentence.
+\end{itemize}
+
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_17/Transformer_Encoder_Decoder.jpg}
+	\caption{
+		Illustration of the final step in 'Machine Translation' task using the encoder-decoder transformer. The input French sentence is fully encoded, and the decoder autoregressively generates the English translation token by token. Each generated token is embedded and combined with positional encoding before being fed into the next decoder step. This process repeats until an EOS token is reached, signaling completion. For the full animation of the decoding process, refer to \cite{jalammar2018_illustrated}.
+	}
+	\label{fig:chapter17_transformer_decoding_process}
+\end{figure}
+
+
+\noindent
+The Transformer thus mirrors the classic seq2seq framework but achieves fully parallelized sequence processing within each block. Attention layers facilitate dynamic, long-range dependencies, enabling state-of-the-art performance in translation, text generation, and various sequence modeling tasks.
+
+\subsubsection{Transformer Encoder Block: Structure and Reasoning}
+
+\noindent
+The Transformer encoder block processes input vectors through two primary sub-layers: a \emph{Multi-Head Self-Attention} mechanism, enabling inter-vector interactions, and a \emph{Position-wise Feed-Forward Network (FFN)}, which independently refines each vector. Residual connections and layer normalization follow each sub-layer, ensuring stable training and efficient gradient flow.
+
+\begin{enumerate}
+	\item \textbf{Multi-Head Self-Attention:}
+	The input is a set of \(N_X\) vectors \( \{x_1, x_2, \ldots, x_{N_X}\} \), each representing an intermediate embedding of a token. Self-attention allows each vector \(x_i\) to attend to all others, capturing dependencies across the sequence regardless of distance. This is crucial for modeling complex contextual relationships within the data.
+	
+	\noindent
+	\textbf{Multiple Heads.} The Transformer employs multiple attention heads, each learning distinct aspects of the data (e.g., syntactic or semantic). Each head has its own linear projections for queries, keys, and values, and processes the input independently. The outputs are then concatenated and projected back to the original space, enriching the representation by capturing diverse interaction patterns.
+	
+	\item \textbf{Residual Connection and Layer Normalization:}
+	To preserve original information and improve gradient flow, a residual connection adds the self-attention output to the original input:
+	\[
+	Z = \text{LayerNorm}\bigl(\text{SelfAttention}(X) + X\bigr).
+	\]
+	
+	\noindent
+	\textbf{Layer Normalization.} Each intermediate vector \(z_i\) is normalized \textit{independently} across its features to ensure \textbf{zero mean} and \textbf{unit variance}:
+	\[
+	\hat{z}_{i,j} = \frac{z_{i,j} - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}},
+	\]
+	where \(\mu_i\) and \(\sigma_i^2\) are the mean and variance of \(z_i\)'s components, and \(\epsilon\) prevents division by zero. The normalized vector is then scaled and shifted with learnable parameters \(\gamma\) and \(\beta\):
+	\[
+	\text{LayerNorm}(z_i) = \gamma \cdot \hat{z}_i + \beta.
+	\]
+	
+	\noindent
+	\textbf{Why Layer Normalization?} Unlike batch normalization, which normalizes across the batch and is sensitive to batch size, layer normalization operates independently for each vector. This is advantageous for variable-length sequences. It stabilizes the scale of activations, ensuring smooth gradient propagation without introducing cross-vector interactions, thus preserving the contextual relationships established during self-attention.
+	
+	\item \textbf{Feed-Forward Network (FFN):}
+	Each vector \(z_i\) is then processed \textit{independently} through a two-layer feed-forward network with ReLU activation:
+	\[
+	F_i = \max\bigl(0, z_iW_1 + b_1\bigr)W_2 + b_2.
+	\]
+	This enhances the model's capacity for non-linear transformations, refining each vector individually without inter-vector communication. This design simplifies parallel processing and leverages modern hardware efficiently.
+	
+	\item \textbf{Second Residual Connection and Layer Normalization:}
+	A second residual connection preserves information from the previous layers:
+	\[
+	Y_i = \text{LayerNorm}(F_i + Z_i).
+	\]
+	
+	\noindent
+	This ensures stable gradients and consistent scaling, enabling deeper stacking of encoder blocks without degradation. The final output \(Y\) from the encoder block is a refined, contextually rich representation of the input sequence.
+\end{enumerate}
+
+\noindent
+\textbf{Why This Structure?} The self-attention layer captures inter-token dependencies, while the FFN enriches each token's representation independently. Residual connections mitigate information loss and promote smoother gradient flow, and layer normalization stabilizes activations across layers. This design balances interaction and independence, ensuring scalability, parallelizability, and robust learning in deep networks.
+
+\noindent
+This encoder block design is fundamental to the Transformer's success, facilitating efficient, parallelizable processing and enabling deep learning of complex sequence relationships.
+
+\subsubsection{Transformer Decoder Block: Structure and Reasoning}
+
+\noindent
+The \textbf{decoder block} closely mirrors the encoder's structure but introduces key mechanisms for sequential generation. Unlike the encoder, it must ensure that each token prediction is based only on previously generated tokens while also attending to the source sequence.
+
+\begin{enumerate}
+	\item \textbf{Masked Multi-Head Self-Attention:}
+	The decoder processes its input sequence \(X_{\text{dec}}\) using self-attention while masking future positions. This ensures that during generation, a token at position \(t\) can only attend to positions \( \leq t \), preventing information leakage about future tokens:
+	\[
+	Z_{\text{dec}} = \text{LayerNorm}\left(\text{MaskedSelfAttention}(X_{\text{dec}}) + X_{\text{dec}}\right).
+	\]
+	\noindent
+	Masking ensures the model learns to predict tokens autoregressively, relying solely on the context of previously generated outputs. The residual connection preserves the initial token representations, and layer normalization stabilizes training.
+	
+	\item \textbf{Cross-Attention (Encoder-Decoder Attention):}
+	To incorporate contextual information from the source sequence, the decoder employs cross-attention. Here:
+	\begin{itemize}
+		\item The \textbf{queries} are derived from the output of the masked self-attention layer (\(Z_{\text{dec}}\)).
+		\item The \textbf{keys} and \textbf{values} originate from the encoder's final output representations (\(H_{\text{enc}}\)).
+	\end{itemize}
+	\noindent
+	This mechanism ensures that the decoder can focus on relevant source tokens while generating the next word:
+	\[
+	C = \text{LayerNorm}\left(\text{CrossAttention}(Z_{\text{dec}}, H_{\text{enc}}) + Z_{\text{dec}}\right).
+	\]
+	\noindent
+	The residual connection and layer normalization again promote stable learning. Importantly, while the encoder outputs provide contextual information about the source sentence, the queries from the decoder allow the model to align and extract relevant information necessary for generating coherent translations or outputs.
+	
+	\item \textbf{Feed-Forward Network (FFN):}
+	Each intermediate vector in \(C\) is then independently processed by a position-wise feed-forward network:
+	\[
+	F = \text{FFN}(C) = \max(0, CW_1 + b_1)W_2 + b_2.
+	\]
+	\noindent
+	This non-linear transformation enhances the model's capacity to learn complex mappings for each token's representation while ensuring that each vector is refined independently.
+	
+	\item \textbf{Second Residual Connection and Layer Normalization:}
+	To maintain stable gradient flow and ensure consistent information propagation, the FFN’s output is added back to its input, followed by normalization:
+	\[
+	Y = \text{LayerNorm}(F + C).
+	\]
+	\noindent
+	This step preserves both the contextual information obtained from cross-attention and the non-linear transformations introduced by the FFN.
+	
+\item \textbf{Final Token Generation:}  
+The refined representations \(Y\) are then passed through a final linear projection followed by a softmax layer to predict the next token in the sequence. Specifically:
+
+\begin{itemize}
+	\item A linear projection maps each vector \(y_i\) to a logits vector over the target vocabulary. If the vocabulary size is \(V\), this projection is defined as:
+	\[
+	\text{logits}_i = y_i W_{\text{out}} + b_{\text{out}},
+	\]
+	where \(W_{\text{out}} \in \mathbb{R}^{D \times V}\) and \(b_{\text{out}} \in \mathbb{R}^{V}\) are learnable parameters, and \(D\) is the dimensionality of the final representation.
+	
+	\item The softmax function is then applied to the logits to produce a probability distribution over all possible tokens in the target vocabulary:
+	\[
+	P_i = \text{softmax}(\text{logits}_i).
+	\]
+	
+	\item The model then selects the most probable token, or samples based on this distribution, to generate the next token in the sequence.
+\end{itemize}
+
+\noindent This mechanism ensures that each token is generated based on a combination of:
+\begin{itemize}
+	\item Context from previously generated tokens (captured via masked self-attention).
+	\item Relevant information from the source sequence (captured via cross-attention).
+\end{itemize}
+\end{enumerate}
+
+\noindent
+This architectural design allows the decoder to balance information from the source sequence and its own generation history effectively. The residual connections ensure that original information is preserved throughout the layers, aiding in deeper gradient flow and mitigating vanishing gradient issues. Layer normalization stabilizes the learning process, ensuring consistent activations across layers.
+
+\subsubsection{Transitioning to Unified Transformer Blocks}
+
+\noindent
+While the original Transformer distinguishes between encoder and decoder blocks, more modern architectures often adopt a unified \textbf{Transformer block} approach. Here, the same block structure processes both inputs and outputs, leveraging only self-attention and feed-forward layers. This design simplifies the architecture while maintaining flexibility for diverse tasks. The only distinction is in the masking strategy:
+\begin{itemize}
+	\item \textbf{Unmasked Self-Attention} is used when all input information is available (e.g., in encoders).
+	\item \textbf{Masked Self-Attention} is applied when autoregressive generation is needed (e.g., in decoders).
+\end{itemize}
+
+\noindent
+This unified structure offers greater flexibility, simplifies implementation, and enhances efficiency, making it the foundation of modern, scalable deep learning architectures. In the next parts, we will explore how these Transformer blocks are adapted and extended in various advanced models.
+
+\subsection{The Modern Transformer Block}
+\label{sec:chapter17_modern_transformer_block}
+
+\noindent
+While the original Transformer architecture introduced separate encoder and decoder blocks, modern architectures often simplify this structure by adopting a \textbf{unified transformer block}. This block generalizes the components of both the encoder and decoder, offering a flexible design suitable for various tasks, including language modeling and classification.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_98.jpg}
+	\caption{Modern Transformer Block: The input is a set of vectors \(X\), and the output is a refined set of vectors \(Y\). Self-attention is the only component enabling interaction between vectors. All other operations (layer normalization and MLP) are applied independently to each vector. This design ensures high scalability and parallelizability.}
+	\label{fig:chapter17_modern_transformer_block}
+\end{figure}
+
+\subsubsection{Structure of the Modern Transformer Block}
+
+\noindent
+The block receives an input set of vectors \(X = \{x_1, x_2, ..., x_{N_X}\}\) and processes them in the following sequence:
+
+\begin{enumerate}
+	\item \textbf{Self-Attention Layer:}
+	This is the only component where vectors interact. Each vector \(x_i\) attends to all other vectors \(x_j\), capturing dependencies and contextual relationships within the set. The self-attention mechanism computes attention weights and produces refined contextual representations.
+	
+	\item \textbf{Residual Connection and Layer Normalization:}
+	The original input \(X\) is added back to the self-attention output to form a residual connection, ensuring gradient flow and preserving information. This is followed by layer normalization:
+	\[
+	Z = \text{LayerNorm}\bigl(\text{SelfAttention}(X) + X\bigr).
+	\]
+	
+	\noindent
+	\textbf{Layer Normalization.} Each vector \(z_i\) is normalized independently across its features to achieve zero mean and unit variance:
+	\[
+	\hat{z}_{i,j} = \frac{z_{i,j} - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}},
+	\]
+	where \(\mu_i\) and \(\sigma_i^2\) are the mean and variance of \(z_i\)'s components, and \(\epsilon\) is a small constant for numerical stability. The normalized vector is then scaled and shifted using learnable parameters \(\gamma\) and \(\beta\):
+	\[
+	\text{LayerNorm}(z_i) = \gamma \cdot \hat{z}_i + \beta.
+	\]
+	
+	\item \textbf{Feed-Forward Network (FFN):}
+	Each vector \(z_i\) is then independently passed through a two-layer feed-forward network with a non-linear activation (typically ReLU):
+	\[
+	F_i = \max\bigl(0, z_iW_1 + b_1\bigr)W_2 + b_2.
+	\]
+	To increase the model's capacity, the hidden dimension of the first linear layer is typically set to be four times larger than the input and output dimensions.
+	
+	\item \textbf{Second Residual Connection and Layer Normalization:}
+	Finally, a second residual connection ensures that the original information is retained:
+	\[
+	Y_i = \text{LayerNorm}(F_i + Z_i).
+	\]
+\end{enumerate}
+
+\subsubsection{PyTorch Implementation}
+
+\noindent The following PyTorch implementation illustrates how a modern transformer block is structured:
+
+\begin{mintedbox}{python}
+	class TransformerBlock(nn.Module):
+	def __init__(self, d_model, heads):
+	super().__init__()
+	
+	self.attention = SelfAttention(d_model, heads=heads)
+	self.norm1 = nn.LayerNorm(d_model)
+	self.norm2 = nn.LayerNorm(d_model)
+	
+	self.ff = nn.Sequential(
+	nn.Linear(d_model, 4 * d_model),
+	nn.ReLU(),
+	nn.Linear(4 * d_model, d_model))
+	
+	def forward(self, x):
+	# Self-Attention with residual connection and layer normalization
+	attended = self.attention(x)
+	x = self.norm1(attended + x)
+	
+	# Feed-Forward with residual connection and layer normalization
+	fedforward = self.ff(x)
+	return self.norm2(fedforward + x)
+\end{mintedbox}
+
+\noindent
+Key Points in the Implementation:
+\begin{itemize}
+	\item The FFN's hidden layer is set to four times the input dimension, following common practice for increased model capacity.
+	\item Residual connections and layer normalization wrap both the self-attention and FFN sub-layers.
+	\item Each operation, aside from self-attention, is applied independently to each vector, supporting full parallelization.
+\end{itemize}
+
+\subsubsection{Why the Modern Transformer Block?}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_102.jpg}
+	\caption{The Transformer architecture revolutionized NLP by introducing a unified block structure. Models like BERT exemplify how stacking multiple Transformer blocks facilitates transfer learning across a wide range of language understanding tasks.}
+	\label{fig:chapter17_transformer_transfer_learning}
+\end{figure}
+
+\noindent
+Modern transformer-based architectures, such as BERT and GPT-2, dispense with the traditional split between \emph{encoder} and \emph{decoder}. Instead, they use a single, generalized \textbf{transformer block} repeatedly stacked to achieve state-of-the-art results on diverse sequence-processing tasks. This development has led to two dominant model paradigms:
+
+\begin{itemize}
+	\item \textbf{Encoder-Only (e.g., BERT):} Processes text bidirectionally, capturing information from both past and future tokens. Such models excel at classification, question answering, and sequence-labeling tasks.
+	\item \textbf{Decoder-Only (e.g., GPT-2):} Employs masked self-attention, relying solely on previous tokens for autoregressive language modeling and text generation.
+\end{itemize}
+
+\subsubsection{Key Benefits of the Modern Transformer Block}
+
+\begin{itemize}
+	\item \textbf{Scalability:} Independent processing in FFN and normalization layers enables efficient GPU utilization, allowing deep stacks of blocks without excessive computational overhead.
+	
+	\item \textbf{Parallelization:} Inter-token interactions are confined to the self-attention layer, enabling computations to be parallelized across tokens. This contrasts with sequential models like RNNs, where each token depends on the previous one.
+	
+	\item \textbf{Flexibility and Generalization:} Unlike the encoder-decoder architecture, modern Transformer blocks can handle input sequences in a more generalized manner. For instance, models like GPT (decoder-only) and BERT (encoder-only) discard the need for explicit encoder-decoder separation, processing inputs through a single stack of Transformer blocks. This simplification removes the need for distinguishing between input and output sequences, enabling broader applicability across tasks such as text generation, classification, or summarization.
+	
+	\item \textbf{Reduced Depth for Similar Performance:} Traditional encoder-decoder models require \(2N\) processing steps—\(N\) for encoding and \(N\) for decoding. Modern architectures using a single block can achieve comparable performance by processing inputs through just \(N\) layers.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_111.jpg}
+	\caption{Overview of modern transformer architectures, their training data, resources, and computational costs. For instance, Gopher (Rae et al., 2021) reportedly cost around \$3,768,320 to train on Google Cloud (evaluation pricing).}
+	\label{fig:chapter17_transformer_architectures}
+\end{figure}
+
+\noindent
+Today’s large-scale models typically adopt this simplified transformer block. As shown in \autoref{fig:chapter17_transformer_architectures}, newer architectures require substantial computational resources—yet their performance gains have been profound, with models like GPT-3 demonstrating remarkable language generation and comprehension.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_120.jpg}
+	\caption{GPT-3 demonstrates style transfer by emulating various literary styles—including an Ernest Hemingway-style parody of the Harry Potter series—showcasing complex, stylistic language generation.}
+	\label{fig:chapter17_gpt3_style_transfer}
+\end{figure}
+
+\newpage
+\subsubsection{Further Reading and Resources}
+
+\begin{itemize}
+	\item \textbf{The Annotated Transformer:}  
+	A thorough, annotated PyTorch implementation of the original Transformer from Harvard NLP. It provides step-by-step explanations of each component’s math and code.  
+	Available \href{https://nlp.seas.harvard.edu/annotated-transformer/}{here}.
+	
+	\item \textbf{Transformers from Scratch by Andrej Karpathy:}  
+	A hands-on video tutorial building a Transformer model in PyTorch from the ground up—ideal for deepening practical understanding.  
+	Available \href{https://www.youtube.com/watch?v=kCc8FmEb1nY&ab_channel=AndrejKarpathy}{here}.
+\end{itemize}
+
+\subsubsection{Bridging Towards Vision Transformers}
+
+\noindent
+Seeing how effectively transformers handle sequences, the next natural step was to apply them to computer vision. Vision Transformers (ViTs) treat image patches as sequences, feeding them through the same self-attention mechanism. This approach now rivals or exceeds state-of-the-art convolution-based methods in image classification, highlighting the remarkable adaptability of the transformer block. In the following chapter, we delve into how images are tokenized and processed through these attention layers, illustrating the expansive reach and potential of transformer-based models.
+
 
 
 

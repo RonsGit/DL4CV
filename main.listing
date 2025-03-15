@@ -1,34 +1,21 @@
-	import torch
-	import torch.nn.functional as F
-	
-	class MultiHeadSelfAttention(torch.nn.Module):
-	def __init__(self, dim_model, num_heads):
+	class TransformerBlock(nn.Module):
+	def __init__(self, d_model, heads):
 	super().__init__()
-	assert dim_model % num_heads == 0, "D_model must be divisible by num_heads"
-	self.num_heads = num_heads
-	self.d_head = dim_model // num_heads
 	
-	# Combine all heads' Q, K, V projections into a single large matrix
-	self.W_qkv = torch.nn.Linear(dim_model, dim_model * 3, bias=False)
-	self.W_o = torch.nn.Linear(dim_model, dim_model, bias=False)
+	self.attention = SelfAttention(d_model, heads=heads)
+	self.norm1 = nn.LayerNorm(d_model)
+	self.norm2 = nn.LayerNorm(d_model)
 	
-	def forward(self, X):
-	batch_size, seq_len, dim_model = X.shape
+	self.ff = nn.Sequential(
+	nn.Linear(d_model, 4 * d_model),
+	nn.ReLU(),
+	nn.Linear(4 * d_model, d_model))
 	
-	# Compute Q, K, V using a single matrix multiplication
-	QKV = self.W_qkv(X)  # Shape: [B, L, 3 * D_model]
-	Q, K, V = torch.chunk(QKV, 3, dim=-1)  # Split into three parts
+	def forward(self, x):
+	# Self-Attention with residual connection and layer normalization
+	attended = self.attention(x)
+	x = self.norm1(attended + x)
 	
-	# Reshape for multi-head processing
-	Q = Q.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
-	K = K.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
-	V = V.view(batch_size, seq_len, self.num_heads, self.d_head).transpose(1, 2)
-	
-	# Compute scaled dot-product attention
-	scores = torch.matmul(Q, K.transpose(-2, -1)) / self.d_head**0.5
-	weights = F.softmax(scores, dim=-1)
-	heads = torch.matmul(weights, V)  # Shape: [B, H, L, d_head]
-	
-	# Concatenate heads and apply final linear projection
-	heads = heads.transpose(1, 2).contiguous().view(batch_size, seq_len, dim_model)
-	return self.W_o(heads)  # Output shape: [B, L, D_model]
+	# Feed-Forward with residual connection and layer normalization
+	fedforward = self.ff(x)
+	return self.norm2(fedforward + x)

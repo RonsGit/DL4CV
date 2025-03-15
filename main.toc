@@ -1267,52 +1267,89 @@
 \contentsline {subsection}{\numberline {17.5.2}Non-Linearity in Self-Attention}{579}{subsection.17.5.2}%
 \contentsline {subsection}{\numberline {17.5.3}Permutation Equivariance in Self-Attention}{580}{subsection.17.5.3}%
 \contentsline {subsubsection}{When is Permutation Equivariance a Problem?}{580}{section*.1141}%
-\contentsline {subsection}{\numberline {17.5.4}Positional Encodings}{581}{subsection.17.5.4}%
+\contentsline {subsection}{\numberline {17.5.4}Positional Encodings: Introduction}{581}{subsection.17.5.4}%
 \contentsline {paragraph}{Why Not Use Simple Positional Indices?}{581}{section*.1142}%
-\contentsline {subsubsection}{Sinusoidal Positional Encoding: Definition and Properties}{582}{section*.1143}%
-\contentsline {subsubsection}{Intuition Behind Sinusoidal Encoding}{583}{section*.1145}%
-\contentsline {subsubsection}{Why Use Both Sine and Cosine?}{583}{section*.1146}%
-\contentsline {subsubsection}{Does Positional Information Vanish in Deeper Layers?}{584}{section*.1147}%
-\contentsline {subsubsection}{Learned Positional Encodings: An Alternative Approach}{584}{section*.1148}%
-\contentsline {paragraph}{Definition}{584}{section*.1149}%
-\contentsline {paragraph}{Examples of Learned Positional Encodings}{584}{section*.1150}%
-\contentsline {paragraph}{Advantages and Disadvantages of Learned Positional Embeddings}{584}{section*.1151}%
-\contentsline {paragraph}{Conclusion}{585}{section*.1152}%
-\contentsline {subsection}{\numberline {17.5.5}Masked Self-Attention Layer}{586}{subsection.17.5.5}%
-\contentsline {subsubsection}{Why Do We Need Masking?}{586}{section*.1153}%
-\contentsline {subsubsection}{Applying the Mask in Attention Computation}{586}{section*.1154}%
-\contentsline {subsubsection}{How Masking Affects the Attention Weights}{586}{section*.1155}%
-\contentsline {subsubsection}{Example of Masking in a Short Sequence}{587}{section*.1157}%
-\contentsline {subsubsection}{Handling Batches with Variable-Length Sequences}{587}{section*.1158}%
-\contentsline {paragraph}{Why is Padding Necessary?}{587}{section*.1159}%
-\contentsline {subsubsection}{Moving on to Input Processing with Self-Attention}{588}{section*.1160}%
-\contentsline {subsection}{\numberline {17.5.6}Processing Inputs with Self-Attention}{589}{subsection.17.5.6}%
-\contentsline {subsubsection}{Parallelization in Self-Attention}{589}{section*.1161}%
-\contentsline {subsubsection}{Handling Batches of Sequences with Different Lengths}{590}{section*.1162}%
-\contentsline {subsubsection}{Why is Self-Attention Parallelizable?}{591}{section*.1163}%
-\contentsline {subsubsection}{Computational Complexity of Self-Attention, RNNs, and Convolutions}{591}{section*.1164}%
-\contentsline {subsubsection}{When is Self-Attention Computationally Efficient?}{591}{section*.1165}%
-\contentsline {subsubsection}{Conclusion: When to Use Self-Attention?}{592}{section*.1166}%
-\contentsline {subsection}{\numberline {17.5.7}Multi-Head Self-Attention Layer}{593}{subsection.17.5.7}%
-\contentsline {subsubsection}{Motivation}{593}{section*.1167}%
-\contentsline {paragraph}{Analogy with Convolutional Kernels}{593}{section*.1168}%
-\contentsline {paragraph}{Diversity in Attention Patterns}{593}{section*.1169}%
-\contentsline {subsubsection}{How Multi-Head Attention Works}{593}{section*.1170}%
-\contentsline {paragraph}{Splitting Dimensions}{593}{section*.1171}%
-\contentsline {paragraph}{Computing Multi-Head Attention}{594}{section*.1172}%
-\contentsline {paragraph}{Concatenation and Output Projection}{594}{section*.1173}%
-\contentsline {subsubsection}{Optimized Implementation and Linear Projection}{595}{section*.1175}%
-\contentsline {subsubsection}{PyTorch Implementation of Multi-Head Attention}{596}{section*.1176}%
-\contentsline {subsubsection}{Stepping Stone to Transformers}{596}{section*.1177}%
-\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{597}{chapter.18}%
-\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{598}{chapter.19}%
-\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{599}{chapter.20}%
-\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{600}{chapter.21}%
-\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{601}{chapter.22}%
-\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{602}{chapter.23}%
-\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{603}{chapter.24}%
-\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{604}{chapter.25}%
-\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{605}{chapter.26}%
-\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{606}{chapter.27}%
-\contentsline {chapter}{\numberline {28}Mamba: State Space Model (Transformer Alternative?)}{607}{chapter.28}%
+\contentsline {subsection}{\numberline {17.5.5}Sinusoidal Positional Encoding}{581}{subsection.17.5.5}%
+\contentsline {subsubsection}{Mathematical Definition}{582}{section*.1143}%
+\contentsline {paragraph}{Intuition: Multiple Frequencies for Local \& Global Positioning}{582}{section*.1144}%
+\contentsline {subsubsection}{Removing Ambiguity with Sine and Cosine}{582}{section*.1146}%
+\contentsline {subsubsection}{Why Use \(\displaystyle 10000\) in the Denominator?}{583}{section*.1148}%
+\contentsline {subsubsection}{Frequency Variation and Intuition}{583}{section*.1149}%
+\contentsline {paragraph}{Concrete Example:}{585}{section*.1151}%
+\contentsline {subsubsection}{How Relative Position Awareness Emerges}{585}{section*.1152}%
+\contentsline {paragraph}{Why This Matters for Relative Positioning}{585}{section*.1153}%
+\contentsline {subsubsection}{Does Positional Information Vanish in Deeper Layers?}{586}{section*.1155}%
+\contentsline {subsubsection}{Why Sinusoidal Encoding Solves Previous Limitations}{586}{section*.1156}%
+\contentsline {subsubsection}{Conclusion on Sinusoidal Positional Encoding}{586}{section*.1157}%
+\contentsline {subsection}{\numberline {17.5.6}Learned Positional Encodings: An Alternative Approach}{587}{subsection.17.5.6}%
+\contentsline {paragraph}{Definition and Mechanics}{587}{section*.1158}%
+\contentsline {paragraph}{Examples of Learned Positional Encodings}{587}{section*.1159}%
+\contentsline {subparagraph}{Highlighting Crucial Positions or Transitions}{587}{subparagraph*.1160}%
+\contentsline {paragraph}{Why Task-Specific Optimization of Position is Useful}{587}{section*.1161}%
+\contentsline {subsubsection}{Pros \& Cons of Learned Positional Embeddings}{588}{section*.1162}%
+\contentsline {paragraph}{Conclusion on Learned Positional Embeddings}{589}{section*.1163}%
+\contentsline {subsection}{\numberline {17.5.7}Masked Self-Attention Layer}{590}{subsection.17.5.7}%
+\contentsline {subsubsection}{Why Do We Need Masking?}{590}{section*.1164}%
+\contentsline {subsubsection}{Applying the Mask in Attention Computation}{590}{section*.1165}%
+\contentsline {subsubsection}{How Masking Affects the Attention Weights}{590}{section*.1166}%
+\contentsline {subsubsection}{Example of Masking in a Short Sequence}{591}{section*.1168}%
+\contentsline {subsubsection}{Handling Batches with Variable-Length Sequences}{591}{section*.1169}%
+\contentsline {paragraph}{Why is Padding Necessary?}{591}{section*.1170}%
+\contentsline {subsubsection}{Moving on to Input Processing with Self-Attention}{592}{section*.1171}%
+\contentsline {subsection}{\numberline {17.5.8}Processing Inputs with Self-Attention}{593}{subsection.17.5.8}%
+\contentsline {subsubsection}{Parallelization in Self-Attention}{593}{section*.1172}%
+\contentsline {subsubsection}{Handling Batches of Sequences with Different Lengths}{594}{section*.1173}%
+\contentsline {subsubsection}{Why is Self-Attention Parallelizable?}{595}{section*.1174}%
+\contentsline {subsubsection}{Computational Complexity of Self-Attention, RNNs, and Convolutions}{595}{section*.1175}%
+\contentsline {subsubsection}{When is Self-Attention Computationally Efficient?}{595}{section*.1176}%
+\contentsline {subsubsection}{Conclusion: When to Use Self-Attention?}{596}{section*.1177}%
+\contentsline {subsection}{\numberline {17.5.9}Multi-Head Self-Attention Layer}{597}{subsection.17.5.9}%
+\contentsline {subsubsection}{Motivation}{597}{section*.1178}%
+\contentsline {paragraph}{Analogy with Convolutional Kernels}{597}{section*.1179}%
+\contentsline {paragraph}{Diversity in Attention Patterns}{597}{section*.1180}%
+\contentsline {subsubsection}{How Multi-Head Attention Works}{597}{section*.1181}%
+\contentsline {paragraph}{Splitting Dimensions}{597}{section*.1182}%
+\contentsline {paragraph}{Computing Multi-Head Attention}{598}{section*.1183}%
+\contentsline {paragraph}{Concatenation and Output Projection}{598}{section*.1184}%
+\contentsline {subsubsection}{Optimized Implementation and Linear Projection}{599}{section*.1186}%
+\contentsline {subsubsection}{PyTorch Implementation of Multi-Head Attention}{600}{section*.1187}%
+\contentsline {subsubsection}{Stepping Stone to Transformers and Vision Applications}{600}{section*.1188}%
+\contentsline {subsection}{\numberline {17.5.10}Self-Attention for Vision Applications}{601}{subsection.17.5.10}%
+\contentsline {paragraph}{Generating Queries, Keys, and Values}{601}{section*.1189}%
+\contentsline {paragraph}{Reshaping for Attention Computation}{601}{section*.1190}%
+\contentsline {paragraph}{Computing Attention Scores}{601}{section*.1191}%
+\contentsline {paragraph}{Normalizing Attention Weights}{602}{section*.1192}%
+\contentsline {paragraph}{Computing the Attention Output}{602}{section*.1193}%
+\contentsline {paragraph}{Reshaping, Final Projection, and Residual Connection}{602}{section*.1194}%
+\contentsline {paragraph}{Summary}{603}{section*.1196}%
+\contentsline {subsubsection}{Bridging Towards Transformers}{603}{section*.1197}%
+\contentsline {section}{\numberline {17.6}Transformer}{604}{section.17.6}%
+\contentsline {subsection}{\numberline {17.6.1}Motivation and Introduction}{604}{subsection.17.6.1}%
+\contentsline {subsubsection}{Three Ways of Processing Sequences}{604}{section*.1198}%
+\contentsline {paragraph}{Recurrent Neural Networks (RNNs)}{604}{section*.1199}%
+\contentsline {paragraph}{1D Convolution for Sequence Processing}{604}{section*.1200}%
+\contentsline {paragraph}{Self-Attention Mechanism}{605}{section*.1201}%
+\contentsline {subsection}{\numberline {17.6.2}Why the Transformer?}{605}{subsection.17.6.2}%
+\contentsline {subsection}{\numberline {17.6.3}Seq2Seq Original Transformer Workflow}{607}{subsection.17.6.3}%
+\contentsline {subsubsection}{Transformer Encoder Block: Structure and Reasoning}{609}{section*.1205}%
+\contentsline {subsubsection}{Transformer Decoder Block: Structure and Reasoning}{610}{section*.1206}%
+\contentsline {subsubsection}{Transitioning to Unified Transformer Blocks}{611}{section*.1207}%
+\contentsline {subsection}{\numberline {17.6.4}The Modern Transformer Block}{612}{subsection.17.6.4}%
+\contentsline {subsubsection}{Structure of the Modern Transformer Block}{612}{section*.1209}%
+\contentsline {subsubsection}{PyTorch Implementation}{613}{section*.1210}%
+\contentsline {subsubsection}{Why the Modern Transformer Block?}{614}{section*.1211}%
+\contentsline {subsubsection}{Key Benefits of the Modern Transformer Block}{614}{section*.1213}%
+\contentsline {subsubsection}{Further Reading and Resources}{616}{section*.1216}%
+\contentsline {subsubsection}{Bridging Towards Vision Transformers}{616}{section*.1217}%
+\contentsline {chapter}{\numberline {18}Lecture 18: Vision Transformers}{617}{chapter.18}%
+\contentsline {chapter}{\numberline {19}Lecture 19: Generative Models I}{618}{chapter.19}%
+\contentsline {chapter}{\numberline {20}Lecture 20: Generative Models II}{619}{chapter.20}%
+\contentsline {chapter}{\numberline {21}Lecture 21: Visualizing Models \& Generating Images}{620}{chapter.21}%
+\contentsline {chapter}{\numberline {22}Lecture 22: Self-Supervised Learning}{621}{chapter.22}%
+\contentsline {chapter}{\numberline {23}Lecture 23: 3D vision}{622}{chapter.23}%
+\contentsline {chapter}{\numberline {24}Lecture 24: Videos}{623}{chapter.24}%
+\contentsline {chapter}{\numberline {25}Lecture 25: Reinforcement Learning}{624}{chapter.25}%
+\contentsline {chapter}{\numberline {26}Model Compression: Quantization and Pruning}{625}{chapter.26}%
+\contentsline {chapter}{\numberline {27}Foundation Models in Computer Vision}{626}{chapter.27}%
+\contentsline {chapter}{\numberline {28}Mamba: State Space Model (Transformer Alternative?)}{627}{chapter.28}%
 \contentsfinish 

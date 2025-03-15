@@ -1,18 +1,17 @@
 [0] Config.pm:308> INFO - This is Biber 2.20
 [0] Config.pm:311> INFO - Logfile is 'main.blg'
-[133] biber-MSWIN64:340> INFO - === 
-[188] Biber.pm:420> INFO - Reading 'main.bcf'
-[466] Biber.pm:994> INFO - Found 172 citekeys in bib section 0
-[483] Biber.pm:4463> INFO - Processing section 0
-[495] Biber.pm:4654> INFO - Looking for bibtex file 'bibliography.bib' for section 0
-[610] bibtex.pm:1713> INFO - LaTeX decoding ...
-[812] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
-[1976] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[1976] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[1976] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[1976] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
-[2160] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
-[2289] bbl.pm:779> INFO - Output to main.bbl
-[2296] Biber.pm:131> WARN - Duplicate entry key: 'devlin2019_bert' in file 'bibliography.bib', skipping ...
-[2296] Biber.pm:131> WARN - BibTeX subsystem: C:\Users\ronko\AppData\Local\Temp\biber_tmp_HcD6\f4d088b3f9f145b5c3058da33afd57d4_26672.utf8, line 1254, warning: 41 characters of junk seen at toplevel
-[2296] Biber.pm:133> INFO - WARNINGS: 2
+[125] biber-MSWIN64:340> INFO - === 
+[175] Biber.pm:420> INFO - Reading 'main.bcf'
+[450] Biber.pm:994> INFO - Found 175 citekeys in bib section 0
+[467] Biber.pm:4463> INFO - Processing section 0
+[478] Biber.pm:4654> INFO - Looking for bibtex file 'bibliography.bib' for section 0
+[588] bibtex.pm:1713> INFO - LaTeX decoding ...
+[791] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
+[1940] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1940] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1940] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[1940] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
+[2127] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[2257] bbl.pm:779> INFO - Output to main.bbl
+[2264] Biber.pm:131> WARN - legacy month field '09--15 Jun' in entry 'zhang2019_self_attention_gan' is not an integer - this will probably not sort properly.
+[2264] Biber.pm:133> INFO - WARNINGS: 1

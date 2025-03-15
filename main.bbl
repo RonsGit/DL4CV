@@ -19,6 +19,30 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
+    \entry{jalammar2018_illustrated}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=071e8b59bcc6de28244fea3bf962a165}{%
+           family={Alammar},
+           familyi={A\bibinitperiod},
+           given={Jay},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{fullhash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{fullhashraw}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{bibnamehash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{authorbibnamehash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{authornamehash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{authorfullhash}{071e8b59bcc6de28244fea3bf962a165}
+      \strng{authorfullhashraw}{071e8b59bcc6de28244fea3bf962a165}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://jalammar.github.io/illustrated-transformer/}}
+      \field{title}{The Illustrated Transformer}
+      \field{year}{2018}
+    \endentry
     \entry{flamingo2022_fewshot}{article}{}{}
       \true{moreauthor}
       \true{morelabelname}
@@ -6693,6 +6717,7 @@
       \strng{authornamehash}{b6aea1a416c89509a7df1cbb69249cb6}
       \strng{authorfullhash}{b6aea1a416c89509a7df1cbb69249cb6}
       \strng{authorfullhashraw}{b6aea1a416c89509a7df1cbb69249cb6}
+      \field{extraname}{1}
       \field{sortinit}{W}
       \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
       \field{labelnamesource}{author}
@@ -6705,6 +6730,35 @@
       \endverb
       \verb{url}
       \verb https://www.wikiwand.com/en/articles/Aliasing
+      \endverb
+    \endentry
+    \entry{wiki_sine_cosine}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=b6aea1a416c89509a7df1cbb69249cb6}{%
+           family={{Wikipedia contributors}},
+           familyi={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{fullhash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{fullhashraw}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{bibnamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorbibnamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authornamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorfullhash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorfullhashraw}{b6aea1a416c89509a7df1cbb69249cb6}
+      \field{extraname}{2}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 2025-03-14}
+      \field{title}{Sine and cosine --- Wikipedia{,} The Free Encyclopedia}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.wikiwand.com/en/articles/Sine_and_cosine
+      \endverb
+      \verb{url}
+      \verb https://www.wikiwand.com/en/articles/Sine_and_cosine
       \endverb
     \endentry
     \entry{williams1992_simple}{article}{}{}
@@ -7086,6 +7140,80 @@
       \verb 1311.2901
       \endverb
     \endentry
+    \entry{zhang2019_self_attention_gan}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=e29e2cdbaa50d58d413b689667ace7db}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Han},
+           giveni={H\bibinitperiod}}}%
+        {{hash=5d2585c11210cf1d4512e6e0a03ec315}{%
+           family={Goodfellow},
+           familyi={G\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod}}}%
+        {{hash=46ea3ac4cd400961380ad39adf32ebed}{%
+           family={Metaxas},
+           familyi={M\bibinitperiod},
+           given={Dimitris},
+           giveni={D\bibinitperiod}}}%
+        {{hash=a04932af4057bbbbad95d73521f2d22b}{%
+           family={Odena},
+           familyi={O\bibinitperiod},
+           given={Augustus},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=050c0df95e5eb5c3218fdd148d0e17a4}{%
+           family={Chaudhuri},
+           familyi={C\bibinitperiod},
+           given={Kamalika},
+           giveni={K\bibinitperiod}}}%
+        {{hash=bd2be300d445e9f6db7808f9533e66cb}{%
+           family={Salakhutdinov},
+           familyi={S\bibinitperiod},
+           given={Ruslan},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {PMLR}%
+      }
+      \strng{namehash}{435720fb71fff6bd0bc5be7059a41b43}
+      \strng{fullhash}{26666edc4bd750155bded002e07cd299}
+      \strng{fullhashraw}{26666edc4bd750155bded002e07cd299}
+      \strng{bibnamehash}{435720fb71fff6bd0bc5be7059a41b43}
+      \strng{authorbibnamehash}{435720fb71fff6bd0bc5be7059a41b43}
+      \strng{authornamehash}{435720fb71fff6bd0bc5be7059a41b43}
+      \strng{authorfullhash}{26666edc4bd750155bded002e07cd299}
+      \strng{authorfullhashraw}{26666edc4bd750155bded002e07cd299}
+      \strng{editorbibnamehash}{ddb716c8c736fb868f09f38a0f4dd1ed}
+      \strng{editornamehash}{ddb716c8c736fb868f09f38a0f4dd1ed}
+      \strng{editorfullhash}{ddb716c8c736fb868f09f38a0f4dd1ed}
+      \strng{editorfullhashraw}{ddb716c8c736fb868f09f38a0f4dd1ed}
+      \field{extraname}{1}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In this paper, we propose the Self-Attention Generative Adversarial Network (SAGAN) which allows attention-driven, long-range dependency modeling for image generation tasks. Traditional convolutional GANs generate high-resolution details as a function of only spatially local points in lower-resolution feature maps. In SAGAN, details can be generated using cues from all feature locations. Moreover, the discriminator can check that highly detailed features in distant portions of the image are consistent with each other. Furthermore, recent work has shown that generator conditioning affects GAN performance. Leveraging this insight, we apply spectral normalization to the GAN generator and find that this improves training dynamics. The proposed SAGAN performs better than prior work, boosting the best published Inception score from 36.8 to 52.52 and reducing Fréchet Inception distance from 27.62 to 18.65 on the challenging ImageNet dataset. Visualization of the attention layers shows that the generator leverages neighborhoods that correspond to object shapes rather than local regions of fixed shape.}
+      \field{booktitle}{Proceedings of the 36th International Conference on Machine Learning}
+      \field{month}{09--15 Jun}
+      \field{series}{Proceedings of Machine Learning Research}
+      \field{title}{Self-Attention Generative Adversarial Networks}
+      \field{volume}{97}
+      \field{year}{2019}
+      \field{pages}{7354\bibrangedash 7363}
+      \range{pages}{10}
+      \verb{file}
+      \verb http://proceedings.mlr.press/v97/zhang19d/zhang19d.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://proceedings.mlr.press/v97/zhang19d.html
+      \endverb
+      \verb{url}
+      \verb https://proceedings.mlr.press/v97/zhang19d.html
+      \endverb
+    \endentry
     \entry{zhang2020_resnest}{misc}{}{}
       \name{author}{12}{}{%
         {{hash=df428416bb33b1ea50cc8131fd7dd043}{%
@@ -7157,7 +7285,7 @@
       \strng{authornamehash}{de8b15c6d3bca9b0a5b8a0414005690d}
       \strng{authorfullhash}{8b68931a7aee04fa2dcc7d87f61a5689}
       \strng{authorfullhashraw}{8b68931a7aee04fa2dcc7d87f61a5689}
-      \field{extraname}{1}
+      \field{extraname}{2}
       \field{sortinit}{Z}
       \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \field{labelnamesource}{author}
@@ -7251,7 +7379,7 @@
       \strng{authornamehash}{47ed15e39b226ffdc3da65f48de59b1f}
       \strng{authorfullhash}{99e17545100e06ee9db2c0f295e2db48}
       \strng{authorfullhashraw}{99e17545100e06ee9db2c0f295e2db48}
-      \field{extraname}{2}
+      \field{extraname}{3}
       \field{sortinit}{Z}
       \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \field{labelnamesource}{author}
@@ -7301,7 +7429,7 @@
       \strng{authornamehash}{d8f4dadb2f7478b1e29f1f5f541e5a3e}
       \strng{authorfullhash}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
       \strng{authorfullhashraw}{2b7b29fe45fee2bd5ddb1dd1cbbff521}
-      \field{extraname}{3}
+      \field{extraname}{4}
       \field{sortinit}{Z}
       \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
       \field{labelnamesource}{author}
