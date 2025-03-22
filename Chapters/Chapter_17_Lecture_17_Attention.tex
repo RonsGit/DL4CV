@@ -1681,7 +1681,7 @@ O_{\text{final}} = O + X.
 
 \noindent The \textbf{Transformer} architecture, introduced in \textit{“Attention is All You Need”} \cite{vaswani2017_attention}, eliminated recurrence and convolutions, replacing them with a \textbf{stack of self-attention-based encoder and decoder blocks}. This design enabled fully parallelized processing, significantly improving efficiency while maintaining the ability to model long-range dependencies.
 
-\noindent Later Transformer models, such as BERT and GPT, streamlined this approach by discarding the explicit encoder-decoder structure. Instead, they employed a \textbf{stack of identical Transformer blocks}—either \textbf{encoder-only} (e.g., BERT) for bidirectional representation learning or \textbf{decoder-only} (e.g., GPT) for autoregressive text generation. This evolution demonstrated that a single, unified \textbf{Transformer block}, rather than a separate encoder-decoder architecture, was sufficient for state-of-the-art performance across a wide range of sequence-based tasks.
+\noindent Later Transformer models, such as BERT and GPT, streamlined this approach by discarding the explicit encoder-decoder structure. Instead, they employed a \textbf{stack of identical Transformer blocks}—either \textbf{encoder-only} (e.g., BERT \cite{devlin2019_bert}) for bidirectional representation learning or \textbf{decoder-only} (e.g., GPT \cite{radford2019_language}) for autoregressive text generation. This evolution demonstrated that a single, unified \textbf{Transformer block}, rather than a separate encoder-decoder architecture, was sufficient for state-of-the-art performance across a wide range of sequence-based tasks.
 
 \begin{figure}[H]
 	\centering

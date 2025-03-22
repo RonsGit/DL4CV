@@ -1,21 +1,4 @@
-	class TransformerBlock(nn.Module):
-	def __init__(self, d_model, heads):
-	super().__init__()
-	
-	self.attention = SelfAttention(d_model, heads=heads)
-	self.norm1 = nn.LayerNorm(d_model)
-	self.norm2 = nn.LayerNorm(d_model)
-	
-	self.ff = nn.Sequential(
-	nn.Linear(d_model, 4 * d_model),
-	nn.ReLU(),
-	nn.Linear(4 * d_model, d_model))
-	
-	def forward(self, x):
-	# Self-Attention with residual connection and layer normalization
-	attended = self.attention(x)
-	x = self.norm1(attended + x)
-	
-	# Feed-Forward with residual connection and layer normalization
-	fedforward = self.ff(x)
-	return self.norm2(fedforward + x)
+		# Compute attention mask: compare group IDs between tokens in each window
+		attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2)
+		attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0))
+		attn_mask = attn_mask.masked_fill(attn_mask == 0, float(0.0))

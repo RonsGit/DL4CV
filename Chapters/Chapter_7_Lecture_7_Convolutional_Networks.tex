@@ -2371,7 +2371,7 @@ Despite its effectiveness, BatchNorm has several downsides:
 \end{enrichment}
 
 \newpage
-\subsubsection{Alternative Normalization Methods}
+\subsection{Alternative Normalization Methods (LN, IN, GN, ...)}
 \label{subsubsec:alt_norms}
 
 Despite BatchNorm’s widespread success, it has drawbacks—particularly with small or non-i.i.d.\ batches. Various alternatives have emerged to address these limitations:
@@ -2387,9 +2387,8 @@ In many CNN applications with large batches, BatchNorm still tends to excel. How
 \subsubsection{Layer Normalization (LN)}
 \label{subsubsec:layer_norm}
 
-\noindent
 \paragraph{Core Idea}
-Layer Normalization operates \emph{per sample}, computing mean and variance across all features/channels of a single training example. This makes it insensitive to batch size (and thus suitable for tiny or single-sample batches).
+Layer Normalization (LN) operates \emph{per training example}, normalizing across all features of a single sample rather than across a batch. Unlike Batch Normalization (BN), which depends on batch-level statistics, LN is fully independent of batch size. This makes it particularly well-suited for small-batch or single-sequence settings, such as RNNs and Transformers.
 
 \begin{figure}[H]
 	\centering
@@ -2398,97 +2397,55 @@ Layer Normalization operates \emph{per sample}, computing mean and variance acro
 	\label{fig:chapter7_layernorm_fc}
 \end{figure}
 
-\paragraph{Definition}
-For an input vector \(\mathbf{x} \in \mathbb{R}^N\),
+\paragraph{Definition (Fully Connected Layers)}
+Given an input vector \(\mathbf{x} \in \mathbb{R}^N\) corresponding to a single training example:
 \[
-\mu(\mathbf{x}) = \frac{1}{N}\sum_{i=1}^N x_i,
-\quad
-\sigma^2(\mathbf{x})
-= \frac{1}{N}\sum_{i=1}^N \bigl(x_i - \mu(\mathbf{x})\bigr)^2.
+\mu(\mathbf{x}) = \frac{1}{N} \sum_{i=1}^N x_i, \qquad
+\sigma^2(\mathbf{x}) = \frac{1}{N} \sum_{i=1}^N \left(x_i - \mu(\mathbf{x})\right)^2.
 \]
-Then LN transforms each component \(x_i\) to:
+Each feature is then normalized as:
 \[
-y_i = \gamma_i\,\frac{x_i - \mu(\mathbf{x})}{\sqrt{\sigma^2(\mathbf{x}) + \epsilon}} + \beta_i,\quad i=1,\dots,N,
+y_i = \gamma_i \, \frac{x_i - \mu(\mathbf{x})}{\sqrt{\sigma^2(\mathbf{x}) + \epsilon}} + \beta_i,
+\quad \text{for } i = 1, \dots, N,
 \]
-where \(\{\gamma_i\}\) and \(\{\beta_i\}\) are trainable parameters (per feature), and \(\epsilon\) is a small constant for numerical stability.
-
-\subsubsection{Layer Normalization (LN)}
-\label{subsubsec:layer_norm}
-
-\noindent
-\textbf{Core Idea.}
-Layer Normalization (LN) operates \emph{per sample}, computing mean and variance \emph{within a single training example} rather than across a batch. Unlike BatchNorm, LN thus remains effective when the batch size is very small or even one.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_96.jpg}
-	\caption{Layer Normalization in a fully connected layer: each sample’s hidden activations are normalized independently.}
-	\label{fig:chapter7_layernorm_fc}
-\end{figure}
-
-\paragraph{Definition (Fully Connected Layers).}
-Given an input vector \(\mathbf{x} \in \mathbb{R}^N\):
-\[
-\mu(\mathbf{x}) 
-= \frac{1}{N}\sum_{i=1}^N x_i,
-\quad
-\sigma^2(\mathbf{x})
-= \frac{1}{N}\sum_{i=1}^N \bigl(x_i - \mu(\mathbf{x})\bigr)^2.
-\]
-Each component is normalized and then scaled/shifted:
-\[
-y_i 
-= \gamma_i \,\frac{x_i - \mu(\mathbf{x})}
-{\sqrt{\sigma^2(\mathbf{x})+\epsilon}}
-\;+\;
-\beta_i,
-\quad
-i=1,\dots,N,
-\]
-where \(\{\gamma_i\}\) and \(\{\beta_i\}\) are learnable parameters. Here, LN does not rely on batch-level statistics, making it robust for small-batch or sequence-based scenarios.
+where \(\gamma_i\) and \(\beta_i\) are learnable parameters (per feature), and \(\epsilon\) is a small constant for numerical stability.
 
 \paragraph{Extension to Convolutional Layers}
-
-Layer Normalization can be applied to convolutional layers by computing the mean and variance across all channels and spatial positions within each individual sample:
-
-\begin{equation}
-	\mu_{n} = \frac{1}{C H W} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} x_{n i j k},
-	\quad
-	\sigma_{n}^2 = \frac{1}{C H W} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} \bigl(x_{n i j k}-\mu_{n}\bigr)^2.
-\end{equation}
-
-Each activation \(x_{n i j k}\) is then normalized as:
-
-\begin{equation}
-	\hat{x}_{n i j k} = \frac{x_{n i j k}-\mu_{n}}{\sqrt{\sigma_{n}^2+\epsilon}},
-\end{equation}
-
-followed by learnable scale \(\gamma\) and shift \(\beta\), maintaining the network’s expressiveness.
+For CNNs, LN is applied across all channels and spatial dimensions of each sample independently. For an input tensor \(x \in \mathbb{R}^{N \times C \times H \times W}\), LN is computed per sample \(n\) as:
+\[
+\mu_n = \frac{1}{CHW} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} x_{nijk}, \qquad
+\sigma_n^2 = \frac{1}{CHW} \sum_{i=1}^{C} \sum_{j=1}^{H} \sum_{k=1}^{W} \left(x_{nijk} - \mu_n\right)^2.
+\]
+Then, each activation \(x_{nijk}\) is normalized as:
+\[
+\hat{x}_{nijk} = \frac{x_{nijk} - \mu_n}{\sqrt{\sigma_n^2 + \epsilon}},
+\]
+followed by learnable scale and shift parameters \(\gamma\), \(\beta\).
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/layer_norm.jpg}
-	\caption{Visualization of Layer Normalization operation, indicating how it is applied to each input image in the batch, with its own corresponding mean and std values \cite{becominghuman2018_allaboutnorm}.}
+	\caption{Visualization of Layer Normalization applied across all channels and spatial dimensions within each image independently. Figure adapted from \cite{becominghuman2018_allaboutnorm}.}
 	\label{fig:chapter7_layernorm_visual}
 \end{figure}
 
 \paragraph{Interpretation}
 \begin{itemize}
-	\item \textbf{Per-Sample Aggregation:} All features (channels) and spatial positions in the \emph{same} image share the same mean \(\mu_n\) and variance \(\sigma_n^2\), ensuring consistency across different feature maps.
-	\item \textbf{Batch-Size Independence:} No averaging across different samples, making LN robust for small-batch or sequence-oriented settings (e.g., RNNs, Transformers).
+	\item \textbf{Per-Sample Aggregation:} LN aggregates statistics across features \emph{within} each sample (vector or image), resulting in consistent normalization that doesn’t depend on other samples in the batch.
+	\item \textbf{Spatial and Channel Awareness:} For images, LN computes a single mean and variance for all pixels and channels in one image, enabling normalization across spatial and semantic dimensions.
+	\item \textbf{Batch-Size Independence:} Since LN doesn’t use inter-sample statistics, it performs well even with very small batches, including batch size 1.
 \end{itemize}
 
-\paragraph{Advantages of LN}
+\paragraph{Advantages of Layer Normalization}
 \begin{enumerate}
-	\item \textbf{Stable with Small Batches:}
-	LN relies solely on per-example statistics, preserving effectiveness even with batch size \(=1\). This is particularly valuable in online learning and reinforcement learning.
-	\item \textbf{Widely Used in RNNs \& Transformers:}
-	Because LN does not average across batches, it naturally suits sequence models. Modern transformer architectures apply LN after multi-head attention and feedforward blocks, enhancing stability and training speed.
+	\item \textbf{Robustness to Small Batches:} LN remains stable and effective in scenarios where batch sizes are small or variable—such as in reinforcement learning, online learning, or NLP inference.
+	\item \textbf{Essential for Sequence Models:} LN is widely adopted in architectures like Transformers and RNNs, where input is typically processed one example (or one time step) at a time. Transformer blocks apply LN after self-attention and feedforward layers to stabilize training and improve convergence.
 \end{enumerate}
 
+\newpage
 \subsubsection{Instance Normalization (IN)}
 A more common normalization approach for images, that resembles layer normalization but makes more sense for a CNN use-case (as it applies per feature map, averaging \textbf{only} over the spatial dimensions, and not on the entirety of the input tensor, across all of the channels). 
-\newpage
+
 \noindent
 \textbf{Definition:} For each sample \(n\) and channel \(c\), \emph{instance normalization} computes the mean and variance across the spatial dimensions \((H \times W)\) only:
 

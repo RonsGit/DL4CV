@@ -2783,11 +2783,40 @@
     <bcf:citekey order="382" intorder="1">zhang2019_self_attention_gan</bcf:citekey>
     <bcf:citekey order="383" intorder="1">vaswani2017_attention</bcf:citekey>
     <bcf:citekey order="384" intorder="1">vaswani2017_attention</bcf:citekey>
-    <bcf:citekey order="385" intorder="1">vaswani2017_attention</bcf:citekey>
-    <bcf:citekey order="386" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="385" intorder="1">devlin2019_bert</bcf:citekey>
+    <bcf:citekey order="386" intorder="1">radford2019_language</bcf:citekey>
     <bcf:citekey order="387" intorder="1">vaswani2017_attention</bcf:citekey>
-    <bcf:citekey order="388" intorder="1">jalammar2018_illustrated</bcf:citekey>
-    <bcf:citekey order="389" intorder="1">jalammar2018_illustrated</bcf:citekey>
+    <bcf:citekey order="388" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="389" intorder="1">vaswani2017_attention</bcf:citekey>
+    <bcf:citekey order="390" intorder="1">jalammar2018_illustrated</bcf:citekey>
+    <bcf:citekey order="391" intorder="1">jalammar2018_illustrated</bcf:citekey>
+    <bcf:citekey order="392" intorder="1">zhang2019_self_attention_gan</bcf:citekey>
+    <bcf:citekey order="393" intorder="1">wang2018_nonlocal_nn</bcf:citekey>
+    <bcf:citekey order="394" intorder="1">chen2020_gpt_pixels</bcf:citekey>
+    <bcf:citekey order="395" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="396" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="397" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="398" intorder="1">chen2020_gpt_pixels</bcf:citekey>
+    <bcf:citekey order="399" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="400" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="401" intorder="1">vit2020_transformers</bcf:citekey>
+    <bcf:citekey order="402" intorder="1">steiner2021_how_to_train_vit</bcf:citekey>
+    <bcf:citekey order="403" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="404" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="405" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="406" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="407" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="408" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="409" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="410" intorder="1">touvron2019_fixres</bcf:citekey>
+    <bcf:citekey order="411" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="412" intorder="1">touvron2021_deit</bcf:citekey>
+    <bcf:citekey order="413" intorder="1">touvron2022_deitiii</bcf:citekey>
+    <bcf:citekey order="414" intorder="1">liu2021_swin</bcf:citekey>
+    <bcf:citekey order="415" intorder="1">liu2022_swinv2</bcf:citekey>
+    <bcf:citekey order="416" intorder="1">fan2021_mvit</bcf:citekey>
+    <bcf:citekey order="417" intorder="1">li2021_improved_mvit</bcf:citekey>
+    <bcf:citekey order="418" intorder="1">tolstikhin2021_mlpmixer</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

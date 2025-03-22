@@ -964,6 +964,16 @@
 	url={https://arxiv.org/abs/1705.03633}, 
 }
 
+@misc{wang2018_nonlocal_nn,
+	title={Non-local Neural Networks}, 
+	author={Xiaolong Wang and Ross Girshick and Abhinav Gupta and Kaiming He},
+	year={2018},
+	eprint={1711.07971},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1711.07971}, 
+}
+
 @inproceedings{hu2018_senet,
 	author = {Jie Hu and Li Shen and Gang Sun},
 	title = {Squeeze-and-Excitation Networks},
@@ -1285,7 +1295,6 @@
 	editor = 	 {Chaudhuri, Kamalika and Salakhutdinov, Ruslan},
 	volume = 	 {97},
 	series = 	 {Proceedings of Machine Learning Research},
-	month = 	 {09--15 Jun},
 	publisher =    {PMLR},
 	pdf = 	 {http://proceedings.mlr.press/v97/zhang19d/zhang19d.pdf},
 	url = 	 {https://proceedings.mlr.press/v97/zhang19d.html},
@@ -1315,6 +1324,14 @@
 	journal   = {arXiv preprint arXiv:2010.11929},
 	year      = {2020}
 }
+
+
+@InProceedings{chen2020_gpt_pixels,
+	title = 	 {Generative Pretraining From Pixels},
+	author =       {Chen, Mark and Radford, Alec and Child, Rewon and Wu, Jeffrey and Jun, Heewoo and Luan, David and Sutskever, Ilya},
+	year = 	 {2020}
+}
+
 
 @article{bochkovskiy2020_yolov4,
 	title={Yolov4: Optimal speed and accuracy of object detection},
@@ -1404,6 +1421,23 @@
 	url={https://kaushikpatnaik.github.io/annotated/papers/2020/07/04/ROI-Pool-and-Align-Pytorch-Implementation.html}
 }
 
+
+@InProceedings{pmlr-v119-chen20s,
+	title = 	 {Generative Pretraining From Pixels},
+	author =       {Chen, Mark and Radford, Alec and Child, Rewon and Wu, Jeffrey and Jun, Heewoo and Luan, David and Sutskever, Ilya},
+	booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+	pages = 	 {1691--1703},
+	year = 	 {2020},
+	editor = 	 {III, Hal Daumé and Singh, Aarti},
+	volume = 	 {119},
+	series = 	 {Proceedings of Machine Learning Research},
+	publisher =    {PMLR},
+	pdf = 	 {http://proceedings.mlr.press/v119/chen20s/chen20s.pdf},
+	url = 	 {https://proceedings.mlr.press/v119/chen20s.html},
+	abstract = 	 {Inspired by progress in unsupervised representation learning for natural language, we examine whether similar models can learn useful representations for images. We train a sequence Transformer to auto-regressively predict pixels, without incorporating knowledge of the 2D input structure. Despite training on low-resolution ImageNet without labels, we find that a GPT-2 scale model learns strong image representations as measured by linear probing, fine-tuning, and low-data classification. On CIFAR-10, we achieve 96.3% accuracy with a linear probe, outperforming a supervised Wide ResNet, and 99.0% accuracy with full fine-tuning, matching the top supervised pre-trained models. We are also competitive with self-supervised benchmarks on ImageNet when substituting pixels for a VQVAE encoding, achieving 69.0% top-1 accuracy on a linear probe of our features.}
+}
+
+
 @InProceedings{huang2020_tfixup,
 	title = 	 {Improving Transformer Optimization Through Better Initialization},
 	author =       {Huang, Xiao Shi and Perez, Felipe and Ba, Jimmy and Volkovs, Maksims},
@@ -1437,6 +1471,16 @@
 	url={https://arxiv.org/abs/2102.06171}, 
 }
 
+@misc{liu2021_swin,
+	title={Swin Transformer: Hierarchical Vision Transformer using Shifted Windows}, 
+	author={Ze Liu and Yutong Lin and Yue Cao and Han Hu and Yixuan Wei and Zheng Zhang and Stephen Lin and Baining Guo},
+	year={2021},
+	eprint={2103.14030},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2103.14030}, 
+}
+
 @misc{bello2021_revisitingresnets,
 	title={Revisiting ResNets: Improved Training and Scaling Strategies}, 
 	author={Irwan Bello and William Fedus and Xianzhi Du and Ekin D. Cubuk and Aravind Srinivas and Tsung-Yi Lin and Jonathon Shlens and Barret Zoph},
@@ -1454,6 +1498,20 @@
 	eprint={2006.15595},
 	archivePrefix={arXiv},
 	primaryClass={cs.CL}
+}
+
+@inproceedings{fan2021_mvit,
+	title={Multiscale Vision Transformers},
+	author={Fan, Haoqi and Xiong, Bo and Mangalam, Karttikeya and Li, Yanghao and Yan, Zhicheng and Dai, Jiteng and Baral, Chao-Yuan and El-Nouby, Alaaeldin and Girdhar, Rohit and Joulin, Armand and others},
+	booktitle={ICCV},
+	year={2021}
+}
+
+@article{li2021_improved_mvit,
+	title={Improved Multiscale Vision Transformers for Classification and Detection},
+	author={Li, Yanghao and Xie, Saining and Dai, Jiteng and Lin, Kaiming and Dollar, Piotr},
+	journal={arXiv preprint arXiv:2111.11429},
+	year={2021}
 }
 
 @inproceedings{levy2021_infonce,
@@ -1519,6 +1577,16 @@
 	url = {https://openai.com/dall-e}
 }
 
+@misc{tolstikhin2021_mlpmixer,
+	title={MLP-Mixer: An all-MLP Architecture for Vision}, 
+	author={Ilya Tolstikhin and Neil Houlsby and Alexander Kolesnikov and Lucas Beyer and Xiaohua Zhai and Thomas Unterthiner and Jessica Yung and Andreas Steiner and Daniel Keysers and Jakob Uszkoreit and Mario Lucic and Alexey Dosovitskiy},
+	year={2021},
+	eprint={2105.01601},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2105.01601}, 
+}
+
 @misc{brock2021_highperformance,
 	title={High-Performance Large-Scale Image Recognition Without Normalization}, 
 	author={Andrew Brock and Soham De and Samuel L. Smith and Karen Simonyan},
@@ -1527,6 +1595,16 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2102.06171}, 
+}
+
+@misc{steiner2021_how_to_train_vit,
+	title={How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers}, 
+	author={Andreas Steiner and Alexander Kolesnikov and Xiaohua Zhai and Ross Wightman and Jakob Uszkoreit and Lucas Beyer},
+	year={2022},
+	eprint={2106.10270},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2106.10270}, 
 }
 
 @misc{zhang2022_dino, 
@@ -1545,6 +1623,23 @@
 	journal = {arXiv preprint},
 	eprint = {2211.04206},
 	year = {2022}
+}
+
+@inproceedings{liu2022_swinv2,
+	title={Swin Transformer V2: Scaling Up Capacity and Resolution},
+	author={Liu, Ze and Hu, Han and Lin, Yutong and Yao, Zhuliang and Xie, Zhenda and Wei, Ying and Ning, Jia and Cao, Yue and Zhang, Zheng and Dong, Li and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@misc{touvron2022_deitiii,
+	title={DeiT III: Revenge of the ViT}, 
+	author={Hugo Touvron and Matthieu Cord and Hervé Jégou},
+	year={2022},
+	eprint={2204.07118},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2204.07118}, 
 }
 
 @misc{oquab2023_dinov2, 

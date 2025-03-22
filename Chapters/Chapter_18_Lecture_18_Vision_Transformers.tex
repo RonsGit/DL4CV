@@ -3,7 +3,1571 @@
 % Chapter-specific content starts here
 \chapter{Lecture 18: Vision Transformers}
 
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 %	CHAPTER 18 - Lecture 18: Vision Transformers
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
+
+\section{Bringing Transformers to Vision Tasks}
+
+\noindent The Transformer architecture, built upon the foundation of self-attention, has revolutionized natural language processing by enabling models to capture long-range dependencies and contextual relationships in sequences. Given this success, researchers have sought to adapt self-attention mechanisms to computer vision tasks. However, unlike text, images are structured as two-dimensional grids with spatially correlated features, presenting unique challenges in directly applying self-attention.
+
+\noindent This chapter explores how self-attention has been progressively integrated into vision models, beginning with augmenting traditional convolutional neural networks (CNNs) and ultimately evolving into fully attention-driven architectures. The goal is to understand how self-attention has transformed vision modeling—from enhancing existing CNNs to fully replacing convolutions with transformer-based structures.
+
+\noindent We will explore three key approaches that highlight this progression:
+
+\begin{enumerate}
+	\item \textbf{Adding Self-Attention Layers to Existing CNN Architectures:} The initial step involves integrating self-attention into standard CNN backbones (e.g., ResNet). This hybrid approach aims to enhance long-range dependency modeling within convolutional frameworks while preserving the spatial locality and efficiency of convolutions.
+	
+	\item \textbf{Replacing Convolution with Local Self-Attention Mechanisms:} Moving beyond hybrid models, this approach eliminates convolutions by replacing them with local self-attention operations. While still constrained by locality, these models offer more flexible and dynamic feature aggregation than fixed convolution kernels.
+	
+	\item \textbf{Eliminating Convolutions Entirely with Fully Attention-Based Models:} The final stage is the development of pure transformer architectures for vision, such as Vision Transformers (ViT) and their efficient variants. These models discard convolutions entirely, leveraging global self-attention to capture long-range relationships while benefiting from high parallelism and scalability.
+\end{enumerate}
+
+\noindent Each approach builds upon the limitations of the previous, progressively leveraging the strengths of self-attention to overcome the constraints of convolutional architectures. 
+
+\noindent We begin by exploring the first approach: how self-attention layers were initially introduced into existing CNN frameworks to enhance their representational capacity.
+
+\section{Integrating Attention into Convolutional Neural Networks (CNNs)}
+
+\noindent One of the earliest attempts to bring attention mechanisms into computer vision involved inserting \textbf{self-attention layers} into standard convolutional architectures such as ResNet. The idea is simple: take a well-established CNN and enhance it with attention layers at strategic points to improve its ability to model long-range dependencies.
+
+\noindent This approach was explored in works such as:
+\begin{itemize}
+	\item \textbf{Self-Attention Generative Adversarial Networks (SAGAN)} \cite{zhang2019_self_attention_gan}, which used self-attention in GANs to improve the quality of generated images.
+	\item \textbf{Non-Local Neural Networks} \cite{wang2018_nonlocal_nn}, which introduced non-local operations that enable each pixel to aggregate information from distant regions in the image.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_38.jpg}
+	\caption{Illustration of integrating self-attention into CNN architectures.}
+	\label{fig:chapter18_attention_in_cnn}
+\end{figure}
+
+\subsection{How Does It Work?}
+
+\noindent In these architectures, self-attention layers are inserted between standard convolutional blocks. These layers allow the network to selectively focus on relevant regions of the image, improving its ability to model \textbf{long-range dependencies} that are difficult for local convolutions (as it relies on limited receptive fields throughout most of the model).
+
+\subsection{Limitations of Adding Attention to CNNs}
+
+\noindent While augmenting CNNs with attention mechanisms enhances their ability to capture global context, it comes with several drawbacks:
+
+\begin{itemize}
+	\item \textbf{Increased Computational Cost:} Adding attention layers increases the number of parameters and computation compared to standard CNNs. The pairwise attention computation scales quadratically with the number of pixels, making it inefficient for high-resolution images.
+	
+	\item \textbf{Limited Parallelization:} Convolution operations benefit from \textbf{highly optimized implementations} on modern hardware. Mixing convolutions with self-attention introduces irregular computations, reducing efficiency compared to fully convolutional models.
+	
+	\item \textbf{Still Convolution-Dependent:} Despite improvements, these models still rely on convolutions as their primary feature extractors. Attention enhances representations, but the model does not fully leverage the advantages of self-attention likes Transformers do in the use-case of sequence modeling.
+\end{itemize}
+
+\noindent To address these challenges, researchers explored an alternative approach: \textbf{replacing convolutions with local self-attention mechanisms}, aiming to enhance flexibility and dynamic feature aggregation while offering an efficiency improvement in comparison with the first idea (full self-attention layers throughout existing CNN architectures). 
+
+\newpage
+\section{Replacing Convolution with Local Attention Mechanisms}
+
+\noindent
+Traditional convolutional layers in vision models use fixed, learned kernels that aggregate local information uniformly across spatial locations. While efficient for capturing local patterns, these kernels lack adaptability—treating all local information equally based on static learned filters.
+
+\noindent
+\textbf{Local self-attention} introduces a more adaptive mechanism. Instead of using fixed weights, local attention allows the model to dynamically aggregate information from a local neighborhood based on content similarity, offering greater flexibility and representational power.
+
+\subsection{How Does Local Attention Work?}
+
+\noindent
+In local attention, for each spatial position, the model operates within a receptive field of size \(R \times R\):
+
+\begin{itemize}
+	\item The \textbf{center} of the receptive field corresponds to the \textbf{query}.
+	\item The \textbf{entire receptive field} contributes keys and values.
+\end{itemize}
+
+\noindent
+Given an input of shape \(C \times H \times W\):
+\begin{itemize}
+	\item The \textbf{query} vector at each spatial position has a dimensionality of \(D_Q\).
+	\item The \textbf{keys} and \textbf{values} are extracted from the \(R \times R\) neighborhood around the query position.
+	\item The \textbf{keys} have shape \(R \times R \times D_Q\), and the \textbf{values} have shape \(R \times R \times C'\).
+	\item Attention weights are computed by comparing the query to each key, and these weights are used to combine the values to produce the output for that position.
+	\item The final output has shape \(C' \times H \times W\).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_45.jpg}
+	\caption{Replacing convolution with local self-attention. While this method offers dynamic feature aggregation, it introduces tricky implementation details and achieves only marginal performance improvements over ResNet architectures.}
+	\label{fig:chapter18_local_attention}
+\end{figure}
+
+\newpage
+\subsection{Why is Local Attention More Flexible than Convolutions?}
+
+\begin{itemize}
+	\item \textbf{Adaptive Feature Aggregation:} 
+	Convolutional kernels apply fixed weights across all spatial locations, meaning they aggregate information in a predefined manner. In contrast, local attention dynamically computes attention weights for each spatial position based on the similarity between the query and its neighboring keys. This means:
+	\begin{itemize}
+		\item \textit{Filters in convolutions} are learned through training but remain static at inference.
+		\item \textit{Local attention} learns to attend dynamically to different features depending on the input.
+		\item \textbf{Example:} In facial recognition, a convolutional filter might apply the same weighting to all nose regions, whereas local attention can emphasize subtle shape variations that distinguish different individuals.
+	\end{itemize}
+	
+	\item \textbf{Content-Aware Receptive Fields:} 
+	While convolutions aggregate information uniformly, local attention allows each position to weight different parts of its receptive field \emph{based on relevance}. This means:
+	\begin{itemize}
+		\item In convolutions, all pixels within the receptive field are treated with equal importance.
+		\item In local attention, pixels with more salient features (e.g., edges, textures) can receive higher attention weights.
+	\end{itemize}
+	This enables better differentiation of critical structures within an image.
+	
+	\item \textbf{Overcoming Convolutional Biases:} 
+	Convolutions assume translational invariance, applying the same filter weights across the entire image. However, not all image structures exhibit such uniformity. Local attention adapts dynamically, tailoring feature aggregation based on context rather than relying on predefined filter interactions. This improves generalization to complex visual patterns.
+\end{itemize}
+
+\subsection{Computational Complexity Comparison: Local Attention vs.\ Convolution}
+
+\noindent
+Although both convolutions and local attention operate over fixed-sized windows \(\,K \times K\), they do so in fundamentally different ways, leading to distinct computational and memory costs.
+
+\paragraph{Convolutional Complexity}
+\begin{itemize}
+	\item \textbf{Setup.} A 2D convolution operates over a spatial feature map of size:
+	\[
+	\text{Spatial size: } (H \times W), \quad 
+	\text{Kernel size: } (K \times K), \quad
+	\text{Input channels: } C_{\text{in}}, \quad
+	\text{Output channels: } C_{\text{out}}.
+	\]
+	\item \textbf{FLOPs.} The total cost of convolving over \((H \times W)\) positions is:
+	\[
+	O\bigl( H W \; C_{\text{in}} \; C_{\text{out}} \; K^2 \bigr).
+	\]
+	\item \textbf{Weight Sharing and Efficient Memory Access.} Convolutional kernels are \textbf{shared across spatial locations}, meaning the same set of \( K^2 C_{\text{in}} C_{\text{out}} \) parameters is reused across all positions. Additionally, modern hardware is optimized for the structured memory access patterns of convolutions, making them highly efficient.
+\end{itemize}
+
+\paragraph{Local Attention Complexity}
+\begin{itemize}
+	\item \textbf{Setup.} In local self-attention, each position (pixel or patch) in an \(\,H \times W\) feature map is treated as a query token of dimension \(\,D\). Each token attends to \(\,K^2\) neighboring tokens.
+	\item \textbf{FLOPs.} For each of the \(H W\) query tokens:
+	\begin{itemize}
+		\item Compute dot-product similarities with \(\,K^2\) neighbors, each requiring \(\,D\) multiplications and additions: \(O(HW \times K^2 \times D)\).
+		\item Apply the resulting attention weights to the \(\,K^2\) values, adding another \(O(HW \times K^2 \times D)\) term.
+	\end{itemize}
+	Overall, local attention has complexity:
+	\[
+	O\bigl(H W \; D \; K^2 \bigr).
+	\]
+	\item \textbf{No Weight Sharing and Higher Memory Access Costs.} Unlike convolutions, local attention computes \textbf{unique attention weights} for every spatial position and its \(K^2\) neighbors. This results in:
+	\begin{itemize}
+		\item Increased memory requirements for storing distinct attention scores.
+		\item Irregular memory access patterns, which reduce efficiency on hardware optimized for convolutions.
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Why is Local Attention More Expensive?}
+\begin{itemize}
+	\item \textbf{Lack of Weight Sharing:} Convolutions efficiently reuse a fixed set of parameters across all spatial positions. In contrast, local attention computes unique pairwise interactions for each query position, leading to higher computational and memory overhead.
+	\item \textbf{Irregular Memory Access:} Convolutions access contiguous memory blocks efficiently, benefiting from hardware acceleration (e.g., cuDNN optimizations). Local attention requires gathering and processing non-contiguous memory locations, introducing \textbf{higher latency} and reduced cache efficiency.
+\end{itemize}
+
+\paragraph{Summary}
+\begin{itemize}
+	\item \textbf{Convolution:} 
+	\[
+	O\bigl(HW \; C_{\text{in}} \; C_{\text{out}} \; K^2 \bigr)
+	\quad\text{(Highly optimized with shared filters and efficient memory access).}
+	\]
+	\item \textbf{Local Attention:} 
+	\[
+	O\bigl(HW \; D \; K^2 \bigr)
+	\quad\text{(No parameter sharing, irregular memory access, and additional overhead).}
+	\]
+\end{itemize}
+
+\paragraph{From Local Attention to ViTs}
+\noindent
+While local attention introduces valuable flexibility and content-aware computation, its practical benefits over well-optimized convolutional layers are modest. Empirical studies have shown that architectures based solely on local self-attention often achieve only marginal gains over comparable CNNs—despite incurring higher computational and implementation complexity.
+
+Moreover, local attention still operates within constrained receptive fields, limiting its ability to capture global context unless stacked deeply. These challenges led researchers to explore a more radical idea: \textbf{replacing convolutions with global self-attention over the entire image}. The result was the \textbf{Vision Transformer (ViT)}—a model that processes image patches as tokens and applies standard Transformer blocks to capture long-range dependencies from the outset.
+
+In the following sections, we will explore how ViTs discard convolutional priors entirely and achieve strong performance by leveraging global attention, tokenized patch inputs, and scalable architectures built for modern hardware.
+
+\newpage
+\section{Vision Transformers (ViTs): From Pixels to Patches}
+\label{sec:chapter18_vit}
+
+\noindent
+While global self-attention in ViTs enables long-range dependency modeling, applying standard transformers directly to image pixels presents a severe \textbf{memory bottleneck}. This approach, explored in \cite{chen2020_gpt_pixels}, suffers from quadratic complexity with respect to image size. Specifically, for an \( R \times R \) image, the self-attention mechanism requires storing and computing attention weights for \( O(R^4) \) elements, making it impractical for high-resolution images. For instance, an image with \( R = 128 \), using 48 transformer layers and 16 heads per layer, requires an estimated \textbf{768GB of memory} just for attention matrices—far exceeding typical hardware capacities.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_48.jpg}
+	\caption{Applying standard transformers to pixels leads to an intractable \( O(R^4) \) memory complexity, motivating a more efficient patch-based approach.}
+	\label{fig:chapter18_pixel_transformer_memory}
+\end{figure}
+
+\noindent
+To address this, \textbf{Vision Transformers (ViT)} \cite{vit2020_transformers} proposed a novel idea: \textbf{processing images as patches instead of raw pixels}. This drastically reduces the number of tokens, making global self-attention computationally feasible.
+
+\subsection{Splitting an Image into Patches}
+\label{sec:chapter18_vit_patching}
+
+\noindent
+The Vision Transformer (ViT) applies the standard Transformer encoder to images with minimal modifications. Instead of processing raw pixels, it treats images as sequences of \textbf{fixed-size patches}, significantly reducing computational complexity compared to pixel-level attention.
+
+\noindent
+To transform an image into a sequence of patches:
+\begin{enumerate}
+	\item The image is divided into non-overlapping patches of size \( P \times P \).
+	\item Each patch, originally of shape \( P \times P \times C \), is flattened into a vector of size \( P^2C \).
+	\item A \textbf{linear projection layer} maps this vector into a \( D \)-dimensional embedding:
+	\begin{equation}
+		\mathbf{z}_i = W \cdot \text{Flatten}(\mathbf{x}_i) + b, \quad \mathbf{z}_i \in \mathbb{R}^D.
+	\end{equation}
+\end{enumerate}
+
+\noindent
+This transformation is essential because:
+\begin{itemize}
+	\item It allows the model to \textbf{learn how to encode image patches} into a meaningful, high-level representation.
+	\item Unlike raw pixel values, the learned embedding provides a \textbf{semantic abstraction}, grouping visually similar patches closer together.
+	\item It reduces redundancy by filtering out unimportant pixel-level noise before processing by the Transformer.
+\end{itemize}
+
+\noindent
+The input image can be patched using a \textbf{convolutional layer} by setting the stride equal to the patch size. This ensures the image is partitioned into non-overlapping patches that are then flattened and processed as tokens.
+
+\subsection{Class Token and Positional Encoding}
+\label{sec:chapter18_vit_class_token}
+
+\noindent
+ViT introduces a \textbf{learnable classification token} (\texttt{[CLS]}), similar to BERT, to aggregate global image information. This token is prepended to the sequence of patch embeddings and participates in self-attention, enabling it to encode high-level features from all patches. The self-attention mechanism allows \texttt{[CLS]} to attend to all tokens, condensing the sequence into a fixed-size representation optimal for classification or regression.
+
+\begin{itemize}
+	\item The \texttt{[CLS]} token acts as an \textbf{information sink}, gathering contextual features across all patches.
+	\item It ensures a \textbf{consistent, fixed-size output} regardless of the input length.
+	\item Unlike selecting an arbitrary patch for classification, using \texttt{[CLS]} avoids position-related biases and stabilizes training.
+	\item Since \texttt{[CLS]} is trainable, it progressively refines its representation over multiple attention layers.
+\end{itemize}
+
+\noindent
+Additionally, since self-attention is permutation equivariant (i.e., it treats input elements as an unordered set), \textbf{positional embeddings} are added to the patch embeddings to preserve spatial order.
+
+\noindent
+For a \( 224 \times 224 \times C \) image (where \( C \) is the number of channels), dividing it into \( 16 \times 16 \) patches:
+\begin{equation}
+	N = \frac{224}{16} \times \frac{224}{16} = 14 \times 14 = 196.
+\end{equation}
+
+\noindent
+Each patch is then flattened and projected into an embedding space before being processed by the Transformer.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/vit_overview.jpg}
+	\caption{ViT Model Overview: Images are split into fixed-size patches, linearly embedded, and passed through a Transformer encoder. The \texttt{[CLS]} token is used for classification. Source: \cite{vit2020_transformers}.}
+	\label{fig:chapter18_vit_overview}
+\end{figure}
+
+\subsection{Final Processing: From Context Token to Classification}
+\label{sec:chapter18_vit_output}
+
+\noindent
+Once the image patches and class token have been processed through the transformer encoder, we obtain the final encoded representation \( C \). The output of the encoder consists of the processed patch embeddings, along with the updated class token embedding \( c_0 \). This class token serves, as we mentioned, as a \textbf{context vector} that aggregates information from all patches through self-attention.
+
+\noindent
+For classification tasks, we are only interested in the class token \( c_0 \), which is passed through a final \textbf{MLP head} to produce the output prediction (e.g., in the case of classification, the final probability vector is computed using a softmax layer). 
+
+\subsection{Vision Transformer: Process Summary and Implementation}
+\label{sec:chapter18_vit_process}
+
+\subsubsection{Vision Transformer Processing Steps}
+
+\begin{enumerate}
+	\item \textbf{Image Patch Tokenization:} 
+	Divide the input image into non-overlapping patches of size \(P \times P\). Each patch is flattened into a vector of size \(P^2 \, C\), where \(C\) is the number of channels.
+	
+	\item \textbf{Linear Projection of Patches:}
+	Map each flattened patch into a high-dimensional embedding space of dimension \(D\). This “patch embedding” transforms raw pixels into meaningful feature vectors.
+	
+	\item \textbf{Appending the Class Token:}
+	Prepend a learnable \texttt{[CLS]} token to the sequence of patch embeddings. This token will aggregate global context after the Transformer encoder.
+	
+	\item \textbf{Adding Positional Embeddings:}
+	Since self-attention alone lacks spatial awareness, add learned positional embeddings to each token to preserve patch-order information.
+	
+	\item \textbf{Transformer Encoder:}
+	Pass the token sequence through multiple stacked Transformer blocks, each containing:
+	\begin{itemize}
+		\item \textbf{Multi-Head Self-Attention:} Allows patches to share information across the entire sequence.
+		\item \textbf{Feed-Forward Network (FFN):} Enriches each token’s representation independently.
+		\item \textbf{Residual Connections and Layer Normalization:} Stabilize training and improve gradient flow.
+	\end{itemize}
+	
+	\item \textbf{Class Token Representation:}
+	After processing, the \texttt{[CLS]} token encodes a global summary of the image.
+	
+	\item \textbf{Final Classification via MLP Head:}
+	Feed the final \texttt{[CLS]} representation into a small MLP head to obtain classification outputs (e.g., class probabilities).
+\end{enumerate}
+
+\newpage
+\subsubsection{PyTorch Implementation of a Vision Transformer}
+
+\noindent
+Below is an illustrative PyTorch example that shows how an image is divided into patches, passed through stacked Transformer blocks, and finally classified. Each portion of the code is explained to clarify the rationale behind the patching process, positional embeddings, Transformer blocks, and \texttt{[CLS]} token usage.
+
+\begin{mintedbox}{python}
+class VisionTransformer(nn.Module):
+	"""
+	Inspired by:
+	- https://github.com/lucidrains/vit-pytorch
+	- https://github.com/jeonsworld/ViT-pytorch
+	
+	Args:
+	image_size: (int) input image height/width (assuming square).
+	patch_size: (int) patch height/width (assuming square).
+	in_channels: (int) number of channels in the input image.
+	hidden_dim: (int) dimension of token embeddings.
+	num_heads: (int) number of attention heads in each block.
+	num_layers: (int) how many Transformer blocks to stack.
+	num_classes: (int) dimension of final classification output.
+	mlp_ratio: (float) factor by which hidden_dim is expanded in the MLP.
+	dropout: (float) dropout rate.
+	"""
+	def __init__(
+	self,
+	image_size: int = 224,
+	patch_size: int = 16,
+	in_channels: int = 3,
+	hidden_dim: int = 768,
+	num_heads: int = 12,
+	num_layers: int = 12,
+	num_classes: int = 1000,
+	mlp_ratio: float = 4.0,
+	dropout: float = 0.0
+	):
+		super().__init__()
+		
+		assert image_size % patch_size == 0, "Image dimensions must be divisible by the patch size."
+		
+		self.image_size = image_size
+		self.patch_size = patch_size
+		self.in_channels = in_channels
+		self.hidden_dim = hidden_dim
+		self.num_heads = num_heads
+		self.num_layers = num_layers
+		self.num_classes = num_classes
+		
+		# ----------------------------------------------------
+		# 1) Patch Embedding
+		# ----------------------------------------------------
+		# Flatten each patch into patch_dim = (patch_size^2 * in_channels).
+		# Then project to hidden_dim.
+		patch_dim = patch_size * patch_size * in_channels
+		self.num_patches = (image_size // patch_size) * (image_size // patch_size)
+		
+		self.patch_embed = nn.Linear(patch_dim, hidden_dim)
+		
+		# ----------------------------------------------------
+		# 2) Learnable [CLS] token
+		# ----------------------------------------------------
+		# shape: (1, 1, hidden_dim)
+		self.cls_token = nn.Parameter(torch.zeros(1, 1, hidden_dim))
+		
+		# ----------------------------------------------------
+		# 3) Positional Embeddings
+		# ----------------------------------------------------
+		# shape: (1, num_patches + 1, hidden_dim)
+		# +1 for the [CLS] token.
+		self.pos_embedding = nn.Parameter(torch.zeros(1, self.num_patches + 1, hidden_dim))
+		
+		# ----------------------------------------------------
+		# 4) Dropout (Optional)
+		# ----------------------------------------------------
+		self.pos_drop = nn.Dropout(dropout)
+		
+		# ----------------------------------------------------
+		# 5) Transformer Blocks
+		# ----------------------------------------------------
+		self.blocks = nn.ModuleList([
+		TransformerBlock(embed_dim=hidden_dim,
+		num_heads=num_heads,
+		mlp_ratio=mlp_ratio,
+		dropout=dropout)
+		for _ in range(num_layers)
+		])
+		
+		# ----------------------------------------------------
+		# 6) Final LayerNorm and Classification Head
+		# ----------------------------------------------------
+		self.norm = nn.LayerNorm(hidden_dim)
+		self.head = nn.Linear(hidden_dim, num_classes)
+		
+		# Optionally initialize weights here
+		self._init_weights()
+
+	def _init_weights(self):
+		"""
+		A simple weight initialization scheme.
+		"""
+		for m in self.modules():
+			if isinstance(m, nn.Linear):
+				nn.init.xavier_uniform_(m.weight)
+			if m.bias is not None:
+				nn.init.zeros_(m.bias)
+			elif isinstance(m, nn.LayerNorm):
+				nn.init.ones_(m.weight)
+				nn.init.zeros_(m.bias)
+	
+	def forward(self, x):
+		"""
+		Forward pass:
+		x: shape (B, C, H, W) with:
+		B = batch size
+		C = in_channels
+		H = W = image_size
+		"""
+		B = x.shape[0]
+		
+		# ----------------------------------------------------
+		# (A) Create patches: (B, num_patches, patch_dim)
+		# ----------------------------------------------------
+		# Flatten patches: each patch is patch_size x patch_size x in_channels
+		# We'll use simple .view or rearranging. Below uses .unfold (similar).
+		# For clarity, here's a naive approach with reshape:
+		
+		# 1) Flatten entire image: (B, C, H*W)
+		# 2) Reshape to group patches: (B, num_patches, patch_dim)
+		#    patch_dim = patch_size^2 * in_channels
+		# This works if patch_size divides H and W exactly
+		# but requires reordering in row-major patch order.
+		
+		# A simpler approach is:
+		patches = x.unfold(2, self.patch_size, self.patch_size)\
+		.unfold(3, self.patch_size, self.patch_size)  # (B, C, nH, nW, pH, pW)
+		# nH = H / patch_size, nW = W / patch_size
+		patches = patches.permute(0, 2, 3, 1, 4, 5)                # (B, nH, nW, C, pH, pW)
+		patches = patches.reshape(B, self.num_patches, -1)         # (B, num_patches, patch_dim)
+		
+		# ----------------------------------------------------
+		# (B) Patch Embedding
+		# ----------------------------------------------------
+		tokens = self.patch_embed(patches)  # (B, num_patches, hidden_dim)
+		
+		# ----------------------------------------------------
+		# (C) Add the [CLS] token
+		# ----------------------------------------------------
+		cls_tokens = self.cls_token.expand(B, -1, -1)  # (B, 1, hidden_dim)
+		tokens = torch.cat([cls_tokens, tokens], dim=1)  # (B, num_patches+1, hidden_dim)
+		
+		# ----------------------------------------------------
+		# (D) Add learnable positional embeddings
+		# ----------------------------------------------------
+		tokens = tokens + self.pos_embedding[:, : tokens.size(1), :]
+		tokens = self.pos_drop(tokens)
+		
+		# ----------------------------------------------------
+		# (E) Pass through Transformer Blocks
+		# ----------------------------------------------------
+		for blk in self.blocks:
+			tokens = blk(tokens)
+		
+		# ----------------------------------------------------
+		# (F) LayerNorm -> Classification Head
+		# ----------------------------------------------------
+		cls_final = self.norm(tokens[:, 0])  # the [CLS] token output
+		logits = self.head(cls_final)       # (B, num_classes)
+		
+		return logits
+
+# --------------------------------------------------------
+#  Example Usage
+# --------------------------------------------------------
+if __name__ == "__main__":
+	# Suppose we have a batch of 8 images, each 3 x 224 x 224
+	model = VisionTransformer(image_size=224,
+	patch_size=16,
+	in_channels=3,
+	hidden_dim=768,
+	num_heads=12,
+	num_layers=12,
+	num_classes=1000)
+	dummy_images = torch.randn(8, 3, 224, 224)
+	out = model(dummy_images)  # (8, 1000)
+	print("Output shape:", out.shape)
+\end{mintedbox}
+
+\noindent
+Applying self-attention at the pixel level is computationally prohibitive, requiring each pixel to interact with every other pixel, resulting in an infeasible \( O(R^4) \) complexity for high-resolution images. To address this, Vision Transformers (ViT) process images as sequences of patches rather than individual pixels.
+
+\noindent
+By dividing an image into fixed-size patches, ViT significantly reduces the number of tokens in self-attention while preserving global context. This enables efficient long-range dependency modeling across semantically meaningful regions with lower memory overhead.
+
+\noindent
+To illustrate this advantage, we now compare the computational complexity of \textbf{pixel-level self-attention} versus \textbf{patch-based self-attention} in ViT.
+
+\newpage
+\subsection{Computational Complexity: ViT vs.\ Pixel-Level Self-Attention}
+\label{sec:chapter18_vit_vs_pixels}
+
+A core challenge in applying Transformers to images is the \emph{quadratic} nature of self-attention in the number of tokens. Below, we compare two approaches: directly treating every pixel as a separate token (\emph{pixel-level} self-attention), versus splitting the image into larger \emph{patches} (as in the Vision Transformer, ViT).
+
+\subsubsection{Pixel-Level Self-Attention}
+\begin{itemize}
+	\item An image of size \(R \times R\) contains \(R^2\) pixels.  
+	\item Self-attention compares each token (pixel) to every other token, incurring a complexity of
+	\[
+	O\bigl(\underbrace{R^2}_{\text{tokens}} \times \underbrace{R^2}_{\text{all-pairs}}\bigr) \;=\; O(R^4).
+	\]
+	\item As an example, for \(128 \times 128\) images with many layers and heads, Chen et al.\ \cite{chen2020_gpt_pixels} report memory usage in the hundreds of gigabytes just to store attention matrices, highlighting how quickly \(R^4\) becomes infeasible.
+\end{itemize}
+
+\subsubsection{Patch-Based Self-Attention (ViT)}
+\begin{itemize}
+	\item Instead of using all \(R^2\) pixels as tokens, ViT groups the image into \(N\) non-overlapping patches, each of size \(P \times P\).  
+	\item The total number of patches is
+	\[
+	N \;=\; \left(\frac{R}{P}\right)^2,
+	\]
+	so the self-attention complexity becomes
+	\[
+	O(N^2) \;=\; O\!\Bigl(\bigl(\tfrac{R^2}{P^2}\bigr)^2\Bigr) \;=\; O\!\Bigl(\frac{R^4}{P^4}\Bigr).
+	\]
+	\item Example: 
+	\[
+	R = 224,\quad P = 16 \;\;\Longrightarrow\;\; 
+	R^2 = 50{,}176\;\;\text{(tokens if using pixels)},
+	\quad
+	N = \bigl(\tfrac{224}{16}\bigr)^2 = 196.
+	\]
+	Thus, we reduce the token count from \(50{,}176\) to \(196\), which is a \emph{256-fold} reduction in the number of tokens. In terms of all-pairs interactions, that is a \(\,256^2\!=\!65{,}536\)-fold reduction in total attention computations.
+\end{itemize}
+
+\subsubsection{Key Takeaways}
+\begin{itemize}
+	\item \textbf{Pixel-level self-attention} has \(O(R^4)\) complexity and quickly becomes intractable for even moderately large images.
+	\item \textbf{Patch-based self-attention} (ViT) cuts down the number of tokens to \(N = (R/P)^2\), reducing complexity to \(O(N^2)\!=\!O\bigl(R^4/P^4\bigr)\). Even a modest patch size \(P\) massively lowers the computational and memory burden.
+	\item Grouping pixels into patches retains the Transformer’s ability to capture \emph{global} interactions among tokens but at a fraction of the cost compared to pixel-level processing.
+\end{itemize}
+
+Hence, ViT avoids the prohibitive \(R^4\) scaling of naive pixel-level self-attention, making Transformers viable for high-resolution imagery on modern hardware.
+
+\noindent
+This shift to patch-based processing laid the foundation for scalable Vision Transformers, making them practical for real-world applications.
+
+\subsection{Limitations and Data Requirements of Vision Transformers}
+\label{sec:vit_downsides}
+
+\noindent
+While Vision Transformers (ViTs) \cite{vit2020_transformers} have demonstrated state-of-the-art performance in many vision tasks, their training requirements differ significantly from Convolutional Neural Networks (CNNs). Specifically, ViTs are often described as being more \textbf{data hungry}, requiring much larger datasets to outperform CNNs. This section examines the factors contributing to this behavior and explores strategies to improve ViT training efficiency.
+
+\subsubsection{Large-Scale Pretraining is Critical}
+
+\noindent
+ViTs lack the spatial priors present in CNNs, such as locality and translation equivariance, which help CNNs generalize well from relatively small datasets. This difference becomes evident when comparing training performance: the ViT paper \cite{vit2020_transformers} found that ViTs trained \emph{from scratch} on ImageNet (1.3M images) underperform compared to similarly sized ResNet models. However, when pre-trained on \textbf{much larger datasets}—such as ImageNet-21k (14M images, over 10× larger) or JFT-300M (300M images, over 200× larger)—ViTs \emph{surpass} CNNs in accuracy. These findings suggest that ViTs require \textbf{far more data} to match or exceed CNN performance. Large-scale pretraining helps compensate for this by providing enough data for the model to discover robust representations from scratch.
+
+\noindent
+A comparison of ImageNet Top-1 accuracy between ViTs and CNNs reveals that ViTs trained solely on ImageNet tend to underperform large ResNets. However, as dataset size increases, ViTs gradually surpass CNNs. This suggests that ViTs require substantially more data to reach competitive performance levels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_67.jpg}
+	\caption{ImageNet Top-1 accuracy comparison between CNNs (ResNets) and ViT models. ViTs struggle on smaller datasets but outperform ResNets when pre-trained on large-scale datasets such as JFT-300M.}
+	\label{fig:chapter18_imagenet_top1_accuracy}
+\end{figure}
+
+\subsubsection{Why Do ViTs Require More Data?}
+\label{sec:vit_data_hungry}
+
+\noindent
+Vision Transformers (ViTs) often require substantially more data than convolutional neural networks (CNNs) to reach competitive performance. This phenomenon is frequently attributed to a “lack of inductive bias,” though the term itself is broad, informally defined, and difficult to quantify.
+
+\newpage
+\noindent
+Below we outline several hypothesized factors that contribute to ViTs’ data hunger—keeping in mind that these are based on empirical observations rather than formal theoretical guarantees.
+
+\paragraph{1. No Built-in Locality or Weight Sharing}
+CNNs are explicitly designed to exploit local patterns in images: each convolutional layer uses a small kernel that slides across the image, enforcing local connectivity and sharing the same weights across spatial positions. This built-in structure allows CNNs to learn efficiently from limited data, as it assumes that nearby pixels are correlated and that patterns repeat across space.
+
+In contrast, ViTs treat the image as an unordered set of patches and must learn these spatial relationships from scratch. Self-attention has no notion of spatial locality unless it is explicitly added (e.g., via positional encoding). Without these priors, ViTs appear to need more data to infer basic spatial regularities that CNNs “get for free.”
+
+\paragraph{2. Higher Parameter Count and Capacity}
+ViTs often contain as many—or more—parameters than large CNNs. Because every patch can attend to every other patch (global attention), and each attention head and MLP adds further depth, the number of learnable parameters grows rapidly. This high capacity can be a strength, but it also increases the risk of overfitting on smaller datasets unless carefully regularized or pretrained on large corpora.
+
+\paragraph{3. Less Implicit Regularization}
+CNNs inherently guide the learning process by enforcing structured constraints:
+\begin{itemize}
+	\item \textbf{Translation equivariance:} If an object shifts in the image, the feature maps shift accordingly.
+	\item \textbf{Locality:} Convolutions restrict interactions to spatially nearby regions.
+	\item \textbf{Hierarchical features:} Stacking convolution layers builds a natural progression from low-level edges to high-level semantic concepts.
+\end{itemize}
+
+These design features act as \emph{implicit regularization}, reducing the risk of overfitting and encouraging the network to learn useful generalizations. ViTs lack such inductive structure: any token can interact with any other token regardless of spatial distance, and there are no architectural constraints guiding the model toward specific types of representations. As a result, ViTs depend more heavily on \textbf{explicit} regularization strategies (see \autoref{sec:regularization}) like dropout, stochastic depth, and strong data augmentation to control overfitting.
+ 
+\paragraph{4. Absence of Hierarchical Representations}
+CNNs naturally build \textbf{multi-scale hierarchies}—starting from small filters detecting edges and textures, and progressing toward deeper layers that detect object parts or full objects. Pooling layers (e.g., max pooling or strided convolutions) reduce spatial resolution while increasing feature abstraction, mimicking the way human vision processes information at different scales.
+
+ViTs, by contrast, operate on flat sequences of patches. All patches are treated equally, and no downsampling occurs unless manually introduced. This lack of built-in hierarchy can make it harder for the model to abstract global structure efficiently—especially when trained on limited data. While the self-attention mechanism does allow long-range interaction from the first layer, it doesn’t encourage a progression from local to global features unless the model learns this behavior purely from data.
+
+\paragraph{A Note on Inductive Bias}
+While it's common to cite ViTs’ lack of inductive bias as a reason for their data inefficiency, it's important to note that “inductive bias” is not a rigorously defined or quantifiable term in deep learning. It broadly refers to architectural assumptions that influence what kinds of patterns a model tends to learn. CNNs, for example, “prefer” learning translation-invariant, local features because of their structure. ViTs make fewer such assumptions, which can make them more flexible—but also more dependent on data and training strategies to learn meaningful structure.
+
+Hence, while ViTs shine on large datasets like ImageNet-21k or JFT-300M, they often fall behind CNNs on smaller datasets unless paired with strong regularization and data augmentation—strategies we later explore.
+
+\subsection{Understanding ViT Model Variants}
+\label{sec:chapter18_vit_variants}
+
+\noindent
+Vision Transformers (ViTs) come in different sizes and configurations. Each model is typically named using the format \texttt{ViT-Size/Patch}, where:
+
+\begin{itemize}
+	\item \textbf{Size} indicates the model capacity:
+	\begin{itemize}
+		\item \texttt{Ti} (Tiny), \texttt{S} (Small), \texttt{B} (Base), \texttt{L} (Large), and \texttt{H} (Huge).
+	\end{itemize}
+	
+	\item \textbf{Patch} refers to the patch resolution, such as \(16 \times 16\), \(32 \times 32\), or \(14 \times 14\), written as \texttt{/16}, \texttt{/32}, or \texttt{/14}.
+\end{itemize}
+
+\noindent
+For example, \texttt{ViT-B/16} represents the \emph{base} variant with a patch size of \(16 \times 16\), and is one of the most commonly used ViT configurations.
+
+\subsubsection{Model Configurations}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\textbf{Model} & \textbf{Layers} & \textbf{Embed Dim} & \textbf{MLP Dim} & \textbf{Heads} & \textbf{\#Params} \\
+		\hline
+		ViT-B/16 & 12 & 768 & 3072 & 12 & 86M \\
+		ViT-L/16 & 24 & 1024 & 4096 & 16 & 307M \\
+		ViT-H/14 & 32 & 1280 & 5120 & 16 & 632M \\
+		\hline
+	\end{tabular}
+	\caption{Typical ViT configurations. The number of heads (\(h\)) is such that the per-head dimension \(d = D / h\) remains constant (usually 64).}
+	\label{tab:chapter18_vit_model_configurations}
+\end{table}
+
+\noindent
+Smaller patch sizes lead to longer input sequences and higher compute, but often better accuracy due to more spatial detail. Larger models (e.g., ViT-L/16 or ViT-H/14) benefit from scale when trained on sufficiently large datasets.
+
+\newpage
+\subsubsection{Transfer Performance Across Datasets}
+
+\noindent
+The ViT paper \cite{vit2020_transformers} shows that model performance scales with both dataset size and compute. For example:
+
+\begin{itemize}
+	\item \textbf{ViT-B/16} reaches 84.2\% top-1 accuracy on ImageNet when pretrained on JFT-300M.
+	\item \textbf{ViT-L/16} pushes this to 87.1\% with more epochs.
+	\item \textbf{ViT-H/14} achieves up to 88.1\% top-1 on ImageNet and 97.5\% on Oxford-IIIT Pets.
+\end{itemize}
+
+\noindent
+In summary, the Vision Transformer (ViT) model naming convention captures both model size and patch granularity—factors that directly influence performance, memory usage, and training time. Larger models and smaller patches typically improve accuracy, but at a significantly higher computational cost.
+
+\noindent
+However, one critical limitation still looms large: \textbf{ViTs struggle when trained on modest-sized datasets}. Unlike CNNs, which benefit from strong inductive biases like translation equivariance and locality, ViTs require extensive data to generalize well. For example, while CNNs achieve strong results on ImageNet (\(\sim1.3\)M images), ViTs originally required datasets 30–300 times larger to outperform them.
+
+\noindent
+This raises a key question: \textit{Can we make ViTs more data-efficient and easier to train on standard-sized datasets?} The following parts explore this challenge—starting with how targeted use of regularization and data augmentation can bridge the performance gap between ViTs and CNNs.
+
+
+\subsection{Improving ViT Training Efficiency}
+
+\noindent
+Given that ViTs require large-scale data to perform well, an important research question is: \textbf{How can we make ViTs more efficient on smaller datasets?} The work of Steiner et al.\ \cite{steiner2021_how_to_train_vit} demonstrated that \textbf{regularization and data augmentation} play a critical role in improving ViT training, reducing the gap between ViTs and CNNs on smaller datasets.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_77.jpg}
+	\caption{Impact of regularization and augmentation on ViT models. More augmentation and regularization generally lead to better performance.}
+	\label{fig:vit_regularization}
+\end{figure}
+
+\newpage
+\paragraph{Regularization Techniques:}
+The same regularization techniques discussed in (\autoref{subsubsec:data_augmentation}) are critical for stabilizing and improving ViT training. These techniques prevent overfitting, enhance generalization, and help ViTs converge more efficiently, even with limited training data.
+
+\begin{itemize}
+	\item \textbf{Weight Decay:} Introduces an \(L_2\) penalty to the model parameters, discouraging large weights and improving generalization.
+	\item \textbf{Stochastic Depth:} Randomly drops entire residual blocks during training, acting as an implicit ensemble method that reduces overfitting.
+	\item \textbf{Dropout in FFN Layers:} Introduces stochasticity within the feed-forward network, preventing the model from relying too heavily on specific neurons.
+\end{itemize}
+
+\paragraph{Data Augmentation Strategies:}
+As explored in \autoref{subsubsec:data_augmentation}, data augmentation is a powerful tool for improving generalization by artificially expanding the training set with transformations that preserve class identity.
+
+\begin{itemize}
+	\item \textbf{MixUp:} Blends two images and their labels, encouraging the model to learn smoother decision boundaries and avoid overconfidence.
+	\item \textbf{RandAugment:} Applies a combination of randomized augmentations, exposing the model to diverse variations of the data.
+\end{itemize}
+
+\noindent
+Experimental results show that \textbf{combining multiple forms of augmentation and regularization significantly improves ViT performance}, especially on datasets like ImageNet. Figure \ref{fig:vit_regularization} illustrates how adding more augmentation and regularization often improves ViT accuracy.
+
+\subsubsection{Towards Data-Efficient Vision Transformers: Introducing DeiT}
+\noindent
+While improving training strategies helps, a fundamental question remains: \emph{Can we design a ViT variant that is inherently more data-efficient?} This question led to the development of \textbf{Data-Efficient Image Transformers (DeiT)} \cite{touvron2021_deit}, which we will explore in the next section. DeiT introduces several key training improvements, allowing ViTs to match CNN performance even when trained on ImageNet-scale datasets without external pretraining.
+
+\newpage
+\section{Data-Efficient Image Transformers (DeiTs)}
+\label{sec:chapter18_deit}
+
+\noindent
+While Vision Transformers (ViTs) demonstrate strong performance on large-scale datasets such as ImageNet-21k or JFT-300M, their reliance on extensive pretraining severely limits their accessibility and practicality. In many real-world scenarios, we may only have access to relatively small datasets like ImageNet-1k (\(\sim\)1.3M images), and training on massive private datasets (e.g., JFT-300M) is not feasible.
+
+\noindent
+To address this, Hugo Touvron and colleagues from Facebook AI proposed the \textbf{Data-Efficient Image Transformer (DeiT)} \cite{touvron2021_deit}. Their goal was to retain most of the original ViT architecture, but to drastically improve its training efficiency—\textbf{without requiring massive external data or extra compute resources}.
+
+\begin{itemize}
+	\item DeiT was trained on \textbf{ImageNet-1k only}, with no additional pretraining.
+	\item Training was done on a \textbf{single 16-GPU node} in under three days.
+	\item The resulting model \textbf{matched or outperformed} similarly sized CNN baselines—something the original ViT required JFT-scale pretraining to achieve.
+\end{itemize}
+
+\noindent
+How was this achieved? The core innovation lies in a novel training strategy: \textbf{distillation through attention}, combining ideas from knowledge distillation with the transformer architecture. In particular, DeiT introduces a new token—the \texttt{[DIST]} token—trained to imitate the predictions of a powerful CNN teacher model.
+
+\noindent
+Before introducing the full architecture, we begin by reviewing the key mathematical tools used in distillation: cross-entropy and KL divergence. These will help us understand how the teacher-student supervision signal is encoded during training.
+
+\subsection{Cross-Entropy and KL Divergence: Theory, Intuition, and Role in Distillation}
+\label{sec:chapter18_deit_kl_ce}
+
+\paragraph{Cross-Entropy Loss}
+
+\noindent
+Cross-entropy (CE) is the standard loss used in classification tasks. It compares a predicted probability distribution \( \mathbf{p} = (p_1, \dots, p_n) \) against a one-hot target distribution \( \mathbf{y} = (0, \dots, 1, \dots, 0) \), where only the ground-truth class is assigned a probability of 1. The CE loss is defined as:
+
+\begin{equation}
+	\mathcal{L}_{\text{CE}}(\mathbf{y}, \mathbf{p}) = - \sum_{i} y_i \log p_i = -\log p_{\text{correct}}.
+\end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_18/log_function.png}
+	\caption{The function \( -\log(x) \). Cross-entropy loss penalizes incorrect predictions more harshly as the predicted probability approaches zero.}
+	\label{fig:chapter18_log_function}
+\end{figure}
+
+\noindent
+Note that in CE, only the predicted probability assigned to the correct class contributes to the loss. This has two key implications:
+\begin{itemize}
+	\item It \textbf{penalizes incorrect predictions} proportionally to how low the correct class probability is.
+	\item It \textbf{ignores how the remaining probability mass is distributed} across other (incorrect) classes.
+\end{itemize}
+
+\noindent
+This can be limiting: CE loss provides no feedback on whether the model is confusing the correct class with semantically similar ones (e.g., confusing \texttt{husky} with \texttt{wolf}) or whether it assigns high probability to completely unrelated classes.
+
+\paragraph{KL Divergence: Full Distribution Matching}
+
+\noindent
+To address this, distillation relies on the Kullback-Leibler (KL) divergence, which compares the \emph{entire} output distributions of a teacher and student model:
+
+\begin{equation}
+	\text{KL}(P \| Q) = \sum_i P(i) \log \frac{P(i)}{Q(i)},
+\end{equation}
+
+\noindent
+where:
+\begin{itemize}
+	\item \( P \): teacher’s output distribution (target),
+	\item \( Q \): student’s predicted distribution.
+\end{itemize}
+
+\noindent
+Unlike CE, KL divergence measures how far the student is from the teacher across \textbf{all classes}, not just the correct one. This makes it particularly useful for transferring richer information such as:
+\begin{itemize}
+	\item Which classes the teacher considers plausible alternatives to the correct one.
+	\item How confident the teacher is overall (i.e., how sharp or flat its distribution is).
+	\item Fine-grained inter-class relationships, such as subtle visual similarities between classes.
+\end{itemize}
+
+\paragraph{Illustrative Example: CE vs KL}
+
+\noindent
+Suppose we are classifying among three classes: \texttt{cat}, \texttt{dog}, and \texttt{rabbit}. The teacher produces:
+
+\[
+P = [0.8, 0.15, 0.05],
+\]
+
+\noindent
+and the students predict:
+
+\[
+Q_1 = [0.7, 0.25, 0.05] \quad \text{(close)}, \quad
+Q_2 = [0.1, 0.1, 0.8] \quad \text{(wrong)}.
+\]
+
+\noindent
+Assuming the correct class is \texttt{cat}, we compute:
+
+\begin{align*}
+	\text{CE}(Q_1) &= -\log 0.7 \approx 0.357, \\
+	\text{CE}(Q_2) &= -\log 0.1 \approx 2.302.
+\end{align*}
+
+\noindent
+From CE’s perspective, the penalty is determined solely by the predicted probability of the ground-truth class. However, CE does not “see” that \( Q_1 \) also respects the teacher’s uncertainty (e.g., assigning some probability to \texttt{dog}), whereas \( Q_2 \) confidently predicts an unrelated class.
+
+\begin{align*}
+	\text{KL}(P \| Q_1) &\approx 0.0302, \\
+	\text{KL}(P \| Q_2) &\approx 1.473.
+\end{align*}
+
+\noindent
+KL divergence correctly detects that \( Q_1 \) matches the teacher’s full belief structure much more closely than \( Q_2 \), even though both place the correct class in first place.
+
+\paragraph{Hard vs.\ Soft Distillation: Choosing the Right Signal}
+
+\noindent
+Knowledge distillation traditionally involves training a \emph{student} model to mimic the outputs of a stronger \emph{teacher} model. This can be done in two principal ways:
+
+\begin{itemize}
+	\item \textbf{Soft distillation} uses the teacher's \emph{full output distribution} as a target. This is typically implemented via \textbf{KL divergence} loss between the teacher’s and student’s probability distributions. It encourages the student to reproduce not just the correct prediction, but also the teacher's uncertainty and inter-class relationships.
+	
+	\item \textbf{Hard distillation}, on the other hand, uses only the teacher's \emph{top-1 prediction}, converting it into a hard label. The student is then trained using standard \textbf{cross-entropy (CE)} loss, just as it would be with human-labeled ground truth. This strategy is also known as \emph{pseudo-labeling}.
+\end{itemize}
+
+\noindent
+While soft distillation provides richer information, it is not always empirically superior. In fact, in the context of \textbf{Data-Efficient Image Transformers (DeiT)}, the authors observed a surprising result:
+
+\begin{itemize}
+	\item \textbf{Hard distillation outperformed soft distillation} on ImageNet-1k. Despite discarding the fine-grained class probability structure, training the student to match only the teacher's most confident prediction led to better generalization.
+	\item This approach was particularly effective when paired with DeiT’s architectural innovation: the \texttt{[DIST]} token, which we will explore next.
+\end{itemize}
+
+\noindent
+This finding highlights an important practical insight: \emph{distillation is not one-size-fits-all}. While KL-based soft supervision may be beneficial in low-data or fine-grained classification settings, in DeiT’s setup, hard distillation offers stronger gradients and less risk of overfitting to noisy or ambiguous teacher outputs.
+
+\noindent
+In summary:
+\begin{itemize}
+	\item CE (with hard labels) focuses only on the correct class, providing a simple and strong learning signal.
+	\item KL divergence captures richer structure but may not always help, especially when the teacher’s uncertainty is not beneficial or the dataset is limited.
+	\item DeiT’s success with hard distillation suggests that carefully chosen \textbf{simpler signals} can sometimes outperform more expressive ones.
+\end{itemize}
+
+\noindent
+Having established the motivation behind hard vs.\ soft distillation, we now turn to the \textbf{distillation token}, DeiT’s key architectural modification that enables effective distillation within the Transformer structure.
+
+\subsection{DeiT Distillation Token and Training Strategy}
+\label{sec:chapter18_deit_token}
+
+\noindent
+To train ViTs without access to massive datasets like JFT-300M, Touvron et al.\ introduced the \textbf{Data-efficient Image Transformer (DeiT)} \cite{touvron2021_deit}. The main idea was to retain the ViT architecture but improve its data efficiency by introducing a novel training scheme: \textbf{distillation via a dedicated token}, supervised by a pretrained \textbf{CNN teacher}. This enabled DeiT to match or exceed CNNs in accuracy using only ImageNet-1k—on a single machine in just a few days.
+
+\subsubsection{Distillation via Tokens: Setup}
+
+\noindent
+DeiT modifies the ViT input sequence by prepending \textbf{two learnable tokens}:
+\begin{itemize}
+	\item \texttt{[CLS]}: used for standard classification and supervised using the ground-truth label.
+	\item \texttt{[DIST]}: trained to mimic a CNN teacher's prediction—serving as a distillation channel.
+\end{itemize}
+
+\noindent
+Both tokens participate fully in all self-attention layers. 
+\newpage
+At the output:
+\begin{itemize}
+	\item The \texttt{[CLS]} token is passed through a classification head and supervised with standard cross-entropy loss.
+	\item The \texttt{[DIST]} token is supervised with the teacher’s output.
+\end{itemize}
+
+\paragraph{Hard Distillation in Practice.}
+In DeiT, the authors found that \textbf{hard distillation using the teacher’s top-1 prediction} performed better than soft distillation (see \autoref{fig:chapter18_deit_distillation_experiments}). The loss is:
+
+\begin{equation}
+	\mathcal{L}_{\text{hard}} = \frac{1}{2} \cdot \mathcal{L}_{\text{CE}}(Z_{\text{cls}}, y) + \frac{1}{2} \cdot \mathcal{L}_{\text{CE}}(Z_{\text{dist}}, y_t),
+	\label{eq:deit_hard_distillation}
+\end{equation}
+
+\noindent
+where:
+\begin{itemize}
+	\item \( Z_{\text{cls}} \), \( Z_{\text{dist}} \): output logits from the \texttt{[CLS]} and \texttt{[DIST]} tokens, respectively.
+	\item \( y \): ground-truth label, \( y_t = \arg\max_c Z_t(c) \): teacher's hard label.
+\end{itemize}
+
+\noindent
+This setup adds no extra parameters and provides two separate yet complementary signals. The \texttt{[CLS]} token learns from the data, while the \texttt{[DIST]} token mimics a CNN trained independently on the same task.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_18/DeiT_distillation_experiments.jpg}
+	\caption{Comparison of distillation strategies on ImageNet. Hard distillation outperforms soft distillation. Late fusion of both tokens further improves results, confirming their complementarity. Source: \cite{touvron2021_deit}.}
+	\label{fig:chapter18_deit_distillation_experiments}
+\end{figure}
+
+\subsubsection{Soft Distillation: Temperature and KL Loss}
+
+\noindent
+While DeiT ultimately used hard distillation, it is worth contrasting with the soft distillation alternative. This uses KL divergence to align the softmax distribution of the student with that of the teacher:
+
+\begin{equation}
+	\mathcal{L}_{\text{soft}} = (1 - \lambda) \cdot \mathcal{L}_{\text{CE}}(Z_{\text{cls}}, y) + \lambda \cdot \tau^2 \cdot \text{KL}\big(\psi(Z_{\text{dist}} / \tau), \psi(Z_t / \tau)\big),
+	\label{eq:deit_soft_distillation}
+\end{equation}
+
+\noindent
+Here:
+\begin{itemize}
+	\item \( \psi \) is the softmax function.
+	\item \( \tau > 1 \) is a temperature parameter used to \textbf{flatten} the distributions.
+	\item \( \lambda \in [0,1] \) balances CE and KL.
+\end{itemize}
+
+\noindent
+Higher \( \tau \) softens the output, making low-confidence classes more pronounced. This allows the student to learn from the teacher’s uncertainty and inter-class structure. However, in practice, DeiT’s experiments showed that the simpler hard-label approach performed better—especially when training on a limited dataset.
+
+\subsubsection{Why Use a CNN Teacher?}
+\label{sec:chapter18_deit_teacher_choice}
+
+\noindent
+Rather than distill from another transformer, the DeiT authors used a pretrained \textbf{RegNetY-16GF} CNN (see \autoref{subsubsec:regnet_architecture}), achieving 82.9\% top-1 accuracy on ImageNet. This design offers several advantages:
+\begin{itemize}
+	\item CNNs are known to learn strong spatial features with hierarchical locality.
+	\item Their decisions are less dependent on large training data or fragile tokenization.
+	\item The contrast in architecture offers diversity—encouraging the student to combine inductive signals from both CNN-style and attention-based computation.
+\end{itemize}
+
+\subsubsection{Learned Token Behavior}
+
+\noindent
+The \texttt{[CLS]} and \texttt{[DIST]} tokens evolve differently through the network:
+\begin{itemize}
+	\item \textbf{Early layers:} Their representations differ significantly (cosine similarity \(\sim 0.06\)).
+	\item \textbf{Final layer:} They converge (\(\sim 0.93\))—not perfectly aligned but close, reflecting shared goals (see teacher output in \autoref{fig:chapter18_deit_distillation_token}).
+\end{itemize}
+
+\noindent
+DeiT showed that adding a second \texttt{[CLS]} token (with no supervision) leads to no performance gain: both tokens collapse to the same representation (cosine \(\sim 0.999\)). This confirms that the \texttt{[DIST]} token is not redundant—it learns from distinct supervision.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Figures/Chapter_18/DeiT_Distillation.png}
+	\caption{DeiT distillation architecture. The \texttt{[CLS]} token is trained with the ground-truth label, while the \texttt{[DIST]} token matches the teacher’s prediction (top-1 label). Source: \cite{touvron2021_deit}.}
+	\label{fig:chapter18_deit_distillation_token}
+\end{figure}
+
+\subsubsection{Fine-Tuning: High Resolution and Distillation Retention}
+\label{sec:chapter18_deit_finetuning}
+
+\noindent
+After initially pretraining on low-resolution images (\(224\times224\)), DeiT employs a \textbf{fine-tuning} stage at higher resolutions (e.g.\ \(384\times384\)). This two-stage approach is common in CNN-based pipelines and benefits Vision Transformers for reasons summarized below.
+
+\paragraph{Two-Phase Training Rationale}
+\begin{itemize}
+	\item \textbf{Pretraining (Low Res):}
+	Uses smaller images to reduce computational overhead and memory footprint. By observing more training iterations (epochs) in less time, the model quickly learns broad, generalizable features.
+	\item \textbf{Fine-Tuning (Higher Res):}
+	Increases spatial detail available to the model. Having already learned general representations, the ViT can now refine discriminative features for finer distinctions.
+\end{itemize}
+
+\paragraph{Why Higher Resolution Helps}
+\noindent
+Even on the same dataset, upscaling images from \(224\times224\) to \(384\times384\) can yield:
+\begin{itemize}
+	\item \textbf{Finer Spatial Details:}
+	Larger images reveal subtle patterns—textures, small objects—previously lost at lower resolutions.
+	\item \textbf{Natural Fit for Global Attention:}
+	Because self-attention is inherently global, the ViT benefits from the extra detail without requiring architectural changes.
+	\item \textbf{Improved Class Separation:}
+	Subtle class differences (e.g.\ fine-grained bird species) become more apparent in high-resolution patches.
+\end{itemize}
+
+\paragraph{Upscaling and L2-Norm Preservation}
+\noindent
+DeiT upsamples pretraining images via \textbf{bicubic interpolation} while preserving the original L2-norm:
+\begin{itemize}
+	\item \textbf{Bicubic Interpolation:}
+	Smoothly resizes images without abrupt pixelation or aliasing.
+	\item \textbf{L2-Norm Maintenance:}
+	Ensures \(\| x_{\text{high-res}} \|_2 \approx \| x_{\text{low-res}} \|_2\), preventing large scale shifts that might disturb the pretrained weights.
+\end{itemize}
+
+\paragraph{Teacher Adaptation with FixRes}
+\noindent
+During fine-tuning, the CNN teacher (e.g.\ RegNetY-16GF) must also be adjusted to the higher resolution. DeiT does this with \textbf{FixRes} \cite{touvron2019_fixres}:
+\begin{itemize}
+	\item \textbf{Resolution-Adaptive Inputs:}
+	The teacher model sees the same upscaled images.
+	\item \textbf{Minimal Retraining:}
+	FixRes applies specialized normalization/rescaling steps so the teacher remains effectively “frozen,” maintaining consistent distillation signals.
+\end{itemize}
+
+\paragraph{Dual Supervision in Fine-Tuning}
+\noindent
+DeiT still uses both ground-truth labels and teacher predictions to guide training:
+\begin{itemize}
+	\item \textbf{[CLS] Token:}
+	Optimized for the standard classification objective with true labels.
+	\item \textbf{[DIST] Token:}
+	Receives the teacher’s soft distribution, preserving distillation benefits in high-resolution fine-tuning.
+\end{itemize}
+
+\subsubsection{Why This Works in Data-Limited Settings}
+
+\noindent
+DeiT’s training strategy is especially effective when data is scarce:
+\begin{itemize}
+	\item By distilling from a strong CNN teacher, the ViT student receives a \textbf{denser supervision signal}—guidance not only on the ground-truth label but also on how to generalize.
+	\item The use of separate heads (\texttt{[CLS]} and \texttt{[DIST]}) allows the model to learn from different objectives simultaneously, improving generalization.
+	\item The distillation loss serves as an \textbf{implicit regularizer}, stabilizing training and encouraging convergence to more robust minima.
+	\item This setup enables ViTs to reach CNN-level performance without needing massive external datasets like JFT-300M, making it practical in standard academic and industrial environments.
+\end{itemize}
+
+\subsection{Model Variants}
+\label{sec:chapter18_deit_variants}
+
+\noindent
+DeiT defines a family of models, keeping the overall ViT structure and varying only the embedding dimension and number of heads. All models use fixed head size \(d=64\):
+
+\begin{itemize}
+	\item \textbf{DeiT-Ti:} 192-dimensional embeddings, 3 attention heads.
+	\item \textbf{DeiT-S:} 384-dimensional embeddings, 6 heads.
+	\item \textbf{DeiT-B:} 768-dimensional embeddings, 12 heads—same as ViT-B.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/DeiT_Variants.jpg}
+	\caption{Comparison of DeiT model variants by throughput and accuracy. Higher embedding dimensions and head counts yield better performance. Source: \cite{touvron2021_deit}.}
+	\label{fig:chapter18_deit_variants}
+\end{figure}
+
+\subsection{Conclusion and Outlook: From DeiT to DeiT III and Beyond}
+\label{sec:chapter18_deit_conclusion}
+
+\noindent
+The \textbf{Data-efficient Image Transformer (DeiT)} marked a major milestone in bringing the Vision Transformer (ViT) architecture closer to practical utility—eliminating the need for large-scale datasets like JFT-300M or high-compute training budgets. By introducing a simple yet powerful \textbf{distillation token} and leveraging a CNN teacher, DeiT enabled ViTs to perform on par with convolutional networks on standard benchmarks such as ImageNet-1k, using only \textbf{ImageNet-level data} and modest compute (see \autoref{fig:chapter18_deit_variants}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_86.jpg}
+	\caption{Performance of ViT-B/16 with key improvements introduced by DeiT: distillation, longer training (300 \(\rightarrow\) 1000 epochs), and fine-tuning at higher resolution (224\(^2\) \(\rightarrow\) 384\(^2\)).}
+	\label{fig:chapter18_deit_improvements}
+\end{figure}
+
+\subsubsection{DeiT III: Revenge of the ViT}
+\label{sec:chapter18_deit3}
+
+\noindent
+\textbf{DeiT III} \cite{touvron2022_deitiii} builds upon the success of DeiT by refining the training pipeline further—\emph{without using a teacher at all}. It demonstrates that:
+
+\begin{itemize}
+	\item With the right \textbf{training strategy}—including improved data augmentation, regularization, optimizer settings, and longer training schedules—\textbf{pure ViTs can match or outperform CNNs} without any form of distillation.
+	\item DeiT III removes the distillation token entirely and shows that even \textbf{vanilla ViTs trained from scratch} can become competitive—closing the performance gap with teacher-based training.
+	\item The model achieves state-of-the-art results on ImageNet using only 224\(^2\) inputs and a standard ViT-B architecture.
+\end{itemize}
+
+\noindent
+In short, DeiT III shows that \textbf{distillation is helpful—but not necessary}—if the training setup is sufficiently strong.
+
+\paragraph{Open Questions Raised by DeiT}
+
+\noindent
+DeiT raises thought-provoking questions about how Transformers learn:
+
+\begin{itemize}
+	\item Is DeiT still dependent on convolutional priors via the teacher? If so, can we design positional encoding or attention mechanisms that encode spatial hierarchies natively?
+	\item What happens if we use \textbf{multiple teachers}, each with its own distillation token? Can a ViT outperform the ensemble that taught it?
+	\item How can we improve ViT’s ability to capture \textbf{multi-scale visual patterns}, which CNNs handle via downsampling and channel scaling?
+\end{itemize}
+
+These questions set the stage for the next wave of models—transformers that go beyond the flat, isotropic structure of ViT.
+
+\subsubsection{Toward Hierarchical Vision Transformers}
+\label{sec:chapter18_transition_swin}
+
+\noindent
+Unlike most CNNs, which \textbf{progressively downsample spatial resolution} while increasing the number of feature channels (see \autoref{fig:chapter18_cnn_vs_vit}), standard ViTs maintain a constant sequence length and embedding dimension throughout all layers—a property known as \textbf{isotropy}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_89.jpg}
+	\caption{CNNs exhibit a hierarchical architecture (resolution decreases, channel width increases). In contrast, ViTs like DeiT use a flat structure with constant embedding size, token length.}
+	\label{fig:chapter18_cnn_vs_vit}
+\end{figure}
+
+\noindent
+But many objects in images appear at multiple scales. Can we design \textbf{hierarchical transformers} that mimic CNNs' ability to capture coarse-to-fine structure?
+
+\noindent
+This leads us naturally to the next family of models: the \textbf{Swin Transformer}, which introduces shifted windows and hierarchical processing, combining the best of both CNN and Transformer designs.
+
+\noindent
+In the next section, we will explore the Swin Transformer and how it solves some of the architectural and scaling challenges of vanilla ViTs while maintaining the benefits of self-attention.
+
+\newpage
+\section{Swin Transformer: Hierarchical Vision Transformers with Shifted Windows}
+\label{sec:chapter18_swin_intro}
+
+\noindent
+As we have seen in \textbf{DeiT}, using a \emph{hierarchical} CNN-based teacher significantly improves ViT performance and data efficiency. This motivates the design of architectures that natively combine the benefits of \textbf{transformers} with the \textbf{hierarchical representations} characteristic of \emph{convolutional networks}.
+
+\noindent
+The \textbf{Swin Transformer} (\emph{Shifted Windows Transformer}) \cite{liu2021_swin} addresses this challenge by introducing a hierarchical ViT architecture with two key design principles:
+
+\begin{itemize}
+	\item \textbf{Local self-attention with non-overlapping windows:} Limits self-attention computation to fixed-size windows, significantly reducing computational complexity.
+	\item \textbf{Shifted windowing scheme:} Enables cross-window communication, expanding the effective receptive field and improving the model’s ability to capture long-range dependencies.
+\end{itemize}
+
+\noindent
+This architecture narrows the gap between Vision Transformers and CNNs in terms of efficiency and scalability, enabling their use in dense prediction tasks such as object detection and segmentation. Moreover, Swin achieves strong empirical performance, surpassing earlier ViT and DeiT models on key benchmarks—while preserving \textbf{linear computational complexity} with respect to image size.
+
+\noindent
+Throughout the following subsections, we will break down the Swin Transformer architecture, drawing conceptual support from the original paper as well as the explanatory \href{https://www.youtube.com/watch?v=qUSPbHE3OeU&t=354s&ab_channel=SoroushMehraban}{YouTube video by Soroush Mehraban}, which provides helpful animations and intuitive visualizations.
+
+\subsection{How Swin Works}
+\label{subsec:chapter18_swin_working}
+
+\paragraph{Patch Tokenization} 
+As in ViT, an image is split into non-overlapping patches. Swin uses small \(4 \times 4\) patches. Each patch is flattened and linearly projected to a fixed embedding dimension \(C\). This can be implemented efficiently using a convolution layer with:
+
+\begin{itemize}
+	\item Kernel size: \(4 \times 4\),
+	\item Stride: \(4\),
+	\item Number of output channels: \(C\).
+\end{itemize}
+
+\noindent
+This yields a feature map of size \( \frac{H}{4} \times \frac{W}{4} \times C \), where each location corresponds to a \emph{token}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/Patches_in_Swin.jpg}
+	\caption{Patch partitioning and linear embedding in Swin Transformer. The input image is first processed with a convolutional layer using \(C\) kernels of size \(4 \times 4 \times 3\) and stride 4. This operation generates non-overlapping \(4 \times 4\) patches, each projected to an embedding of dimension \(C\). Thus, the convolutional layer performs both patch partitioning and linear projection in a single step, preparing the input sequence for the first Swin Transformer block.}
+	\label{fig:chapter18_swin_patch_embedding}
+\end{figure}
+
+\subsection{Window-Based Self-Attention (W-MSA)}
+Instead of computing attention globally (as in ViT), Swin divides the token grid into \textbf{non-overlapping windows} of size \( M \times M \) (e.g., \( M = 7 \)). Within each window, self-attention is computed \emph{locally}, reducing the total cost.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/w-msa.jpg}
+	\caption{
+		Visualization of Window-based Multi-Head Self-Attention (W-MSA). In Swin Transformers, self-attention is computed independently within each non-overlapping window. This design dramatically reduces computational complexity while capturing strong local context. For many vision tasks, local interactions are sufficient—e.g., background patches generally don’t benefit from attending to unrelated regions. However, in cases where understanding an object requires aggregating non-local features (e.g., recognizing a bird that spans multiple windows), purely local attention becomes limiting. This motivates the introduction of Shifted Window MSA (SW-MSA), which enables cross-window interactions to improve global understanding while maintaining efficiency.
+	}
+	\label{fig:chapter18_wmsa}
+\end{figure}
+
+\noindent
+Each window performs self-attention independently:
+
+\begin{equation}
+	\text{Total attention cost per window: } \mathcal{O}(M^4 \cdot C)
+\end{equation}
+
+\noindent
+Let \( N = \frac{H \cdot W}{16} \) be the number of tokens (since we downsample by 4). The total number of windows is \( \frac{N}{M^2} \), and thus the overall complexity becomes:
+
+\begin{align}
+	\mathcal{O}\left( \frac{N}{M^2} \cdot M^4 \cdot C \right) &= \mathcal{O}(N \cdot M^2 \cdot C) \\
+	&= \mathcal{O}(H \cdot W \cdot C) \quad \text{(since } M \text{ is constant)}.
+\end{align}
+
+\noindent
+Hence, Swin achieves \textbf{linear complexity} with respect to image size.
+
+\subsection{Limitation: No Cross-Window Communication}
+
+\noindent
+While windowed self-attention is efficient, it creates a problem: \textbf{tokens can only attend to others within the same window}. As a result:
+
+\begin{itemize}
+	\item Long-range dependencies across windows are not captured.
+	\item Objects spanning multiple windows may not be modeled holistically.
+	\item Non-adjacent image regions that are semantically linked remain disconnected.
+\end{itemize}
+
+\noindent
+\textbf{Examples:}
+\begin{itemize}
+	\item A person’s face partially split across windows may have disconnected features.
+	\item Recognizing symmetry or object boundaries requires context from adjacent or distant windows.
+\end{itemize}
+
+\subsection{Solution: Shifted Windows (SW-MSA)}
+\label{subsec:chapter18_swin_shifted}
+
+\noindent
+To address the lack of inter-window communication in Window-based Multi-Head Self-Attention (W-MSA), Swin introduces a simple yet effective mechanism: \textbf{Shifted Window Multi-Head Self-Attention (SW-MSA)}. By altering how windows are defined between consecutive transformer blocks, this strategy enables efficient cross-window interaction—without sacrificing the linear complexity benefits of W-MSA.
+
+\paragraph{How it works}
+\begin{itemize}
+	\item In alternate transformer blocks, the grid of patch tokens is \textbf{shifted by \(\frac{M}{2}\)} pixels along both spatial axes.
+	\item This changes the window partitioning such that tokens that were previously in different windows now fall into the same window.
+	\item Attention is computed within these shifted \(M \times M\) windows, allowing tokens from neighboring regions to \textbf{interact across windows}.
+\end{itemize}
+
+\paragraph{Benefits of SW-MSA}
+\begin{itemize}
+	\item \textbf{Increased Receptive Field:} Over multiple layers, tokens gradually interact with a broader context, similar to the expanding receptive field of CNNs, introducing a smooth integration of information across patch boundaries, improving the model's ability to understand larger structures in images.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.65\textwidth]{Figures/Chapter_18/shifted_windows_benefits.jpg}
+		\caption{Benefits of SW-MSA. After a window shift, tokens that were in separate windows (e.g., red, green, blue) in layer \(L\) now fall into the same window in layer \(L+1\), enabling interaction and richer context aggregation.}
+		\label{fig:chapter18_swin_shifted_windows_benefits}
+	\end{figure}
+	\item \textbf{Linear Complexity Preserved:} Since attention is still localized to \(M \times M\) regions, SW-MSA retains \(\mathcal{O}(HWC)\) complexity, avoiding the quadratic cost of global attention.
+\end{itemize}
+
+\paragraph{Challenges Introduced by Shifted Windows}
+
+\noindent
+While effective for capturing broader context, the shifted window design introduces several new implementation and computational issues, particularly near the image boundaries.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_103.jpg}
+	\caption{Shifted windows introduce unaligned boundaries. To maintain consistent \(M \times M\) window shapes, additional padding must be applied, increasing the number of windows and total compute.}
+	\label{fig:chapter18_swin_padding_problem}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.45\textwidth]{Figures/Chapter_18/no-cyclic-sw-msa.jpg}
+	\caption{Even after shifting, objects spanning multiple windows may still not be fully captured, like the turtle in Soroush Mehraban's figure. Meanwhile, excessive windows and their corresponding zero-padding adds computational waste.}
+	\label{fig:chapter18_swin_shifted_limitations}
+\end{figure}
+
+\noindent
+As illustrated in the figures, shifted windows enable cross-region communication but still face several issues we would like to deal with:
+
+\begin{itemize}
+	\item \textbf{Fragmented Coverage:} Large or spatially dispersed objects may remain split across non-overlapping windows, making complete context aggregation difficult—even with stacking.
+	\item \textbf{Uneven Window Sizes at Edges:} As seen in \autoref{fig:chapter18_swin_padding_problem}, shifting creates windows that extend beyond image boundaries. To enforce uniform \(M \times M\) window sizes, zero-padding must be introduced—leading to artificial tokens that add no semantic value.
+	\item \textbf{Increased Number of Windows:} A small shift can dramatically inflate the number of windows (e.g., from 4 to 9), increasing the number of attention computations required per layer.
+	\item \textbf{Padding Overhead:} The padded regions still participate in matrix multiplications during attention, incurring additional computation for no informational gain.
+\end{itemize}
+
+\noindent  
+To address the inefficiencies introduced by regular shifted windows—particularly the padding overhead and inflated number of windows—the Swin Transformer introduces a more principled variant: \textbf{cyclic shifted windows}. This technique applies the same shift operation as standard SW-MSA but treats the image as \emph{toroidal}, effectively wrapping the shifted tokens around the image borders rather than padding them with zeros. This maintains uniform \(M \times M\) window sizes and preserves regular window alignment—\textbf{eliminating zero-padding and reducing computational overhead}.
+
+\noindent  
+However, it's important to note that \textbf{cyclic shifts alone do not entirely solve the issue of fragmented object coverage or long-range dependencies}. Those challenges are addressed by stacking multiple Swin blocks (alternating W-MSA and SW-MSA) and incorporating hierarchical downsampling via patch merging, which we'll explore later.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.45\textwidth]{Figures/Chapter_18/two_successive_swin_transformer_blocks.png}
+	\caption{Two consecutive Swin Transformer blocks. Each block resembles a standard Transformer encoder block but replaces global self-attention with window-based self-attention (W-MSA in the first block, SW-MSA in the second). Alternating W-MSA and SW-MSA layers enables inter-window communication and increases the receptive field, allowing more contextual information to be aggregated across blocks.}
+	\label{fig:chapter18_swin_block_pair}
+\end{figure}
+
+\subsection{Cyclic Shifted Window-Masked Self Attention (Cyclic SW-MSA)}
+\label{subsec:chapter18_cyclic_swmha}
+
+\noindent
+To enable efficient inter-window communication while maintaining local window-based attention, Swin Transformer introduces a refined approach: \textbf{Cyclic Shifted Window Multi-Head Self Attention (Cyclic SW-MSA)}.
+
+\noindent
+This mechanism builds on standard SW-MSA by:
+\begin{itemize}
+	\item Applying a \textbf{cyclic shift} to the feature map prior to partitioning into windows.
+	\item Computing attention within fixed-size windows \emph{with masking}, ensuring only \textbf{valid, adjacent} spatial relationships are attended to.
+	\item Reversing the shift after attention to restore the spatial layout.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/Ilustration_of_cyclic_shifts_in_sw_msa.jpg}
+	\caption{Cyclic shift in SW-MSA (adapted from Soroush Mehraban). Patches are cyclically shifted to form new overlapping windows. Masking ensures attention only occurs between spatially coherent regions. Colored segments illustrate masked-out interactions (e.g., red and yellow columns in Window 2).}
+	\label{fig:chapter18_cyclic_shift_diagram}
+\end{figure}
+
+\subsubsection{Masking in SW-MSA}
+\label{subsubsec:chapter18_masking_in_swmha}
+
+\noindent
+During \textbf{Shifted Window Multi-Head Self-Attention (SW-MSA)}, cyclically shifting the feature map by \(\frac{M}{2}\) patches horizontally and vertically enables tokens from adjacent windows to interact. However, this also causes non-adjacent tokens that were originally in \emph{different} windows (in the unshifted layout) to end up in the \emph{same} window after the shift. To prevent invalid cross-region attention (i.e., self-attention between patches that were originally far apart from one another), a binary attention mask is constructed.
+
+\paragraph{Step-by-Step Construction of the Mask}
+
+\begin{enumerate}
+	\item \textbf{Assign group IDs to each spatial region}
+	
+	Each window-sized region is assigned a unique integer ID in a mask tensor. Using three spatial slices for height and width, the region is broken into \(3 \times 3\) zones (when shift is non-zero). Each zone gets a group index from 0 to 8:
+	
+	\begin{mintedbox}{python}
+		H, W = self.input_resolution
+		img_mask = torch.zeros((1, H, W, 1))  # shape: 1 x H x W x 1
+		h_slices = (slice(0, -M), slice(-M, -s), slice(-s, None))
+		w_slices = (slice(0, -M), slice(-M, -s), slice(-s, None))
+		
+		cnt = 0
+		for h in h_slices:
+			for w in w_slices:
+				img_mask[:, h, w, :] = cnt
+				cnt += 1
+	\end{mintedbox}
+	
+	\item \textbf{Apply cyclic shift and partition windows}
+	
+	\begin{mintedbox}{python}
+		# Shift the group ID map
+		shifted_mask = torch.roll(img_mask, shifts=(-s, -s), dims=(1, 2))
+		
+		# Partition into non-overlapping windows
+		mask_windows = window_partition(shifted_mask, M)  # shape: nW x M x M x 1
+		mask_windows = mask_windows.view(-1, M * M)        # shape: nW x M^2
+	\end{mintedbox}
+	
+	\item \textbf{Compare group IDs to create the attention mask}
+	
+	\begin{mintedbox}{python}
+		# Compute attention mask: compare group IDs between tokens in each window
+		attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2)
+		attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0))
+		attn_mask = attn_mask.masked_fill(attn_mask == 0, float(0.0))
+	\end{mintedbox}
+	
+	Here:
+	\begin{itemize}
+		\item \texttt{unsqueeze(1)} reshapes the tensor to \((nW, 1, M^2)\), enabling it to broadcast as the query vector.
+		\item \texttt{unsqueeze(2)} reshapes the tensor to \((nW, M^2, 1)\), for broadcasting as the key vector.
+		\item Subtracting compares every token-pair's group ID: if the difference is non-zero, they originated from different windows and should not attend to each other.
+		\item These invalid entries are assigned \(-100.0\), suppressing them in softmax (effectively masking them out).
+	\end{itemize}
+\end{enumerate}
+
+\paragraph{Why Use \(-100.0\) in the Mask?}
+
+\noindent
+In scaled dot-product attention, attention scores are normalized using the softmax function:
+\[
+\text{softmax}(A_{ij}) = \frac{\exp(A_{ij})}{\sum_k \exp(A_{ik})}.
+\]
+Setting a score to \(-100\) ensures:
+\[
+\exp(-100) \approx 3.7 \times 10^{-44} \approx 0,
+\]
+so that the corresponding token pair receives effectively zero attention weight. This guarantees that tokens only interact with other patches from the \textbf{same logical window}, preserving local structure even in shifted views.
+
+\newpage
+\paragraph{Expanded Receptive Fields}
+
+Stacking W-MSA and SW-MSA alternately allows information to gradually propagate across windows, simulating global attention over layers. This is illustrated in the following figure.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/Ilustration_of_cyclic_shifts_windows.jpg}
+	\caption{Cyclic shifts enable tokens from different windows (same color regions) to attend to each other over successive layers. This increases receptive field without global attention.}
+	\label{fig:chapter18_cyclic_shift_receptive_field}
+\end{figure}
+
+\noindent
+Cyclic SW-MSA is therefore a key innovation in Swin Transformer. It balances the computational benefits of local attention with the expressive power of global modeling, \textbf{without relying on full global self-attention}, making it scalable and effective for vision tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/Ilustration_of_cyclic_ws_msa.jpg}
+	\caption{Cyclic Shifted Window Self-Attention (SW-MSA). After applying a cyclic shift by \( M/2 \) patches in both spatial directions, new windows are formed that include patches from different regions of the original unshifted image. A masking mechanism is applied to prevent undesired attention between patches that were not originally neighbors. Each color block represents a logical region from the original image space; same-color patches now grouped together in a shifted window will be masked from attending to one another (adapted from Soroush Mehraban). }
+	\label{fig:chapter18_cyclic_ws_msa}
+\end{figure}
+
+\subsection{Patch Merging in Swin Transformers}
+\label{subsec:chapter18_patch_merging}
+
+\noindent
+One of the core architectural innovations in Swin Transformers is the \textbf{patch merging} mechanism. Unlike ViT, which maintains a fixed token resolution across all layers, Swin progressively reduces spatial resolution in a \textbf{hierarchical fashion}, analogous to spatial downsampling in CNNs (e.g., max pooling or strided convolutions). This allows deeper layers to operate on coarser representations, increasing both computational efficiency and receptive field.
+
+\subsubsection*{What Happens in Patch Merging?}
+\begin{itemize}
+	\item The feature map is divided into non-overlapping \(2 \times 2\) spatial groups.
+	\item The embeddings of the four patches in each group are concatenated:
+	\[
+	[\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3, \mathbf{x}_4] \in \mathbb{R}^{4C}.
+	\]
+	\item A linear projection reduces the dimensionality from \(4C\) to \(2C\):
+	\[
+	\mathbf{y} = W_{\text{merge}} \cdot [\mathbf{x}_1; \mathbf{x}_2; \mathbf{x}_3; \mathbf{x}_4], \quad W_{\text{merge}} \in \mathbb{R}^{2C \times 4C}.
+	\]
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/patch_merging.jpg}
+	\caption{Patch merging in Swin Transformer. Four adjacent \(C\)-dimensional patch embeddings are concatenated and projected to a single \(2C\)-dimensional embedding, reducing spatial resolution while enriching feature representation. Adapted from Soroush Mehraban.}
+	\label{fig:chapter18_patch_merging}
+\end{figure}
+
+\subsubsection*{Benefits of Patch Merging}
+\begin{itemize}
+	\item \textbf{Hierarchical Representation:} Enables the model to learn multi-scale features across different stages, from fine details to coarse semantics—similar to CNNs.
+	\item \textbf{Context Expansion via SW-MSA:} As Swin blocks are stacked, the combination of patch merging and shifted window attention allows more distant patches to interact. Even though W-MSA starts with small local windows, successive blocks expand the model’s receptive field, enabling global reasoning over time.
+	\item \textbf{Computational Efficiency:} Reducing the number of tokens at deeper layers significantly lowers the cost of self-attention, especially compared to flat-resolution ViTs.
+	\item \textbf{Empirical Performance:} Despite using small initial patch sizes (e.g., \(4 \times 4\)), Swin Transformers often outperform ViTs using coarser patches (e.g., \(16 \times 16\))—due to the combination of local precision and effective hierarchical abstraction.
+\end{itemize}
+
+\subsubsection*{Downsides and Considerations}
+\begin{itemize}
+	\item \textbf{Spatial Detail Loss:} Each merging step reduces spatial granularity, which may obscure fine structures—though this is often compensated for by higher-level context aggregation.
+	\item \textbf{Increased Channel Dimensionality:} Doubling feature dimensions increases parameter count and projection cost.
+	\item \textbf{Less Uniform Design:} Unlike ViT’s isotropic (uniform) architecture, Swin’s stage-wise structure adds design complexity and requires reasoning across multiple resolutions.
+\end{itemize}
+
+\noindent
+Nonetheless, this architectural shift is central to Swin’s success. The combined effect of \textbf{hierarchical patch merging} and \textbf{shifted window self-attention} enables Swin Transformers to scale efficiently and generalize well—bridging the gap between CNN-style design and transformer flexibility.
+
+\subsubsection*{Positional Encoding in Swin Transformers: Relative Positional Bias}
+\label{enrichment:swin_positional_bias}
+
+\noindent
+In standard Vision Transformers (ViTs), positional information is injected via \textbf{absolute positional embeddings}:
+\[
+\mathbf{z}_i = \mathbf{x}_i + \mathbf{p}_i,
+\]
+where \( \mathbf{x}_i \) is the embedding of the \(i\)-th patch and \( \mathbf{p}_i \in \mathbb{R}^D \) is a learnable vector encoding its absolute position in the image.
+
+\medskip
+\noindent
+However, Swin Transformer \textbf{does not} use absolute positional embeddings. Instead, it incorporates \textbf{relative position encoding} directly into the attention computation via a learnable \emph{relative positional bias}.
+
+\paragraph{Relative Positional Bias in Attention}
+Let \(Q, K, V \in \mathbb{R}^{M^2 \times D}\) be the query, key, and value matrices computed for a single \(M \times M\) window, where \(M^2\) is the number of tokens in that window.
+
+The self-attention output is computed as:
+\[
+\text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^\top}{\sqrt{D}} + B \right)V,
+\]
+where \(B \in \mathbb{R}^{M^2 \times M^2}\) is a learnable matrix that assigns a scalar bias based on the \textbf{relative position} between each query–key pair.
+
+\paragraph{What Does the Bias Represent?}
+Each element \(B_{i,j}\) encodes the relative spatial offset between token \(i\) and token \(j\) within the local window. For example:
+\begin{itemize}
+	\item If \(i\) and \(j\) are adjacent horizontally, they share the same relative position across windows.
+	\item This allows the model to generalize better across positions, since relative offsets like “left of,” “above,” or “diagonal to” are invariant to the absolute location of the window.
+\end{itemize}
+
+\paragraph{Benefits of Relative Bias}
+\begin{itemize}
+	\item \textbf{Translation-Friendly:} Relative encoding makes the attention mechanism more robust to shifts and translations of the image.
+	\item \textbf{Parameter Efficient:} The number of relative positions is much smaller than absolute positions, especially within fixed-size windows.
+	\item \textbf{Better Generalization:} Unlike absolute embeddings that are tied to specific coordinates, relative bias supports window-level inductive biases that generalize to unseen positions and resolutions.
+\end{itemize}
+
+\paragraph{Implementation Detail}
+Because there are only a finite number of relative positions within a window (e.g., \((-M+1, \dots, 0, \dots, M-1)\) in each direction), the matrix \(B\) can be indexed from a smaller lookup table of learnable biases and expanded into a full \(M^2 \times M^2\) matrix.
+
+\subsection{Conclusion: The Swin Transformer Architecture and Variants}
+\label{subsec:chapter18_swin_conclusion}
+
+\noindent
+Swin Transformer introduced a compelling shift in vision transformer design by combining the benefits of self-attention with a \textbf{hierarchical structure}—a feature previously reserved for convolutional networks. This enables efficient multi-scale representation learning and significantly enhances the transformer's ability to model fine-grained local and global patterns.
+
+\subsubsection*{Overall Swin Architecture}
+
+\noindent
+Swin starts by splitting the input image into non-overlapping patches of size \(4 \times 4\), projecting them to a token dimension (e.g., 96). These tokens then pass through a \textbf{stack of Swin Transformer blocks} composed of alternating W-MSA and SW-MSA layers, with occasional \textbf{patch merging} between stages to reduce spatial resolution and increase feature richness—mirroring the downsampling behavior of CNNs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_96.jpg}
+	\caption{Swin Transformer backbone architecture. The model hierarchically downsamples feature maps while increasing channel dimensions across four stages.}
+	\label{fig:chapter18_swin_architecture}
+\end{figure}
+
+\subsubsection*{Swin Variants (T/S/B/L)}
+
+\noindent
+Swin Transformer comes in different sizes analogous to the ViT family (Tiny, Small, Base, and Large). The table below summarizes the architecture of each variant:
+
+\vspace{0.5em}
+\begin{center}
+	\scriptsize
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Stage} & \textbf{Downsample Rate} & \textbf{Swin-T} & \textbf{Swin-B} & \textbf{Swin-L} \\
+		\hline
+		Stage 1 & \(4\times\) (\(56\times56\)) & Patch size \(4\times4\), dim 96 & dim 128 & dim 192 \\
+		&                              & 2 blocks, head 3 & 2 blocks, head 4 & 2 blocks, head 6 \\
+		\hline
+		Stage 2 & \(8\times\) (\(28\times28\)) & dim 192 & dim 256 & dim 384 \\
+		&                              & 2 blocks, head 6 & 2 blocks, head 8 & 2 blocks, head 12 \\
+		\hline
+		Stage 3 & \(16\times\) (\(14\times14\)) & dim 384 & dim 512 & dim 768 \\
+		&                               & 6 blocks, head 12 & 18 blocks, head 16 & 18 blocks, head 24 \\
+		\hline
+		Stage 4 & \(32\times\) (\(7\times7\)) & dim 768 & dim 1024 & dim 1536 \\
+		&                              & 2 blocks, head 24 & 2 blocks, head 32 & 2 blocks, head 48 \\
+		\hline
+	\end{tabular}
+\end{center}
+\vspace{0.5em}
+
+\noindent
+This hierarchical structure with progressive patch merging not only boosts accuracy but also enables efficient training and inference on dense prediction tasks.
+
+\subsubsection*{Speed vs.\ Accuracy: Swin vs.\ DeiT and CNNs}
+
+\noindent
+Swin Transformers offer a compelling balance between speed and accuracy compared to other vision models such as \textbf{DeiT}, \textbf{EfficientNet}, and \textbf{RegNetY}. This is largely due to their hierarchical design, efficient windowed attention, and flexible scaling strategies.
+
+\noindent
+Unlike vanilla ViTs and DeiT, which operate on fixed-size \(16 \times 16\) patches and maintain uniform resolution across layers (isotropic architecture), Swin operates on \textbf{small \(4 \times 4\) patches} and hierarchically merges them, forming a \textbf{multi-resolution feature pyramid}. This enables it to process both fine and coarse visual patterns efficiently.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/slide_108.jpg}
+	\caption{Speed vs.\ accuracy comparison on ImageNet (ms/image on V100 vs.\ top-1 accuracy). Swin outperforms comparable models across the trade-off curve, achieving higher accuracy with faster inference.}
+	\label{fig:chapter18_swin_speed_vs_accuracy}
+\end{figure}
+
+\noindent
+Thanks to its \textbf{linear computational complexity}, Swin can be scaled to higher resolutions without a quadratic memory or latency blow-up, making it suitable for dense vision tasks such as semantic segmentation, object detection, and keypoint estimation.
+
+\newpage
+\subsubsection*{Extensions and Successors to Swin}
+
+\noindent
+Swin has influenced a growing family of hierarchical transformer architectures, each introducing further innovations. Notable successors include:
+
+\begin{itemize}
+	\item \textbf{Swin-V2} \cite{liu2022_swinv2}: Builds directly upon Swin by improving training stability and pushing scale. It introduces:
+	\begin{itemize}
+		\item \textbf{Scaled cosine attention} for better numerical stability during large-scale training.
+		\item \textbf{Log-spaced relative position bias} to generalize better across resolutions.
+		\item \textbf{Post-norm Transformer blocks} and deeper architectures (up to 3B parameters).
+	\end{itemize}
+	It sets state-of-the-art results across classification, detection, and segmentation benchmarks.
+	
+	\item \textbf{Multiscale Vision Transformer (MViT)} \cite{fan2021_mvit}: Unlike Swin’s fixed windowing, MViT dynamically allocates attention across spatial scales. Key differences include:
+	\begin{itemize}
+		\item Attention spans grow deeper in the network.
+		\item Token downsampling and channel expansion are interleaved hierarchically.
+		\item Originally designed for video classification, but extended to 2D tasks.
+	\end{itemize}
+	
+	\item \textbf{Improved MViT} \cite{li2021_improved_mvit}: Enhances the original MViT with:
+	\begin{itemize}
+		\item Better attention resolution scheduling.
+		\item Tuned width-depth-resolution trade-offs.
+		\item Re-weighted feature fusion across scales.
+	\end{itemize}
+	It improves transferability and shows performance improvements on classification and detection tasks.
+\end{itemize}
+
+\noindent
+Each of these models expands upon Swin’s principles of \textbf{hierarchical feature representation}, enabling vision transformers to match or surpass CNNs across both classification and structured prediction tasks.
+
+\subsubsection*{Next: Can We Go Simpler Than Attention?}
+
+\noindent
+Despite its versatility, attention remains computationally expensive—especially in large-scale settings. This raises a compelling question:
+
+\begin{quote}
+	\emph{Can we replace self-attention altogether with simpler mechanisms?}
+\end{quote}
+
+\noindent
+In the next section, we explore the \textbf{MLP-Mixer} architecture \cite{tolstikhin2021_mlpmixer}, which challenges the necessity of both convolutions and attention by using only feed-forward MLPs to mix spatial and channel information.
+
+
 
