@@ -279,7 +279,7 @@ This ability to interpret how neural networks make decisions was largely missing
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/slide_36.jpg}
 	\caption{Attention maps corresponding to different caption tokens for an image of a bird flying above water. Brighter regions indicate higher attention weights.}
-	\label{fig:chapter17_attention_map}
+	\label{fig:chapter17_attention_map_visual_example}
 \end{figure}
 
 \noindent Observations:
@@ -341,6 +341,7 @@ This ability to interpret how neural networks make decisions was largely missing
 \noindent These applications demonstrate that attention is not merely a tool for sequential processing—it is a powerful and general framework for learning relationships between different modalities. This leads naturally to the development of \textbf{Attention Layers}, which we will explore next.
 
 \section{Attention Layer}
+\ref{sec:chapter17_attention_layer}
 
 \noindent In computer science, when a useful method emerges that can be applied to a variety of tasks, the natural progression is to \textbf{abstract} and \textbf{generalize} it into a modular component that can be flexibly integrated into different architectures. This principle applies to attention mechanisms, leading to the development of the \textbf{Attention Layer}, a powerful and reusable module that enhances neural networks across diverse domains.
 
@@ -990,7 +991,7 @@ In essence, the \emph{rotation matrix} viewpoint shows that sinusoidal encodings
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_17/Positional_Encoding_Example.jpeg}
 	\caption{Sinusoidal positional encoding applied to the sentence "I Can Buy Myself Flowers." The encoding ensures consistent relative distances between tokens while allowing generalization to longer sequences.}
-	\label{fig:chapter17_positional_encoding}
+	\label{fig:chapter17_positional_encoding_example}
 \end{figure}
 
 \subsubsection{Does Positional Information Vanish in Deeper Layers?}

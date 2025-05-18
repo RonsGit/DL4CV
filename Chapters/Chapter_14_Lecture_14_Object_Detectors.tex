@@ -27,10 +27,11 @@ State-of-the-art (SOTA) object detectors now leverage \textbf{transformers} rath
 	\item \textbf{DINOv2} \cite{oquab2023_dinov2}: A recent self-supervised vision transformer model that achieves SOTA performance on multiple vision tasks, including object detection.
 \end{itemize}
 
+\newpage
 These modern approaches provide several advantages:
 \begin{itemize}
 	\item \textbf{End-to-End Training:} Unlike R-CNN-based methods that require separate steps for region proposals, feature extraction, and classification, transformer-based models optimize the entire detection pipeline jointly.
-	\item \textbf{Improved Scalability:} Transformers naturally handle long-range dependencies and complex object relationships, making them well-suited for large-scale datasets and high-resolution images.
+	\item \textbf{Improved Scalability:} Transformers naturally handle long-range dependencies and complex object relationships, making them well-suited for large-scale datasets, high-resolution images.
 	\item \textbf{Simplified Post-Processing:} Traditional detectors rely on NMS to filter overlapping detections. DETR and its successors learn to output only the most relevant bounding boxes directly, removing the need for additional heuristics.
 \end{itemize}
 
@@ -46,16 +47,17 @@ Fast R-CNN \cite{girshick2015_fastrcnn} was proposed as a major improvement, sig
 \subsection{Key Idea: Shared Feature Extraction}
 \label{subsec:chapter14_fast_rcnn_idea}
 
-Instead of running a CNN separately for each proposal, \textbf{Fast R-CNN} applies a deep CNN \emph{once} to the entire image, extracting a \textbf{shared feature representation}. Then, \textbf{Region of Interest (RoI) Pooling} is used to extract features corresponding to each region proposal from this shared representation.  A \textbf{small per-region sub-network} is then applied to each extracted region to \textbf{Classify} the region into an object category or background. and \textbf{Refine the bounding box} using regression.
+Instead of running a CNN separately for each proposal, \textbf{Fast R-CNN} applies a deep CNN \emph{once} to the entire image.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/slide_18.jpg}
-	\caption{\textbf{Fast R-CNN architecture:} A backbone CNN processes the full image, generating a feature map. RoI Pooling extracts regions from this shared representation, followed by classification and bounding box refinement.}
+	\caption{\textbf{Fast R-CNN architecture:} A backbone CNN processes the full image, generating a feature map. RoI Pooling extracts regions from this shared representation, followed by classification and bounding box refinement. This significantly improves efficiency while maintaining detection accuracy.}
 	\label{fig:chapter14_fast_rcnn}
 \end{figure}
 
-This significantly improves efficiency while maintaining detection accuracy.
+\newpage
+It does so by extracting a \textbf{shared feature representation}. Then, \textbf{Region of Interest (RoI) Pooling} is used to extract features corresponding to each region proposal from this shared representation.  A \textbf{small per-region sub-network} is then applied to each extracted region to \textbf{Classify} the region into an object category or background, and \textbf{refine the bounding box} using regression. 
 
 \subsection{Using Fully Convolutional Deep Backbones for Feature Extraction}
 \label{subsec:chapter14_fast_rcnn_backbone}
@@ -78,7 +80,6 @@ Fast R-CNN leverages deep CNNs to extract features from the entire image in one 
 
 An interesting observation is that both approaches use a \textbf{fully convolutional backbone}. 
 
-\newpage
 \noindent This is deliberate, as a fully convolutional network produces a dense, spatially organized feature map in which each element corresponds directly to a specific location in the input image. This spatial correspondence is critical for RoI pooling: it allows us to accurately map the coordinates of a region proposal (generated in the original image space) onto the feature map, so that the correct features can be “cropped out” and later pooled into a fixed-size representation.
 
 In contrast, if the backbone ended with fully connected layers, the spatial arrangement would be lost because fully connected layers mix information from all locations. Without a maintained spatial structure, there would be no straightforward way to project a region proposal onto the feature map. Consequently, each proposal would have to be processed individually from the image itself—defeating the purpose of using a shared, efficient feature extractor.
@@ -713,6 +714,121 @@ By integrating the \textbf{smooth \( L_1 \) loss} into the RPN's training object
 	\item Provide a balance between \textbf{object detection} and \textbf{background rejection}, making the system more robust (ensuring that the RPN does not overfit to detecting only foreground objects). 
 \end{itemize}
 
+\begin{enrichment}[Training Region Proposal Networks (RPNs)][subsubsection]
+	\label{enrichment:rpn_training_pipeline}
+	
+	\noindent
+	The \textbf{Region Proposal Network (RPN)} \cite{ren2015_fasterrcnn} is a learnable module for generating class-agnostic object proposals from convolutional feature maps. Below is a complete walkthrough of the training process.
+	
+	\paragraph{1. Input Feature Map}
+	Given an input image \( I \in \mathbb{R}^{H \times W \times 3} \), a CNN backbone (e.g., VGG-16, ResNet-50) produces a feature map of spatial dimensions:
+	\[
+	F \in \mathbb{R}^{H' \times W' \times C'}, \quad \text{where } H' = H/s,\, W' = W/s.
+	\]
+	The stride \( s \) reflects total downsampling (often \( s = 16 \)).
+	
+	\paragraph{2. Sliding Window: Shared 3\(\times\)3 Conv}
+	A shared \(3 \times 3\) conv is applied across all spatial locations to extract intermediate features:
+	
+	\begin{mintedbox}{python}
+		# Shared intermediate 3x3 conv
+		rpn_conv = nn.Conv2d(C_prime, 512, kernel_size=3, padding=1)
+		inter_features = F.relu(rpn_conv(featmap))  # (B, 512, H', W')
+	\end{mintedbox}
+	
+	Each spatial location corresponds to a position in the original image and will be associated with \(K\) anchor boxes.
+	
+	\paragraph{3. RPN Heads: Anchor-wise Classification and Regression}
+	Two parallel \(1\times1\) conv layers produce:
+	\begin{itemize}
+		\item \textbf{Objectness scores:} \(2K\) channels (foreground vs. background for each anchor),
+		\item \textbf{BBox deltas:} \(4K\) channels (\(\Delta x, \Delta y, \Delta w, \Delta h\) for each anchor).
+	\end{itemize}
+	
+	\begin{mintedbox}{python}
+		rpn_cls_logits = nn.Conv2d(512, 2 * K, kernel_size=1)(inter_features)
+		rpn_bbox_deltas = nn.Conv2d(512, 4 * K, kernel_size=1)(inter_features)
+	\end{mintedbox}
+	
+	These outputs are reshaped to \((B, H' \times W' \times K, 2)\) and \((B, H' \times W' \times K, 4)\) respectively during training for loss computation, to associate each anchor with its corresponding predictions:
+	\begin{mintedbox}{python}
+		rpn_cls_logits = rpn_cls_logits.permute(0, 2, 3, 1).reshape(B, -1, 2)
+		rpn_bbox_deltas = rpn_bbox_deltas.permute(0, 2, 3, 1).reshape(B, -1, 4)
+	\end{mintedbox}
+	
+	\paragraph{4. Anchor Labeling and Ground Truth Assignment}
+	To train the network, we must determine which anchors are positive (object), negative (background), or ignored. For this, we compute the IoU (Intersection-over-Union) between each anchor and each ground-truth box:
+	\begin{itemize}
+		\item \textbf{Positive:} An anchor is labeled positive if it has an IoU \(\ge 0.7\) with any GT box, or if it is the highest-IoU anchor for a given GT.
+		\item \textbf{Negative:} Labeled background if it has IoU \(\le 0.3\) with all GT boxes.
+		\item \textbf{Ignored:} Anchors with intermediate IoU scores are not used in the loss.
+	\end{itemize}
+	
+	\begin{mintedbox}{python}
+		labels, matched_gt_boxes = assign_labels(all_anchors, gt_boxes)
+		# labels: 1 = positive, 0 = negative, -1 = ignore
+		pos_inds = torch.where(labels == 1)[0]  # Indices of positive anchors
+		fg_bg_inds = torch.where(labels != -1)[0]  # Anchors involved in loss
+	\end{mintedbox}
+	
+	\paragraph{5. Bounding-Box Regression Targets}
+	For each \textbf{positive} anchor, we compute the offset required to transform the anchor into its assigned ground-truth box. These offsets form the regression \emph{targets}.
+	
+	Each target is parameterized as:
+	\[
+	\Delta x = \frac{x_{\text{gt}} - x_{\text{anchor}}}{w_{\text{anchor}}}, \quad
+	\Delta y = \frac{y_{\text{gt}} - y_{\text{anchor}}}{h_{\text{anchor}}}, \quad
+	\Delta w = \log \frac{w_{\text{gt}}}{w_{\text{anchor}}}, \quad
+	\Delta h = \log \frac{h_{\text{gt}}}{h_{\text{anchor}}}.
+	\]
+	
+	These values measure:
+	\begin{itemize}
+		\item The \emph{relative translation} (\(\Delta x, \Delta y\)) of the ground-truth box center w.r.t.\ the anchor box.
+		\item The \emph{log-scale change} (\(\Delta w, \Delta h\)) needed to stretch the anchor's width/height to match the ground truth.
+	\end{itemize}
+	
+	\begin{mintedbox}{python}
+		bbox_targets = compute_regression_targets(anchors[pos_inds], matched_gt_boxes[pos_inds])
+		# Shape: (N_pos, 4)
+	\end{mintedbox}
+	
+	These targets serve as supervision: the network learns to predict these deltas for each positive anchor.
+	
+	\paragraph{6. Loss Computation}
+	The RPN is trained using a multi-task loss:
+	\[
+	\mathcal{L}_{\text{RPN}} = 
+	\frac{1}{N_{\text{cls}}} \sum_i \mathcal{L}_{\text{cls}}(p_i, p_i^*) 
+	+ \lambda \cdot 
+	\frac{1}{N_{\text{reg}}} \sum_i \mathbb{1}_{\{p_i^* = 1\}} 
+	\cdot \mathcal{L}_{\text{reg}}(t_i, t_i^*),
+	\]
+	where:
+	\begin{itemize}
+		\item \(p_i\): predicted objectness logits (before softmax),
+		\item \(p_i^*\): binary GT label (1 for object, 0 for background),
+		\item \(t_i\): predicted regression deltas (\texttt{rpn\_bbox\_deltas}),
+		\item \(t_i^*\): GT regression target (\texttt{bbox\_targets}).
+	\end{itemize}
+	
+	\begin{mintedbox}{python}
+		cls_loss = F.cross_entropy(rpn_cls_logits[fg_bg_inds], labels[fg_bg_inds])
+		reg_loss = smooth_l1_loss(rpn_bbox_deltas[pos_inds], bbox_targets)
+		total_loss = cls_loss + lambda_ * reg_loss
+	\end{mintedbox}
+	
+\textbf{Note:} During training, we do \emph{not} decode or apply the predicted deltas to anchors. Instead, we supervise the raw predicted deltas directly, using regression targets computed from fixed anchor–GT box pairs. This ensures stable optimization, as the anchors remain fixed while the network learns to output precise \((\Delta x, \Delta y, \Delta w, \Delta h)\) shifts. Only at inference time do we apply these predicted offsets to anchors to produce proposal boxes.
+
+\end{enrichment}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_14/training_rpn_and_rpn_detections.jpg}
+	\caption[Region Proposal Network and Example Detections]{\textbf{Left}: Region Proposal Network (RPN). \textbf{Right}: Example detections using RPN proposals on PASCAL VOC 2007 test. The method detects objects in a wide range of scales and aspect ratios. Source: \cite{ren2015_fasterrcnn}}
+	\label{fig:training_rpn_and_rpn_detections}
+\end{figure}
+
 \paragraph{\textbf{Inference: Generating Region Proposals}}
 At inference time, the RPN processes all anchor boxes across the image and filters out low-confidence proposals to retain the most relevant ones. The process consists of the following steps:
 
@@ -764,6 +880,7 @@ Before Faster R-CNN, Fast R-CNN significantly reduced inference time compared to
 	\label{fig:chapter14_faster_rcnn_speed_comparison}
 \end{figure}
 
+\newpage
 \textbf{Key Takeaways:}
 \begin{itemize}
 	\item \textbf{Eliminating external region proposals} – Instead of using a separate CPU-based region proposal method (e.g., Selective Search), Faster R-CNN predicts region proposals using CNNs.
@@ -1310,7 +1427,6 @@ By leveraging fully convolutional architectures and eliminating the complexities
 		\end{enrichment}
 	\end{enrichment}
 
-\newpage
 \section{Conclusion: The Evolution of Object Detection}
 \label{sec:chapter14_conclusion}
 

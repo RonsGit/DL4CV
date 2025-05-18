@@ -776,4 +776,66 @@ Object detection evaluation requires balancing \textbf{classification accuracy} 
 	\item \textbf{Weighted mAP} prioritizes critical object classes by assigning different importance weights, making evaluation more application-specific.
 \end{itemize}  
 
-This structured approach ensures object detectors are evaluated fairly and optimized for the real-world tasks at hand. In the following parts of the document, we'll discuss about improvements over the current R-CNN algorithm, improving both the computational overhead and speed of our object detection algorithms, along with enhanced algorithmic performance. 
+This structured approach ensures object detectors are evaluated fairly and optimized for the real-world tasks at hand. In the following parts of the document, we'll discuss about improvements over the current R-CNN algorithm, improving both the computational overhead and speed of our object detection algorithms, along with enhanced algorithmic performance.
+
+\newpage
+\begin{enrichment}[Mosaic Augmentation for Object Detection][subsection]
+	\label{enrichment:mosaic_for_object_detection}
+	
+	\noindent
+	While data augmentation techniques such as flipping, cropping, and jittering are widely used in classification (\S\ref{subsubsec:data_augmentation}), object detection introduces unique challenges: models must predict both \emph{what} is in the image and \emph{where} it is, using bounding boxes. This requires augmentations that preserve the structure and integrity of object locations. One popular strategy addressing this need is \textbf{Mosaic augmentation}, initially introduced in YOLOv4 \cite{bochkovskiy2020_yolov4} and later explored further in \cite{chen2020_gpt_pixels}.
+	
+	\paragraph{Motivation and Advantages}
+	Mosaic augmentation stitches together four different training images into a single \(2 \times 2\) grid, effectively constructing a new composite scene. This has several benefits:
+	
+	\begin{itemize}
+		\item \textbf{Scale Diversity:} Objects are shown at smaller relative sizes, encouraging robustness to small object detection and training the model to recognize targets across varied resolutions.
+		\item \textbf{Context Enrichment:} Different backgrounds and scene elements are juxtaposed, forcing the model to decouple object identity from a fixed or familiar context. This reduces overfitting to specific backgrounds and improves robustness to background variation at test time.
+		\item \textbf{Rare-Class Balancing:} By combining object-centric and scene-centric images, Mosaic acts as a type of implicit upsampling for rare classes—helping combat class imbalance, particularly in long-tailed datasets.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/YOLO_V4_MOSIAC.jpg}
+		\caption{Mosaic augmentation in YOLOv4. Source: \cite{bochkovskiy2020_yolov4}. Four input images are stitched into a \(2 \times 2\) grid, allowing object instances to appear in unfamiliar contexts and at smaller scales. Unlike CutMix, which blends only two images, Mosaic mixes four scenes simultaneously, encouraging robustness to background variation and spatial layout. Notably, this design enables BatchNorm to compute statistics over four different images per batch, reducing the need for large batch sizes.}
+		\label{fig:chapter13_yolo_mosaic}
+	\end{figure}
+	
+	\paragraph{Implementation Considerations}
+	Despite its power, Mosaic augmentation requires careful design:
+	
+	\begin{itemize}
+		\item \textbf{Coordinate Adjustment:} Each original image’s bounding boxes must be re-mapped to their new locations in the mosaic coordinate system.
+		\item \textbf{Boundary Handling:} Boxes crossing image seams should be clipped or filtered based on how much of the object remains visible.
+		\item \textbf{Semantic Noise:} The abrupt visual seams between tiles may introduce low-level inconsistencies. While helpful for regularization, overly strong artifacts can confuse the network. 
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/YOLO_V4_AUGMENTATIONS.jpg}
+		\caption{Data augmentation strategies used in YOLOv4. Source: \cite{bochkovskiy2020_yolov4}. These include \textbf{bilateral blurring}, \textbf{MixUp}, \textbf{CutMix}, and \textbf{Mosaic}. These augmentations enhance the model’s robustness to varying object scales, positions, and backgrounds.}
+		\label{fig:chapter13_yolo_augmentations}
+	\end{figure}
+	
+	
+	\paragraph{Domain-Dependent Utility}
+	Mosaic augmentation is particularly beneficial in domains where:
+	
+	\begin{itemize}
+		\item Scenes contain multiple objects at varying scales.
+		\item Small objects are common and must be localized accurately.
+		\item Long-tailed class distributions are present.
+		\item Robustness to background variation is essential, and training on fixed backgrounds might lead to context overfitting.
+	\end{itemize}
+	
+	\noindent
+	However, for tasks requiring precise geometric relationships (e.g., medical or industrial inspection), such artificial compositions might harm spatial reasoning and should be evaluated cautiously.
+
+\paragraph{Conclusion}
+Mosaic augmentation extends traditional image-level augmentation into the object detection domain by combining multiple images into composite layouts. This promotes generalization to diverse backgrounds, improves small-object robustness, and implicitly balances class frequency. Furthermore, it enhances the model’s ability to distinguish foreground objects from noisy or unfamiliar backgrounds, reducing the risk of overfitting to scene context. When combined with techniques like color jitter, CutMix, and random crop, Mosaic stands out as an effective augmentation for training modern object detectors—especially in scenarios with limited data or unbalanced label distributions.
+
+\noindent
+More broadly, Mosaic exemplifies a key principle in deep learning: \textit{augmentation strategies must be tailored to the structure and demands of the task}. Some tasks require additional domain-aware, label-preserving transformations. As such, effective augmentation often demands both creativity and a deep understanding of the task’s supervision signals, generalization needs, etc.
+	
+\end{enrichment}
+

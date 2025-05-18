@@ -61,7 +61,17 @@ When the input data contains small perturbations or noise, a model without regul
 		\item Promotes sparsity by driving many weights to exact zeros, effectively performing feature selection.
 		\item Encourages interpretable models by retaining only a subset of the most relevant features.
 	\end{itemize}
-	\item \textbf{Why L1 Produces Sparse Weights:} The sharp gradient of the absolute value penalty around zero encourages optimization to push small weights to exactly zero.
+	\item \textbf{Why L1 Produces Sparse Weights:} 
+	
+	The key to L1-induced sparsity lies in the geometry of its constraint region. As shown in Figure~\ref{fig:chapter2_l1_l2_comparison}, the L1 norm constraint \( |w_1| + |w_2| = c \) defines a diamond-shaped region bounded by straight lines. This shape results from the fact that the absolute value function grows linearly and independently in each coordinate.
+	
+	When minimizing a loss function subject to this constraint (with an L1 regularization penalty), the optimal solution is often found at the \textbf{corners} of the diamond—points where one or more weights are exactly zero. This happens because these corners offer more degrees of freedom to satisfy the constraint while minimizing the loss.
+	
+	Geometrically, the corners of the L1 ball intersect the level sets of the loss function more frequently than the flat sides or interior. As a result, the optimizer is more likely to converge to a solution where some weights are zero, naturally promoting sparsity.
+	
+	In contrast, the L2 norm constraint \( w_1^2 + w_2^2 = c^2 \), shown as a circle in the same figure, imposes a smooth, symmetric penalty in all directions. It penalizes large weights more heavily but does not inherently prefer exact zeros. Therefore, L2 regularization tends to shrink weights uniformly rather than forcing them to zero.
+	
+	This difference is why L1 regularization (as in Lasso) is often used when feature selection or sparse model representations are desired.
 	\item \textbf{Pros:}
 	\begin{itemize}
 		\item Suitable for feature selection in high-dimensional datasets.
@@ -75,6 +85,7 @@ When the input data contains small perturbations or noise, a model without regul
 \end{itemize}
 
 \subsection{L2 Regularization (Ridge)}
+\label{subsec:L2_Reg}
 
 \begin{itemize}
 	\item \textbf{Definition:} Adds a penalty proportional to the sum of the squared weights:
@@ -86,20 +97,30 @@ When the input data contains small perturbations or noise, a model without regul
 		\item Reduces all weights uniformly, discouraging large weights without enforcing sparsity.
 		\item Promotes balanced use of all features, making the model less sensitive to individual feature noise.
 	\end{itemize}
-	\item \textbf{Why L2 Is Common in Practice:}
-	\begin{itemize}
-		\item Handles correlated features better by distributing weights across them.
-		\item Computationally efficient with gradient-based methods due to its smooth gradients.
-	\end{itemize}
-	\item \textbf{Pros:}
-	\begin{itemize}
-		\item Effective for datasets with correlated features.
-		\item Produces robust models by retaining all features.
-	\end{itemize}
-	\item \textbf{Cons:}
-	\begin{itemize}
-		\item Does not perform feature selection, retaining all features in the model.
-	\end{itemize}
+	\newpage
+\item \textbf{Why L2 Regularization Is Common in Practice:}
+
+L2 regularization adds a quadratic penalty term \( \lambda \| \mathbf{w} \|_2^2 = \lambda \sum_j w_j^2 \) to the loss function, which encourages smaller but nonzero weights. This smooth penalty leads to several practical advantages:
+
+\begin{itemize}
+	\item \textbf{Smooth optimization landscape:} The squared term is differentiable everywhere and convex, making it highly compatible with gradient-based optimization methods. The gradient is simply \( \nabla_{w_j} \left( \lambda w_j^2 \right) = 2\lambda w_j \), which leads to stable updates and faster convergence.
+	
+	\item \textbf{Weight sharing across correlated features:} When input features are correlated, L2 tends to distribute weights more evenly among them rather than forcing the model to pick one arbitrarily. This "weight spreading" reduces variance and often improves generalization.
+	
+	\item \textbf{No bias toward zeroing weights:} Unlike L1, L2 does not create sharp corners in the constraint geometry, so weights are shrunk smoothly but rarely exactly zero. This makes it ideal when all features are believed to carry some signal.
+\end{itemize}
+
+\item \textbf{Pros:}
+\begin{itemize}
+	\item \textbf{Retains all features:} Useful when input features are all informative, even if weakly.
+	\item \textbf{Robust to multicollinearity:} When features are correlated, L2 avoids instability by distributing weight mass.
+	\item \textbf{Efficient for high-dimensional problems:} Closed-form solutions exist for linear models, and gradients are well-behaved for neural networks.
+\end{itemize}
+
+\item \textbf{Cons:}
+\begin{itemize}
+	\item \textbf{No sparsity or feature selection:} L2 shrinks weights but rarely sets them exactly to zero, so it cannot be used to remove irrelevant features.
+\end{itemize}
 \end{itemize}
 
 \subsection{Choosing Between L1 and L2 Regularization}
@@ -132,13 +153,33 @@ The choice depends on the problem:
 			\item The L2 penalty helps distribute weights among correlated features, overcoming L1's tendency to select only one feature from a group of highly correlated features.
 		\end{itemize}
 		
-		\paragraph{When to Use Elastic Net?} Elastic Net is especially beneficial in situations where:
-		\begin{itemize}
-			\item The dataset contains many features, some of which are irrelevant (addressed by L1).
-			\item There are groups of highly correlated features that all contribute to the prediction (handled by L2).
-		\end{itemize}
+	\paragraph{When to Use Elastic Net?} 
+	
+	Elastic Net combines both L1 and L2 penalties and is particularly useful when the data exhibits a mix of sparsity and feature correlation. It is especially effective when:
+	
+	\begin{itemize}
+		\item The dataset has many features, some of which are irrelevant or redundant — L1 encourages sparsity by zeroing out unimportant weights.
+		\item Groups of correlated features contribute jointly to prediction — L2 helps distribute weights across them instead of selecting just one.
+	\end{itemize}
+	
+	By tuning the L1–L2 mixing ratio (commonly via a hyperparameter \( \alpha \)), Elastic Net interpolates smoothly between pure Lasso and pure Ridge behavior.
+	
+	\paragraph{When Not to Use Elastic Net?}
+	
+	Elastic Net may be unnecessary or suboptimal in the following cases:
+	
+	\begin{itemize}
+		\item \textbf{When no sparsity is desired:} If all features are known to be relevant (e.g., physical signals, embedded representations), L2 regularization (Ridge) is simpler and more appropriate.
 		
-		\paragraph{Summary:} Elastic Net strikes a balance between L1 and L2 regularization, offering a flexible approach for scenarios where sparsity and balanced weight distribution are both important.
+		\item \textbf{When features are uncorrelated and sparse:} Lasso alone may suffice and offer cleaner interpretability without the additional complexity of mixing two norms.
+		
+		\item \textbf{For very large-scale models or deep learning:} Elastic Net adds tuning complexity (both \( \lambda \) and \( \alpha \)) and often doesn’t yield significant benefits over standard L2, which is better understood, easier to optimize, and integrates seamlessly into stochastic gradient descent pipelines.
+	\end{itemize}
+	
+	\paragraph{Summary:}
+	
+	Elastic Net strikes a balance between L1 and L2 regularization, making it well-suited for situations where both sparsity and weight sharing are desirable. However, L2 regularization remains the most widely used in practice due to its computational simplicity, smooth gradients, and general effectiveness across many modern machine learning models.
+	
 	\end{enrichment} 
 	
 \subsection{Expressing Preferences Through Regularization}
@@ -153,6 +194,7 @@ Regularization helps express preferences beyond minimizing the training loss:
 	\item \textbf{L1 Regularization:} Favors sparse solutions, focusing on a subset of features. In the above example, \(w_1\) would be preferred by L1 regularization.
 \end{itemize}
 
+\newpage
 \section{Impact of Feature Scaling on Regularization}
 
 Regularization penalties depend on the magnitude of weights, which is influenced by the scale of the input features. Without proper scaling, features with larger values dominate the penalty term, skewing the regularization effect. This is because:
@@ -234,7 +276,7 @@ Imagine the optimization process as traversing a high-dimensional landscape, whe
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_22.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_4/Slide_22.jpg}
 	\caption{Traversing the loss landscape toward the minimum. The person starts at a random point and follows a path downwards.}
 	\label{fig:chapter4_traversal}
 \end{figure}
@@ -270,12 +312,13 @@ As we've shown in the enrichment section, finding an explicit analytical solutio
 
 To overcome this, we begin by exploring simpler, more naive approaches before gradually building towards smarter and more practical solutions for this optimization problem. This progression will allow us to develop an intuitive understanding of the problem while introducing increasingly effective methods to address it.
 
+\newpage
 \subsection{Optimization Idea \#1: Random Search}
 One naive strategy for optimization is \textbf{random search}. This involves generating many random weight matrices, evaluating the loss for each, and keeping track of the best solution encountered. Although this method can improve the model's performance given sufficient time (compared to random initialization), it is highly inefficient due to the vastness of the parameter space. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_23.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_4/Slide_23.jpg}
 	\caption{Random search: A naive optimization approach.}
 	\label{fig:chapter4_random_search}
 \end{figure}
@@ -287,7 +330,7 @@ A more practical approach is to \textbf{follow the slope} of the loss landscape.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_26.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_4/Slide_26.jpg}
 	\caption{Following the slope to descend the landscape.}
 	\label{fig:chapter4_following_slope}
 \end{figure}
@@ -524,6 +567,102 @@ As a result:
 
 By adapting to the geometry of the loss surface, gradient descent inherently balances exploration and precision, enabling effective convergence toward the minimum.
 
+\subsection{Why Gradient Descent Moves \emph{All} Parameters Together}
+
+A tempting idea in high-dimensional optimisation is to “fix every variable but
+one” and march along the axes.  
+That \emph{coordinate–descent} philosophy is not what gradient methods do.
+Below we contrast the two approaches and explain why a single
+gradient step is usually preferable in machine-learning practice.
+
+%--------------------------------------------------------------------%
+\paragraph{The gradient is one \( d \)-dimensional arrow}
+
+For a smooth loss
+\( L : \mathbb{R}^{d} \to \mathbb{R} \) with parameters
+\( \mathbf{w} = (w_{1}, \dots, w_{d})^{\top} \),
+the first-order Taylor expansion reads
+\[
+L(\mathbf{w} + \boldsymbol{\delta})
+= L(\mathbf{w}) + \nabla L(\mathbf{w})^{\top} \boldsymbol{\delta} + \mathcal{O}(\|\boldsymbol{\delta}\|^{2}),
+\qquad
+\nabla L(\mathbf{w}) =
+\left[ \frac{\partial L}{\partial w_{1}}, \dots, \frac{\partial L}{\partial w_{d}} \right]^{\top}.
+\]
+Among all unit-length displacements \( \boldsymbol{\delta} \),
+the scalar product
+\[
+\nabla L(\mathbf{w})^{\top} \boldsymbol{\delta}
+= \|\nabla L(\mathbf{w})\|_{2} \cos\theta
+\]
+is maximal when \( \boldsymbol{\delta} \) is parallel to the gradient.
+Hence \( -\nabla L \) is the direction of steepest \emph{descent}.  
+Gradient descent therefore uses the \emph{joint} update
+\[
+\boxed{%
+	\mathbf{w} \leftarrow \mathbf{w} - \eta \nabla L(\mathbf{w})}
+\qquad (\eta > 0).
+\]
+Every coordinate changes in the \emph{same step}; their magnitudes are scaled by
+the corresponding partial derivatives, but the direction is computed
+\emph{globally}, exploiting correlations among parameters.
+
+%--------------------------------------------------------------------%
+\paragraph{Axis-aligned moves may crawl or diverge}
+
+Coordinate descent, in contrast, freezes \( d-1 \) variables and moves one:
+\[
+w_{j} \leftarrow w_{j} - \eta_{j} \, \frac{\partial L}{\partial w_j}(\mathbf{w}),
+\qquad j = 1, \dots, d.
+\]
+Repeating this produces axis-aligned zig-zags.  
+On the elongated quadratic  
+\[
+L(w_1, w_2) = \tfrac{1}{2} \left( 10w_1^{2} + w_2^{2} \right),
+\]
+gradient descent marches straight to the origin,  
+whereas coordinate descent alternates between diminishing \( w_1 \) and \( w_2 \),
+wasting many iterations and possibly diverging when the individual learning
+rates \( \eta_j \) are poorly tuned.
+
+Not only is coordinate descent slower, it can \emph{converge elsewhere}.  
+Because it solves a sequence of one-dimensional sub-problems, it may halt at
+points where each partial derivative is zero individually while the full
+gradient is \emph{not}—a non-critical point of the original objective.  
+In convex problems, both methods reach the global optimum eventually, but the
+paths—and hence practical speed—differ greatly; in non-convex landscapes they
+can land in distinct local minima.
+
+%--------------------------------------------------------------------%
+\paragraph{When does coordinate descent shine?}
+
+Axis-wise updates are attractive when:
+
+\begin{enumerate}
+	\item \textbf{Fast conditional updates.}  
+	Each 1D sub-problem has a closed form or needs only a tiny subset of the
+	data (as in the Lasso, where one coordinate update reduces to soft
+	thresholding).
+	
+	\item \textbf{Weak parameter coupling.}  
+	If the optimum of \( w_j \) barely depends on the other coordinates,
+	a single sweep of coordinate descent can almost solve the problem.
+\end{enumerate}
+
+These conditions are rare in deep learning where weights interact strongly.
+Gradient descent therefore uses the local geometry much more effectively.
+
+%--------------------------------------------------------------------%
+\paragraph{Take-away}
+
+The gradient is \emph{not} merely a list of partial derivatives to apply one
+after another.  
+It is a \emph{single} vector giving the fastest local descent in \( \mathbb{R}^{d} \).  
+Moving along \( -\nabla L \) exploits correlations between parameters and reaches
+good solutions quickly; stepping along one axis at a time ignores those
+correlations and usually takes a far longer—and sometimes different—route
+through parameter space.
+
 \subsection{Batch Gradient Descent}
 The version of gradient descent shown in Figure \ref{fig:chapter4_gradient_descent_contour} is known as \textbf{Batch Gradient Descent} or \textbf{Full Batch Gradient Descent}.
 
@@ -639,6 +778,7 @@ While \textbf{SGD} is effective, it suffers from several challenges such as osci
 \subsection{How SGD with Momentum Works}
 The concept can be visualized as a ball rolling down a high-dimensional loss surface. Instead of directly using the gradient direction for updates, we maintain a \textbf{velocity vector} \( \mathbf{v}_t \) that combines the current gradient and past gradients through an \textbf{Exponential Moving Average (EMA)}.
 
+\newpage
 \subsubsection{Update Equations}
 At each step \( t \), we update the velocity and position as follows:
 \begin{align*}
@@ -690,6 +830,7 @@ Momentum addresses the three key problems of SGD:
 	\label{fig:chapter4_momentum_benefits}
 \end{figure}
 
+\newpage
 \subsection{Downsides of Momentum}
 Despite its advantages, SGD with Momentum has several limitations:
 \begin{itemize}
@@ -761,6 +902,7 @@ This reformulation ensures compatibility with modern optimization frameworks by 
 \subsubsection{Comparison with SGD and SGD+Momentum}
 Momentum-based methods, including Nesterov, tend to overshoot near minima due to accumulated velocity. Nesterov's look-ahead mechanism mitigates this overshooting, producing a more efficient path to the minimum. 
 
+\newpage
 \subsubsection{Limitations of Nesterov Momentum and the Need for Adaptivity}
 
 While Nesterov Momentum addresses several shortcomings of traditional momentum methods, it still has limitations that motivate further advancements in optimization techniques:

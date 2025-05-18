@@ -126,14 +126,14 @@ One approach is to use a sliding window technique, where the image is divided in
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_20.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_2/Slide_20.jpg}
 	\caption{Using sliding windows for object detection: classifying regions as background or containing an object.}
 	\label{fig:chapter2_sliding_window_bg}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_21.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_2/Slide_21.jpg}
 	\caption{Using sliding windows for object detection: classifying regions containing objects (e.g., person).}
 	\label{fig:chapter2_sliding_window_person}
 \end{figure}
@@ -176,6 +176,7 @@ Board games such as Go provide another example of framing a complex task as a cl
 	\label{fig:chapter2_board_games}
 \end{figure}
 
+\newpage
 \subsection{Summary: Leveraging Image Classification}
 
 Image classification is not just an isolated task but a fundamental building block for diverse applications in computer vision and artificial intelligence. By leveraging classification in tasks such as object detection, image captioning, and decision-making, researchers have been able to extend its utility and address increasingly complex problems. This underscores the importance of developing robust image classifiers, as they form the foundation for solving more sophisticated challenges.
@@ -203,7 +204,7 @@ While this approach provides a structured framework, it faces critical challenge
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_27.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_2/Slide_27.jpg}
 	\caption{Attempting to classify images using hard-coded features is highly challenging.}
 	\label{fig:chapter2_classification_attempt}
 \end{figure}
@@ -225,6 +226,7 @@ Machine learning revolutionized image classification by replacing manual feature
 	\item \textbf{Prediction and Evaluation:} Use the trained model to predict labels for unseen images and evaluate performance using metrics like accuracy or log-likelihood.
 \end{enumerate}
 
+\newpage
 This pipeline, illustrated in Figure \ref{fig:chapter2_data_driven}, modularizes the process into two core functions: \texttt{train(images, labels)} and \texttt{predict(model, test\_images)}.
 
 \begin{figure}[H]
@@ -257,6 +259,7 @@ Datasets are the foundation of modern machine learning, enabling models to learn
 	\item \textbf{Empirical Strength:} Data-driven methods align closely with real-world variability, capturing patterns that are infeasible to encode manually.
 \end{itemize}
 
+\newpage
 The growing emphasis on datasets reflects a paradigm shift in machine learning research, where the quality of data often outweighs incremental algorithmic improvements. This approach empowers models to tackle the complexities of real-world visual data effectively.
 
 In the next section, we delve into the critical role of datasets in machine learning, exploring how they shape the development and performance of image classification models.
@@ -273,14 +276,17 @@ While MNIST is often referred to as the \textit{Drosophila of computer vision}, 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_31.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_2/Slide_31.jpg}
 	\caption{MNIST: A dataset of handwritten digits, often used as a toy benchmark.}
 	\label{fig:chapter2_mnist}
 \end{figure}
 
 \subsection{CIFAR: Real-World Object Recognition}
 
-The \textbf{CIFAR-10} dataset \cite{krizhevsky2009_learning} represents a significant step forward in dataset complexity. It contains 10 classes of objects (e.g., airplane, automobile, bird, cat) with $32 \times 32 \times 3$ RGB images. The dataset includes 50,000 training images (5,000 per class) and 10,000 test images (1,000 per class). CIFAR-10 strikes a balance between complexity and computational feasibility, making it ideal for research and teaching purposes. In this course, CIFAR-10 is the primary dataset for homework assignments.
+The \textbf{CIFAR-10} dataset \cite{krizhevsky2009_learning} represents a significant step forward in dataset complexity. It contains 10 classes of objects (e.g., airplane, automobile, bird, cat) with $32 \times 32 \times 3$ RGB images. The dataset includes 50,000 training images (5,000 per class) and 10,000 test images (1,000 per class). 
+
+\newpage
+CIFAR-10 strikes a balance between complexity and computational feasibility, making it ideal for research and teaching purposes. In this course, CIFAR-10 is the primary dataset for homework assignments.
 
 CIFAR-10 has a \textit{cousin}, \textbf{CIFAR-100}, which has similar statistics but with 100 categories instead of 10. These 100 categories are grouped into 20 superclasses, each containing five finer-grained classes. For example, the \textit{Aquatic Animals} superclass includes classes like beaver, dolphin, otter, seal, and whale.
 
@@ -298,6 +304,7 @@ CIFAR-10 has a \textit{cousin}, \textbf{CIFAR-100}, which has similar statistics
 	\label{fig:chapter2_cifar100}
 \end{figure}
 
+\newpage
 \subsection{ImageNet: The Gold Standard}
 
 \textbf{ImageNet} \cite{imagenet2009_hierarchicaldatabase} is a cornerstone dataset in computer vision, widely used for benchmarking image classification algorithms. It comprises over 1.3 million training images across 1,000 categories, with approximately 1,300 images per category, alongside 50,000 validation images and 100,000 test images.
@@ -320,7 +327,7 @@ ImageNet's \textbf{top-5 accuracy} metric allows the algorithm to succeed if the
 	\label{fig:chapter2_imagenet_top5}
 \end{figure}
 
-
+\newpage
 \subsection{MIT Places: Scene Recognition}
 
 While datasets like ImageNet focus on object recognition, the \textbf{MIT Places} dataset \cite{zhou2017_places} emphasizes scene classification, with categories like classrooms, fields, and buildings. This shift from object-centric to scene-centric data broadens the scope of image classification research, enabling algorithms to analyze broader contexts in visual data.
@@ -430,7 +437,14 @@ The distance metric determines how "similar" two images are. The most common cho
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_63.jpg}
-		\caption{Comparison of L1 and L2 distance metrics: points with the same distance from the origin $(0,0)$ according to each metric (left:L1, right: L2).}
+		\captionsetup{singlelinecheck=off}
+		\caption[]{
+			Comparison of L1 and L2 norm constraint regions in two dimensions.
+			\begin{itemize}
+				\item \textbf{Left:} The L1 norm constraint \( |w_1| + |w_2| = c \) defines a region bounded by four linear segments, forming a diamond. This shape arises because the absolute value function grows linearly and independently in each coordinate, so all points satisfying the constraint lie along lines where the sum of the horizontal and vertical distances equals \( c \).
+				\item \textbf{Right:} The L2 norm constraint \( w_1^2 + w_2^2 = c^2 \) forms a circle, as it includes all points at Euclidean distance \( c \) from the origin $(0,0)$. The quadratic form symmetrically penalizes all directions, yielding a smooth, round boundary.
+			\end{itemize}
+		}
 		\label{fig:chapter2_l1_l2_comparison}
 	\end{figure}
 \end{itemize}
@@ -446,7 +460,7 @@ The distance metric determines how "similar" two images are. The most common cho
 			\item \textbf{L2 (Euclidean)}: Circular (or spherical) boundaries, since points equidistant in Euclidean space lie on circles (or spheres).
 		\end{itemize}
 	}
-	\label{fig:chapter2_l1_l2_comparison}
+	\label{fig:chapter2_l1_l2_comparison_boundaries}
 \end{figure}
 
 
@@ -457,7 +471,7 @@ The distance metric determines how "similar" two images are. The most common cho
 	\label{fig:chapter2_l1_poor_performance}
 \end{figure}
 
-Each metric produces different decision boundaries, as shown in Slide \ref{fig:chapter2_l1_l2_comparison}. However, these pixel-based metrics often fail to capture semantic similarity. For instance, as demonstrated in Slide \ref{fig:chapter2_l1_poor_performance}, visually dissimilar objects with similar colors (e.g., a ginger cat and an orange frog) may appear "close" under L1 or L2 distance.
+Each metric produces different decision boundaries, as shown in Slide \ref{fig:chapter2_l1_l2_comparison_boundaries}. However, these pixel-based metrics often fail to capture semantic similarity. For instance, as demonstrated in Slide \ref{fig:chapter2_l1_poor_performance}, visually dissimilar objects with similar colors (e.g., a ginger cat and an orange frog) may appear "close" under L1 or L2 distance.
 
 \subsection{Extending Nearest Neighbor: Applications Beyond Images}
 
@@ -530,17 +544,34 @@ Some strategies we can think of to select model hyperparameters include:
 
 \subsection{Cross-Validation}
 
-For smaller datasets, \textbf{k-fold cross-validation} (\underline{note}: this is not k-nearest neighbors, but a model's performance evaluation method) is often preferred. The dataset is split into \(k\) folds, and each fold is used as a validation set while the remaining \(k-1\) folds are used for training. The process repeats \(k\) times, and results are averaged to evaluate performance. This method offers a robust mechanism for hyperparameter selection, as demonstrated in Slide \ref{fig:chapter2_cross_validation}.
+For smaller datasets, \textbf{k-fold cross-validation} is a widely used strategy for reliable model evaluation and hyperparameter tuning. 
+\underline{Note:} this method should not be confused with \emph{k-nearest neighbors}; it refers to a technique for assessing a model’s generalization ability.
+
+In k-fold cross-validation, the available dataset is first split into two parts:
+\begin{itemize}
+	\item A dedicated \textbf{test set}, held out and untouched until the final evaluation.
+	\item A \textbf{training+validation set}, which is used for model selection and cross-validation.
+\end{itemize}
+
+This training+validation set is then partitioned into \(k\) equally sized folds. For each of the \(k\) iterations, one fold is treated as a temporary validation set, and the remaining \(k-1\) folds are used for training. 
+
+\newpage
+The process is repeated \(k\) times such that every fold serves as validation exactly once. The resulting performance metrics (e.g., accuracy or loss) are averaged across the \(k\) runs to produce a more stable and reliable estimate of model quality.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_2/Slide_77.jpg}
-	\caption{Cross-validation accuracy for different values of \(k\). Each dot represents a trial, and the mean is represented by the line. Here we pick $k=7$ as the mean is the highest in this case.}
+	\caption{Cross-validation accuracy for different values of \(k\). 
+		Each dot represents an individual trial, and the mean accuracy across folds is shown by the line. 
+		In this example, \(k = 7\) yields the highest average validation performance, so it is selected.}
 	\label{fig:chapter2_cross_validation}
 \end{figure}
 
-While cross-validation is computationally feasible for small datasets, it becomes impractical for large datasets and complex deep learning models, and thus is not common in evaluation of practical vision algorithms.
+This method provides a robust mechanism for hyperparameter selection and model comparison, particularly when limited data makes a single train-validation split unreliable. It is important to emphasize that the \textbf{test set is never used during cross-validation}. It remains completely separate and is reserved for the final, unbiased evaluation of the trained model, only after all tuning is complete.
 
+While cross-validation is computationally feasible and valuable for smaller datasets or shallow models, it becomes impractical for large-scale datasets or deep learning models due to the repeated training involved. For such cases, a single train-validation split is typically used during training instead (often paired with mechanisms such as early stopping).
+
+\newpage
 \subsection{Implementation and Complexity}
 
 The simplicity of Nearest Neighbor allows for a straightforward implementation:

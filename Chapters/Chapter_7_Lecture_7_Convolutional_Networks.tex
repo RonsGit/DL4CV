@@ -1581,26 +1581,26 @@ Global pooling layers apply a pooling operation over the \emph{entire} spatial d
 \subsubsection{Global Average Pooling (GAP)}
 \label{subsubsec:gap}
 
-\paragraph{Operation.} 
+\paragraph{Operation} 
 GAP computes the mean of all activations in a feature map \(X\in \mathbb{R}^{H\times W}\):
 \[
 O = \frac{1}{HW}\sum_{i=1}^{H}\sum_{j=1}^{W} X_{ij}.
 \]
 This is performed independently for each channel.
 
-\paragraph{Upsides.}
+\paragraph{Upsides}
 \begin{itemize}
 	\item \textbf{Direct Channel-to-Feature Mapping:} Each channel in the input shrinks to a single numeric representation, facilitating interpretability.
 	\item \textbf{Smooth Gradient Flow:} Since every spatial element contributes equally, gradients are spread out evenly, stabilizing training.
 \end{itemize}
 
-\paragraph{Downsides.}
+\paragraph{Downsides}
 \begin{itemize}
 	\item \textbf{Loss of Spatial Detail:} Global averaging discards \emph{where} a feature occurs.
 	\item \textbf{Sensitivity to Very Small Feature Maps:} If \((H,W)\) is tiny, the mean could be too coarse, omitting relevant details.
 \end{itemize}
 
-\paragraph{Backpropagation.}
+\paragraph{Backpropagation}
 Since \(O\) is the average over \(HW\) elements,
 \[
 \frac{\partial L}{\partial X_{ij}}
@@ -1616,19 +1616,19 @@ GMP takes the maximum over \(\{X_{ij}\}\) in a feature map:
 O = \max_{i,j} X_{ij}.
 \]
 
-\paragraph{Upsides.}
+\paragraph{Upsides}
 \begin{itemize}
 	\item \textbf{Captures Strongest Activations:} Highlights the most prominent response within the map.
 	\item \textbf{Useful in Detection Tasks:} Identifying a key active neuron can help in bounding box predictions or coarse localization.
 \end{itemize}
 
-\paragraph{Downsides.}
+\paragraph{Downsides}
 \begin{itemize}
 	\item \textbf{Sparse Gradient Updates:} Only the max element receives gradient signals; others get zero, potentially harming learning.
 	\item \textbf{Overemphasis on a Single Activation:} Non-max elements, which might contain relevant sub-features, are ignored.
 \end{itemize}
 
-\paragraph{Backpropagation.}
+\paragraph{Backpropagation}
 Only the maximum entry obtains a nonzero derivative:
 \[
 \frac{\partial L}{\partial X_{ij}}
@@ -1653,19 +1653,19 @@ Only the maximum entry obtains a nonzero derivative:
 
 \newpage
 \subsubsection{Contrasting with Regular Pooling}
-\paragraph{Window Size.}
+\paragraph{Window Size}
 \begin{itemize}
 	\item \textbf{Regular Pooling:} Uses smaller windows (\(2\times2\), \(3\times3\), \dots) gradually reducing dimensions, preserving some notion of spatial layout.
 	\item \textbf{Global Pooling:} Collapses the entire feature map to one value per channel, often as a final layer (or near the end).
 \end{itemize}
 
-\paragraph{When to Use Global Pooling.}
+\paragraph{When to Use Global Pooling}
 \begin{itemize}
 	\item To replace fully connected layers, common in many efficient CNN architectures like \emph{MobileNet}.
 	\item When a concise channel-level summary suffices (e.g.\ final classification).
 \end{itemize}
 
-\paragraph{When to Use Regular Pooling.}
+\paragraph{When to Use Regular Pooling}
 \begin{itemize}
 	\item Early or mid-layer dimension reduction where preserving partial spatial context is beneficial.
 	\item Tasks requiring finer feature localization (e.g.\ segmentation).
@@ -1784,13 +1784,13 @@ The final layer typically performs classification using \textbf{Softmax} or anot
 \subsubsection{Key Architectural Trends in CNNs, Illustrated by LeNet-5}
 \label{subsubsec:lenet_trends}
 
-\paragraph{Hierarchical Feature Learning.}
+\paragraph{Hierarchical Feature Learning}
 LeNet-5 demonstrated how progressively reducing spatial dimensions while increasing channel depth leads to feature representations that capture multiple abstraction levels (edges, textures, shapes, etc.).
 
-\paragraph{Alternating Convolution and Pooling.}
+\paragraph{Alternating Convolution and Pooling}
 By interleaving convolutional and pooling layers, the network efficiently extracts features while gradually shrinking the spatial resolution, reducing both compute and parameter counts.
 
-\paragraph{Transition to Fully Connected (FC) Layers.}
+\paragraph{Transition to Fully Connected (FC) Layers}
 After sufficient feature extraction in convolutional/pooling blocks, LeNet-5 relies on FC layers to finalize classification or regression tasks—an approach still prevalent in many CNNs.
 
 \subsection{How Are CNN Architectures Designed?}
@@ -2096,7 +2096,10 @@ Internal covariate shift is a phenomenon described by the authors of Batch Norma
 BatchNorm aims to mitigate internal covariate shift by normalizing layer inputs at each training step. By ensuring that activations have a more stable distribution, BatchNorm enables the use of higher learning rates, reduces sensitivity to weight initialization, and accelerates network convergence. However, later research discovers that reducing internal covariate shift is not the primary reason for BatchNorm's effectiveness. We will revisit this topic later and explore additional more concrete reasons why BatchNorm improves training speed and performance.
 
 \subsection{Batch Normalization Process}
-Assume the output tensor of a previous layer consists of features \( x_1, x_2, \dots, x_D \), where \( D \) is the feature dimension. For each feature \( x_i \), we compute the mean and variance across the batch:
+\label{subsec:chapter7_batchnorm}
+
+\noindent
+Assume the output tensor of a previous layer consists of features \( x_1, x_2, \dots, x_D \), where \( D \) is the feature dimension of that layer (e.g., the number of neurons in a fully-connected layer or the number of channels in a convolutional layer). For each feature \( x_i \), we compute the mean and variance across the batch:
 
 \begin{equation}
 	\mu_i = \frac{1}{N} \sum_{j=1}^{N} x_i^{(j)}, \quad \sigma_i^2 = \frac{1}{N} \sum_{j=1}^{N} (x_i^{(j)} - \mu_i)^2
@@ -2108,32 +2111,46 @@ where \( N \) is the batch size. We then normalize the feature values:
 	\hat{x}_i = \frac{x_i - \mu_i}{\sqrt{\sigma_i^2 + \epsilon}}
 \end{equation}
 
-where \( \epsilon \) is a small constant to prevent division by zero. Normalizing in this way forces activations to have zero mean and unit variance, but such strict standardization may limit the expressiveness of the network.
+where \( \epsilon \) is a small constant added for numerical stability. Normalizing in this way ensures that the output has zero mean and unit variance across the batch, but such strict standardization may reduce the expressive capacity of the network.
 
-To allow the model to learn more expressive transformations, BatchNorm introduces two additional learnable parameters: \( \gamma_i \) (scale) and \( \beta_i \) (shift):
+\noindent
+To reintroduce flexibility, BatchNorm includes two learnable parameters per feature: a scale parameter \( \gamma_i \) and a shift parameter \( \beta_i \). These parameters allow the network to undo or modify the normalization:
 
 \begin{equation}
 	y_i = \gamma_i \hat{x}_i + \beta_i
 \end{equation}
 
-where \( \gamma_i \) allows the network to scale the normalized values, and \( \beta_i \) allows shifting them. Every feature \( x_i \) has its own \( \gamma_i \) and \( \beta_i \), making them \( D \)-dimensional vectors, where \( D \) is the number of features in the input tensor. Typically, \( \gamma \) is initialized to 1 and \( \beta \) is initialized to 0, but both are updated throughout training via backpropagation.
+\noindent
+This transformation enables each feature to retain a trainable mean and variance, if necessary. Importantly, these parameters are:
+
+\begin{itemize}
+	\item Learned independently for each output feature dimension \( i \in \{1, \dots, D\} \).
+	\item Specific to the layer in which they appear (i.e., each BatchNorm layer has its own distinct set of \(\gamma, \beta \in \mathbb{R}^D\)).
+	\item Updated during training via backpropagation, just like standard weights.
+\end{itemize}
+
+\noindent
+Typically, \( \gamma_i \) is initialized to 1 and \( \beta_i \) to 0, meaning the network initially preserves the normalized values, but gradually learns to modulate them if doing so improves performance.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_86.jpg}
-	\caption{Summary of shapes and formulas of the 'Batch Normalization' process: normalization followed by learnable scaling and shifting (de-normalization).}
+	\caption{Summary of shapes and formulas in the Batch Normalization process: normalization followed by per-feature scaling and shifting. Each layer learns its own set of \(\gamma\) and \(\beta\) parameters.}
 	\label{fig:chapter7_batchnorm_process}
 \end{figure}
 
-Why is this flexibility useful? During backpropagation, the gradient of the loss with respect to \( x_i \) is given by:
+\paragraph{Why is this flexibility useful?}
+During backpropagation, the gradient of the loss with respect to \( x_i \) is given by:
 
 \begin{equation}
-	\frac{dL}{dx_i} = \frac{\gamma_i}{\sqrt{\sigma^2_B + \epsilon}} \cdot \frac{dL}{dy_i}.
+	\frac{dL}{dx_i} = \frac{\gamma_i}{\sqrt{\sigma^2_B + \epsilon}} \cdot \frac{dL}{dy_i}
 \end{equation}
 
-Since \( \gamma \) is a learnable parameter, the network can adaptively scale the gradients, preventing them from becoming too large or too small. Additionally, the denominator \( \sqrt{\sigma^2_B + \epsilon} \) rescales the gradient based on the batch statistics, ensuring that if activations vary too much, their magnitude remains consistent, stabilizing gradient flow.
+\noindent
+Because \( \gamma_i \) is learnable, the network can scale gradients dynamically for each feature, preventing them from becoming too small or too large. The denominator \( \sqrt{\sigma^2_B + \epsilon} \), derived from the batch statistics, helps stabilize gradient magnitude by normalizing across different activation scales.
 
-This flexibility in relaxing the harsh constraint of strict standardization (zero mean, unit variance) is often crucial for enabling deep networks to train effectively. As we will explore later, BatchNorm’s impact extends beyond just reducing internal covariate shift—it fundamentally influences gradient propagation, optimization dynamics, and network robustness.
+\noindent
+This ability to fine-tune the normalized outputs and adaptively control gradient magnitudes helps improve convergence and optimization stability. As we will explore later, the benefits of BatchNorm go far beyond reducing internal covariate shift—they include better conditioning, smoother loss landscapes, and improved robustness during training.
 
 \subsubsection{Batch Normalization for Convolutional Neural Networks (CNNs)}
 
@@ -2444,6 +2461,7 @@ followed by learnable scale and shift parameters \(\gamma\), \(\beta\).
 
 \newpage
 \subsubsection{Instance Normalization (IN)}
+\label{chapter7:subsubec_instance_norm}
 A more common normalization approach for images, that resembles layer normalization but makes more sense for a CNN use-case (as it applies per feature map, averaging \textbf{only} over the spatial dimensions, and not on the entirety of the input tensor, across all of the channels). 
 
 \noindent
@@ -2487,6 +2505,7 @@ Instance Normalization operates at a more granular level than BatchNorm, normali
 
 \newpage
 \subsubsection{Group Normalization (GN)}
+\label{chapter7_group_normalization}
 
 \noindent
 \textbf{Definition:} Group Normalization (GN) normalizes activations across a defined number of groups instead of across the batch (BatchNorm) or spatial dimensions (InstanceNorm). Given a sample \(n\) and a set of \(G\) groups, GN computes the mean and variance for each group across the channels \(C\) and spatial dimensions \(H \times W\):
@@ -2725,61 +2744,160 @@ All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts,
 \end{enrichment}
 
 \newpage
-\begin{enrichment}[BatchNorm and \(L_2\) Regularization][subsection]
+\begin{enrichment}[Batch Normalization \& \(\ell_2\) Regularization][subsection]
 	\label{enrichment:bn_l2_regularization}
 	
-	\paragraph{Context and Motivation}
-	Batch Normalization (BN) and \(L_2\) regularization (a.k.a.\ weight decay) are both common in modern deep learning. BN stabilizes training by normalizing feature activations in each mini-batch, while \(L_2\) shrinks weights to control overfitting. However, \emph{once BN is applied to a convolutional layer, the usual “shrink the filter weights” mechanism of \(L_2\) may change meaningfully}.
+	\paragraph{Context and References}
+	This discussion builds upon classic results on \(\ell_2\) regularization (as in \autoref{subsec:L2_Reg}) and batch normalization, and draws heavily from the excellent analysis by \emph{Jane Street’s tech blog} \cite{janestreet_l2_bn}. Their exposition highlights the subtle—but critical—interactions between BN and weight decay in modern architectures. What follows summarizes and expands on their findings with mathematical and practical clarifications.
 	
-	\paragraph{Why Combine Them?}
-	\begin{itemize}
-		\item \textbf{Mild Extra Regularization:}
-		BN somewhat regularizes by making activations less sensitive to weight scale; layering on \(L_2\) can further suppress overfitting.
-		\item \textbf{Smoother Activations + Weight Decay:}
-		BN ensures stable feature scales, which can complement the incremental shrinkage from \(L_2\), often improving convergence.
-	\end{itemize}
+	\paragraph{1. \(\ell_2\) Regularization Without BatchNorm}
 	
-	\paragraph{Key Interaction: BN Masks the Scale of Weights}
-	\subparagraph{Invariance to Weight Scaling}
-	BN’s mean/variance normalization effectively discards the absolute magnitude of incoming weights. As a result:
+	\noindent
+	In traditional training, \(\ell_2\) regularization (also called weight decay) adds a penalty to the loss:
 	\[
-	\text{If } w \mapsto \lambda\, w,\quad \text{then }\, \mathrm{BN}(w) \approx \mathrm{BN}(\lambda\,w).
+	\mathrm{Loss}(w, x) = \underbrace{\mathcal{L}(f(w, x), y)}_{\text{DataLoss}} + \frac{1}{2}c \|w\|^2,
 	\]
-	Hence, weight decay’s “shrink the weights” effect no longer reduces overfitting in a straightforward sense, because BN can \emph{undo} that scale change.
+	where \(\mathcal{L}\) is a standard loss (e.g., cross-entropy), and \(c > 0\) is the weight decay coefficient.
 	
-	\subparagraph{Shifting Role of \(L_2\)}
-	Rather than acting as a direct \emph{regularizer} on that layer’s capacity, \(L_2\) can become a mechanism controlling the \emph{effective learning rate}. When weights grow large, BN normalizes them, causing gradients to shrink inversely with weight magnitude. If there is no \(L_2\) to counterbalance this, the net effect can lead to an unbounded weight scale (and a diminishing step size), effectively making training freeze or behave oddly. With weight decay, however, the network is forced to maintain a consistent weight scale, preserving a stable gradient regime.
+	Taking the gradient and applying SGD yields:
+	\[
+	\frac{\partial \mathrm{Loss}}{\partial w} = \nabla \mathcal{L}(f(w, x), y) + c w
+	\quad \Longrightarrow \quad
+	w \gets w - \alpha \bigl(\nabla \mathcal{L} + c w\bigr),
+	\]
+	which simplifies to:
+	\[
+	w \gets (1 - \alpha c)\, w - \alpha \nabla \mathcal{L}.
+	\]
+	So weight decay \emph{shrinks} weights with each update, and thus, reduces the model's capacity to "memorize" noise in the training set. Here's one way to understand this:
 	
-	\paragraph{Practical Pitfalls}
-	\subparagraph{(1) Excluding \(\gamma,\beta\) from Decay}
-	BN layers introduce \(\gamma\) (scale) and \(\beta\) (shift). Standard practice excludes these from weight decay:
 	\begin{itemize}
-		\item \textbf{Why Exclude?} 
-		Penalizing \(\gamma\) can prevent BN from effectively rescaling channels.
-		\item \textbf{Danger of Huge \(\gamma\):} 
-		Conversely, if main filter weights are heavily decayed, BN might “compensate” by inflating \(\gamma\). Carefully observe or limit \(\gamma\) to avoid large amplitude in activations.
+		\item If a weight \(w_i\) truly helps the model reduce the loss on a wide range of samples, it will get pushed up by gradients consistently and "fight back" against decay.
+		\item If \(w_i\) mostly captures noise (e.g., a rare correlation or one-off pattern), its gradient updates will be weak and inconsistent. Decay will eventually shrink it away.
 	\end{itemize}
 	
-	\subparagraph{(2) Small Batches}
-	BN relies on stable batch-level statistics. With small batch sizes (e.g., \(<8\) or \(<16\)), the noise in mean/variance estimates can conflict with steady weight decay, causing:
-	\begin{itemize}
-		\item \textbf{Oscillating Updates:} Variation in BN’s normalization plus constant shrinking of weights can destabilize training.
-		\item \textbf{Under/Overfitting Mix:} The network may converge suboptimally or require more complex tuning (e.g., smaller momentum in BN).
-	\end{itemize}
+	This mechanism biases the model toward parameters that reflect broad, reliable structure in the data and away from those that overfit idiosyncrasies.
 	
-	\paragraph{Recommendations}
-	\begin{itemize}
-		\item \textbf{Exclude or Lightly Penalize BN’s \(\gamma,\beta\):}
-		Typically, BN’s scale/shift are not included in weight decay. Or use only a gentle decay on \(\gamma\).
-		\item \textbf{Tune Decay Strength Carefully:}
-		If BN already helps stabilize/regularize, an overly large \(L_2\) might hamper learning.
-		\item \textbf{Track \(\gamma\) Behavior:}
-		If \(\gamma\) grows excessively, consider lowering its learning rate or mild penalty.
-		\item \textbf{For Small Batches:}
-		Higher BN momentum (less variance in mean/var estimates) or alternative normalizations can reduce instability.
-	\end{itemize}
+	\noindent
+	From a Bayesian lens, \(\tfrac12 c \|w\|^2\) is equivalent to placing a Gaussian prior \(w \sim \mathcal{N}(0, \tfrac{1}{c} I)\) over the weights. This penalizes "complex" functions with highly varying outputs (which often require large weights), and favors "simpler" smoother functions that generalize better.
 	
-	\paragraph{Summary}
-	When a convolutional layer feeds into BN, scaling down its weights via \(L_2\) no longer directly reduces overfitting—BN can “cancel out” the shrinkage. Instead, the main effect of \(L_2\) is to bound weight scale and thus preserve a stable gradient magnitude. In many architectures, this indirect role still benefits training, but practitioners should be aware of potential pitfalls such as runaway \(\gamma\) and fragile updates with tiny batch sizes.
+	\paragraph{2. BN Cancels Weight Norm in the Forward Pass}
+	\noindent Let \(L(w)\) be the pre-BN output of a convolutional or linear layer. BN transforms it as:
+	\[
+	\mathrm{BN}(L(w)) = \gamma \cdot \frac{L(w) - \mu_L}{\sqrt{\sigma_L^2 + \varepsilon}} + \beta,
+	\]
+	where \(\mu_L\) and \(\sigma_L\) are the batch-wise mean and standard deviation, and \(\gamma, \beta\) are learnable scale and shift parameters.
+	
+	Now suppose weight decay acts to scale \(w \mapsto \lambda w\), where \(\lambda < 1\). Then:
+	\[
+	L(\lambda w) = \lambda L(w), \quad 
+	\mu_L(\lambda w) = \lambda \mu_L(w), \quad
+	\sigma_L(\lambda w) = \lambda \sigma_L(w),
+	\]
+	so:
+	\[
+	\mathrm{BN}(L(\lambda w)) = \gamma \cdot \frac{\lambda L(w) - \lambda \mu_L(w)}{\lambda \sigma_L(w)} + \beta = \mathrm{BN}(L(w)).
+	\]
+	
+	\textbf{Importantly:} This result is unaffected by \(\gamma\) and \(\beta\) — they operate \emph{after} the scale-invariance has already been enforced. That is, even with \(\gamma, \beta\), BN cancels any uniform rescaling of \(w\). Hence, from a forward-pass perspective, \(\ell_2\)'s pressure to "shrink" weights becomes meaningless when followed by BN. This is precisely where the confusion arises.
 
+	\paragraph{3. Why \(\ell_2\) Still Matters: Learning Dynamics Perspective}
+	
+	Although BN erases the influence of weight norm in the forward pass, it does \emph{not} erase it in the gradient computation. To see this, recall that BN includes a normalization step:
+	\[
+	\hat{z} = \frac{z - \mu}{\sqrt{\sigma^2 + \varepsilon}}, \quad \text{with } z = L(w).
+	\]
+	
+	Now, using the chain rule:
+	\[
+	\frac{\partial\, \mathrm{BN}(L(w))}{\partial w} = 
+	\frac{\partial\, \mathrm{BN}}{\partial z} \cdot \frac{\partial z}{\partial w}.
+	\]
+	
+	Since \(L(w)\) is a linear function of \(w\), and \(\mathrm{BN}\) divides by \(\sigma(L(w))\), which grows proportionally to \(\|w\|\), we find:
+	\[
+	\frac{\partial\, \mathrm{BN}(L(w))}{\partial w} \sim \frac{1}{\|w\|}.
+	\]
+	
+	Thus, if \(\|w\|\) becomes large, the gradient shrinks. To see this, assume \(L(w) = x \cdot w\) is a linear operation (dot product or convolution) with a fixed input \(x\). Then:
+	\[
+	\text{Var}(L(w)) = \text{Var}(x \cdot w) = \|w\|^2 \cdot \text{Var}(x),
+	\]
+	assuming \(x\) has zero mean and uncorrelated components.
+	
+	Hence,
+	\[
+	\sigma(L(w)) = \sqrt{\text{Var}(L(w))} \propto \|w\|.
+	\]
+	
+	This means that the batch stddev used in BN grows linearly with the weight norm, and so:
+	\[
+	\frac{\partial \mathrm{BN}(L(w))}{\partial w} \sim \frac{1}{\|w\|}.
+	\]
+	
+	As weights grow, the gradient shrinks, reducing the size of updates.
+	
+	This decreases the \textbf{effective learning rate}, leading to:
+	\begin{itemize}
+		\item \textbf{Stalled training:} The model's parameters stop updating significantly.
+		\item \textbf{Unstable convergence:} Weight norms may keep drifting while no learning progress is made.
+	\end{itemize}
+	
+	\emph{Weight decay} limits this drift, keeping gradients in a healthy range and training stable.
+	
+	\paragraph{4. Coexisting With Learning Rate Schedules}
+	
+	\noindent
+	A natural question is whether weight decay might conflict with LR schedules like cosine decay or step-wise reduction. In fact, they are complementary:
+	
+	\begin{itemize}
+		\item \textbf{Schedulers} (e.g., cosine or step decay) reduce the base learning rate \(\alpha\) explicitly.
+		\item \textbf{Weight decay} prevents the unintended \emph{implicit} decay of step size caused by increasing \(\|w\|\).
+		\item \textbf{Complementary Gradient Control:}  
+		By combining weight decay (which stabilizes weight magnitudes) with an explicit learning-rate schedule (which controls gradient scale over time), we maintain smoother training dynamics. This synergy helps the optimizer explore wider valleys in the loss landscape. Empirically, such \emph{flatter minima}—where the loss changes slowly around the solution—are correlated with better generalization \cite{keskar2017_flatminima, li2018_visualizing}. Weight decay acts as a regularizer that discourages sharp, narrow minima that can overfit to training noise.
+	
+	\end{itemize}
+	
+	\paragraph{5. Behavior of BN’s \(\gamma, \beta\)}
+	
+	BN layers include learnable scale and shift:
+	\[
+	\mathrm{BN}(z) = \gamma \cdot \hat{z} + \beta,
+	\quad \text{where} \quad \hat{z} = \frac{z - \mu}{\sqrt{\sigma^2 + \varepsilon}}.
+	\]
+	
+	Since BN cancels the effect of weight scale, \(\gamma\) could in principle absorb all scale lost from L2 regularization. However:
+	\begin{itemize}
+		\item \textbf{We exclude \(\gamma,\beta\) from decay}. This preserves BN's ability to scale features.
+		\item In practice, \(\gamma\) rarely “blows up” to cancel all decay. It adjusts smoothly under SGD. While it's true that BN has a learnable scale parameter \(\gamma\), it cannot completely negate the effect of weight decay. Here's why:
+		
+		\begin{itemize}
+			\item \(\gamma\) is applied \emph{after} normalization. It cannot recover the rich directional information lost by decaying all filter weights toward zero.
+			\item \(\gamma\) is learned via SGD just like other parameters, and it’s updated based on how useful it is for prediction—not as a compensatory mechanism. There is no strong gradient pressure to “undo” weight decay unless the model explicitly benefits from high post-BN amplitudes.
+			\item Empirically, \(\gamma\) tends to stabilize around moderate values. It may grow slightly in response to decay, but does not explode unless other hyperparameters are poorly tuned (e.g., too large a decay on weights, or poor initialization).
+		\end{itemize}
+		
+		\item Thus, \(\ell_2\) still controls learning dynamics by limiting \(\|w\|\) on the main weights.
+	\end{itemize}
+	
+	\paragraph{6. Recommendations}
+	
+	\begin{itemize}
+		\item \textbf{Exclude BN’s \(\gamma,\beta\) from decay.} This preserves the intended normalization behavior.
+		\item \textbf{Tune decay strength.} Since L2 is now an optimization stabilizer (not a pure regularizer), lower values often suffice.
+		\item \textbf{Avoid small batch instability.} BN becomes noisy at batch sizes \(< 8\); L2 may exacerbate instability. Consider GroupNorm or adjusting BN momentum.
+	\end{itemize}
+	
+	\newpage
+	\paragraph{7. Conclusion: BN \& L2 Are Complementary, Not Contradictory}
+	
+	Even though BN neutralizes the forward-pass effect of \(\|w\|\), weight decay:
+	\begin{itemize}
+		\item Prevents gradients from vanishing due to large \(\|w\|\),
+		\item Maintains effective learning rate throughout training,
+		\item Improves convergence and often generalization.
+	\end{itemize}
+	
+	\noindent
+	Thus, \textbf{BN and \(\ell_2\)} are not at odds. They act on different parts of the training pipeline: BN stabilizes the forward activations; weight decay stabilizes the optimization trajectory. Used together, they form a synergistic pair in modern architectures.
 \end{enrichment}

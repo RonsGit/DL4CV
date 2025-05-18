@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+		\PYG{n}{rpn\PYGZus{}cls\PYGZus{}logits} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{l+m+mi}{512}\PYG{p}{,} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{K}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{(}\PYG{n}{inter\PYGZus{}features}\PYG{p}{)}
+		\PYG{n}{rpn\PYGZus{}bbox\PYGZus{}deltas} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{l+m+mi}{512}\PYG{p}{,} \PYG{l+m+mi}{4} \PYG{o}{*} \PYG{n}{K}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{(}\PYG{n}{inter\PYGZus{}features}\PYG{p}{)}
+\end{MintedVerbatim}

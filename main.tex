@@ -44,6 +44,7 @@
 %----------------------------------------------------------------------------------------
 
 \def\R{\mathbb{R}}
+\newcommand{\ind}{\mathbf{1}}
 \newcommand{\cvx}{convex}
 
 \begin{document}
@@ -76,7 +77,7 @@
 \noindent \textsc{github.com/RonsGit/}\\ % URL
 This document is based on content from various sources—including books and lecture notes. Each source used is duly cited to give proper credit to the original authors. If you find any content in this document that you would prefer to be removed, please feel free to contact me by clicking \textbf{\href{mailto:eecs498summary@gmail.com}{here}}, and I will address your request promptly.\\ % License information
 
-\noindent \textit{First release, March 2025} % Printing/edition date
+\noindent \textit{First release, May 2025} % Printing/edition date
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -98,38 +99,122 @@ This document is based on content from various sources—including books and lec
 \section{Getting Started: About the Project and How to Navigate It}
 
 \subsection{Why This Document?}
-I am a data scientist passionate about making deep learning and computer vision more accessible. In December 2023, I observed that many newcomers struggled to find a clear starting point, often getting lost in selecting topics and resources. To address this, I created this document, which consolidates key introductory concepts, curated resources, and practical insights. It is inspired by the University of Michigan’s EECS498 course, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture, I aimed to provide readers with the foundational knowledge and guidance necessary to dive into deep learning and computer vision.
 
-This summary is tailored for undergraduate and early graduate students in science and engineering disciplines, particularly those with foundational knowledge of Python, calculus, and linear algebra. These skills are essential for completing the course exercises and understanding the material effectively. If you’re unsure about your readiness, I recommend brushing up on Python programming (e.g., using \href{https://www.learnpython.org/}{Learn Python}), calculus (e.g., \href{https://www.khanacademy.org/math/calculus-1}{Khan Academy Calculus}), and linear algebra (e.g., \href{https://www.3blue1brown.com/topics/linear-algebra}{3Blue1Brown's Linear Algebra Series}).
+This document was created to serve as a structured and accessible entry point into deep learning and computer vision for students and early-stage practitioners. As a data scientist with a strong interest in democratizing knowledge, I observed that many newcomers—particularly those from science and engineering backgrounds—struggled to identify a coherent path through the rapidly growing ecosystem of courses, papers, and tutorials. The abundance of resources often leads to confusion rather than clarity.
 
-While not strictly required, taking an introductory course in machine learning can significantly enhance your understanding. For those seeking a beginner-friendly approach, I recommend \href{https://www.coursera.org/learn/machine-learning}{Andrew Ng's Machine Learning course on Coursera}, which provides an intuitive introduction to the field. If you're looking for a more mathematical perspective, consider Stanford's \href{https://cs229.stanford.edu/}{CS229: Machine Learning}, which delves deeper into the theoretical foundations.
+To address this, I began compiling this guide in December 2023, grounded in the outstanding curriculum of the University of Michigan’s EECS498 course, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture and distilling its core concepts, I have assembled a practical and pedagogically structured resource. This document supplements and extends the original course with clarified explanations, curated references, and additional context that support long-term understanding.
+
+The material is tailored for undergraduate and early graduate students in computer science, electrical engineering, software engineering, and related fields. Readers are expected to have foundational knowledge in Python programming, calculus, and linear algebra. If you feel uncertain about these prerequisites, I recommend reviewing the following: 
+\begin{itemize}
+	\item \href{https://www.learnpython.org/}{Learn Python} for programming fundamentals,
+	\item \href{https://www.khanacademy.org/math/calculus-1}{Khan Academy Calculus} for introductory calculus, and
+	\item \href{https://www.3blue1brown.com/topics/linear-algebra}{3Blue1Brown's Linear Algebra series} for geometric intuition and matrix operations.
+\end{itemize}
+
+While prior coursework in machine learning is not strictly required, it can be highly beneficial. For a beginner-friendly option, I recommend \href{https://www.coursera.org/learn/machine-learning}{Andrew Ng's Machine Learning course on Coursera}. For those seeking a more theoretical treatment, \href{https://cs229.stanford.edu/}{Stanford’s CS229: Machine Learning} offers a rigorous mathematical perspective.
+
+\newpage
+\noindent
+\textbf{A Living Resource.}  
+This document is intended to evolve into a living resource—open, modular, and continuously improved by the community. In the near future, I plan to release the full source files and compilation scripts (e.g., LaTeX + Markdown + BibTeX) to support versioning, feedback, and collaborative contributions. Readers will be able to:
+\begin{itemize}
+	\item Suggest clarifications, corrections, and additions,
+	\item Contribute new sections, figures, or examples,
+	\item Help maintain up-to-date coverage of evolving topics in the field.
+\end{itemize}
+
+The goal is to build a shared, reliable foundation for learning deep learning and computer vision—one that reflects the generosity and rigor of the research community it draws from.
 
 \subsection{Acknowledgments and Contributions}
-This document stands on the shoulders of giants, extensively referencing Justin Johnson’s lectures, publicly available resources, and insightful diagrams. Sources are cited at the beginning of each section or alongside relevant content. If you find missing or incorrect credits or would like content removed, please \href{mailto:eecs498summary@gmail.com}{email me}, and I will address your concerns promptly.
+
+This document draws extensively on the work of many outstanding educators and researchers—most notably, the lecture materials from Justin Johnson’s EECS498 course at the University of Michigan. It also incorporates publicly available figures, tutorials, and visual explanations, all of which are cited either at the beginning of each section or directly alongside the relevant content.
+
+If you are the creator or copyright holder of a figure, diagram, or other artifact referenced in this document and would prefer that it not be included, please contact me via \href{mailto:eecs498summary@gmail.com}{email}. I will respectfully review and address your request without delay.
 
 \subsection{Your Feedback Matters}
-This is a personal project created in my free time and reviewed by only a few individuals. Your feedback is invaluable in improving this document. If you have suggestions, corrections, or feedback, please \href{mailto:eecs498summary@gmail.com}{email me}.
 
-\subsection{How to Navigate This Document}
+This project was created independently during my personal time and at the time of the first publication, has been reviewed by only a small number of readers. As such, your feedback—whether in the form of corrections, clarifications, or suggestions—is highly appreciated and vital to improving the clarity, accuracy, and usefulness of the text.
+
+As previously mentioned, looking ahead, I plan to make this project fully open-source to support broader collaboration. If you are interested in contributing—whether by expanding coverage, improving explanations, suggesting exercises, or proposing structural changes—I would love to hear from you. Please don’t hesitate to reach out via \href{mailto:eecs498summary@gmail.com}{email}, suggest pull requests via the \href{https://github.com/RonsGit/EECS498---Summary}{project GitHub} and thank you in advance for helping shape this resource into a living, community-driven guide for deep learning and computer vision.
+
+\subsection{How to Use This Document Effectively}
+
+This document is designed to support a wide range of learners—from students discovering deep learning for the first time to practitioners revisiting foundational concepts. It is not intended to be read linearly from start to finish. Instead, treat it as a flexible reference that can adapt to your goals and level of experience. Here are some recommended strategies:
+
 \begin{enumerate}
-	\item \textbf{New to the Field:} Start by watching the 
-	\href{https://www.youtube.com/watch?v=dJYGatp4SvA\&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r\&index=1\&ab_channel=MichiganOnline}{EECS498 lectures on YouTube}. 
-	To reinforce your understanding, follow along with this document in parallel—referencing the corresponding sections while watching the videos. If a concept is unclear or requires deeper exploration, consult the document for a more detailed breakdown. Additionally, revisiting the chapters after completing the lecture video will help consolidate your knowledge before tackling the course assignments.
+	\item \textbf{If You’re New to the Field:}  
+	Begin by following the 
+	\href{https://www.youtube.com/watch?v=dJYGatp4SvA\&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r\&index=1\&ab_channel=MichiganOnline}{EECS498 lecture series on YouTube}, and read the corresponding sections in parallel. Use this document to:
+	\begin{itemize}
+		\item Clarify ideas presented quickly in the video,
+		\item Reference equations or diagrams while watching,
+		\item Revisit chapters after the lecture to solidify your understanding.
+	\end{itemize}
+	Try pausing to reflect on key definitions or derivations before reading through the explanations—they’re designed to help you reason things out.
 	
-	\item \textbf{Practitioner or Advanced Learner:} Use the table of contents or the search function to quickly navigate to topics of interest. This document is structured for both quick reference and in-depth study, making it valuable for revisiting fundamental principles or delving into advanced discussions. If a topic in the lectures requires more comprehensive understanding, the relevant sections in this document provide further insights and clarity.
+	\item \textbf{If You’re a Practitioner or Advanced Learner:}  
+	Use the table of contents to jump directly to the topics that interest you. This document is structured to support:
+	\begin{itemize}
+		\item Quick lookups and topic refreshers.
+		\item In-depth conceptual reviews when needed.
+		\item Bridging gaps between foundational material and modern techniques.
+	\end{itemize}
+	
+	\item \textbf{Use It Selectively:}  
+	There is no expectation that you read the entire document. Each section is written to stand on its own, so feel free to explore topics nonlinearly. If you're preparing for a specific project, paper, or interview, jump directly to relevant chapters—such as optimization, normalization, transformers, or generative models.
+	
+	\item \textbf{Refresh Your Knowledge Over Time:}  
+	This document can serve as a long-term companion. When returning to a concept after months away—say, backpropagation, attention, or KL divergence—you can revisit just the section you need. Clear explanations, definitions, and enrichment boxes are designed to support both first-time learning and second-pass reviewing.
+	
+	\item \textbf{Leverage RAG Tools for Interactive Exploration:}  
+	To enhance your learning, consider uploading this document into retrieval-augmented tools like \textbf{NotebookLM} or \textbf{ChatGPT with file support}. These tools allow you to:
+	\begin{itemize}
+		\item Ask custom follow-up questions in natural language.
+		\item Summarize long derivations.
+		\item Quiz yourself on key concepts without manually searching.
+	\end{itemize}
+	This transforms a static reading experience into an interactive dialogue.
 \end{enumerate}
 
 \subsection{Staying Updated in the Field}
-Deep learning evolves rapidly. To stay current, explore new papers using tools like \href{https://www.connectedpapers.com/}{Connected Papers}. Resources like \href{https://www.paperswithcode.com/}{Papers with Code} provide trending research and implementations. For high-level insights, follow YouTube channels like \href{https://www.youtube.com/@yannickilcher?si=xybWvQBUwVkFLJK3}{Yannic Kilcher} and \href{https://www.youtube.com/@andrejkarpathy?si=7DpJQABbAVeANwUc}{Andrej Karpathy}. Major conferences such as CVPR, ICCV, and ECCV are excellent for discovering state-of-the-art developments. Curated repositories, like the \href{https://www.github.com/chicleee/Image-Matching-Paper-List}{Image Matching Papers List}, are also valuable resources.
+
+While this document aims to provide a reliable and up-to-date foundation, deep learning continues to evolve at a remarkable pace—often with new methods, architectures, and theoretical insights emerging daily. As such, readers are encouraged to treat this material as a starting point rather than an endpoint.
+
+To stay current with developments:
+\begin{itemize}
+	\item Use tools like \href{https://www.connectedpapers.com/}{\textbf{Connected Papers}} to explore the citation graph and discover related work.
+	\item Follow \href{https://www.paperswithcode.com/}{\textbf{Papers with Code}} to track trending papers, benchmark results, and open-source implementations.
+	\item Subscribe to \href{https://www.dailyarxiv.com/}{\textbf{DailyArxiv}} to receive daily email digests of new arXiv submissions in machine learning, computer vision, and related fields.
+	\item Watch high-level paper reviews and discussions on YouTube channels such as \href{https://www.youtube.com/@yannickilcher}{Yannic Kilcher} and \href{https://www.youtube.com/@andrejkarpathy}{Andrej Karpathy}.
+	\item Follow key researchers and labs on \textbf{X} (formerly Twitter), such as \texttt{@ylecun}, \texttt{@karpathy}, \texttt{@smerity}, and \texttt{@david\_ha}, to stay informed about emerging ideas and discussions that may precede formal publication.
+	\item Review accepted papers and tutorials from top-tier conferences such as \textbf{CVPR}, \textbf{ICCV}, \textbf{ECCV}, \textbf{NeurIPS}, \textbf{ICLR}, and \textbf{ICML}.
+	\item Bookmark curated repositories like the \href{https://www.github.com/chicleee/Image-Matching-Paper-List}{Image Matching Papers List} to explore focused subfields efficiently.
+\end{itemize}
+
+By combining this foundational document with regular engagement in the broader research ecosystem, you can maintain both conceptual depth and up-to-date knowledge as the field progresses.
 
 \subsection{The Importance of Practice}
-Practice is crucial to mastering computer vision. As Richard Feynman famously said, “What I cannot build, I do not understand.” Actively engaging with exercises and implementing concepts is one of the most effective ways to solidify your understanding.
+Practice is crucial to mastering computer vision. As Richard Feynman famously said, “What I cannot build, I do not understand”. Actively engaging with exercises and implementing concepts is one of the most effective ways to solidify your understanding.
 
 To maximize learning, I highly recommend completing the course assignments provided for the EECS498 course, available \href{https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/}{here}. These assignments are designed to complement the lectures and provide hands-on experience with key concepts in deep learning and computer vision.
 
 Platforms like \href{https://www.colab.research.google.com/}{Google Colab} are excellent for running experiments, while \href{https://www.kaggle.com/}{Kaggle} offers competitive challenges to apply your skills. Pairing your efforts with tools like \href{https://wandb.ai/}{WandB}, \href{https://clear.ml/}{ClearML}, or \href{https://www.tensorflow.org/tensorboard}{TensorBoard} can streamline your workflow and enhance your learning journey.
 
 By tackling exercises alongside the lectures, you deepen your theoretical understanding and gain practical insights that are invaluable for real-world applications.
+
+\subsection{Final Remarks}
+
+Thank you for engaging with this material. Whether you are a student, researcher, or practitioner, I hope this document supports your efforts to develop a deeper and more structured understanding of deep learning and computer vision.
+
+This resource is intended not only as a learning companion but also as a reference you can revisit over time. The field continues to evolve rapidly, and while the foundational ideas remain central, new architectures, techniques, and theoretical tools are introduced regularly. A solid conceptual base will enable you to adapt confidently to these developments.
+
+I am also sincerely grateful to readers who have taken the time to share suggestions, point out errors, or recommend improvements. Your feedback helps refine and expand this work, and ensures that it remains a relevant and valuable resource for future learners.
+
+\vspace{1em}
+\begin{flushright}
+	\textit{“Live as if you were to die tomorrow. Learn as if you were to live forever.”} \\
+	— Mahatma Gandhi
+\end{flushright}
 
 % Include chapters
 \input{Chapters/Chapter_1_Lecture_1_Course_Introduction}
@@ -156,10 +241,8 @@ By tackling exercises alongside the lectures, you deepen your theoretical unders
 \input{Chapters/Chapter_22_Lecture_22_SelfSupervised_Learning}
 \input{Chapters/Chapter_23_Lecture_23_3D_vision}
 \input{Chapters/Chapter_24_Lecture_24_Videos}
-\input{Chapters/Chapter_25_Reinforcement_Learning}
-\input{Chapters/Chapter_26_Model_Compression_Quantization_and_Pruning}
-\input{Chapters/Chapter_27_Foundation_Models_in_Computer_Vision}
-\input{Chapters/Chapter_28_MAMBA}
+\input{Chapters/Chapter_25_Model_Compression_Quantization_and_Pruning}
+\input{Chapters/Chapter_26_MAMBA}
 
 \printbibliography
 \end{document}

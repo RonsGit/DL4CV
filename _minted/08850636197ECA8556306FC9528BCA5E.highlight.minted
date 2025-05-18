@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{k+kn}{from} \PYG{n+nn}{torchvision}\PYG{n+nn}{.}\PYG{n+nn}{ops} \PYG{k+kn}{import} \PYG{n}{generalized\PYGZus{}box\PYGZus{}iou}
+	
+	\PYG{c+c1}{\PYGZsh{} GIoU loss: 1 \PYGZhy{} GIoU score}
+	\PYG{n}{giou} \PYG{o}{=} \PYG{n}{generalized\PYGZus{}box\PYGZus{}iou}\PYG{p}{(}\PYG{n}{pred\PYGZus{}boxes}\PYG{p}{,} \PYG{n}{target\PYGZus{}boxes}\PYG{p}{)}
+	\PYG{n}{giou\PYGZus{}loss} \PYG{o}{=} \PYG{l+m+mf}{1.0} \PYG{o}{\PYGZhy{}} \PYG{n}{giou}
+\end{MintedVerbatim}

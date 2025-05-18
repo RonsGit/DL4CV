@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+				\PYG{k+kn}{from} \PYG{n+nn}{scipy}\PYG{n+nn}{.}\PYG{n+nn}{linalg} \PYG{k+kn}{import} \PYG{n}{svd}
+				
+				\PYG{c+c1}{\PYGZsh{} Compute economy\PYGZhy{}sized SVD (faster for large problems)}
+				\PYG{n}{U}\PYG{p}{,} \PYG{n}{S}\PYG{p}{,} \PYG{n}{Vt} \PYG{o}{=} \PYG{n}{svd}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{full\PYGZus{}matrices}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\end{MintedVerbatim}

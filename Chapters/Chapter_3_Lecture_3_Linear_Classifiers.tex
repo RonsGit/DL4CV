@@ -197,6 +197,7 @@ Simultaneously, the weight matrix \(\mathbf{W}\), originally of shape \(K \times
 \]
 where the augmented weight matrix seamlessly integrates the effect of the bias.
 
+\newpage
 \textbf{Advantages of the Bias Trick:}
 \begin{itemize}
 	\item \textbf{Simplified Notation:} The trick reduces the need for separate terms in the computation, allowing the bias and weights to be handled in a unified framework.
@@ -432,7 +433,7 @@ Interpreting data as points in high-dimensional space highlights:
 \subsection{Conclusion: Linear Classifiers Aren't Enough}
 These limitations necessitate more advanced models capable of non-linear decision boundaries and hierarchical feature learning, which we explore in subsequent chapters.
 
-\section{Choosing the Weights for Linear Classifiers}
+\subsection{Choosing the Weights for Linear Classifiers}
 
 To effectively use linear classifiers, we must find a weight matrix \(W\) and bias vector \(\mathbf{b}\) that minimize misclassification. This involves two core tasks:
 \begin{itemize}
@@ -442,13 +443,54 @@ To effectively use linear classifiers, we must find a weight matrix \(W\) and bi
 
 In the rest of this chapter, we focus on the first task—choosing an appropriate loss function—while optimization will be addressed in the next chapter.
 
+\newpage
 \section{Loss Functions}
 
-Loss functions are core to machine learning, providing a quantitative way to evaluate a model's performance given training data. The goal is to minimize the loss over the entire dataset, defined as the average of per-example losses:
+Loss functions are fundamental to machine learning—they provide a scalar measure of how far a model's predictions deviate from the true targets. Learning proceeds by minimizing this loss across a dataset, typically using gradient-based optimization.
+
+Given a dataset with \(N\) examples, the total loss is computed as:
 \[
 L = \frac{1}{N} \sum_{i=1}^{N} L_i(f(x_i, W), y_i),
 \]
-where \(L_i\) is the loss for a single training example.
+where:
+\begin{itemize}
+	\item \(x_i\) is an input example,
+	\item \(y_i\) is the corresponding true label,
+	\item \(f(x_i, W)\) is the model's prediction given parameters \(W\),
+	\item and \(L_i\) is the loss incurred on a single example.
+\end{itemize}
+
+\subsection{Core Requirements for Loss Functions}
+
+Regardless of the task, certain properties are essential for a loss function to be useful in optimization:
+
+\begin{itemize}
+	\item \textbf{Differentiability:} The loss should be differentiable with respect to the model parameters to enable the use of gradient-based optimization algorithms such as stochastic gradient descent (SGD).
+	
+	\item \textbf{Monotonicity:} The loss should increase as the model’s predictions become worse. That is, the loss should provide a signal that correlates with how "wrong" a prediction is.
+	
+	\item \textbf{Continuity:} Smoothness in the loss landscape helps ensure stable updates during training and prevents erratic gradient jumps.
+	
+	\item \textbf{Well-defined domain and range:} The loss function should handle valid model outputs and targets gracefully and return real-valued, finite outputs.
+\end{itemize}
+
+\subsection{Desirable Properties (Depending on the Task)}
+
+Beyond the core requirements, some properties may be beneficial or even necessary depending on the specific problem, model, or dataset:
+
+\begin{itemize}
+	\item \textbf{Convexity (for simpler models):} Convex loss functions are easier to optimize because any local minimum is also a global minimum. While deep networks make the full objective non-convex, convex losses simplify training in linear models.
+	
+	\item \textbf{Robustness to outliers:} In tasks where noisy or mislabeled data is common, a loss function that does not over-penalize extreme errors (e.g., using absolute error instead of squared error) can improve generalization.
+	
+	\item \textbf{Probabilistic or geometric interpretation:} Some loss functions correspond to likelihood maximization under a specific model or enforce geometric margins. These interpretations often guide their design and applicability.
+	
+	\item \textbf{Alignment with evaluation metrics:} Ideally, the loss should correlate with the metric we care about at test time (e.g., accuracy, F1 score, BLEU). While exact alignment is not always feasible, closer alignment often leads to better results.
+\end{itemize}
+
+\medskip
+
+With these principles in mind, we now turn to specific loss functions commonly used in classification and regression tasks, beginning with one of the most widely used: the cross-entropy loss.
 
 \subsection{Cross-Entropy Loss}
 
@@ -524,10 +566,175 @@ The name arises from information theory, where cross-entropy measures the differ
 
 The softmax function is named for its differentiable approximation to the max function, making it suitable for gradient-based optimization.
 
+\begin{enrichment}[Why Cross-Entropy Uses Logarithms, Not Squared Errors][subsubsection]
+	
+	\noindent
+	Cross-entropy loss is the standard choice for classification, especially when used with the softmax output layer. But why does it use logarithms, and not something seemingly simpler like squared error?
+	
+	\newpage
+	\begin{itemize}
+		\item \textbf{(1) Mean Squared Error (MSE)} used as a loss for classification: 
+		\[
+		\text{Loss} = \sum_j (p_j - \hat{p}_j)^2,
+		\]
+		where \( p \) is the one-hot target and \( \hat{p} \) is the predicted probability vector.
+		
+		\item \textbf{(2) Replacing exponentials in softmax with squared values:}
+		\[
+		\text{Alternative softmax:} \quad \hat{p}_j = \frac{z_j^2}{\sum_k z_k^2},
+		\]
+		which preserves normalization but alters the probabilistic and geometric behavior.
+	\end{itemize}
+	
+	We now explain why both of these alternatives are inferior to cross-entropy loss with standard softmax.
+	
+	\medskip
+	\textbf{1. Cross-entropy arises naturally from log-likelihood and KL divergence.}
+	
+	Cross-entropy loss is not an arbitrary design—it is grounded in the principle of \textbf{maximum likelihood estimation (MLE)} for categorical variables. Suppose the true class is \( y \), and the model assigns it predicted probability \( \hat{p}_y \). Then, under a categorical distribution, the log-likelihood is:
+	\[
+	\log p(y \mid x) = \log \hat{p}_y,
+	\]
+	and the corresponding loss is the \textbf{negative log-likelihood}:
+	\[
+	\text{Loss} = -\log \hat{p}_y.
+	\]
+	This expression generalizes to the full cross-entropy between the true label distribution \( p \) (which is typically one-hot) and the predicted probability vector \( \hat{p} \):
+	\[
+	H(p, \hat{p}) = -\sum_j p_j \log \hat{p}_j.
+	\]
+	
+	More fundamentally, this quantity appears inside the \textbf{Kullback–Leibler (KL) divergence}, which measures how far a predicted distribution \( \hat{p} \) is from the true distribution \( p \):
+	\[
+	\text{KL}(p \,\|\, \hat{p}) = \sum_j p_j \log \frac{p_j}{\hat{p}_j} = H(p, \hat{p}) - H(p).
+	\]
+	
+	Since \( H(p) \), the entropy of the true distribution, is fixed (independent of model parameters), minimizing the cross-entropy is equivalent to minimizing KL divergence.
+	
+	\medskip
+	\textbf{Why is this useful?} KL divergence is a principled and well-understood measure of distributional mismatch. By minimizing it, we are not just guessing the correct class—we are learning to approximate the entire target distribution. This ensures:
+	\begin{itemize}
+		\item \textbf{Probabilistic correctness:} The model assigns high probability to the true class while properly normalizing over alternatives.
+		\item \textbf{Meaningful confidence:} The output reflects calibrated uncertainty, not just a one-hot choice.
+		\item \textbf{Gradient quality:} The loss provides rich feedback even when the prediction is wrong, making learning faster and more stable.
+	\end{itemize}
+	
+	Thus, cross-entropy's link to likelihood and KL divergence ensures it is not only mathematically justified but also practically effective for probabilistic classification.
+
+	\medskip
+	\textbf{2. Squared error is poorly aligned with classification objectives.}
+	
+	Using mean squared error (MSE) for classification tasks is both conceptually inappropriate and mathematically inefficient. MSE assumes that outputs are continuous and independent, which does not hold in categorical prediction settings.
+	
+	\begin{itemize}
+		
+		\item \textbf{Lack of asymmetry:}
+		
+		The MSE loss penalizes the squared difference between the predicted probability vector \( \hat{p} \) and the one-hot encoded true label \( p \). The loss is defined as:
+		\[
+		\text{MSE}(p, \hat{p}) = \sum_j (p_j - \hat{p}_j)^2.
+		\]
+		
+		This loss is symmetric: overestimating or underestimating the correct class by the same amount yields the same penalty. For instance, suppose the true class is class 1. Then:
+		\[
+		(1 - 0.8)^2 = (1 - 1.2)^2 = 0.04.
+		\]
+		
+		In both cases, MSE assigns the same loss—even though the first prediction is underconfident, while the second is overconfident and invalid (e.g., \(\hat{p}_1 = 1.2\) is not even a valid probability). This symmetry fails to reflect the inherently asymmetric nature of classification, where confident wrong predictions are more damaging than slightly uncertain correct ones.
+		
+		\item \textbf{Weak penalty for confident errors:}
+		
+		MSE penalizes prediction errors quadratically but lacks the steep, exponential-like penalties needed for classification. Consider predicting a low probability for the true class:
+		\[
+		\text{Cross-entropy:} \quad -\log(0.01) \approx 4.6
+		\]
+		\[
+		\text{MSE:} \quad (1 - 0.01)^2 = 0.9801.
+		\]
+		
+		Cross-entropy provides a much sharper penalty for this confident error, which encourages the model to avoid placing extremely low probabilities on the correct class. This steepness acts like a strong corrective force during learning.
+		
+		\item \textbf{Poor gradient behavior:}
+		
+		While mean squared error (MSE) and cross-entropy (CE) losses may appear similar when applied directly to predicted probabilities, their gradients behave very differently once we consider how they flow through the softmax function during backpropagation.
+		
+		Let’s assume the model outputs logits \( z_j \), which are passed through softmax:
+		\[
+		\hat{p}_j = \frac{e^{z_j}}{\sum_k e^{z_k}},
+		\]
+		to produce class probabilities.
+		
+		\medskip
+		\textbf{Cross-entropy loss:}
+		\[
+		\mathcal{L}_{\text{CE}} = -\sum_j p_j \log \hat{p}_j.
+		\]
+		When computing the gradient of CE with respect to logits \( z_j \), we obtain a remarkably simple and well-behaved form:
+		\[
+		\frac{\partial \mathcal{L}_{\text{CE}}}{\partial z_j} = \hat{p}_j - p_j.
+		\]
+		This gradient is linear in the prediction error and provides a clean, direct learning signal—especially effective when the model is confidently wrong (e.g., when \( \hat{p}_y \approx 0 \), the loss and gradient are large).
+		
+		\medskip
+		\textbf{Mean squared error:}
+		\[
+		\mathcal{L}_{\text{MSE}} = \sum_j (\hat{p}_j - p_j)^2.
+		\]
+		The gradient with respect to the predicted probabilities is:
+		\[
+		\frac{\partial \mathcal{L}_{\text{MSE}}}{\partial \hat{p}_j} = 2(\hat{p}_j - p_j),
+		\]
+		which appears similar to CE (up to a constant factor). However, when we backpropagate through the softmax, the full gradient with respect to the logits \( z_j \) becomes:
+		\[
+		\frac{\partial \mathcal{L}_{\text{MSE}}}{\partial z_j} = 2 \sum_k (\hat{p}_k - p_k)\hat{p}_k(\delta_{jk} - \hat{p}_j),
+		\]
+		which is more complex and involves \textit{interactions across all classes}. This entangled gradient signal is harder to interpret and can lead to slower, less stable learning.
+		
+		\medskip
+		\textbf{Key distinction:} Cross-entropy provides a \emph{local} gradient per logit that depends only on the predicted probability and the true label. MSE, in contrast, introduces non-local coupling between logits due to the softmax Jacobian. As a result, cross-entropy produces sharper corrections, especially when the model is confidently incorrect, while MSE gradients may become weak or noisy in such regimes.
+		
+		\medskip
+		\textbf{Conclusion:} Although the MSE and CE gradients appear similar at the output layer, their behavior through the softmax transformation differs significantly. Cross-entropy leads to more effective training dynamics, which is one reason it is the preferred loss for classification tasks.
+		
+		\item \textbf{Mismatch with softmax structure:}
+		
+		MSE assumes the outputs \( \hat{p}_j \) are independent scalar predictions that can be pushed toward 0 or 1 freely. But softmax outputs are constrained:
+		\[
+		\sum_j \hat{p}_j = 1, \quad \hat{p}_j \in (0,1).
+		\]
+		
+		This means increasing one class's probability forces other probabilities to decrease. MSE ignores this coupling, treating each component separately. As a result, MSE fails to exploit the inter-class competition inherent to classification, and its gradients don’t reflect how increasing confidence in one class affects others.
+		
+		In contrast, cross-entropy is designed specifically for probability distributions. It takes into account the full predicted vector and compares it to the one-hot true label in a principled, probabilistic manner.
+	\end{itemize}
+
+	
+	\medskip
+	\textbf{3. Using \( z_j^2 / \sum_k z_k^2 \) instead of softmax breaks probabilistic structure.}
+	
+	Some have proposed using squared logits in place of exponentials to define a normalized output:
+	\[
+	\hat{p}_j = \frac{z_j^2}{\sum_k z_k^2}.
+	\]
+	While this guarantees outputs in \([0,1]\) that sum to 1, it fails in several key ways:
+	
+	\begin{itemize}
+		\item \textbf{No log-likelihood interpretation:} This function does not arise from any known probabilistic model. There’s no equivalent of a negative log-likelihood or KL divergence for guiding learning.
+		
+		\item \textbf{Limited expressiveness:} The squaring operation is symmetric around 0, so it cannot distinguish between positive and negative evidence. For example, \( z_j = -5 \) and \( z_j = 5 \) produce the same result.
+		
+		\item \textbf{Unstable or flat gradients:} Near-zero logits yield gradients close to zero, which can stall learning. Exponentials in softmax, by contrast, ensure that even small logit differences yield sharp probability contrasts, especially early in training.
+		
+		\item \textbf{No exponential separation of scores:} Softmax amplifies differences exponentially, creating a margin-like separation between classes. This is essential for learning sharp decisions in high-dimensional settings; \( z^2 \) lacks this behavior.
+	\end{itemize}
+	
+\end{enrichment}
+
 \subsection{Multiclass SVM Loss}
+\label{subsec:chpater3_hinge_loss}
 
 The \textbf{multiclass SVM loss}, also known as the \textbf{hinge loss} (so named because its graphical shape resembles a door hinge), is a straightforward yet powerful loss function. Its goal is to ensure that the score of the correct class is higher than all other class scores by at least a predefined margin \(\Delta\). If this condition is satisfied, the loss is 0; otherwise, the loss increases linearly with the violation.
-
+ 
 \subsubsection{Loss Definition}
 
 For a single training example \((x_i, y_i)\), the multiclass SVM loss is defined as:
@@ -649,6 +856,63 @@ Both losses aim to guide the model toward correct predictions, but their behavio
 	\caption{Impact of scaling on SVM and cross-entropy loss. The CE loss decreases, while the SVM loss remains unchanged.}
 	\label{fig:chapter3_loss_comparison_scaling}
 \end{figure}
+
+\subsubsection{Debugging with Initial Loss Values}
+
+An effective way to verify whether a model is configured correctly is to examine the loss value \emph{at the very start of training}, before any updates have been applied. For both cross-entropy and margin-based losses (e.g., SVM), there are mathematically predictable loss values when the model begins with random, unbiased weights.
+
+\medskip
+\textbf{Cross-Entropy Loss: Expected Initial Value.}
+
+Suppose a classifier is initialized such that it produces uniform predictions over all \(C\) classes (as is often the case with random initialization and symmetric weight distributions). That is, the model assigns each class probability:
+\[
+\hat{p}_j = \frac{1}{C}.
+\]
+The cross-entropy loss for a one-hot label \(p_j = \delta_{jy}\) becomes:
+\[
+\mathcal{L}_{\text{CE}} = -\sum_j p_j \log \hat{p}_j = -\log \hat{p}_y = -\log \frac{1}{C} = \log C.
+\]
+\textbf{So at initialization, we expect the cross-entropy loss to be approximately \( \log C \)}. For example:
+\[
+C = 10 \quad \Rightarrow \quad \mathcal{L}_{\text{CE}} \approx \log 10 \approx 2.3.
+\]
+
+\medskip
+\textbf{SVM (Hinge) Loss: Expected Initial Value.}
+
+For the multiclass SVM or hinge loss (often used in margin-based classifiers), the typical loss formulation is:
+\[
+\mathcal{L}_{\text{SVM}} = \sum_{j \neq y} \max(0, f_j - f_y + 1),
+\]
+where \(f_j\) is the score (logit) for class \(j\), and \(y\) is the true class.
+
+If the scores \(f_j\) are initialized to be equal or nearly equal (as in uniform random initialization), then:
+\[
+f_j \approx f_y \quad \Rightarrow \quad f_j - f_y + 1 \approx 1 \text{ for all } j \neq y.
+\]
+This means the max terms are all active, and the total loss becomes:
+\[
+\mathcal{L}_{\text{SVM}} \approx \sum_{j \neq y} 1 = C - 1.
+\]
+\textbf{So at initialization, we expect the hinge loss to be approximately \(C - 1\)}. For example:
+\[
+C = 10 \quad \Rightarrow \quad \mathcal{L}_{\text{SVM}} \approx 9.
+\]
+
+\medskip
+\textbf{How This Helps Debugging?}
+
+Inspecting the initial loss is a fast and effective sanity check. It helps confirm that the model, label encoding, output activations, and loss function are correctly configured—before any training begins. While this section focuses on cross-entropy and hinge losses, the principle extends to many loss functions in both classification and regression.
+
+\begin{itemize}
+	\item \textbf{If the loss is too low at initialization:} This may signal data leakage (e.g., label information leaking into the inputs), incorrect use of pretrained weights, or even a flaw in the loss implementation. For example, a cross-entropy loss close to zero implies that the model is already assigning very high probability to the correct class—unlikely if the weights are truly untrained.
+	
+	\item \textbf{If the loss is too high:} This might indicate degenerate model outputs (e.g., extremely large or small logits), incorrect label encoding (such as using class indices instead of one-hot vectors), or numerical instability. In CE, large logit magnitudes with wrong signs can spike the loss well above \( \log C \).
+	
+	\item \textbf{If the loss deviates significantly from the expected baseline (e.g., \( \log C \) for cross-entropy or \( C - 1 \) for SVM):} This may reflect label mismatches, class imbalance, or improperly scaled outputs (e.g., skipping softmax or applying wrong activation functions).
+\end{itemize}
+
+\textbf{In short:} Mismatch with expected baseline (e.g., \( \log C \) for CE or \( C - 1 \) for SVM) suggests issues like misaligned labels, class imbalance, or broken forward pass logic. Checking the initial loss should be a routine step when setting up models. It helps catch configuration bugs early—often before training even begins.
 
 \subsubsection{Conclusion: SVM, Cross Entropy, and the Evolving Landscape of Loss Functions}
 

@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{c+c1}{\PYGZsh{} Insert red value back into the image (for conditioning)}
+	\PYG{n}{img}\PYG{p}{[}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{r}\PYG{p}{,} \PYG{n}{c}\PYG{p}{]} \PYG{o}{=} \PYG{n}{red\PYGZus{}value}
+	
+	\PYG{c+c1}{\PYGZsh{} Re\PYGZhy{}run the entire convolutional stack with Mask B}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{MaskedConv2d}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{7}\PYG{p}{,} \PYG{n}{mask\PYGZus{}type}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{B}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{(}\PYG{n}{img}\PYG{p}{)}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{(}\PYG{n}{MaskedConv2d}\PYG{p}{(}\PYG{n}{h}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{mask\PYGZus{}type}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{B}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{(}\PYG{n}{MaskedConv2d}\PYG{p}{(}\PYG{n}{h}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{mask\PYGZus{}type}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{B}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+	
+	\PYG{c+c1}{\PYGZsh{} Project using 1x1 convolutions}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{n}{h}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+	\PYG{n}{x} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{n}{h}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}
+	\PYG{n}{logits\PYGZus{}green} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{n}{h}\PYG{p}{,} \PYG{l+m+mi}{256}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+	\PYG{n}{probs\PYGZus{}green} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{softmax}\PYG{p}{(}\PYG{n}{logits\PYGZus{}green}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+\end{MintedVerbatim}

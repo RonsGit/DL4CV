@@ -606,4 +606,46 @@ Despite this, pretraining followed by fine-tuning remains superior when datasets
 
 \noindent Ultimately, while collecting more data remains the best way to improve model performance, transfer learning provides a practical, efficient, and effective solution for adapting pretrained models to new tasks.
 
+\newpage
+\begin{enrichment}[Regularization in the Era of Finetuning][subsection]
+	\label{enrichment:fine_tuning_regularization}
+	
+	\paragraph{1. Freezing Most of the Backbone}
+	In most fine-tuning pipelines, the majority of the model—especially early and mid-level layers of a pretrained network—is kept frozen to retain its general-purpose features. Only a subset of late-stage layers or newly added modules (e.g., classification heads) are updated:
+	\begin{itemize}
+		\item \textbf{Why freeze?} To preserve learned representations from large-scale datasets (e.g., ImageNet, CLIP) and prevent catastrophic forgetting when adapting to smaller datasets \cite{howard2018_universal}.
+		\item \textbf{Minimal regularization need:} Since frozen parameters are not updated, there’s no need to regularize them. Even in partially frozen setups (e.g., layer-wise learning rate decay), mild \(\ell_2\) or batch norm tuning may help—but only when the domain shift is significant.
+	\end{itemize}
+	
+	\paragraph{2. Regularizing Small Trainable Heads: Caution With Dropout}
+	When fine-tuning adds only a shallow classification head (e.g., a 1–2 layer MLP or linear probe), strong regularization like dropout may be too aggressive:
+	\begin{itemize}
+		\item \textbf{For shallow heads (1–2 layers):} Dropout is rarely used unless the dataset is very small or prone to label noise. Lighter \(\ell_2\) weight decay is typically preferred \cite{li2022_understanding}.
+		\item \textbf{For deeper heads (3+ layers):} Moderate dropout (e.g., 0.3–0.5) becomes more effective, especially in low-data settings where overfitting risk increases.
+	\end{itemize}
+	
+	\paragraph{3. Training From Scratch on Large Datasets}
+	When training a network from scratch (e.g., ViTs or CNNs) on high-volume datasets like ImageNet-21k or JFT:
+	\begin{itemize}
+		\item \textbf{Large batches make BN optional:} If batch size is large, the per-batch statistics become stable, and some models even omit BN entirely \cite{zhang2019_fixup, vit2020_transformers}.
+		\item \textbf{Data abundance reduces overfitting risk:} Regularization is still used, but it shifts from aggressive \(\ell_2\) penalties toward more gentle \emph{implicit regularizers} such as data augmentations.
+	\end{itemize}
+	
+	\paragraph{4. Implicit and Soft Regularization Prevail}
+	In both fine-tuning and large-scale training, modern pipelines increasingly lean on:
+	\begin{itemize}
+		\item \textbf{Data augmentation:} mixup, CutMix \cite{yun2019_cutmix}, RandAugment \cite{cubuk2020_randaugment} are now dominant forms of regularization.
+		\item \textbf{Light weight decay or dropout:} Rather than large-scale penalties, milder explicit regularizers are combined with augmentation and pretraining.
+	\end{itemize}
+	
+	\paragraph{5. Summary}
+	In modern transfer learning workflows:
+	\begin{itemize}
+		\item Most regularization effort is applied to small newly-trained modules (e.g., MLPs).
+		\item Dropout is more effective when deeper heads are trained (3+ layers), but is sometimes too harsh for smaller heads.
+		\item BN and \(\ell_2\) decay are unnecessary for frozen layers, and are often minimal even in unfrozen ones, if used at all.
+		\item Augmentations and large pretraining data serve as primary generalization \& regularization tools in the fine-tuning and large datasets era.
+	\end{itemize}
+	
+\end{enrichment}
 

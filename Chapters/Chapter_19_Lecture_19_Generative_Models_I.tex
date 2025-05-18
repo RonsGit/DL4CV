@@ -3,6 +3,1316 @@
 % Chapter-specific content starts here
 \chapter{Lecture 19: Generative Models I}
 
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 %	CHAPTER 19 - Lecture 19: Generative Models I
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
+
+\noindent
+In this chapter, we shift our attention from discriminative modeling tasks like classification and detection to a more mathematically advanced and intellectually rich problem: \emph{generating new images}. This involves modeling the underlying distribution of the data and sampling from it to synthesize realistic outputs. We begin with foundational methods such as Variational Autoencoders (VAEs) and Generative Adversarial Networks (GANs), then proceed to more recent state-of-the-art techniques like diffusion models and flow matching.
+
+\section{Supervised vs.\ Unsupervised Learning}
+\label{sec:chapter19_supervised_vs_unsupervised}
+
+\subsection{Supervised Learning}
+\label{subsec:chapter19_supervised_learning}
+
+\noindent
+Supervised learning refers to the setting in which we are given labeled data pairs \((x, y)\), where \(x\) is the input (e.g., an image), and \(y\) is the target label (e.g., “cat”). These labels are typically human-annotated and expensive to collect at scale. This annotation burden can limit the scope of applications in data-rich but label-scarce domains.
+
+\noindent
+\textbf{Goal:} Learn a function that maps inputs to outputs, \(f : x \rightarrow y\).
+
+\noindent
+\textbf{Examples:} Classification, regression, object detection, semantic segmentation, image captioning.
+
+\subsection{Unsupervised Learning}
+\label{subsec:chapter19_unsupervised_learning}
+
+\noindent
+In unsupervised learning, the data comes without labels—just inputs \(x\). The goal is to extract useful structures, representations, or generative processes from the data distribution itself.
+
+\noindent
+\textbf{Goal:} Learn a latent or hidden structure underlying the observed data.
+
+\noindent
+\textbf{Examples:} Clustering (e.g., K-Means), dimensionality reduction (e.g., PCA), density estimation, self-supervised representation learning.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.48\textwidth]{Figures/Chapter_19/slide_10.jpg}
+	\hfill
+	\includegraphics[width=0.48\textwidth]{Figures/Chapter_19/slide_12.jpg}
+	\caption{\textbf{Left}: Supervised learning example (image captioning). \textbf{Right}: Unsupervised learning example (clustering).}
+	\label{fig:chapter19_supervised_unsupervised_examples}
+\end{figure}
+
+\noindent
+A key building block in unsupervised learning is the \textbf{autoencoder}, a neural network that learns to compress and reconstruct its input. By training to minimize reconstruction error, it discovers meaningful latent representations that can be used in downstream tasks.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_14.jpg}
+	\caption{Autoencoder learns a latent representation \(z\) of input \(x\) and reconstructs it as \(\hat{x}\), minimizing reconstruction loss \(||x - \hat{x}||^2\).}
+	\label{fig:chapter19_autoencoder}
+\end{figure}
+
+\noindent
+Our ultimate goal is to develop methods that can learn rich and structured representations using vast amounts of unlabeled data—considered the “holy grail” of machine learning.
+
+\section{Discriminative vs.\ Generative Models}
+\label{sec:chapter19_discriminative_vs_generative}
+
+\noindent
+To understand the progression toward generative models, we revisit the fundamental difference between discriminative and generative modeling. Given a data point \(x\) (e.g., an image of a cat) and a label \(y\) (e.g., “cat”), we distinguish:
+
+\begin{itemize}
+	\item \textbf{Discriminative model:} Learns the conditional distribution \(p(y \mid x)\)
+	\item \textbf{Generative model:} Learns the marginal distribution \(p(x)\)
+	\item \textbf{Conditional generative model:} Learns the conditional distribution \(p(x \mid y)\)
+\end{itemize}
+
+\subsection{Discriminative Models}
+\label{subsec:chapter19_discriminative_models}
+
+\noindent
+Discriminative models focus on classification: for a given input \(x\), what is the probability of each possible label \(y\)? The probability mass is shared among labels only—images do not compete with each other. Thus, these models are prone to confidently labeling out-of-distribution inputs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_19/slide_21.jpg}
+	\caption{Discriminative models normalize over possible labels. Even when given an invalid input (e.g., a monkey), they must output probabilities over non-fitting labels (e.g., cat, dog).}
+	\label{fig:chapter19_discriminative_example}
+\end{figure}
+
+\subsection{Generative Models}
+\label{subsec:chapter19_generative_models}
+
+\noindent
+In contrast, generative models learn the probability density \(p(x)\), which assigns a likelihood to each possible input. This task is significantly harder: instead of a limited number of labels, the model must reason over an infinite space of possible images.
+
+\noindent
+A well-trained generative model can \emph{reject} invalid inputs by assigning low density, and it can be used to \emph{generate} new samples by sampling from \(p(x)\).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_19/slide_25.jpg}
+	\caption{Generative models assign likelihood to every possible image. In this example, realistic animal images are given high density, while unrealistic art is rejected.}
+	\label{fig:chapter19_generative_distribution}
+\end{figure}
+
+\noindent
+Since \(x\) lies in a continuous space, probability is only meaningful when integrated over a region. Thus, we evaluate generative models using criteria like perplexity: a model trained on natural images should assign high density to unseen, yet realistic, test samples.
+
+\subsection{Conditional Generative Models}
+\label{subsec:chapter19_conditional_generative_models}
+
+\noindent
+Conditional generative models model \(p(x \mid y)\), allowing them to generate class-specific samples and reject anomalies. Given a label \(y\), they determine the likelihood of each input \(x\) belonging to that label. Unlike discriminative models, these can reject invalid inputs by assigning low likelihoods across all labels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_19/slide_26.jpg}
+	\caption{Conditional generative models can reject inputs (e.g., art images) by assigning low likelihoods for all learned labels.}
+	\label{fig:chapter19_conditional_generative_example}
+\end{figure}
+
+\subsection{Model Relationships via Bayes' Rule}
+\label{subsec:chapter19_model_relationships}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_19/slide_28.jpg}
+	\caption{Bayes’ rule provides a bridge between discriminative, generative, and conditional generative models.}
+	\label{fig:chapter19_bayes_connection}
+\end{figure}
+
+\noindent
+The three model types are mathematically linked via Bayes’ rule:
+\[
+p(x \mid y) = \frac{p(y \mid x)}{p(y)} \cdot p(x)
+\]
+
+\noindent
+Thus, we can construct a conditional generative model using a discriminative model and a generative model, provided we know the label prior \(p(y)\). This relationship implies that discriminative and unconditional generative models serve as foundational building blocks for many modeling tasks.
+
+\subsection{Summary of Generative Model Taxonomy}
+\label{subsec:chapter19_taxonomy}
+
+\noindent
+Generative models fall into different families based on how they represent and estimate the data distribution:
+
+\begin{itemize}
+	\item \textbf{Explicit density models:}
+	\begin{itemize}
+		\item Tractable: e.g., autoregressive models
+		\item Approximate: e.g., VAEs, Markov chains
+	\end{itemize}
+	\item \textbf{Implicit density models:}
+	\begin{itemize}
+		\item Markov chain based
+		\item Direct: e.g., GANs
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_37.jpg}
+	\caption{Taxonomy of generative models. Explicit density models can be tractable or approximate; implicit models include GANs and diffusion-based methods.}
+	\label{fig:chapter19_generative_taxonomy}
+\end{figure}
+
+\noindent
+Recent advancements in generative modeling such as \textbf{diffusion models} \cite{ho2020_ddpm,nichol2021_improveddpm} fall under the class of \emph{approximate explicit density models} based on \emph{Markov chains}. These models learn to reverse a gradual noising process applied to the data, ultimately generating realistic samples through a learned denoising trajectory. Diffusion models have recently demonstrated state-of-the-art performance across various domains, including image generation, audio synthesis, and molecular modeling.
+
+\newpage \noindent
+Closely related in spirit but different in formulation, \textbf{flow matching models} \cite{lipman2022_flowmatching} aim to directly learn a continuous velocity or flow field that maps a prior distribution (e.g., Gaussian noise) to the data distribution, bypassing the stepwise diffusion process. These models sit conceptually between diffusion models and normalizing flows: they preserve continuous-time transformation properties while avoiding discretized stochastic chains, making them more computationally efficient in practice and further enriching the generative model taxonomy.
+
+\noindent
+We begin with \textbf{autoregressive models}, which belong to the family of \emph{tractable explicit density models}. These models factorize the joint distribution of an image as a product of conditional probabilities over pixels or patches, enabling exact likelihood computation and straightforward sampling. Although slower at generation time due to their sequential nature, autoregressive models provide a natural foundation and useful intuitions that will help ground our understanding of more complex approaches like VAEs, GANs, and diffusion methods.
+
+\section{Autoregressive Models and Explicit Density Estimation}
+\label{sec:chapter19_autoregressive_models}
+
+\noindent
+In this section we explore a class of generative models that aim to model the data distribution \( p(x) \) explicitly. A model is said to perform \textbf{explicit density estimation} when it provides a function \( p(x) = f(x; \mathbf{W}) \) that assigns a probability to each data point \( x \), parameterized by learnable weights \( \mathbf{W} \).
+
+\subsection{Maximum Likelihood Estimation}
+\label{subsec:chapter19_mle}
+
+\noindent
+Given a dataset \( \mathcal{D} = \{x^{(1)}, x^{(2)}, \ldots, x^{(N)}\} \) where each sample is assumed to be i.i.d., we aim to learn a probabilistic model parameterized by \( \mathbf{W} \) that maximizes the likelihood of observing the training data:
+
+\[
+\mathbf{W}^* = \arg\max_{\mathbf{W}} \prod_{i=1}^N p(x^{(i)}; \mathbf{W}).
+\]
+
+\noindent
+Since maximizing a product of probabilities can be numerically unstable and analytically inconvenient, we take the logarithm of the objective. The logarithm is a monotonic function, so this transformation preserves the location of the maximum:
+
+\[
+= \arg\max_{\mathbf{W}} \log \left( \underbrace{ \prod_{i=1}^N p(x^{(i)}; \mathbf{W}) }_{\text{i.i.d.\ assumption}} \right)
+= \arg\max_{\mathbf{W}} \sum_{i=1}^N \log p(x^{(i)}; \mathbf{W}).
+\]
+
+\noindent
+This is the classic \textbf{maximum likelihood estimation} (MLE) objective. We train the model by maximizing the total log-likelihood over the dataset, typically using stochastic gradient descent. In most deep generative models, \( p(x; \mathbf{W}) \) is represented implicitly through a neural network \( f(x; \mathbf{W}) \) that either outputs a probability or parameterizes a density.
+
+\subsection{Autoregressive Factorization}
+\label{subsec:chapter19_autoregressive_factorization}
+
+\noindent
+For high-dimensional data such as images, a common approach is to factor the joint probability using the \textbf{chain rule of probability}:
+\[
+p(x_1, x_2, \ldots, x_T) = \prod_{t=1}^{T} p(x_t \mid x_1, x_2, \ldots, x_{t-1}),
+\]
+where each \( x_t \) is a component of the data \( x \in \mathbb{R}^T \). For images, this corresponds to a pixel ordering (e.g., raster scan: left-to-right, top-to-bottom), so each pixel is modeled as a conditional distribution given all previous pixels.
+
+This factorization is the foundation of \textbf{autoregressive models} and closely mirrors the structure of recurrent neural networks (RNNs) and LSTMs, which sequentially process and predict tokens (or pixels) over time.
+
+\subsection{Recurrent Pixel Networks: Overview and Motivation}
+\label{subsec:chapter19_pixelrnn_extended}
+
+\noindent
+The \textbf{PixelRNN} paper~\cite{oord2016_pixernn} proposes a family of autoregressive models for image generation. These models generate images one pixel at a time, scanning the image in a raster order (top-to-bottom, left-to-right), and predicting the Red, Green, and Blue channels sequentially at each location. Every prediction is conditioned on the previously generated pixels and channels, thereby enforcing a strict autoregressive structure:
+
+\[
+p(x) = \prod_{i=1}^{H} \prod_{j=1}^{W} \; 
+p(x_{i,j}^{(R)} \mid x_{<i,<j}) \cdot 
+p(x_{i,j}^{(G)} \mid x_{i,j}^{(R)}, x_{<i,<j}) \cdot 
+p(x_{i,j}^{(B)} \mid x_{i,j}^{(R)}, x_{i,j}^{(G)}, x_{<i,<j})
+\]
+
+\noindent
+Here, \(x_{i,j}^{(C)}\) denotes the intensity of channel \(C \in \{R, G, B\}\) at pixel \((i,j)\), and \(x_{<i,<j}\) refers to all previously generated pixels (rows above and columns to the left of the same row). This factorization captures:
+\begin{itemize}
+	\item \textbf{Spatial dependencies} between pixels across the 2D image grid.
+	\item \textbf{Inter-channel dependencies} within each pixel: Green depends on Red; Blue depends on both Red and Green.
+\end{itemize}
+
+\paragraph{Autoregressive Architectures in PixelRNN}
+\label{sec:pixelrnn_variants}
+
+\noindent
+The \textbf{PixelRNN} framework~\cite{oord2016_pixernn} introduces four autoregressive models for image generation, all adhering to a shared high-level design. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/pixelrnn_architecture.jpg}
+	\caption{High-level overview of recurrent pixel generation models. All variants follow the same masked-conv $\rightarrow$ recurrent/core $\rightarrow$ output-conv structure. The middle block can be a PixelCNN, Row LSTM, Diagonal BiLSTM, or Multi-Scale recurrent unit. Figure adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_pixelrnn_variants}
+\end{figure}
+
+\newpage
+\begin{itemize}
+	\item \textbf{Masked Input Convolutions (Green):} The first block is a $7\times7$ convolution that extracts local features from already generated pixels while respecting causal order.
+	\item \textbf{Core Dependency Module (Red):} Use either convolutional or recurrent blocks to model spatial dependencies.
+	\item \textbf{Masked Output Projection (Blue):} Produce logits for Red, Green, and Blue channels sequentially via \(1 \times 1\) masked convolutions.
+	\item \textbf{Softmax Intensity Prediction (Gray):} Takes the logits of the color channel produced by the $1 \times 1$ convolutions, and selects the most probable color intensity for that channel. 
+\end{itemize}
+
+\noindent
+We explore the four architectural variants below, in the order they will be covered:
+
+\begin{enumerate}
+	\item \textbf{PixelCNN:} A convolutional baseline that stacks masked convolutions to model pixel dependencies. It is \textbf{fully parallelizable during training} (since all pixels are known) and thus fast to optimize. However, its use of local kernels (e.g., \(3 \times 3\)) leads to slow receptive field growth, and its masking strategy introduces \textbf{blind spots} — spatially valid past pixels that are unreachable due to convolution geometry. Additionally, \textbf{inference is slow}, as the model generates pixels and RGB channels sequentially in raster order.
+	
+	\item \textbf{Row LSTM:} Replaces stacked convolutions with a  structured recurrent design. Each row \(r\) is processed in parallel, with every pixel receiving hidden and cell states from the previous row \(r{-}1\), along with feature maps extracted from row \(r{-}1\) via a masked convolution (e.g., \(3 \times 1\)). There is \textbf{no recurrence across the row}, so pixels within the same row are conditionally independent. This structure eliminates blind spots and improves vertical information flow, but creates a \textbf{triangular receptive field} — horizontal context is missing. To access pixels from rows \(r{-}2, r{-}3\), the model requires deep stacking.
+	
+	\item \textbf{Diagonal BiLSTM:} Addresses the limitations of Row LSTM by processing the image diagonally, where \(r + c = \text{const}\). Recurrence now flows both horizontally and vertically, enabling a more \textbf{balanced 2D receptive field} within a single layer. It improves spatial coherence and reduces the need for deep stacking, but introduces implementation complexity (e.g., skewing/unskewing) and slower sequential diagonal inference.
+	
+	\item \textbf{Multi-Scale PixelRNN:} Builds the image progressively across multiple resolutions — starting from a coarse low-resolution version and refining it through successive stages. This coarse-to-fine scheme improves global structure modeling. It is orthogonal to the core architecture and can be combined with either Row LSTM or Diagonal BiLSTM.
+\end{enumerate}
+
+\noindent
+Although these models are no longer dominant in modern generative pipelines, they established foundational ideas — such as masked computation, spatial factorization, and coarse-to-fine generation — that remain influential in architectures like \textbf{Gated PixelCNN}, \textbf{PixelCNN++}, and transformer-based models including \textbf{ImageGPT} and \textbf{MaskGIT}. Their study reveals valuable design patterns for autoregressive generation and provides conceptual scaffolding for later advances such as \textbf{VAEs}, \textbf{GANs}, \textbf{diffusion models}, and \textbf{flow-matching approaches}.
+
+\subsubsection{PixelCNN}
+\label{chapter19_subsubsec:pixelcnn}
+
+\noindent
+We begin our study of autoregressive image models with the \textbf{PixelCNN}—a fully convolutional variant of the PixelRNN framework~\cite{oord2016_pixernn}. While it achieves the fastest training  speed among the proposed variants, it sacrifices modeling power due to its limited ability to capture long-range spatial dependencies, leading us towards RNN variants. Nevertheless, PixelCNN still provides a valuable first step in understanding pixel-by-pixel generation and the role of masked convolutions.
+
+\paragraph{Image Generation as Sequential Prediction}
+
+\noindent
+Given an RGB image of size \(H \times W \times 3\), PixelCNN models image generation as a strictly \textbf{autoregressive} process. We flatten the image into a raster-scan sequence:
+\[
+x = \left(x_1, x_2, \dots, x_N\right), \quad \text{where } N = H \times W.
+\]
+Each \(x_i\) represents the RGB values of a single pixel, and generation proceeds pixel-by-pixel:
+\[
+p(x) = \prod_{i=1}^{N} \; 
+p(x_i^{(R)} \mid x_{<i}) \cdot 
+p(x_i^{(G)} \mid x_i^{(R)}, x_{<i}) \cdot 
+p(x_i^{(B)} \mid x_i^{(R)}, x_i^{(G)}, x_{<i}).
+\]
+
+\noindent
+Here, \(x_{<i}\) includes all pixels \((r', c')\) such that \(r' < r\) or \(r' = r, c' < c\), for the current pixel index \(x_i \leftrightarrow (r,c)\). This ensures that the model never uses “future” pixels (those below or on the same row to the right of \((r,c)\)), and future color channels at the same pixel.
+
+\paragraph{Autoregressive Generation Process}
+
+\noindent
+We begin with a blank image (all zeros or a seed value) of size \(H \times W \times 3\) and generate color intensities sequentially:
+\begin{enumerate}
+	\item Initialize \(x_1^{(R)}\) using a constant or random value.
+	\item For each pixel \(x_i\) (raster scan):
+	\begin{itemize}
+		\item Generate red: \(x_i^{(R)} \sim p(x_i^{(R)} \mid x_{<i})\),
+		\item Generate green: \(x_i^{(G)} \sim p(x_i^{(G)} \mid x_i^{(R)}, x_{<i})\),
+		\item Generate blue: \(x_i^{(B)} \sim p(x_i^{(B)} \mid x_i^{(R)}, x_i^{(G)}, x_{<i})\).
+	\end{itemize}
+\end{enumerate}
+
+\noindent
+This process ensures that both spatial and intra-pixel channel dependencies are respected.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_19/pixelcnn_stage0.jpg}
+	\caption{PixelCNN generation begins with a blank canvas. For pixel \((r,c)\), the red channel is predicted based on all previous pixels (above and to the left) using a masked convolutional network. Figure adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_pixelcnn_red}
+\end{figure}
+
+\paragraph{Masked Convolution for Feature Extraction}
+
+\noindent
+The first layer is a \textbf{masked \(7 \times 7\) convolution}, using \textbf{Mask A}. It restricts each pixel from accessing future positions:
+\begin{itemize}
+	\item Pixels below row \(r\). 
+	\item Pixels to the right of column \(c\), in row \(r\).
+	\item The pixel itself \((r,c)\) — i.e., the current location.
+\end{itemize}
+
+\noindent
+This ensures strict autoregressive structure.
+
+\begin{mintedbox}[fontsize=\footnotesize]{python}
+	class MaskedConv2d(nn.Conv2d):
+		def __init__(self, in_channels, out_channels, kernel_size, mask_type='A'):
+			# Zero padding and no pooling are used to maintain spatial size
+			super().__init__(in_channels, out_channels,
+			kernel_size, padding=kernel_size // 2)
+			assert mask_type in {'A', 'B'}
+	
+			# Create a binary mask the same shape as conv weights
+			self.register_buffer('mask', torch.ones_like(self.weight))
+			
+			kH, kW = self.kernel_size  # Kernel height and width
+			yc, xc = kH // 2, kW // 2  # (yc, xc) is the center of the kernel — the "current" pixel (r,c)
+			
+			# --- Masking Strategy ---
+			
+			# Zero out all positions below the current row
+			# That is: (r+1, :, :) and beyond — future rows
+			self.mask[:, :, yc+1:, :] = 0
+			
+			# In the current row (yc), zero out pixels to the right
+			# For 'A': block (r,c) itself and all future columns => mask[:, :, yc, xc:] = 0
+			# For 'B': allow access to (r,c), only block strictly future columns => mask[:, :, yc, xc+1:] = 0
+			if mask_type == 'A':
+				self.mask[:, :, yc, xc:] = 0  # Include current pixel (r,c) in the block
+			else:  # mask_type == 'B'
+				self.mask[:, :, yc, xc+1:] = 0  # Only block pixels strictly right of (r,c)
+		
+		def forward(self, x):
+			# Apply the mask to the convolution weights before use
+			self.weight.data *= self.mask
+			return super().forward(x)
+\end{mintedbox}
+
+\noindent
+When \texttt{mask\_type='A'}, the current pixel itself is excluded (\(x_{r,c}\)). In \texttt{mask\_type='B'}, the pixel can access its own earlier channels (used later for green/blue).
+
+\newpage
+\paragraph{Red Channel: Feature Processing and Softmax}
+
+\noindent
+The generation of the red channel for each pixel \((r,c)\) begins with a masked \(7 \times 7\) convolution using \textbf{Mask A}. This ensures strict causality: only pixels \emph{above} and to the \emph{left} of \((r,c)\) contribute to its feature computation — excluding the pixel itself. The output is a feature map of shape \((H \times W \times h)\), where \(h\) is the hidden dimension, containing local, autoregressive context from the past pixels.
+
+\medskip \noindent
+To refine this contextual representation, the model then applies a sequence of smaller masked convolutions (typically \(3 \times 3\)) using \textbf{Mask B}. Unlike Mask A, \textbf{Mask B allows the filter to access the current pixel position \((r,c)\)}, in addition to all earlier spatial positions. This is valid because:
+
+\begin{itemize}
+	\item The input to these Mask B layers is not the raw image, but the feature map produced by previous masked operations (beginning with Mask A), which already respects the autoregressive constraint.
+	\item No ground-truth pixel values from the current location \((r,c)\) are accessed or leaked — only learned features that preserve causality.
+\end{itemize}
+
+\noindent
+Thus, Mask B safely expands the model’s expressiveness while still respecting the generative order.
+
+\medskip
+\begin{mintedbox}[fontsize=\footnotesize]{python}
+	# Initial masked convolution - Mask A (strict causality)
+	x = MaskedConv2d(3, h, kernel_size=7, mask_type='A')(img)
+	
+	# Feature refinement with Mask B (causality-preserving)
+	x = nn.ReLU()(MaskedConv2d(h, h, kernel_size=3, mask_type='B')(x))
+	x = nn.ReLU()(MaskedConv2d(h, h, kernel_size=3, mask_type='B')(x))
+	
+	# Projection stack (1x1 convolutions + softmax)
+	x = nn.ReLU()(nn.Conv2d(h, h, 1)(x))
+	x = nn.ReLU()(nn.Conv2d(h, h, 1)(x))
+	logits_red = nn.Conv2d(h, 256, 1)(x)
+	probs_red = F.softmax(logits_red, dim=1)
+\end{mintedbox}
+
+\noindent
+The final \(1 \times 1\) convolutions act like spatially-applied MLPs: they perform per-pixel nonlinear transformations without changing the receptive field, projecting each pixel's features into 256 logits — corresponding to the possible red intensity values (from 0 to 255). A softmax then yields the red-channel categorical distribution for each pixel.
+
+\medskip
+
+\noindent
+The entire pipeline is repeated for the green and blue channels, but with modified inputs that include the already-sampled red (and for blue, also the green) channel values. We describe that process next.
+
+\paragraph{Green Channel: Conditioning on Red}
+
+\noindent
+After predicting the red intensity for pixel \((r, c)\), we proceed to generate the green intensity — now conditioned on both:
+\begin{itemize}
+	\item All \emph{previous} pixels in raster order (above and to the left).
+	\item The current pixel’s red value \(x_{r,c}^{(R)}\), which has just been sampled.
+\end{itemize}
+
+\noindent
+To do this, we update the input tensor by inserting the red values (raw intensities) into the first channel of the input. We then recompute the entire forward pass using the same PixelCNN architecture — but with \textbf{Mask B} applied from the very beginning. 
+
+\newpage
+\begin{mintedbox}[fontsize=\footnotesize]{python}
+	# Insert red value back into the image (for conditioning)
+	img[:, 0, r, c] = red_value  
+	
+	# Re-run the entire convolutional stack with Mask B
+	x = MaskedConv2d(3, h, kernel_size=7, mask_type='B')(img)
+	x = nn.ReLU()(MaskedConv2d(h, h, kernel_size=3, mask_type='B')(x))
+	x = nn.ReLU()(MaskedConv2d(h, h, kernel_size=3, mask_type='B')(x))
+	
+	# Project using 1x1 convolutions
+	x = nn.ReLU()(nn.Conv2d(h, h, 1)(x))
+	x = nn.ReLU()(nn.Conv2d(h, h, 1)(x))
+	logits_green = nn.Conv2d(h, 256, 1)(x)
+	probs_green = F.softmax(logits_green, dim=1)
+\end{mintedbox}
+
+\noindent
+The key difference from red generation is the use of \textbf{Mask B}, which allows each pixel \((r,c)\) to see its own red value during the masked convolution operations. This supports autoregressive conditioning across channels within the same pixel.
+
+\noindent
+Once the green value \(x_{r,c}^{(G)}\) is sampled from the predicted distribution, it is written into the image and used as input for the blue channel prediction in the next step.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/pixelcnn_stage1.jpg}
+	\caption{
+		Generation of the green channel at pixel \((r,c)\) incorporates the already sampled red value at that location. 
+		This is achieved by updating the image tensor with the red value and reapplying the PixelCNN forward pass — now using \textbf{Mask B} in the initial convolution. Figure adapted from \cite{lebanoff2018_pixelrnn}.
+	}
+	\label{fig:chapter19_pixelcnn_green}
+\end{figure}
+
+\paragraph{Blue Channel: Conditioning on Red and Green}
+
+\noindent
+To generate the blue intensity at pixel \((r,c)\), the model conditions on both previously generated red and green values at that location. After the red and green intensities have been sampled, they are inserted into the corresponding channels of the input tensor. A new forward pass is then performed using \textbf{Mask B}, which now allows the model to access the current pixel’s red and green channels, as well as all earlier spatial positions. This yields a 256-way softmax distribution for the blue channel, completing the RGB prediction for pixel \((r,c)\).
+
+\paragraph{Moving to the Next Pixel}
+
+\noindent
+Once all three color channels (Red, Green, and Blue) have been sampled for pixel \((r, c)\), the generator moves on to the next spatial location \((r, c+1)\), continuing in raster-scan order. At each step, the red channel is predicted first, followed by green (conditioned on red), and then blue (conditioned on red and green). This strict autoregressive process ensures that all spatial and inter-channel dependencies are respected.
+
+\noindent
+However, a major limitation of PixelCNNs during \textbf{inference} is that generation is inherently \emph{sequential}. Each pixel and each channel must be predicted one at a time, in order. The model cannot proceed to pixel \((r, c+1)\) until it has completed all channels of \((r, c)\), making sampling extremely \textbf{slow} in practice — especially for high-resolution images.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/pixelcnn_stage2.jpg}
+	\caption{After completing pixel \((r,c)\), generation proceeds to \((r,c+1)\), where red is again predicted first. Previously generated pixels and channels act as context. Figure adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_pixelcnn_next_pixel}
+\end{figure}
+
+\paragraph{Training PixelCNNs Efficiently}
+
+\noindent
+Despite the autoregressive nature of the model, \textbf{training PixelCNNs is efficient and fully parallelizable}. This is because during training, we are given the complete ground-truth image — so we know the true values of all pixels in advance. This allows us to compute the output logits for \emph{all pixels and channels simultaneously}, without waiting for previous pixels to be generated.
+
+\noindent
+However, even in training, we must ensure that the model does not \emph{cheat} by peeking at future pixels or channels. To preserve the autoregressive structure, we apply \textbf{masked convolutions} over all convolutional layers. These masks (such as \emph{Mask A} and \emph{Mask B}) zero out connections to any spatial location or channel that has not yet been generated in the prescribed order.
+
+\paragraph{Why Move Beyond PixelCNN? Blind Spots, Receptive Fields, and Inference Latency}
+
+\noindent
+While PixelCNN provides a clean, convolutional, and fully parallelizable framework for training autoregressive image models, it suffers from three significant limitations:
+\begin{enumerate}
+	\item A relatively \textbf{limited effective receptive field}.
+	\item The presence of \textbf{blind spots} in its spatial coverage.
+	\item \textbf{Slow inference speed} due to strictly sequential generation.
+\end{enumerate}
+
+These architectural issues motivate the transition to recurrent pixel generators, beginning with Row LSTMs.
+
+\subparagraph{1. Receptive Field Growth is Local and Incremental}
+
+\noindent
+PixelCNN builds up contextual awareness using \emph{masked convolutions} — usually starting with a \(7 \times 7\) masked layer (Mask A), followed by stacks of \(3 \times 3\) masked convolutions (Mask B). While this design ensures autoregressive structure, its spatial modeling is inherently local:
+
+\begin{itemize}
+	\item \textbf{Slow receptive field expansion}: Each convolution layer grows the receptive field by only one pixel in each spatial direction.
+	\item \textbf{Limited global context}: Capturing distant pixel relationships (especially vertically) requires deep stacking of layers.
+	\item \textbf{Suboptimal modeling power}: Without sufficient depth, the network fails to learn long-range dependencies — crucial for structured patterns like textures or repeating motifs.
+\end{itemize}
+
+\subparagraph{2. Blind Spots: Missing Valid Context Pixels}
+
+\noindent
+PixelCNN also suffers from \textbf{blind spots} in its receptive field. Even though some pixels appear earlier in the raster scan (e.g., \((i-1,j+2)\) lies above and to the right), they are excluded due to the masking scheme. As a result:
+
+\begin{itemize}
+	\item Some "past" pixels are ignored — even though they are causally valid and should contribute to predicting the current pixel.
+	\item These blind spots persist even with deeper stacks of masked convolutions unless special architectural modifications are introduced (as in Gated PixelCNN or PixelCNN++).
+\end{itemize}
+
+\noindent
+This problem is thoroughly discussed and visualized in \cite{pinaya2021_pixelcnn_blindspot}, which we refer readers to for detailed illustrations and code examples. The takeaway is that masked convolutions, unless carefully designed, fail to capture a complete and consistent context.
+
+\subparagraph{3. Inference Time: Slow Sequential Generation}
+
+\noindent
+Despite its training efficiency, PixelCNN is notoriously \textbf{slow at inference time}. While convolutional layers are fully parallelizable during training — since all ground-truth pixels are known and available — generation must proceed strictly one pixel and one channel at a time, in raster order. For each pixel:
+\begin{itemize}
+	\item Red is generated based on previous pixels.
+	\item Green is conditioned on red and previous pixels.
+	\item Blue is conditioned on both red, green, and previous pixels.
+\end{itemize}
+This severely limits sampling speed and makes PixelCNN impractical for real-time or high-resolution applications.
+
+\newpage
+\subparagraph{Motivation for Recurrent Alternatives}
+
+\noindent
+While \textbf{PixelCNN} presents a clean, convolutional approach to autoregressive image modeling, it suffers from two major limitations: (1) slow sampling due to its strictly sequential inference process, and (2) an incomplete and inefficient receptive field caused by stacking local masked convolutions. These drawbacks motivate the recurrent architectures introduced in the \textbf{PixelRNN} framework — particularly the \textbf{Row LSTM} and \textbf{Diagonal BiLSTM} variants.
+
+\medskip
+
+\noindent
+Compared to PixelCNN, these recurrent alternatives offer several architectural improvements:
+
+\begin{itemize}
+	\item \textbf{More efficient vertical context propagation:} 
+	PixelCNN gradually expands its receptive field through many stacked \(3 \times 3\) masked convolutions. Recurrent models, on the other hand, introduce mechanisms for transmitting global signals across rows or diagonals in a single step. In Row LSTM, each pixel in row \(r\) receives the same recurrent state vector from row \(r{-}1\), enabling coordinated processing and reuse of previously computed structure. Diagonal BiLSTM further generalizes this idea by allowing information to flow along diagonal paths (\(r + c = \text{const}\)), effectively modeling dependencies across both rows and columns.
+	
+	\item \textbf{More aligned spatial coverage with fewer blind spots:}
+	In PixelCNN, the convolutional masking scheme often prevents access to pixels that should be valid under the raster order (e.g., \((r{-}1, c{+}1)\)). Recurrent models reduce this problem by designing computation to explicitly depend on prior rows (Row LSTM) or diagonals (Diagonal BiLSTM), helping cover more of the relevant 2D context. While Row LSTM does not condition on other pixels within the same row (each pixel \((r,c)\) is computed independently using shared information from row \(r{-}1\)), it still benefits from a better-structured vertical dependency path than PixelCNN.
+\end{itemize}
+
+\noindent
+These benefits come with their own costs. Recurrent variants are typically slower to train and harder to parallelize than purely convolutional models like PixelCNN. Furthermore, Row LSTM still suffers from limited receptive fields — its access to earlier rows is constrained to fixed-width masked convolutions, and its independence across columns within a row limits horizontal structure modeling.
+
+\noindent
+In the next part, we examine the Row LSTM in more detail. Despite its limitations, it marks a conceptual shift from convolutional masking to structured recurrence — a step toward richer autoregressive spatial modeling that later variants like Diagonal BiLSTM will continue to improve.
+
+\newpage
+\subsubsection{Row LSTM}
+\label{chapter19_subsubsec:rowLSTM}
+
+\noindent
+The \textbf{Row LSTM} replaces the convolutional core of PixelCNN with a vertically structured recurrent mechanism, designed to aggregate spatial context more efficiently while still enforcing autoregressive generation. Instead of modeling pixels one-by-one through local convolutions, it processes entire rows of feature maps simultaneously using a modified form of the LSTM — known as the \emph{Convolutional LSTM}.
+
+\paragraph{From Convolution Stacks to Convolutional Recurrence}
+
+\noindent
+Whereas PixelCNN stacks many masked convolutions to increase its receptive field, Row LSTM relies on recurrence across image rows. For a given row \(r\), the model maintains:
+\begin{itemize}
+	\item A hidden state \(\mathbf{h}_{r}\), shared across all pixels in row \(r\),
+	\item A memory cell \(\mathbf{c}_{r}\), also shared across the row.
+\end{itemize}
+
+\noindent
+Each LSTM layer updates \((\mathbf{h}_{r}, \mathbf{c}_{r})\) using the hidden state \(\mathbf{h}_{r-1}\) and memory \(\mathbf{c}_{r-1}\) from the previous row, as well as spatial features \(\mathbf{x}_r\) extracted from row \(r{-}1\) via masked convolutions.
+
+The LSTM gate updates are computed as:
+
+\begin{align*}
+	[o_r, \mathbf{f}_r, \mathbf{i}_r, \mathbf{g}_r] &= \sigma\left(\mathbf{K}^{ss} \circledast \mathbf{h}_{r-1} + \mathbf{K}^{is} \circledast \mathbf{x}_r \right) \\
+	\mathbf{c}_r &= \mathbf{f}_r \odot \mathbf{c}_{r-1} + \mathbf{i}_r \odot \mathbf{g}_r \\
+	\mathbf{h}_r &= o_r \odot \tanh(\mathbf{c}_r)
+\end{align*}
+
+\noindent
+Where:
+\begin{itemize}
+	\item \(\circledast\) denotes a \textbf{convolution} (instead of a fully connected layer).
+	\item \(\odot\) is elementwise multiplication.
+	\item \(\sigma\) is the logistic sigmoid (used for the input, forget, and output gates).
+	\item \(\tanh\) is applied to the content gate \(\mathbf{g}_r\) and the output memory.
+\end{itemize}
+
+\paragraph{What is a Convolutional LSTM?}
+
+\noindent
+The \textbf{Convolutional LSTM} (ConvLSTM) is a spatially-aware variant of the traditional LSTM. In a standard LSTM, inputs and hidden states are treated as flat vectors — requiring feature maps from an entire row to be flattened before processing. This would destroy spatial locality between pixels.
+
+\noindent
+In contrast, ConvLSTM replaces the fully connected layers (typically used to compute gate activations) with convolution layers:
+\begin{itemize}
+	\item Instead of multiplying by a weight matrix, we convolve over the row using kernels \(\mathbf{K}^{is}\) and \(\mathbf{K}^{ss}\),
+	\item Each gate (input, forget, output, and content) is computed by applying these convolutions \emph{independently at each spatial location},
+	\item This preserves the spatial layout of the image row, so neighboring pixels remain localized in memory.
+\end{itemize}
+
+\noindent
+Although the input \(\mathbf{x}_r\) contains feature maps for all pixels in row \(r\), no future pixels are accessed during generation — the masked convolutions (Mask A or B) ensure that only valid context from previously generated pixels is used. Furthermore, the convolutional gate computation operates locally and independently across each pixel’s receptive field.
+
+\newpage
+\paragraph{Triangular Receptive Field}
+
+\noindent
+Row LSTM’s receptive field grows \textbf{vertically} across layers but remains limited horizontally within each row. Specifically:
+\begin{itemize}
+	\item Each pixel \((r, c)\) receives:
+	\begin{itemize}
+		\item Vertical context via recurrence from \(\mathbf{h}_{r-1}\).
+		\item Local vertical context from a masked input convolution over \((r{-}1, c{-}1)\), \((r{-}1, c)\), and \((r{-}1, c{+}1)\).
+	\end{itemize}
+	\item As can be seen, there is \emph{no direct access} to earlier pixels in the same row \((r, c')\) where \(c' < c\),
+\end{itemize}
+
+\noindent
+This leads to a \textbf{triangular receptive field}: vertical context grows naturally with each added LSTM layer, but horizontal context is only indirectly integrated through additional depth. As a result, capturing dependencies across wide spatial extents — particularly horizontally — requires stacking a lot of layers, leading to inefficient deep models.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Chapter_19/receptive_fields_pixel_recurrent_networks.jpg}
+	\caption{Receptive fields in autoregressive image models. 
+		\textbf{Left:} PixelCNN has a local receptive field due to its stack of masked convolutions, resulting in blind spots—e.g., diagonally adjacent pixels that are not accessible. 
+		\textbf{Middle:} Row LSTM expands vertical context using a recurrent connection from the row above combined with a masked input convolution, but forms a \emph{triangular} receptive field: pixels in the same row (e.g., $(r,c{-}1)$) are not incorporated into $(r,c)$. 
+		\textbf{Right:} Diagonal BiLSTM processes pixels along diagonals (constant $r + c$), with bidirectional recurrence. This provides more complete spatial coverage by allowing information to flow across both horizontal and vertical directions simultaneously. 
+		Figure adapted from \cite{oord2016_pixernn}.}
+	\label{fig:chapter19_receptive_field_comparison}
+\end{figure}
+
+\paragraph{Looking Ahead}
+
+\noindent
+To overcome this asymmetry, the \textbf{Diagonal BiLSTM} variant (explored next) modifies the recurrence pattern to follow image diagonals. This enables more balanced 2D coverage in a single layer — expanding the receptive field in both directions more efficiently.
+
+\newpage
+\subsubsection{Diagonal BiLSTM}
+\label{chapter19_subsubsec:diagonal_bilstm}
+
+\noindent
+The \textbf{Diagonal BiLSTM} improves upon Row LSTM by enabling a more balanced two-dimensional receptive field. It generates the image one diagonal at a time, where each diagonal satisfies the condition \( r + c = \text{const} \), and allows for recurrence to flow in both horizontal and vertical directions simultaneously.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/diagonal_generation_using_bilstm.jpg}
+	\caption{Pixel generation proceeds along diagonals \(r + c = \text{const}\), allowing concurrent computation across a diagonal. Here shown the left-to-right direction only. Adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_diagonal_generation}
+\end{figure}
+
+\paragraph{Skewing the Input for Diagonal Convolutions}
+
+\noindent
+To make diagonal processing efficient, the input map is first \textbf{skewed}: each row is offset by one position to the right relative to the row above. This transformation converts the original \(n \times n\) input into a skewed map of size \(n \times (2n - 1)\), where each column now corresponds to a diagonal in the original image. This alignment enables the application of vertical convolutions to operate directly along the diagonals.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/skew_bilstm.jpg}
+	\caption{Skewing the input aligns diagonal pixels vertically, allowing efficient convolution across diagonals. Adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_skewing}
+\end{figure}
+
+\paragraph{Causal Correction for Bidirectionality}
+
+\noindent
+Since the BiLSTM processes each diagonal in both directions (left-to-right and right-to-left), care must be taken to avoid violating the autoregressive constraint. A naive skewing of the right-to-left pass may accidentally use future pixels. To correct this, the left-to-right direction shifts up one additional row — ensuring that each pixel only accesses past pixels.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/ltr_skew.jpg}
+	\caption{Causal correction for bidirectional skewing. To prevent future access, one additional row is used for left-to-right propagation. Adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_ltr_skew}
+\end{figure}
+
+\paragraph{Convolutional LSTM Logic}
+
+\noindent
+Like other PixelRNN variants, the Diagonal BiLSTM uses a \textbf{convolutional LSTM} (ConvLSTM) core to maintain spatial structure across layers. Unlike standard LSTMs that flatten the input and operate on one sequence at a time, ConvLSTMs replace fully connected operations with convolutions, enabling structured computation over 2D feature maps.
+
+\medskip
+
+\noindent
+In the Diagonal BiLSTM, each hidden and cell state corresponds to a diagonal in the image, indexed by \( d = r + c \). At each time step, the model computes the next diagonal by updating all pixels along that diagonal concurrently. This is possible due to the skewed spatial representation, which aligns the necessary context pixels (e.g., \( (r{-}1, c) \) and \( (r, c{-}1) \)) into the same column, allowing convolutions to operate efficiently across diagonals.
+
+\medskip
+
+\noindent
+The input-to-state contribution is computed with a shared \(1 \times 1\) convolution applied to the current skewed input diagonal \( \mathbf{x}_d \) (a feature map containing all pixel embeddings for the current diagonal):
+
+\[
+\mathbf{K}^{is} \circledast \mathbf{x}_d
+\]
+
+\noindent
+This produces a \(4h \times w\) tensor that contributes to all four LSTM gates.
+
+\medskip
+
+\noindent
+The state-to-state recurrence gathers information from both directions — left-to-right and right-to-left — using two independent \(2 \times 1\) convolutions applied to the hidden states of the previous diagonal from each direction:
+
+\[
+[\mathbf{o}_d, \mathbf{f}_d, \mathbf{i}_d, \mathbf{g}_d] = 
+\sigma\left(
+\mathbf{K}^{ss}_{\text{left}} \circledast \mathbf{h}_{d-1}^{\text{left}} +
+\mathbf{K}^{ss}_{\text{right}} \circledast \mathbf{h}_{d-1}^{\text{right}} +
+\mathbf{K}^{is} \circledast \mathbf{x}_d
+\right)
+\]
+
+\noindent
+Here, \( \sigma \) represents the gate-wise nonlinearity: a logistic sigmoid for the output \( \mathbf{o}_d \), forget \( \mathbf{f}_d \), and input \( \mathbf{i}_d \) gates, and a \(\tanh\) activation for the candidate update \( \mathbf{g}_d \).
+
+\medskip
+
+\noindent
+The cell and hidden states are then updated elementwise at each spatial location (i.e., for each pixel in the diagonal):
+
+\[
+\mathbf{c}_d = \mathbf{f}_d \odot \mathbf{c}_{d-1} + \mathbf{i}_d \odot \mathbf{g}_d, \quad
+\mathbf{h}_d = \mathbf{o}_d \odot \tanh(\mathbf{c}_d)
+\]
+
+\noindent
+After computing the hidden states for the current diagonal in both directions, the outputs are un-skewed and merged. To maintain causality and prevent future pixel leakage, as previously mentioned, the output from the right-to-left stream is \textbf{shifted down by one row} before summing with the left-to-right output. This fusion ensures that every pixel prediction only depends on already generated pixels, even in the bidirectional setup.
+
+\medskip
+
+\noindent
+This diagonal ConvLSTM computation preserves autoregressive ordering while allowing each pixel to integrate spatial context from both directions more effectively than PixelCNN or Row LSTM.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/bilstm_state_to_state.jpg}
+	\caption{Each diagonal’s hidden state combines features from both directions. The final output merges both flows after causal correction. Adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_bilstm_state_merge}
+\end{figure}
+
+\paragraph{Why Diagonal BiLSTM is the Most Expressive Variant}
+
+\noindent
+The Diagonal BiLSTM achieves the \textbf{most complete and balanced receptive field} of all previously examined 'Pixel Recurrent Neural Network' variants. Each pixel receives contextual information from both left and above — including long-range dependencies — within a single recurrent layer. This stands in contrast to the Row LSTM, which requires multiple stacked layers to build vertical context and cannot capture same-row dependencies directly.
+
+\noindent
+Additionally, by computing entire diagonals at once, Diagonal BiLSTM supports partial parallelization during both training and inference — though it is still not significantly faster than Row LSTM in practice due to the complexity of skewing, bidirectional processing, and state fusion.
+
+\paragraph{Residual Connections in PixelRNNs}
+
+\noindent
+Training deep autoregressive models can be challenging due to vanishing gradients and poor signal propagation across layers. To address this, the authors of \textbf{PixelRNN} adopt \textbf{residual connections}~\cite{he2016_resnet} between consecutive LSTM layers — particularly crucial for networks with up to 12 recurrent layers.
+
+\medskip
+
+\noindent
+In the case of the multi-layered \textbf{Row LSTM} or \textbf{Diagonal BiLSTM}, each LSTM layer produces an output feature map of dimensionality \( h \), corresponding to the number of hidden units per gate. To form a residual connection, this output is first projected back to the original dimensionality (\( 2h \)) using a \( 1 \times 1 \) convolution. It is then added elementwise to the input feature map of that layer, which also has \( 2h \) channels. This addition encourages stable gradient flow and improves convergence speed without requiring additional gating mechanisms.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/residual_connections.jpg}
+	\caption{Residual blocks for a PixelCNN (left) and a PixelRNN variant (right). In PixelRNN, the output of the LSTM layer is projected back to the input dimension (2h) using a \(1 \times 1\) convolution before being added to the input map. Figure adapted from \cite{oord2016_pixernn}.}
+	\label{fig:chapter19_residual_connections}
+\end{figure}
+
+\noindent
+This structure is illustrated in \autoref{fig:chapter19_residual_connections}, where the right panel shows the LSTM residual block. The residual connection enables the network to learn incremental refinements over previous layers, preserving useful representations while allowing deeper architectures to be trained effectively.
+
+\medskip
+
+\noindent
+Although the paper also explores \textbf{learnable skip connections} from intermediate layers to the final output, residual connections between layers are shown to be more effective and simpler to implement.
+
+\paragraph{Looking Ahead}
+
+\noindent
+In summary, Diagonal BiLSTM provides the most expressive spatial modeling capacity among the PixelRNN variants. It avoids both the blind spots of PixelCNN and the triangular receptive field of Row LSTM, delivering strong generative performance through bidirectional diagonal context aggregation. However, its benefits come at the cost of implementation complexity. 
+
+\medskip
+
+\noindent
+In the next part, we turn to the final variant proposed in the original PixelRNN paper: the \textbf{Multi-Scale PixelRNN}. This architecture introduces a coarse-to-fine generation strategy, where a low-resolution image is modeled first and then refined at higher resolutions. This approach aims to improve the sample quality, especially for larger images.
+
+\newpage
+\subsubsection{Multi-Scale PixelRNN}
+\label{chapter19_subsubsec:multiscale_pixelrnn}
+
+\noindent
+The \textbf{Multi-Scale PixelRNN} is a hierarchical extension of the standard PixelRNN framework designed to improve image coherence and scalability. Instead of generating the entire high-resolution image from scratch, it first constructs a smaller version of the image to capture global structure, and then conditions the full-resolution generation on that coarse output. This two-stage process allows the model to simultaneously capture \textbf{global layout} and \textbf{local fine details}, making it especially useful for larger or more structured images.
+
+\paragraph{Two-Stage Architecture}
+
+\noindent
+The model comprises two PixelRNNs working in sequence:
+
+\begin{itemize}
+	\item \textbf{Unconditional PixelRNN (coarse stage):} This stage generates a downsampled version of the target image (e.g., \(s \times s\), where \(s = n/2\)). It processes the smaller canvas directly using the standard PixelRNN pipeline (e.g., using Diagonal BiLSTM blocks), without any conditioning — hence "unconditional." The generation proceeds in raster order, predicting each pixel and channel sequentially. Since the resolution is lower, this stage more easily captures long-range dependencies and global structure.
+	
+	\item \textbf{Conditional PixelRNN (refinement stage):} This second stage generates the final full-resolution \(n \times n\) image. It is conditioned on the smaller image from the first stage, which is upsampled and used to guide generation. Each layer in this stage incorporates coarse features from the earlier stage into its computations. The architecture is structurally similar to the unconditional PixelRNN but includes conditioning at every layer.
+\end{itemize}
+
+\paragraph{Conditioning via Upsampling and Biasing}
+
+\noindent
+Once the coarse \(s \times s\) image is generated by the unconditional PixelRNN, it is passed through a separate \textbf{upsampling network} — typically a convolutional decoder with deconvolution (transpose convolution) layers \ref{chapter15_subsec:transposed_convolution}. This produces a dense feature map of shape \(c \times n \times n\), where \(c\) is the number of conditioning channels, and \(n \times n\) is the size of the target high-resolution image.
+
+\medskip
+
+\noindent
+This upsampled map contains semantic cues from the coarse image — such as the global structure, object placement, or layout — and is used to inform every layer of the high-resolution PixelRNN. Specifically, this information is injected into the model via a \textbf{learned bias term} added to the input-to-state convolution of each LSTM layer.
+
+\medskip
+
+\noindent
+Formally, for each LSTM layer in the conditional PixelRNN, we compute the input-to-state activations as:
+
+\[
+\mathbf{K}^{is} \ast \mathbf{x}_i \; + \; \mathbf{K}^{cond} \ast \mathbf{c}_{\text{up}},
+\]
+
+\noindent
+where:
+\begin{itemize}
+	\item \(\mathbf{x}_i\) is the current input map (from the previous layer).
+	\item \(\mathbf{K}^{is}\) is the convolution kernel used in the input-to-state path.
+	\item \(\mathbf{c}_{\text{up}} \in \mathbb{R}^{c \times n \times n}\) is the upsampled coarse image.
+	\item \(\mathbf{K}^{cond}\) is a learned \(1 \times 1\) unmasked convolution that transforms the conditioning map to match the LSTM gate dimensionality.
+\end{itemize}
+
+\noindent
+The term \(\mathbf{K}^{cond} \ast \mathbf{c}_{\text{up}}\) produces a \(4h \times n \times n\) tensor — a learned additive \textbf{bias} that is broadcast to each of the four gate computations (input, forget, output, and candidate).
+
+\medskip
+
+\noindent
+This bias can be interpreted as a global signal that nudges the LSTM gates to behave differently based on the coarse context. Unlike standard LSTM biases (which are scalar or position-independent), this one is \emph{spatially aware}, varying per pixel across the high-resolution canvas.
+
+\medskip
+
+\noindent
+The rest of the LSTM computation (including the \textbf{state-to-state} transition via \(\mathbf{K}^{ss} \ast \mathbf{h}_{i-1}\), e.g., with a \(2 \times 1\) convolution in Diagonal BiLSTM) proceeds as usual, preserving the autoregressive nature. Importantly, this conditioning bias \emph{does not leak future information} — the entire coarse image is generated beforehand and treated as known input.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/multi_scale_pixelrnn.jpg}
+	\caption{Multi-Scale PixelRNN architecture. A small \(s \times s\) image is first generated by an unconditional PixelRNN. It is then upsampled and used to condition a second, full-resolution PixelRNN that generates an \(n \times n\) image. Figure adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_multiscale_pixelrnn}
+\end{figure}
+
+\paragraph{Why Multi-Scale Helps}
+
+\noindent
+The Multi-Scale design helps the model capture both \textbf{global and local structure} more effectively:
+\begin{itemize}
+	\item The unconditional small-scale model captures the coarse spatial layout (e.g., object location, composition, symmetry).
+	\item The conditional high-resolution model refines local texture and detail, using both autoregressive recurrence and the global information injected via upsampling.
+\end{itemize}
+
+\noindent
+Importantly, this conditioning does not violate the autoregressive property: since the entire low-resolution image is generated before the high-resolution image begins, all conditioning information is "in the past".
+
+\paragraph{Trade-Offs and Usage}
+
+\noindent
+While Multi-Scale PixelRNN does not drastically accelerate inference (as each pixel is still sampled sequentially), it improves image \textbf{quality and coherence} — particularly for datasets requiring large receptive fields or hierarchical structure. It also scales more gracefully to higher resolutions without requiring excessively deep stacks of recurrent layers.
+
+\subsubsection{Results and Qualitative Samples}
+\label{chapter19_subsubsec:pixelrnn_results}
+
+\noindent
+The original \textbf{PixelRNN} models were evaluated on a range of image generation tasks, including CIFAR-10 and downsampled ImageNet (\(32 \times 32\)). While the models do not generate high-resolution, photorealistic images, they nevertheless produce surprisingly coherent samples — especially considering the strong autoregressive constraints and lack of global conditioning.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_60.jpg}
+	\caption{Samples from PixelRNN models. Left: generated CIFAR-10 images. Right: samples from a model trained on downsampled ImageNet (\(32 \times 32\)). While not photorealistic, and making total sense, the images exhibit semantic structure such as edges, object boundaries, and coherent color regions. Figure adapted from \cite{lebanoff2018_pixelrnn}.}
+	\label{fig:chapter19_pixelrnn_results}
+\end{figure}
+
+\noindent
+Although the generated samples may appear noisy or unrealistic upon close inspection, they demonstrate that the model learns to represent:
+\begin{itemize}
+	\item \textbf{Global layout}: objects appear spatially coherent and exhibit structure consistent with real scenes.
+	\item \textbf{Texture and color dependencies}: color patterns and edge continuity are preserved across adjacent pixels.
+	\item \textbf{Class-aware priors (implicitly)}: despite not being trained with labels, the samples often reflect common object categories (e.g., animals, vehicles).
+\end{itemize}
+
+\noindent
+However, these results also highlight the limits of early autoregressive models:
+\begin{itemize}
+	\item The images often lack \textbf{fine detail} and appear \textbf{blurry or ambiguous} when zoomed in.
+	\item The generation process is \textbf{slow and sequential}, limiting scalability to higher resolutions.
+\end{itemize}
+These limitations inspire us to proceed towards more advanced autoregressive solutions, and other generative approaches like VAEs. 
+
+\begin{enrichment}[Beyond PixelRNN: Advanced Autoregressive Variants][subsubsection]
+	\label{chapter19_enr:beyond_pixelrnn}
+	
+	\noindent
+	The \textbf{PixelRNN} framework helped spark a wave of progress in autoregressive image modeling. While the original LSTM-based variants are no longer widely used in practice, their architectural principles — including autoregressive factorization, masked computation, and spatial dependency modeling — have influenced a series of more powerful and scalable successors.
+	
+	\paragraph{Gated PixelCNN}  
+	To overcome the blind spots and limited nonlinearity of the original PixelCNN \cite{oord2016_pixernn}, this variant introduces a \textbf{gated activation unit} that replaces ReLU with:
+	\[
+	\mathbf{y} = \tanh(\mathbf{W}_f * \mathbf{x}) \odot \sigma(\mathbf{W}_g * \mathbf{x})
+	\]
+	Additionally, Gated PixelCNN decomposes masked convolutions into \textbf{horizontal} and \textbf{vertical stacks}, improving coverage of spatial context. This design eliminates blind spots entirely while retaining the convolutional efficiency of PixelCNNs. Hence, it produces significantly higher-quality samples.
+	
+	\paragraph{PixelCNN++}  
+	PixelCNN++ \cite{salimans2017_pixelcnnpp} builds on Gated PixelCNN with a series of enhancements that make the model more stable and expressive:
+	\begin{itemize}
+		\item It replaces discrete softmax likelihoods with \textbf{discretized logistic mixture models}, offering a better fit to natural image statistics.
+		\item It incorporates \textbf{residual connections}, \textbf{downsampling} to ease training and expand receptive field coverage.
+		\item It achieves state-of-the-art log-likelihood performance on CIFAR-10 and other benchmarks using a purely likelihood-based objective.
+	\end{itemize}
+	
+	\paragraph{ImageGPT}  
+	ImageGPT \cite{chen2020_imagegpt} extends autoregressive modeling to the Transformer era. Inspired by the success of GPT in NLP, it represents images as sequences of discrete tokens and applies a standard GPT-like transformer architecture. Key contributions include:
+	\begin{itemize}
+		\item Leveraging \textbf{self-attention} to scale to high-resolution images.
+		\item Enabling \textbf{unsupervised pretraining for vision}, which can be transferred to classification and other tasks.
+		\item Demonstrating that \textbf{language and vision} can be unified under a shared autoregressive modeling framework.
+	\end{itemize}
+	This marked the transition from convolutional pixel models to token-based models and laid the groundwork for later developments in vision-language pretraining and generative transformers.
+	
+	\medskip
+	
+	\noindent
+	Together, these successors illustrate the enduring legacy of PixelRNN: they extend its autoregressive structure to broader modeling tools and continue to inspire state-of-the-art generative architectures in both vision and multimodal settings.
+	
+\end{enrichment}
+
+\newpage
+\paragraph{Looking Ahead: From Autoregressive Models to VAEs}
+
+\noindent
+Autoregressive models like PixelCNN, PixelRNN, and their successors have demonstrated impressive results in modeling the distribution of natural images. One of their most important properties is that they provide an \textbf{exact and tractable log-likelihood}: they explicitly decompose the joint distribution over all pixels as a product of conditional probabilities,
+\[
+p(\mathbf{x}) = \prod_{i=1}^{H \times W} p(x_i \mid x_{<i}),
+\]
+where \(x_i\) is the \(i\)-th pixel (or channel), and \(x_{<i}\) are all preceding ones in raster scan order.
+
+\medskip
+
+\noindent
+During training, the model is optimized to maximize the log-likelihood of the training data. At \textbf{test time}, we evaluate the model's generalization ability by computing the log-likelihood (or negative log-likelihood loss) on unseen test images. Since the test image is fully observed, we can evaluate each conditional term in the product by feeding the ground truth values from earlier pixels as inputs — this is often called \emph{teacher forcing}. The result is a scalar log-likelihood score for each image that reflects how probable the model thinks the image is under its learned distribution.
+
+\medskip
+
+\noindent
+This provides a principled, quantitative way to compare generative models: if a model assigns high log-likelihood to unseen test data, it has effectively captured the data distribution. Unlike GANs — which lack a normalized likelihood — or VAEs — which require variational approximations — autoregressive models allow \textbf{exact density evaluation}, making them especially valuable for tasks that prioritize likelihood modeling or anomaly detection.
+
+\medskip
+
+\noindent
+However, this modeling strength comes at a steep computational cost. Since pixels are generated sequentially, sampling from autoregressive models is inherently \textbf{slow} — even with optimized transformer-based variants like ImageGPT. For high-resolution images (e.g., \(256 \times 256\)), generation may require tens of thousands of steps. Transformer-based solutions try to parallelize attention computations but still suffer from a quadratic time and memory complexity due to self-attention over long sequences.
+
+\medskip
+
+\noindent
+Moreover, these models (particularly the LSTM-based variants like Row LSTM and Diagonal BiLSTM) are typically trained for a fixed spatial resolution. Their row- and column-specific processing means they are not trivially transferable to new resolutions or arbitrary-shaped inputs — making them inflexible for practical tasks like texture synthesis, super-resolution, or image inpainting without significant architectural modification.
+
+\medskip
+
+\noindent
+While we briefly mentioned the idea of conditional generation (e.g., Multi-Scale PixelRNNs), most of our discussion so far has centered on \textbf{unconditional} generation. In practice, controlling the generation process — for example, generating digits of a specific class or translating sketches into realistic images — often requires conditioning the model on external inputs. Conditional extensions of autoregressive models exist, but they further increase the architectural and computational complexity.
+
+\medskip
+
+\noindent
+These limitations motivate the development of alternative approaches. In the next section, we turn to \textbf{Variational Autoencoders (VAEs)}, a powerful class of latent variable models that combine tractable training objectives with faster, feedforward sampling and inference. Unlike autoregressive models that operate directly in pixel space, VAEs learn a low-dimensional latent representation of images, enabling global control and efficient generation while still preserving a principled probabilistic foundation.
+
+\section{Variational Autoencoders (VAEs)}
+\label{chapter19:vae_intro}
+
+\noindent
+To address autoregressive models shortcomings, we now turn to a different family of models: \textbf{Variational Autoencoders (VAEs)}. Unlike autoregressive models, VAEs define a joint density over observed data \(\mathbf{x}\) and latent variables \(\mathbf{z}\), but this density is typically \textit{intractable to compute or optimize directly}. Instead, VAEs derive and maximize a tractable \textbf{lower bound} on the marginal log-likelihood of the data. By optimizing this lower bound (the ELBO), we hope to increase the true likelihood as well — even if it cannot be evaluated exactly.
+
+\medskip
+
+\noindent
+Before diving into the variational formulation, we briefly introduce standard (non-variational) autoencoders to set the stage.
+
+\subsection{Regular (Non-Variational) Autoencoders}
+\label{chapter19_subsec:regular_autoencoders}
+
+\noindent
+Autoencoders are an unsupervised learning approach designed to extract useful features (latent codes) from raw data — in our case, images. The architecture consists of two main components:
+\begin{itemize}
+	\item An \textbf{encoder} \( f_{\theta}(\mathbf{x}) \): maps the input image \( \mathbf{x} \) to a lower-dimensional feature representation \( \mathbf{z} \).
+	\item A \textbf{decoder} \( g_{\phi}(\mathbf{z}) \): attempts to reconstruct the original input \( \hat{\mathbf{x}} = g_{\phi}(f_{\theta}(\mathbf{x})) \).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_70.jpg}
+	\caption{Autoencoder training: the model learns to reconstruct the input image by minimizing an \(\ell_2\) loss between the original image \( \mathbf{x} \) and its reconstruction \( \hat{\mathbf{x}} \). This process requires no labels.}
+	\label{fig:chapter19_autoencoder_l2loss}
+\end{figure}
+
+\noindent
+Training is unsupervised: we minimize the reconstruction loss (typically mean squared error):
+\[
+\mathcal{L}_{\text{AE}}(\mathbf{x}) = \| \mathbf{x} - g_{\phi}(f_{\theta}(\mathbf{x})) \|^2
+\]
+The encoder must compress the input into a bottleneck representation \( \mathbf{z} \), forcing it to retain only the most salient features.
+
+\paragraph{Usage in Transfer Learning}
+After training, the decoder is often discarded. The encoder can be repurposed to extract features for downstream tasks (e.g., classification, segmentation), often with fine-tuning on a small labeled dataset.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_72.jpg}
+	\caption{Autoencoders can be used as a pretraining mechanism. After unsupervised training, the encoder is repurposed for a downstream supervised task.}
+	\label{fig:chapter19_autoencoder_pretrain}
+\end{figure}
+
+\paragraph{Architecture Patterns}
+Autoencoders typically follow an \textbf{encoder-decoder architecture}, where:
+\begin{itemize}
+	\item The encoder downsamples the input using strided convolutions, pooling layers, or other operations to produce a latent code \( \mathbf{z} \).
+	\item The decoder upsamples \( \mathbf{z} \) using transposed convolutions, interpolation layers, or learned upsampling blocks to recover the original input resolution.
+\end{itemize}
+
+\noindent
+Importantly, \textbf{there are no strict architectural requirements} for either component: both the encoder and decoder can be implemented using convolutional neural networks (CNNs) with ReLU activations, Transformer blocks, MLPs, or any other differentiable function class. While the encoder and decoder often mirror each other structurally, this is not required and often depends on the task and data modality.
+
+\paragraph{Limitations of Vanilla Autoencoders}
+While intuitive and easy to implement, regular autoencoders suffer from two significant drawbacks:
+\begin{enumerate}
+	\item \textbf{Limited generative capability:} These models are not probabilistic — they learn deterministic mappings and cannot generate new samples from a learned distribution.
+	\item \textbf{Limited success in practice:} Despite their potential, regular autoencoders rarely achieve state-of-the-art results in unsupervised representation learning or generative modeling.
+\end{enumerate}
+
+\noindent
+To address these limitations, we now turn to a probabilistic extension: the \textbf{Variational Autoencoder (VAE)} — a model that will hopefully won't only learn compact and meaningful latent representations but will also enable sampling of novel, coherent outputs from the learned distribution.
+
+\newpage
+\subsection{Introducing the VAE}  
+\label{chapter19_subsubsec:intro_vae}
+
+\paragraph{Core Goals}  
+Variational Autoencoders aim to combine representation learning and generative modeling. Their objectives are:
+
+\begin{enumerate}
+	\item Learn a low-dimensional latent representation \( \mathbf{z} \) from input data \( \mathbf{x} \), useful for downstream tasks or interpolation.
+	\item Generate new data by sampling from a learned conditional distribution \( p_\theta(\mathbf{x} \mid \mathbf{z}) \), where \( \mathbf{z} \sim p(\mathbf{z}) \).
+\end{enumerate}
+
+\paragraph{Why a Latent Variable Model?}  
+
+\noindent
+We assume that observed data \( \mathbf{x} \in \mathbb{R}^{D} \) (e.g., an image) is generated by an underlying, lower-dimensional latent representation \( \mathbf{z} \in \mathbb{R}^{n} \) that captures explanatory factors such as object identity, shape, pose, or illumination. While these latent factors are unobserved, our goal is to learn them by modeling the generative process:
+
+\begin{itemize}
+	\item \textbf{Sample latent code:} \( \mathbf{z} \sim p(\mathbf{z}) \), where the prior is typically chosen to be a unit Gaussian: 
+	\[
+	p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbf{I})
+	\]
+	This choice is not mandatory but is widely adopted because it offers several desirable properties:
+	\begin{itemize}
+		\item It is \textbf{simple and tractable} — sampling is easy and the probability density is known in closed form.
+		\item It defines a \textbf{smooth and isotropic} latent space where no direction is privileged over others — this encourages generalization and prevents the model from overfitting to specific directions or dimensions.
+		\item It \textbf{concentrates mass near the origin}, providing a compact space where most useful codes lie within a reasonable range. This allows us to sample \( \mathbf{z} \)'s that are likely to produce valid outputs even if we never saw them during training.
+		\item It encourages \textbf{semantic organization of the latent space}: because the Gaussian prior distributes latent codes smoothly around the origin, interpolating between two latent vectors (e.g., two images of different digits or faces) typically produces meaningful transitions in the output space — such as morphing one digit into another or blending facial attributes — rather than generating noisy or unrealistic images.
+	\end{itemize}
+	
+	\item \textbf{Generate image:} \( \mathbf{x} \sim p_\theta(\mathbf{x} \mid \mathbf{z}) \), where the decoder is a neural network that defines a probability distribution over images conditioned on \( \mathbf{z} \).
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_79.jpg}
+	\caption{Sampling from a trained VAE: draw latent code \( \mathbf{z} \sim p(\mathbf{z}) \), then decode it to produce a sample \( \mathbf{x} \sim p_\theta(\mathbf{x} \mid \mathbf{z}) \).}
+	\label{fig:chapter19_vae_sampling}
+\end{figure}
+
+\paragraph{Probabilistic Decoder}  
+Unlike standard autoencoders, which reconstruct a deterministic output image, VAEs treat the decoder as a conditional distribution. For example, we assume that:
+\[
+p_\theta(\mathbf{x} \mid \mathbf{z}) = \mathcal{N}\big(\boldsymbol{\mu}_\theta(\mathbf{z}), \operatorname{diag}(\boldsymbol{\sigma}^2_\theta(\mathbf{z}))\big)
+\]
+That is, the decoder outputs the parameters (mean and variance) of a Gaussian distribution over all pixels. This enables stochastic sampling of images given a latent code.
+
+\begin{itemize}
+	\item \( \boldsymbol{\mu}_\theta(\mathbf{z}) \in \mathbb{R}^{D} \): predicted mean per pixel.
+	\item \( \boldsymbol{\sigma}^2_\theta(\mathbf{z}) \in \mathbb{R}^{D} \): predicted variance per pixel.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_80.jpg}
+	\caption{The decoder is probabilistic: it outputs per-pixel means and variances, which define a diagonal Gaussian distribution over the image space conditioned on \( \mathbf{z} \).}
+	\label{fig:chapter19_decoder_probabilistic}
+\end{figure}
+
+\paragraph{Why Not a Full Covariance Matrix?}  
+In theory, one could let the decoder model a full Gaussian distribution with covariance matrix \( \boldsymbol{\Sigma}_\theta \in \mathbb{R}^{D \times D} \), allowing pixel-wise correlations to be captured:
+\[
+p_\theta(\mathbf{x} \mid \mathbf{z}) = \mathcal{N}(\boldsymbol{\mu}_\theta(\mathbf{z}), \boldsymbol{\Sigma}_\theta(\mathbf{z}))
+\]
+But for large images, this is computationally infeasible:
+\begin{itemize}
+	\item For a \(512 \times 512\) grayscale image, the covariance matrix has \( \sim 2.6 \times 10^5 \) rows and columns.
+	\item The decoder would have to predict \( \sim 7 \times 10^{10} \) values per image — impractical for storage, learning, and sampling.
+\end{itemize}
+
+\paragraph{Diagonal Assumption and Trade-Offs}  
+To sidestep this, VAEs typically assume the pixels are conditionally independent given \( \mathbf{z} \), leading to a factorized Gaussian:
+\[
+p_\theta(\mathbf{x} \mid \mathbf{z}) = \prod_{i=1}^{D} \mathcal{N}(x_i \mid \mu_i(\mathbf{z}), \sigma_i^2(\mathbf{z}))
+\]
+This drastically simplifies computation and keeps the number of predicted values manageable (just two scalars per pixel). However, it introduces limitations:
+\begin{itemize}
+	\item \textbf{No modeling of pixel-wise correlations:} patterns like edges, textures, and fine structures are only captured via the mean; their co-dependence across space is lost.
+	\item \textbf{Blurry outputs:} the model often predicts an average over multiple plausible outcomes, especially when uncertainty is high.
+\end{itemize}
+
+\paragraph{Marginal Likelihood: What We Want to Optimize}  
+Given a dataset \( \mathcal{D} = \{\mathbf{x}^{(i)}\}_{i=1}^N \), our objective is to train a model \( p_\theta(\mathbf{x}) \) that approximates the true data distribution \( p^*(\mathbf{x}) \). We do so by maximizing the marginal likelihood of each training example \( \mathbf{x} \in \mathcal{D} \):
+
+\[
+p_\theta(\mathbf{x}) = \int p_\theta(\mathbf{x}, \mathbf{z}) \, d\mathbf{z} = \int p_\theta(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z}) \, d\mathbf{z}
+\]
+
+\noindent
+This integral marginalizes out the latent variable \( \mathbf{z} \), summing over all the possible latent codes that could have generated \( \mathbf{x} \). Both terms in the integrand are tractable:
+\begin{itemize}
+	\item \( p(\mathbf{z}) \) is a known prior, typically a standard Gaussian.
+	\item \( p_\theta(\mathbf{x} \mid \mathbf{z}) \) is parameterized by a neural network decoder, and easy to evaluate for a given \( \mathbf{z} \).
+\end{itemize}
+
+\noindent
+\textbf{The problem is not computing each term, but evaluating the integral as a whole.} The marginal likelihood \( p_\theta(\mathbf{x}) \) has no closed-form solution because the integral has no analytic form. Worse, it cannot be reliably estimated using standard numerical methods:
+
+\begin{itemize}
+	\item The latent variable \( \mathbf{z} \in \mathbb{R}^n \) is often high-dimensional (e.g., 64–512 dimensions).
+	\item Monte Carlo or quadrature methods would require exponentially many samples to accurately estimate the integral in high dimensions.
+\end{itemize}
+
+\medskip
+
+\noindent
+Yet, computing or at least maximizing \( p_\theta(\mathbf{x}) \) is essential for learning — we want our model to assign high likelihood to training examples \( \mathbf{x} \sim \mathcal{D} \). Ideally, we would like to compute \( \log p_\theta(\mathbf{x}) \) and take gradients with respect to \( \theta \) to perform gradient-based optimization. Sadly, we can't.
+
+\medskip
+
+\noindent
+\textbf{What can we do instead?}  
+Rather than trying to compute \( p_\theta(\mathbf{x}) \) directly, we take a Bayesian approach and introduce an auxiliary distribution — a learned approximation of the intractable posterior \( p_\theta(\mathbf{z} \mid \mathbf{x}) \). This leads us to define a variational lower bound on the log-likelihood, known as the \textbf{Evidence Lower Bound (ELBO)}, which we will derive next.
+
+\subsubsection{Training VAEs and Developing the ELBO}
+\label{chapter19_subsubsec:elbo_vae}
+
+\paragraph{The Role of Bayes' Rule}  
+Before deriving the VAE training objective, let’s revisit \textbf{Bayes’ Rule}:
+\[
+p(H \mid E) = \frac{p(H) \cdot p(E \mid H)}{p(E)}
+\]
+where:
+\begin{itemize}
+	\item \( H \) is the \emph{hypothesis} (e.g., a particular latent variable \( \mathbf{z} \)).
+	\item \( E \) is the \emph{evidence} (e.g., an observed image \( \mathbf{x} \)).
+	\item \( p(H) \) is the prior over hypotheses.
+	\item \( p(E \mid H) \) is the likelihood of observing the evidence if the hypothesis were true.
+	\item \( p(E) \) is the \emph{marginal likelihood} (also called the \emph{model evidence}) — the probability of observing the evidence under all possible hypotheses.
+\end{itemize}
+
+\noindent
+The quantity we want in our setting is the \textbf{posterior} \( p_\theta(\mathbf{z} \mid \mathbf{x}) \): the distribution over latent codes given an image. Using Bayes’ Rule:
+\[
+p_\theta(\mathbf{z} \mid \mathbf{x}) = \frac{p_\theta(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z})}{p_\theta(\mathbf{x})}
+\]
+
+\noindent
+Here:
+\begin{itemize}
+	\item The \emph{prior} \( p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbf{I}) \) is fixed and known.
+	\item The \emph{likelihood} \( p_\theta(\mathbf{x} \mid \mathbf{z}) \) is given by the decoder network.
+	\item The \emph{marginal likelihood} \( p_\theta(\mathbf{x}) = \int p_\theta(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z}) \, d\mathbf{z} \) is intractable to compute directly.
+\end{itemize}
+
+\paragraph{Why This Matters}  
+In principle, we could train the model by maximizing the log-likelihood \( \log p_\theta(\mathbf{x}) \). But since this term requires integrating over all possible latent codes \( \mathbf{z} \), it has no closed-form solution and cannot be efficiently approximated.
+
+\paragraph{Switching Objectives: Approximating the Posterior}  
+Instead of directly optimizing the marginal likelihood, we \emph{approximate the intractable posterior} \( p_\theta(\mathbf{z} \mid \mathbf{x}) \) using a \textbf{variational distribution} \( q_\phi(\mathbf{z} \mid \mathbf{x}) \), parameterized by a separate encoder network. This technique is called \emph{variational inference}.
+
+\noindent
+The encoder parameters \( \phi \) are shared across all data points, allowing the model to generalize to unseen inputs and efficiently amortize inference across the dataset.
+
+\paragraph{Rewriting the Log Likelihood}  
+We aim to derive a tractable lower bound on \( \log p_\theta(\mathbf{x}) \), the log marginal likelihood. Using Bayes' rule:
+
+\[
+\log p_\theta(\mathbf{x}) 
+= \log \left( \frac{p_\theta(\mathbf{x}, \mathbf{z})}{p_\theta(\mathbf{z} \mid \mathbf{x})} \right)
+= \log \left( \frac{p_\theta(\mathbf{x} \mid \mathbf{z}) p(\mathbf{z})}{p_\theta(\mathbf{z} \mid \mathbf{x})} \right)
+\]
+
+We now multiply both numerator and denominator by \( q_\phi(\mathbf{z} \mid \mathbf{x}) \), our learned approximation to the intractable posterior:
+\[
+\log p_\theta(\mathbf{x}) 
+= \log \left( \frac{p_\theta(\mathbf{x} \mid \mathbf{z}) p(\mathbf{z}) q_\phi(\mathbf{z} \mid \mathbf{x})}{p_\theta(\mathbf{z} \mid \mathbf{x}) q_\phi(\mathbf{z} \mid \mathbf{x})} \right)
+\]
+
+This transformation is valid because we multiply by the same positive quantity \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) in both the numerator and denominator, leaving the overall expression unchanged.
+
+\medskip
+
+\noindent
+We now apply logarithmic identities: 
+\[
+\log \frac{a \cdot b \cdot c}{d \cdot c} = \log a + \log b - \log d
+\]
+Here, \( a = p_\theta(\mathbf{x} \mid \mathbf{z}) \), \( b = p(\mathbf{z}) \), \( c = q_\phi(\mathbf{z} \mid \mathbf{x}) \), and \( d = p_\theta(\mathbf{z} \mid \mathbf{x}) \). So we can write:
+
+\[
+\log p_\theta(\mathbf{x}) 
+= \log p_\theta(\mathbf{x} \mid \mathbf{z}) + \log \frac{p(\mathbf{z})}{q_\phi(\mathbf{z} \mid \mathbf{x})} + \log \frac{q_\phi(\mathbf{z} \mid \mathbf{x})}{p_\theta(\mathbf{z} \mid \mathbf{x})}
+\]
+
+\noindent
+Now take the expectation of both sides with respect to \( \mathbf{z} \sim q_\phi(\mathbf{z} \mid \mathbf{x}) \). This is valid because the left-hand side does not depend on \( \mathbf{z} \), so its expectation is just the value itself:
+
+\[
+\log p_\theta(\mathbf{x}) 
+= \mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log p_\theta(\mathbf{x}) \right]
+\]
+
+\noindent
+Thus:
+
+\[
+\begin{aligned}
+	\log p_\theta(\mathbf{x}) 
+	&= \mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log p_\theta(\mathbf{x} \mid \mathbf{z}) \right]
+	+ \mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log \frac{p(\mathbf{z})}{q_\phi(\mathbf{z} \mid \mathbf{x})} \right]
+	+ \mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log \frac{q_\phi(\mathbf{z} \mid \mathbf{x})}{p_\theta(\mathbf{z} \mid \mathbf{x})} \right]
+\end{aligned}
+\]
+
+\noindent
+We now identify the last two terms as \textbf{KL divergences}:
+
+\begin{itemize}
+	\item The second term is the negative KL divergence between the encoder’s approximate posterior and the prior:
+	\[
+	\mathbb{E}_{q_\phi} \left[ \log \frac{p(\mathbf{z})}{q_\phi(\mathbf{z} \mid \mathbf{x})} \right]
+	= -D_{\mathrm{KL}} \left(q_\phi(\mathbf{z} \mid \mathbf{x}) \; \| \; p(\mathbf{z}) \right)
+	\]
+	
+	\item The third term is the KL divergence between the encoder and the true posterior:
+	\[
+	\mathbb{E}_{q_\phi} \left[ \log \frac{q_\phi(\mathbf{z} \mid \mathbf{x})}{p_\theta(\mathbf{z} \mid \mathbf{x})} \right]
+	= D_{\mathrm{KL}} \left(q_\phi(\mathbf{z} \mid \mathbf{x}) \; \| \; p_\theta(\mathbf{z} \mid \mathbf{x}) \right)
+	\]
+\end{itemize}
+
+\noindent
+Putting everything together, we can now rewrite the log-likelihood as:
+
+\[
+\log p_\theta(\mathbf{x}) = 
+\underbrace{\mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log p_\theta(\mathbf{x} \mid \mathbf{z}) \right]}_{\text{Data Reconstruction}} 
+- \underbrace{D_{\mathrm{KL}} \left(q_\phi(\mathbf{z} \mid \mathbf{x}) \, \| \, p(\mathbf{z}) \right)}_{\text{Prior Regularization}} 
++ \underbrace{D_{\mathrm{KL}} \left(q_\phi(\mathbf{z} \mid \mathbf{x}) \, \| \, p_\theta(\mathbf{z} \mid \mathbf{x}) \right)}_{\text{Approximation Gap}}
+\]
+
+\noindent
+The final KL term — which we call the \textbf{approximation gap} — measures how far the variational distribution \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) is from the true posterior \( p_\theta(\mathbf{z} \mid \mathbf{x}) \). Unfortunately, since this true posterior is intractable (due to the marginal likelihood \( p_\theta(\mathbf{x}) \) in its denominator), we \emph{cannot compute or minimize this term directly}.
+
+\medskip
+
+\noindent
+In contrast, the first two terms are both \textbf{tractable}:
+\begin{itemize}
+	\item The reconstruction term involves evaluating \( \log p_\theta(\mathbf{x} \mid \mathbf{z}) \), which the decoder provides — and its expectation over \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) can be approximated with samples from the encoder.
+	\item The KL divergence between \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) and the prior \( p(\mathbf{z}) \) is analytic for many standard choices (e.g., Gaussian).
+\end{itemize}
+
+\noindent
+Because the approximation gap is always non-negative, we obtain a valid lower bound by \textbf{dropping} it:
+
+\[
+\log p_\theta(\mathbf{x}) \geq 
+\underbrace{\mathbb{E}_{\mathbf{z} \sim q_\phi} \left[ \log p_\theta(\mathbf{x} \mid \mathbf{z}) \right]}_{\text{Reconstruction Term}} 
+- \underbrace{D_{\mathrm{KL}} \left(q_\phi(\mathbf{z} \mid \mathbf{x}) \, \| \, p(\mathbf{z}) \right)}_{\text{KL Regularization}}
+\]
+
+\noindent
+This is known as the \textbf{Evidence Lower Bound (ELBO)}. It becomes our training objective in the VAE framework.
+
+\paragraph{Interpreting the ELBO}  
+The Evidence Lower Bound (ELBO) consists of two terms with complementary roles:
+
+\begin{itemize}
+	\item The \textbf{reconstruction term} 
+	\[ \mathbb{E}_{\mathbf{z} \sim q_\phi(\mathbf{z} \mid \mathbf{x})} \left[ \log p_\theta(\mathbf{x} \mid \mathbf{z}) \right] \]
+	encourages the decoder to accurately reconstruct the input image from the latent code. This ensures that \( \mathbf{z} \) captures meaningful information about \( \mathbf{x} \).
+	
+	\item The \textbf{KL divergence term} 
+	\[ D_{\mathrm{KL}}(q_\phi(\mathbf{z} \mid \mathbf{x}) \, \| \, p(\mathbf{z})) \]
+	acts as a regularizer, pushing the learned posterior \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) to stay close to the prior \( p(\mathbf{z}) \). This prevents the model from overfitting and encourages a smooth, continuous latent space.
+\end{itemize}
+
+\noindent
+Although the true marginal likelihood \( \log p_\theta(\mathbf{x}) \) is intractable, the ELBO provides a \textbf{tractable, differentiable objective} that we can efficiently optimize. We train the encoder and decoder jointly by maximizing this bound.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_19/slide_92.jpg}
+	\caption{VAE training: jointly optimize the encoder \( q_\phi(\mathbf{z} \mid \mathbf{x}) \) and decoder \( p_\theta(\mathbf{x} \mid \mathbf{z}) \) by maximizing the ELBO.}
+	\label{fig:chapter19_elbo_training}
+\end{figure}
+
+\noindent
+In the next chapter, we will explore how to make this optimization possible, and how VAEs compare to alternative generative modeling approaches like GANs.
+

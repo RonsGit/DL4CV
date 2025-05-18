@@ -1,4 +1,50 @@
-		# Compute attention mask: compare group IDs between tokens in each window
-		attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2)
-		attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0))
-		attn_mask = attn_mask.masked_fill(attn_mask == 0, float(0.0))
+			import torch
+			from tqdm import tqdm
+			
+			# Assumes the following are pre-initialized:
+			# - model: diffusion model (e.g., U-Net)
+			# - text_encoder: a frozen CLIP/T5-style encoder
+			# - tokenizer: matching tokenizer
+			# - scheduler: DDPM or DDIM scheduler with .step()
+			# - guidance_scale: e.g., 7.5
+			# - H, W: image dimensions (e.g., 64x64)
+			
+			# Step 1: Define prompt(s)
+			prompts = ["a photo of a dog"]  # List of text prompts
+			batch_size = len(prompts)
+			device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+			
+			# Step 2: Tokenize conditional and unconditional prompts
+			cond_tokens = tokenizer(prompts, padding=True, return_tensors="pt")
+			uncond_tokens = tokenizer([""] * batch_size, padding=True, return_tensors="pt")
+			
+			# Step 3: Encode prompts into embeddings
+			text_cond = text_encoder(
+			input_ids=cond_tokens.input_ids.to(device),
+			attention_mask=cond_tokens.attention_mask.to(device)
+			).last_hidden_state  # Shape: (B, T, D)
+			
+			text_uncond = text_encoder(
+			input_ids=uncond_tokens.input_ids.to(device),
+			attention_mask=uncond_tokens.attention_mask.to(device)
+			).last_hidden_state  # Shape: (B, T, D)
+			
+			# Step 4: Concatenate for a single forward pass
+			text_embeddings = torch.cat([text_uncond, text_cond], dim=0)  # Shape: (2B, T, D)
+			
+			# Step 5: Initialize Gaussian noise
+			x = torch.randn((2 * batch_size, model.in_channels, H, W), device=device)
+			
+			# Step 6: Reverse sampling loop
+			for t in tqdm(scheduler.timesteps):
+				t_batch = torch.full((2 * batch_size,), t, device=device, dtype=torch.long)
+			
+				with torch.no_grad():
+					noise_pred = model(x, t_batch, encoder_hidden_states=text_embeddings).sample
+					noise_uncond, noise_cond = noise_pred.chunk(2)  # Split into (B, ...) chunks
+					
+					# Apply classifier-free guidance
+					guided_noise = noise_uncond + guidance_scale * (noise_cond - noise_uncond)
+		
+				# Step the scheduler using only guided samples
+				x = scheduler.step(guided_noise, t, x[:batch_size]).prev_sample  # Shape: (B, C, H, W)

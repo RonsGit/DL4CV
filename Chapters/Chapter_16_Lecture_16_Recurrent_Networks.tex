@@ -98,7 +98,7 @@
 Many tasks in modern machine learning involve sequential or time-dependent data, where each observation depends (often subtly) on previous inputs. Classical feedforward networks (fully connected or convolutional) assume inputs are independent and struggle to capture these temporal dependencies. \textbf{Recurrent Neural Networks (RNNs)} address this by introducing a hidden state that spans timesteps, enabling them to model sequences of arbitrary length.
 
 \subsubsection{RNN Progression: From Vanilla to Gated Units}
-\paragraph{Vanilla RNNs.}
+\paragraph{Vanilla RNNs}
 The simplest RNN (often called an \emph{Elman RNN}) repeatedly applies:
 \[
 \mathbf{h}_t 
@@ -113,13 +113,13 @@ The simplest RNN (often called an \emph{Elman RNN}) repeatedly applies:
 \]
 where \(\mathbf{h}_t\) is the hidden state at time \(t\), reused for each timestep. While straightforward, \emph{vanilla RNNs} typically suffer from the \textbf{vanishing gradient problem} over long sequences \cite{bengio1994_learning, pascanu2013_difficulty}, making them impractical for tasks beyond about 10--50 timesteps unless carefully managed (e.g.\ truncated BPTT). Exploding gradients can also arise if \(\|\mathbf{W}_{hh}\|>1\) or if the activation allows unbounded growth, but gradient clipping is usually effective at tamping that down.
 
-\paragraph{Long Short-Term Memory (LSTM).}
+\paragraph{Long Short-Term Memory (LSTM)}
 To improve the ability to store and retrieve information over hundreds of steps, \textbf{LSTMs} \cite{hochreiter1997_lstm} replace the purely multiplicative recurrence with \emph{additive} cell-state updates and \emph{gates} (input/forget/output). This design alleviates vanishing gradients and made LSTMs a mainstay in speech recognition, language modeling, and many other temporal tasks. However, LSTMs remain \emph{sequential}, limiting parallelization and occasionally struggling with extremely long contexts (thousands of tokens).
 
-\paragraph{Gated Recurrent Units (GRUs).}
+\paragraph{Gated Recurrent Units (GRUs)}
 \textbf{GRUs} \cite{cho2014_gru} simplify the LSTM by merging the forget and input gates, creating a single “update” gate and reducing parameter count. They typically match LSTM performance on moderate sequences and are less expensive to train, making them popular in embedded or resource-limited environments. However, some tasks may benefit from the extra flexibility that LSTM gating provides.
 
-\paragraph{Bidirectional RNNs.}
+\paragraph{Bidirectional RNNs}
 All these RNN cells (vanilla, LSTM, GRU) can be made \emph{bidirectional}, processing data forward and backward to capture future context (in tasks where the entire sequence is available). This helps with tasks like text classification or named entity recognition but is unsuitable for real-time streaming since you cannot see the “future” data during inference.
 
 \subsubsection{Motivation Toward Transformers}
@@ -965,62 +965,103 @@ where:
 \subsection{LSTM Gate Computation}
 \label{sec:chapter16_lstm_gates}
 
-\noindent Instead of directly modifying the hidden state, LSTMs apply a single matrix multiplication whose output is partitioned into four different gates. Each gate has a specific function and is processed through a distinct activation function:
+\noindent
+Instead of directly computing a new hidden state like in vanilla RNNs, LSTMs apply a more structured update that uses four parallel \emph{gates}. Each gate has a distinct purpose and is formed by combining the previous hidden state \( h_{t-1} \in \mathbb{R}^{H} \) and the current input \( x_t \in \mathbb{R}^{I} \), where \( H \) is the hidden size and \( I \) is the input dimension.
+
+\noindent
+For each gate, we compute a linear transformation using two separate weight matrices:
+\[
+W_*^{(h)} \in \mathbb{R}^{H \times H}, \quad W_*^{(x)} \in \mathbb{R}^{H \times I}, \quad b_* \in \mathbb{R}^H
+\]
+where \( * \in \{f, i, g, o\} \) denotes the forget, input, candidate, and output gates respectively. Then the gate activations are:
 
 \begin{itemize}
-	\item \textbf{Forget Gate} (\( f_t \)): Determines how much of the previous cell state should be retained or erased.
+	\item \textbf{Forget Gate} (\( f_t \)): Determines how much of the previous cell state \( c_{t-1} \) should be retained or erased:
 	\[
-	f_t = \sigma(W_f [h_{t-1}, x_t] + b_f)
+	f_t = \sigma(W_f^{(h)} h_{t-1} + W_f^{(x)} x_t + b_f)
 	\]
-	Since \( f_t \) passes through a sigmoid activation (\(\sigma\)), its values range between 0 and 1. A value close to 1 retains the corresponding information in \( c_{t-1} \), while a value close to 0 erases it. This gate ensures that irrelevant or outdated information is discarded.
+	Each element of \( f_t \in [0, 1] \) acts as a soft mask. A value close to 1 retains information; a value close to 0 forgets it.
 	
-	\item \textbf{Input Gate} (\( i_t \)): Decides how much new information should be added to the cell state.
+	\item \textbf{Input Gate} (\( i_t \)): Decides how much new information should be written into the memory:
 	\[
-	i_t = \sigma(W_i [h_{t-1}, x_t] + b_i)
+	i_t = \sigma(W_i^{(h)} h_{t-1} + W_i^{(x)} x_t + b_i)
 	\]
-	Like the forget gate, the input gate uses a sigmoid activation, producing values between 0 and 1 to regulate new information introduction.
+	Like the forget gate, the sigmoid ensures values between 0 and 1.
 	
-	\item \textbf{'Gate'/Candidate Gate} (\( g_t \)): Generates new candidate values for the cell state.
+	\item \textbf{Candidate Gate} (\( g_t \)): Proposes new candidate values for the memory update:
 	\[
-	g_t = \tanh(W_g [h_{t-1}, x_t] + b_g)
+	g_t = \tanh(W_g^{(h)} h_{t-1} + W_g^{(x)} x_t + b_g)
 	\]
-	Unlike the other gates, this gate uses a \(\tanh\) activation, producing values between \([-1,1]\). This candidate state represents potential updates to the memory.
+	This gate uses a \(\tanh\) activation to produce values in \([-1, 1]\), enabling both positive and negative memory contributions.
 	
-	\item \textbf{Output Gate} (\( o_t \)): Controls how much of the internal cell state should be exposed externally as the hidden state.
+	\item \textbf{Output Gate} (\( o_t \)): Controls how much of the internal cell state should be exposed to the next layer or timestep as hidden state:
 	\[
-	o_t = \sigma(W_o [h_{t-1}, x_t] + b_o)
+	o_t = \sigma(W_o^{(h)} h_{t-1} + W_o^{(x)} x_t + b_o)
 	\]
-	The output gate determines the amount of processed memory (\( c_t \)) that contributes to the hidden state, regulating the information available for subsequent computations.
 \end{itemize}
+
+\noindent
+Although these gates are shown here as if computed independently, modern implementations perform all gate computations \textbf{in parallel using a single matrix multiplication}. First, the input and previous hidden state are concatenated:
+\[
+z_t = [h_{t-1}, x_t] \in \mathbb{R}^{H+I}
+\]
+
+\noindent
+Then, a single weight matrix \( W \in \mathbb{R}^{4H \times (H+I)} \) and bias \( b \in \mathbb{R}^{4H} \) are applied:
+\[
+\begin{bmatrix}
+	f_t \\
+	i_t \\
+	g_t \\
+	o_t
+\end{bmatrix}
+=
+W z_t + b
+\]
+
+\noindent
+The result is then split into four parts and passed through the appropriate activations:
+\[
+f_t = \sigma(\cdot), \quad
+i_t = \sigma(\cdot), \quad
+g_t = \tanh(\cdot), \quad
+o_t = \sigma(\cdot)
+\]
+
+\noindent
+This compact implementation is \textbf{mathematically equivalent} to using separate weights for each gate, and greatly improves computational efficiency. It is widely used in all deep learning libraries, including PyTorch, TensorFlow, and JAX.
 
 \subsection{LSTM State Updates}
 \label{sec:chapter16_lstm_updates}
 
-\noindent Using these gates, LSTMs update their internal memory as follows:
+\noindent
+After computing the four gates, the LSTM updates its memory and hidden state using the following equations:
 
 \begin{enumerate}
-	\item The previous cell state \( c_{t-1} \) is scaled by the forget gate and updated with new information:
+	\item \textbf{Update Cell State:}
 	\[
 	c_t = f_t \odot c_{t-1} + i_t \odot g_t
 	\]
 	where:
 	\begin{itemize}
-		\item \( f_t \odot c_{t-1} \) determines how much past information is retained.
-		\item \( i_t \odot g_t \) represents new information being added to memory.
+		\item \( f_t \odot c_{t-1} \) retains selected parts of the previous memory.
+		\item \( i_t \odot g_t \) adds new candidate content into the cell.
 	\end{itemize}
 	
-	\item The new hidden state \( h_t \) is computed using the output gate and transformed cell state:
+	\item \textbf{Compute Hidden State:}
 	\[
 	h_t = o_t \odot \tanh(c_t)
 	\]
+	The output gate modulates how much of the transformed internal memory is revealed to the outside.
 \end{enumerate}
 
-\noindent This formulation ensures that information updates are both structured and stable over long sequences, significantly improving upon the memory limitations of vanilla RNNs.
+\noindent
+This architecture allows the LSTM to learn long-range dependencies by combining both \textbf{additive} (memory-preserving) and \textbf{multiplicative} (gated) pathways. It overcomes the vanishing gradient problem found in vanilla RNNs and enables stable training over long sequences.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_16/slide_90.jpg}
-	\caption{Long Short-Term Memory (LSTM) architecture, illustrating the function of each gate.}
+	\caption{Long Short-Term Memory (LSTM) architecture. All gates are computed from the concatenated input \( [h_{t-1}, x_t] \) via a single matrix multiplication and then split. Each gate plays a role in regulating the memory and hidden state updates.}
 	\label{fig:chapter16_lstm_architecture}
 \end{figure}
 
@@ -1229,11 +1270,11 @@ The main distinction is that ResNets employ simple, identity skip connections wi
 	\label{fig:chapter16_resnets_lstm_similarity}
 \end{figure}
 
+\newpage
 \subsection{Summary of LSTM, Highway, and ResNet Connections}
 
 \noindent Highway Networks, ResNets, and LSTMs share a common principle: they provide additive gradient pathways that enable deep models to be trained effectively. While Highway and ResNet architectures stabilize gradient flow across spatial layers, LSTMs employ a similar concept to stabilize gradient flow across timesteps. The key advantage of LSTMs lies in their adaptive gating, allowing the network to dynamically choose which information is carried forward, facilitating more efficient training and robust learning of long-range temporal dependencies.
 
-\newpage
 \section{Stacking Layers in RNNs and LSTMs}
 \label{sec:chapter16_stacking_rnn_lstm}
 
@@ -1436,7 +1477,6 @@ Stacked RNNs and LSTMs build hierarchical temporal representations by passing hi
 	
 \end{enrichment}
 
-\newpage
 \section{Summary and Future Directions} 
 \label{sec:chapter16_summary_future}
 
@@ -1453,6 +1493,7 @@ For example, Zoph and Le~\cite{zoph2017_nas} evaluated approximately 10,000 cand
 	\label{fig:chapter16_nas_rnn}
 \end{figure}
 
+\newpage
 \subsection{Summary of RNN Architectures}
 
 Throughout this chapter, we have explored key architectures developed to overcome challenges inherent to vanilla RNNs—particularly vanishing and exploding gradients:

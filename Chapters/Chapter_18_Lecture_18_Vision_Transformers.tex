@@ -1362,15 +1362,15 @@ Stacking W-MSA and SW-MSA alternately allows information to gradually propagate 
 	\label{fig:chapter18_cyclic_shift_receptive_field}
 \end{figure}
 
-\noindent
-Cyclic SW-MSA is therefore a key innovation in Swin Transformer. It balances the computational benefits of local attention with the expressive power of global modeling, \textbf{without relying on full global self-attention}, making it scalable and effective for vision tasks.
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/Ilustration_of_cyclic_ws_msa.jpg}
-	\caption{Cyclic Shifted Window Self-Attention (SW-MSA). After applying a cyclic shift by \( M/2 \) patches in both spatial directions, new windows are formed that include patches from different regions of the original unshifted image. A masking mechanism is applied to prevent undesired attention between patches that were not originally neighbors. Each color block represents a logical region from the original image space; same-color patches now grouped together in a shifted window will be masked from attending to one another (adapted from Soroush Mehraban). }
+	\caption{Cyclic Shifted Window Self-Attention (SW-MSA). \textbf{Left:} The original image is divided into four regions (A, B, C, D), each representing a contiguous spatial group of patches. \textbf{Middle:} As in standard SW-MSA, the original window grid is shifted by \(M/2\) patches along both spatial dimensions, forming 9 new overlapping windows. Each shifted window is assigned a color-coded group ID, indicating which patches were originally grouped together in a standard (non-cyclic) shift. \textbf{Right:} The regions A, B, C, and D are cyclically shifted by \(M/2\) to preserve the original 4-window layout. Within each window, self-attention is restricted using a masking mechanism: only patches that share the same group ID (i.e., that originated from the same window according to SW-MSA) can attend to each other. This preserves local attention structure while allowing cross-window interactions across layers (adapted from Soroush Mehraban).}
 	\label{fig:chapter18_cyclic_ws_msa}
 \end{figure}
+
+\noindent
+Cyclic SW-MSA is therefore a key innovation in Swin Transformer. It balances the computational benefits of local attention with the expressive power of global modeling, \textbf{without relying on full global self-attention}, making it scalable and effective for vision tasks.
 
 \subsection{Patch Merging in Swin Transformers}
 \label{subsec:chapter18_patch_merging}
@@ -1416,46 +1416,52 @@ One of the core architectural innovations in Swin Transformers is the \textbf{pa
 \noindent
 Nonetheless, this architectural shift is central to Swin’s success. The combined effect of \textbf{hierarchical patch merging} and \textbf{shifted window self-attention} enables Swin Transformers to scale efficiently and generalize well—bridging the gap between CNN-style design and transformer flexibility.
 
-\subsubsection*{Positional Encoding in Swin Transformers: Relative Positional Bias}
+\subsection{Positional Encoding in Swin Transformers}
 \label{enrichment:swin_positional_bias}
 
 \noindent
-In standard Vision Transformers (ViTs), positional information is injected via \textbf{absolute positional embeddings}:
+In standard Vision Transformers (ViTs), each patch embedding \(\mathbf{x}_i \in \mathbb{R}^{D}\) is enriched with a learnable \emph{absolute} position encoding \(\mathbf{p}_i\):
 \[
 \mathbf{z}_i = \mathbf{x}_i + \mathbf{p}_i,
 \]
-where \( \mathbf{x}_i \) is the embedding of the \(i\)-th patch and \( \mathbf{p}_i \in \mathbb{R}^D \) is a learnable vector encoding its absolute position in the image.
+which treats each patch as having a unique coordinate in the global image grid. While effective for classification with fixed-resolution inputs, absolute position embeddings can be less suitable for \textbf{hierarchical} or \textbf{multi-scale} architectures, and they do not seamlessly handle shifts in the input.
 
-\medskip
-\noindent
-However, Swin Transformer \textbf{does not} use absolute positional embeddings. Instead, it incorporates \textbf{relative position encoding} directly into the attention computation via a learnable \emph{relative positional bias}.
-
-\paragraph{Relative Positional Bias in Attention}
-Let \(Q, K, V \in \mathbb{R}^{M^2 \times D}\) be the query, key, and value matrices computed for a single \(M \times M\) window, where \(M^2\) is the number of tokens in that window.
-
-The self-attention output is computed as:
+\paragraph{Relative Position Bias in Swin Transformers}
+Swin Transformer instead encodes \emph{positional} information \emph{locally} within each window by adding a \emph{relative positional bias} \(B\) in the self-attention computation. Concretely, if \(Q,K,V \in \mathbb{R}^{M^2 \times D}\) are the query, key, and value matrices for a single local window of size \(M \times M\) (which contains \(M^2\) “tokens”), the output is:
 \[
-\text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^\top}{\sqrt{D}} + B \right)V,
+\text{Attention}(Q,K,V) \;=\; 
+\underbrace{
+	\text{softmax}\!\Bigl(\frac{Q\,K^\top}{\sqrt{D}} \;+\; B\Bigr)
+}_{\text{local self-attention}}
+\,V,
 \]
-where \(B \in \mathbb{R}^{M^2 \times M^2}\) is a learnable matrix that assigns a scalar bias based on the \textbf{relative position} between each query–key pair.
+where \(B \in \mathbb{R}^{M^2 \times M^2}\) provides a \emph{learnable} bias for each pair of query–key \emph{relative offsets}. 
 
-\paragraph{What Does the Bias Represent?}
-Each element \(B_{i,j}\) encodes the relative spatial offset between token \(i\) and token \(j\) within the local window. For example:
-\begin{itemize}
-	\item If \(i\) and \(j\) are adjacent horizontally, they share the same relative position across windows.
-	\item This allows the model to generalize better across positions, since relative offsets like “left of,” “above,” or “diagonal to” are invariant to the absolute location of the window.
-\end{itemize}
+\paragraph{Hierarchical Windows and Relative Offsets}
+Because Swin Transformer partitions the image into \emph{non-overlapping windows} at each stage, each \(\texttt{window}\) is only responsible for a \(\texttt{window\_size} \times \texttt{window\_size}\) region. The matrix \(B\) thus encodes differences in row/column \emph{within} each local window. For example, if token \(i\) lies at a relative offset \((\Delta r, \Delta c)\) from token \(j\), then \(B_{i,j}\) depends only on \(\Delta r\) and \(\Delta c\). Since local windows are smaller, the set of possible \((\Delta r, \Delta c)\) is limited:
+\[
+- (M-1) \;\;\le\; \Delta r,\,\Delta c \;\;\le\; (M-1).
+\]
+This approach naturally fits Swin’s \emph{hierarchical} downsampling: at each stage, tokens merge spatially (halving resolution and doubling channels), but the \emph{relative} geometry in any local window remains bounded by \(\pm(M-1)\). Hence, the bias matrix \(B\) can be reused across windows regardless of their absolute position in the image or the resolution of the stage.
 
-\paragraph{Benefits of Relative Bias}
+\paragraph{Why Relative Position Bias for Hierarchical Transformers?}
+
 \begin{itemize}
-	\item \textbf{Translation-Friendly:} Relative encoding makes the attention mechanism more robust to shifts and translations of the image.
-	\item \textbf{Parameter Efficient:} The number of relative positions is much smaller than absolute positions, especially within fixed-size windows.
-	\item \textbf{Better Generalization:} Unlike absolute embeddings that are tied to specific coordinates, relative bias supports window-level inductive biases that generalize to unseen positions and resolutions.
+	\item \textbf{Translation Awareness but Not Fixed Coordinates.}  
+	By focusing on offsets \((\Delta r, \Delta c)\) instead of absolute patch indices, Swin gains a degree of translation or shift invariance inside each window—an important inductive bias in many vision tasks.  
+	\item \textbf{Local-Window Compatibility.}  
+	Swin processes images in smaller local windows, then merges them stage by stage. Because each window only spans \(\texttt{window\_size} \times \texttt{window\_size}\), the total number of relative positions is finite and small, avoiding the overhead of a large absolute embedding table.  
+	\item \textbf{Multi-Scale Generalization.}  
+	In deeper stages, patch merging reduces spatial resolution, yet each window is still \(\texttt{window\_size} \times \texttt{window\_size}\). By indexing bias terms purely via \((\Delta r,\Delta c)\), the model can gracefully adapt to different input sizes or patch merges without re-learned absolute coordinates. Indeed, the same local geometry (e.g.\ “one patch to the left or right”) remains consistent, aiding generalization to varied image resolutions.  
 \end{itemize}
 
 \paragraph{Implementation Detail}
-Because there are only a finite number of relative positions within a window (e.g., \((-M+1, \dots, 0, \dots, M-1)\) in each direction), the matrix \(B\) can be indexed from a smaller lookup table of learnable biases and expanded into a full \(M^2 \times M^2\) matrix.
+Internally, one can store a smaller table \(\hat{B} \in \mathbb{R}^{(2M-1)\times(2M-1)}\) indexed by \((\Delta r, \Delta c)\). To form the full \(M^2\times M^2\) matrix \(B\), we map each token pair \((i,j)\) to its relative row and column offsets \((\Delta r,\Delta c)\) and then pull the appropriate scalar from \(\hat{B}\). This avoids storing a large matrix for all token pairs outright.
 
+\paragraph{Practical Benefits}
+Relative bias has shown improved performance over absolute embeddings in Swin Transformers, especially on tasks beyond classification (e.g.\ detection, segmentation). Empirically, local relative bias helps preserve stable spatial reasoning across hierarchical stages, granting “\emph{sliding window-like}” inductive bias that captures consistent local structure—a crucial factor in many vision scenarios.
+
+\newpage
 \subsection{Conclusion: The Swin Transformer Architecture and Variants}
 \label{subsec:chapter18_swin_conclusion}
 
@@ -1523,51 +1529,764 @@ Unlike vanilla ViTs and DeiT, which operate on fixed-size \(16 \times 16\) patch
 \noindent
 Thanks to its \textbf{linear computational complexity}, Swin can be scaled to higher resolutions without a quadratic memory or latency blow-up, making it suitable for dense vision tasks such as semantic segmentation, object detection, and keypoint estimation.
 
-\newpage
-\subsubsection*{Extensions and Successors to Swin}
+\section{Extensions and Successors to Swin}
+\label{sec:chapter18_swin_extensions}
 
 \noindent
-Swin has influenced a growing family of hierarchical transformer architectures, each introducing further innovations. Notable successors include:
+The Swin Transformer's core innovations—\emph{hierarchical feature maps}, \emph{local window-based attention}, and \emph{shifted window} partitioning—have inspired a vibrant ecosystem of derivative models. Among these successors, \textbf{Swin V2} stands out for its focus on enhancing training stability at larger resolutions and model scales. Below, we examine Swin V2’s key improvements and their mathematical foundations, emphasizing how these changes address limitations in the original “Swin V1” design.
+
+\subsection{Swin Evolution: Swin Transformer V2}
+\label{sec:chapter18_swin_v2}
+
+\noindent
+\textbf{Swin Transformer V2} \cite{liu2022_swinv2} refines Swin V1 by introducing three primary adjustments:
 
 \begin{itemize}
-	\item \textbf{Swin-V2} \cite{liu2022_swinv2}: Builds directly upon Swin by improving training stability and pushing scale. It introduces:
-	\begin{itemize}
-		\item \textbf{Scaled cosine attention} for better numerical stability during large-scale training.
-		\item \textbf{Log-spaced relative position bias} to generalize better across resolutions.
-		\item \textbf{Post-norm Transformer blocks} and deeper architectures (up to 3B parameters).
-	\end{itemize}
-	It sets state-of-the-art results across classification, detection, and segmentation benchmarks.
-	
-	\item \textbf{Multiscale Vision Transformer (MViT)} \cite{fan2021_mvit}: Unlike Swin’s fixed windowing, MViT dynamically allocates attention across spatial scales. Key differences include:
-	\begin{itemize}
-		\item Attention spans grow deeper in the network.
-		\item Token downsampling and channel expansion are interleaved hierarchically.
-		\item Originally designed for video classification, but extended to 2D tasks.
-	\end{itemize}
-	
-	\item \textbf{Improved MViT} \cite{li2021_improved_mvit}: Enhances the original MViT with:
-	\begin{itemize}
-		\item Better attention resolution scheduling.
-		\item Tuned width-depth-resolution trade-offs.
-		\item Re-weighted feature fusion across scales.
-	\end{itemize}
-	It improves transferability and shows performance improvements on classification and detection tasks.
+	\item \textbf{Scaled Cosine Attention:} A cosine-based self-attention variant with a learnable temperature, which helps control extreme activation magnitudes in very deep or wide networks.
+	\item \textbf{Log-Spaced Continuous Position Bias (Log-CPB):} A continuous, meta-network–based approach for encoding relative positions, improving scalability to arbitrary window sizes or resolutions.
+	\item \textbf{Residual Post-Norm:} Shifts the normalization layers to occur \emph{after} the residual connection, mitigating gradient instability in large-scale training.
 \end{itemize}
 
 \noindent
-Each of these models expands upon Swin’s principles of \textbf{hierarchical feature representation}, enabling vision transformers to match or surpass CNNs across both classification and structured prediction tasks.
+These alterations allow Swin V2 to handle higher resolutions (\(1536 \times 1536\)) and billions of parameters while preserving the efficiency and multi-scale strengths of Swin V1.
 
-\subsubsection*{Next: Can We Go Simpler Than Attention?}
+\paragraph{1) Scaled Cosine Attention}
+Swin V2 replaces the standard dot-product attention
+\[
+\text{Attention}(Q, K, V) \;=\; \text{Softmax}\!\Bigl(\frac{Q K^\top}{\sqrt{D}}\Bigr)\, V
+\]
+with a \emph{cosine similarity}–based formulation:
+\[
+\text{CosineAttention}(Q, K, V) 
+=\; \text{Softmax}\!\Bigl(\underbrace{\frac{\langle Q, K\rangle}{\|Q\|\|K\|}}_{\text{bounded in }[-1,1]} \times \tau \Bigr)\, V,
+\]
+where \(\langle Q, K\rangle\) is the dot product, \(\|Q\|\) and \(\|K\|\) are the Euclidean norms, and \(\tau\) is a \emph{learnable} scaling parameter. By focusing on normalized vectors \(\frac{Q}{\|Q\|}\) and \(\frac{K}{\|K\|}\), the attention logits remain within \([-1,1]\). This bounded range avoids overly sharp softmax distributions or extremely large gradients, issues that become acute in deeper networks. The learnable \(\tau\) (initialized to a safe positive value) adjusts how strongly the model weighs these normalized similarities—thereby preventing the uniform “one-size-fits-all” scaling from saturating or exploding in large-scale networks.
+
+\paragraph{2) Log-Spaced Continuous Position Bias (Log-CPB)}
+In Swin V1, local windows adopt a \emph{Relative Position Bias (RPB)} stored in a discrete lookup table of size \((2M-1)\times(2M-1)\), indexed by \((\Delta x,\Delta y)\). While effective for modest window sizes, this table-based approach can become unwieldy as \(\,(2M-1)^2\) grows and struggles to generalize across arbitrary or large window sizes.
 
 \noindent
-Despite its versatility, attention remains computationally expensive—especially in large-scale settings. This raises a compelling question:
+\textbf{Swin V2} introduces \emph{Log-Continuous Position Bias (Log-CPB)}, parameterizing biases through a learnable function:
+\[
+\text{Bias}(i,j) 
+=\; G\!\Bigl(\log\bigl(|i-j| + 1\bigr)\Bigr),
+\]
+where \(G\) is a small MLP mapping logarithmically scaled distances to a bias value. This design:
+\begin{itemize}
+	\item \textbf{Avoids Exponential Table Growth:} By computing bias on the fly from a meta-network, the memory cost does not blow up for large \(M\).
+	\item \textbf{Generalizes to Arbitrary Sizes:} Log-scaling ensures consistent representation of both small and large relative displacements, enabling robust transfer to new window sizes or varied spatial resolutions.
+	\item \textbf{Smooth \& Learnable:} The MLP \(G\) can learn more nuanced spatial relationships than a discrete table, benefiting tasks requiring refined positional cues.
+\end{itemize}
+
+\paragraph{3) Residual Post-Norm}
+Standard Swin V1 layers employ \emph{pre-normalization}, i.e.,
+\[
+x_{\text{out}} 
+=\; x \;+\; F\bigl(\text{LayerNorm}(x)\bigr),
+\]
+where \(F\) can be a Multi-Head Self-Attention or an MLP block. While stable at moderate depths, pre-norm can induce large gradient variance if the network goes extremely deep or wide.
+
+\noindent
+\textbf{Post-Norm:} Swin V2 instead normalizes \emph{after} the addition:
+\[
+x_{\text{out}}
+=\;\text{LayerNorm}\!\Bigl(x \;+\; F(x)\Bigr).
+\]
+This scheme preserves the identity shortcut path \emph{unaltered}, which better stabilizes gradients in massive architectures (hundreds of layers, billions of parameters). Formally, post-norm retains the direct gradient flow from the identity connection even as \(\,F(x)\) evolves, mitigating vanishing or exploding gradients that can occur in stacked transformations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figures/Chapter_18/swin_v2.jpg}
+\caption{\textbf{Swin V2 Architecture.} Building on the core Swin design, V2 adds scaled cosine attention, log-spaced continuous position bias, and residual post-norm. These modifications allow deeper, wider models and higher input resolutions while preserving the hierarchical, window-based approach. Source: \cite{liu2022_swinv2}.}
+\label{fig:chapter18_swin_v2_arch}
+\end{figure}
+
+\paragraph{Implications and Results}
+By introducing scaled cosine attention, log-spaced positional biases, and residual post-norm, Swin V2 successfully:
+\begin{itemize}
+	\item \textbf{Scales to Larger Resolutions:} Achieves stable training up to \(1536\times1536\) images with less reliance on ad hoc initialization or aggressive gradient clipping.
+	\item \textbf{Handles More Parameters:} Reaches up to 3B parameters without collapsing or diverging in training—uncommon for earlier vision models.
+	\item \textbf{Retains Window Efficiency:} Continues the local attention mechanism of Swin V1, keeping memory and compute overhead linear in image size.
+	\item \textbf{Achieves SOTA Performance:} Demonstrates improved results across classification, detection, and segmentation benchmarks compared to Swin V1 and other concurrent models, especially for large-scale tasks.
+\end{itemize}
+
+\noindent
+In essence, \emph{Swin V2} refines the original architecture’s positional and normalization mechanisms to more gracefully handle extremely deep transformers trained on high-resolution inputs. By bounding dot products through cosine attention, replacing discrete relative bias with a log-scaled continuous function, and switching to post-norm blocks, Swin V2 unlocks further performance gains and scalability—providing a powerful foundation for next-generation computer vision models.
+
+\subsection{Multiscale Vision Transformer (MViT)}
+\label{sec:mvit_overview}
+
+\noindent
+Multiscale Vision Transformers (MViT) \cite{fan2021_mvit} introduce a hierarchical Transformer design tailored to high-resolution visual data—such as images or videos—by building a true \emph{feature pyramid} inside the Transformer architecture. Instead of maintaining a fixed spatial resolution like standard ViTs, MViT reduces spatial (or spatiotemporal) resolution across layers, while \emph{increasing} channel capacity. This mirrors the inductive structure of CNN backbones, making MViT efficient and effective for dense tasks like object detection and segmentation.
+
+\paragraph{1.\ Pooling Attention (MHPA)}
+At the core of MViT is the \textbf{Multi-Head Pooling Attention (MHPA)} mechanism. Unlike standard self-attention where queries (\(Q\)), keys (\(K\)), and values (\(V\)) all retain the same sequence length, MHPA introduces learnable pooling operators that downsample these tensors:
+
+\[
+Q,\, K,\, V \;\;\longrightarrow\;\; P(Q),\; P(K),\; P(V)
+\]
+
+This significantly reduces the number of tokens in deeper layers, which is critical because the computational and memory cost of self-attention scales quadratically with the token length \(L\). By reducing \(L\), especially in higher layers, MViT remains tractable even for high-resolution inputs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{Figures/Chapter_18/MViT_MHPA.png}
+	\caption{\textbf{Multi-Head Pooling Attention (MHPA)} in MViT. Queries, keys, and values are projected and optionally pooled to reduce resolution before self-attention. This improves efficiency while allowing hierarchical feature representation across stages. Adapted from \cite{fan2021_mvit}.}
+	\label{fig:chapter18_mvit_mhpa}
+\end{figure}
+
+\paragraph{How Does Pooling Work?}
+Each tensor \(Q, K, V \in \mathbb{R}^{L \times D}\) is reshaped into a 4D spatial or spatiotemporal format: \((T, H, W, D)\), where:
+\begin{itemize}
+	\item \(T\) is the number of video frames (or \(T = 1\) for images),
+	\item \(H \times W\) is the spatial grid of tokens,
+	\item \(D\) is the embedding dimension.
+\end{itemize}
+
+Average pooling is applied independently over the \((T, H, W)\) dimensions for each feature channel. For example, a \(2 \times 2\) spatial kernel with stride \(2\) halves both \(H\) and \(W\), merging every \(2 \times 2\) neighborhood of tokens into a single output token. This aggregation reduces redundancy while retaining key local patterns. Unlike dropping tokens, pooling \emph{summarizes} them—similar to average pooling in CNNs.
+
+After pooling, the sequence is flattened back into shape \(\mathbb{R}^{\hat{L} \times D}\), where \(\hat{L} < L\), and passed into the attention mechanism. This downsampling is typically performed more aggressively at deeper layers.
+
+\paragraph{Multiscale Hierarchy via Pooling}
+Pooling in MViT is not applied uniformly: different attention blocks can pool \(Q\), \(K\), and \(V\) with different stride configurations. This enables:
+\begin{itemize}
+	\item High spatial resolution in early layers—capturing fine-grained visual details.
+	\item Low spatial resolution in deeper layers—capturing semantic, abstract features efficiently.
+\end{itemize}
+
+This hierarchical structure allows MViT to build coarse-to-fine representations similar to CNNs while preserving global attention across stages.
+
+\paragraph{2.\ Hierarchical Token Downsampling}
+Beyond MHPA, MViT uses token downsampling across \textbf{stages}, much like how CNNs downsample with pooling or strided convolutions. At the end of each stage, token resolution is reduced (e.g., \(H \times W \to \tfrac{H}{2} \times \tfrac{W}{2}\)) and channel dimension is increased (e.g., \(96 \to 192\)):
+
+\[
+(\text{Resolution}, \text{Channels}) \;:\; (56 \times 56, 96) \longrightarrow (28 \times 28, 192)
+\]
+
+Each stage consists of several Transformer blocks operating at fixed resolution. The first block in each new stage performs the downsampling using query pooling and projection, enabling efficient spatial abstraction as depth increases.
+
+\paragraph{3.\ Global Attention vs.\ Local Windows}
+A distinctive feature of MViT is that it retains \textbf{global self-attention} throughout all layers. Unlike Swin Transformers that rely on local window attention and require special mechanisms (e.g., shifted windows) to communicate across patches, MViT enables each token to attend to all others—even after pooling.
+
+\noindent
+This global context is maintained while still reducing the token count. Therefore, MViT combines the benefits of:
+\begin{itemize}
+	\item Local computation in early stages (via high-resolution tokens),
+	\item Global reasoning in all stages (via full-range attention),
+	\item Pyramidal representation learning (via progressive downsampling).
+\end{itemize}
+
+\newpage
+\paragraph{Originally Designed for Video, Effective for Images}
+MViT was initially introduced for video classification, where token sequences are extremely long due to the temporal dimension. However, its architectural principles—namely multiscale pooling and global attention—transfer well to 2D vision tasks. MViT has shown competitive performance on image classification, detection, and segmentation benchmarks.
+
+\paragraph{Empirical Strengths}
+\begin{itemize}
+	\item \textbf{Efficiency at Scale:} Lower token counts in deeper layers significantly reduce FLOPs and memory consumption—making MViT ideal for high-res images and video.
+	\item \textbf{Strong Accuracy–Efficiency Tradeoff:} MViT achieves better performance–cost ratios compared to standard ViTs and window-based models like Swin.
+	\item \textbf{Task Generalization:} Its built-in multiscale hierarchy aligns naturally with object detection pipelines (e.g., FPN), enabling seamless integration for downstream vision tasks.
+\end{itemize}
+
+\noindent
+Overall, MViT combines the best of both worlds: the hierarchical abstraction of CNNs and the modeling capacity of global attention.
+
+\subsection{Improved Multiscale Vision Transformers: MViTv2}
+\label{sec:mvitv2}
+
+\noindent
+\textbf{MViTv2} \cite{li2021_improved_mvit} builds on the original Multiscale Vision Transformer (MViT) by refining key aspects of its pooling-based attention architecture. These improvements allow the model to scale to higher resolutions, train more stably, and outperform prior hierarchical transformers like Swin on a variety of visual tasks.
+
+\vspace{0.5em}
+\subsubsection{Decomposed Relative Positional Embeddings}
+
+\noindent
+In MViT, position information was either encoded using absolute embeddings or a full 3D relative bias table. However, both approaches are expensive or lack shift-invariance—a critical property in vision tasks.
+
+\paragraph{Motivation}
+A 3D table that explicitly encodes relative offsets \((\Delta t, \Delta h, \Delta w)\) requires \(O(T \cdot H \cdot W)\) memory. Worse, it can cause different outputs for the same relative displacement at different absolute positions—violating shift-invariance.
+
+\paragraph{Decomposed Formulation}
+MViTv2 decomposes the relative positional bias into additive components along each axis:
+
+\[
+R_{p(i), p(j)} = 
+R^{(\mathrm{h})}_{h(i), h(j)} + 
+R^{(\mathrm{w})}_{w(i), w(j)} + 
+R^{(\mathrm{t})}_{t(i), t(j)}
+\]
+
+\noindent
+where:
+\begin{itemize}
+	\item \( h(i), w(i), t(i) \) denote the height, width, and (optionally) temporal coordinates of token \( i \).
+	\item \( R^{(\cdot)} \in \mathbb{R}^{L \times L} \) is a learnable matrix of pairwise relative biases per axis.
+\end{itemize}
+
+\newpage
+\paragraph{Integration into Attention}
+The standard attention weights are modified by adding these decomposed biases:
+
+\[
+\text{Attn}(Q, K, V) = 
+\text{Softmax}\left( \frac{Q K^\top}{\sqrt{d}} + E^{(\text{rel})} \right) V, \quad
+\text{where} \quad
+E^{(\text{rel})}_{ij} = Q_i \cdot R_{p(i), p(j)}.
+\]
+
+\noindent
+This strategy retains shift-consistent behavior while significantly reducing memory usage to \(O(H + W + T)\) instead of \(O(HWT)\).
+
+\vspace{1em}
+\subsubsection{Residual Pooling Connections}
+
+\noindent
+A core feature of MViT is its use of pooling attention: downsampling keys and values to reduce the cost of attention, but downsampling queries too aggressively can hurt learning.
+
+\paragraph{Problem}
+When the query sequence is pooled (e.g., via strided convolution), spatial resolution drops. This leads to:
+\begin{itemize}
+	\item Information loss from skipped query locations.
+	\item Difficulty in backpropagation and unstable training.
+\end{itemize}
+
+\paragraph{Solution.}
+MViTv2 adds a \textbf{residual connection} from the pooled query back into the attention output:
+
+\[
+Z = \text{Attn}(Q, K, V) + Q
+\]
+
+\noindent
+This residual skip ensures that key spatial cues—though pooled—remain in the computation graph and contribute directly to the output. It stabilizes training and improves performance across layers with large strides.
+
+\paragraph{Empirical Impact}
+\begin{itemize}
+	\item Better gradient flow across stage transitions.
+	\item Stronger retention of coarse spatial features.
+	\item Improved performance in classification, detection, and video recognition benchmarks.
+\end{itemize}
+
+\vspace{1em}
+\subsubsection{Performance Benefits}
+
+\noindent
+MViTv2 outperforms its predecessors and many competitors:
+\begin{itemize}
+	\item On \textbf{ImageNet}, MViTv2-S achieves better accuracy than Swin-B with fewer FLOPs.
+	\item On \textbf{COCO} (object detection), MViTv2 integrated into Mask R-CNN beats Swin and MViT, particularly in small- and medium-object detection.
+	\item On \textbf{Kinetics} and other video datasets, MViTv2’s efficient decomposed embeddings and stable residual connections allow it to outperform spatiotemporal transformers with significantly fewer parameters.
+\end{itemize}
+
+\vspace{1em}
+\subsubsection{Summary}
+
+\noindent
+\textbf{MViTv2} redefines pooling attention by:
+\begin{itemize}
+	\item Introducing \textbf{decomposed relative positional encodings} to make attention shift-invariant and efficient.
+	\item Adding \textbf{residual pooling connections} to improve gradient flow and maintain spatial context across downsampling.
+	\item Maintaining a \textbf{hierarchical feature pyramid} through flexible token pooling.
+\end{itemize}
+
+\noindent
+These changes enable MViTv2 to perform competitively with or better than window-based models like Swin—particularly on higher-resolution tasks like detection, segmentation, and video classification.
+
+\paragraph{Looking Ahead}
+
+\noindent
+The architectures we've explored—Swin, MViT, and MViTv2—belong to a family of hierarchical vision transformers built upon \textbf{self-attention} as the fundamental operation. Each differs in how it scopes attention (local vs.\ pooled), handles downsampling (window-based vs.\ flexible pooling), and encodes positional information (absolute, relative, decomposed).
+
+\noindent
+But what if we step away from self-attention altogether?
 
 \begin{quote}
-	\emph{Can we replace self-attention altogether with simpler mechanisms?}
+	\emph{Can we design vision models that match transformer-level performance without any attention mechanism—using only MLPs?}
 \end{quote}
 
 \noindent
-In the next section, we explore the \textbf{MLP-Mixer} architecture \cite{tolstikhin2021_mlpmixer}, which challenges the necessity of both convolutions and attention by using only feed-forward MLPs to mix spatial and channel information.
+This idea led to the development of the \textbf{MLP-Mixer} \cite{tolstikhin2021_mlpmixer}, a radically simplified architecture that removes both attention and convolutions. Instead, it mixes information across \textbf{tokens} and across \textbf{channels} using only fully connected layers.
+
+\noindent
+Where attention previously enabled token-to-token interaction, MLP-Mixer achieves a similar effect through stacked \textit{token-mixing MLPs}. In the next section, we investigate this architecture in detail and explore its surprising effectiveness.
+
+\newpage
+\section{MLP-Mixer: All-MLP Vision Architecture}
+\label{sec:chapter18_mlpmixer}
+
+\noindent
+Until now, the architectures we've explored—ViT, DeiT, Swin, MViT, and MViTv2—rely on some form of \textbf{self-attention} as the core mixing primitive. But in 2021, Google Brain researchers proposed a bold idea: \textbf{What if we eliminated attention altogether?} Can we still build a strong vision model?
+
+\noindent
+The resulting architecture, \textbf{MLP-Mixer} \cite{tolstikhin2021_mlpmixer}, answers this question by replacing both self-attention and convolutions with nothing more than \textbf{multi-layer perceptrons (MLPs)}. The model mixes information \emph{across spatial tokens} and \emph{across channels}, entirely through feedforward computation.
+
+\subsection{The MLP-Mixer Architecture}
+
+\noindent
+An image is split into fixed-size non-overlapping patches, similar to ViT. Each patch is linearly projected into a feature vector of dimension \( C \), forming a sequence of \( N \) patches (tokens), giving an input matrix of shape \( N \times C \).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_18/slide_115.jpg}
+	\caption{MLP-Mixer processes the image as a sequence of \( N \) patches (tokens), each with \( C \) channels. It alternates between channel-mixing and token-mixing MLPs. Despite lacking both attention and convolutions, it retains spatial and semantic structure.}
+	\label{fig:chapter18_mlpmixer_architecture}
+\end{figure}
+
+\paragraph{Token-Mixing and Channel-Mixing Blocks}
+
+\noindent
+MLP-Mixer alternates between two types of MLP layers:
+\begin{itemize}
+	\item \textbf{Channel-Mixing MLP:} Applied independently to each token (row), mixes information across channels (like a 1x1 convolution).
+	\item \textbf{Token-Mixing MLP:} Applied independently to each channel (column), mixes information across tokens (like a grouped convolution over spatial positions).
+\end{itemize}
+
+\noindent
+Formally, for input \( X \in \mathbb{R}^{N \times C} \), the two layers operate as:
+\[
+\text{Token-Mixing:} \quad X \mapsto X + W_2 \, \sigma(W_1 X^\top)^\top, \qquad
+\text{Channel-Mixing:} \quad X \mapsto X + W_4 \, \sigma(W_3 X)
+\]
+where \( W_1, W_2 \in \mathbb{R}^{C \times C} \) and \( W_3, W_4 \in \mathbb{R}^{N \times N} \), and \( \sigma \) is a non-linearity such as GELU.
+
+\newpage
+\paragraph{CNN Equivalence}
+\noindent
+Surprisingly, the architecture can be interpreted as a \textbf{weird CNN}:
+\begin{itemize}
+	\item \textbf{Channel MLP:} like a \(1 \times 1\) convolution.
+	\item \textbf{Token MLP:} like a large grouped convolution with kernel size covering the entire spatial extent.
+\end{itemize}
+This equivalence links Mixer to traditional convolutional pipelines but using unusual kernel and grouping configurations.
+
+\subsection{Results and Limitations}
+
+\noindent
+Despite the simplicity of using only MLPs, MLP-Mixer shows competitive results on large datasets, especially when pretrained on \textbf{JFT-300M}. However, on smaller datasets like ImageNet-1k, its performance trails attention-based models like DeiT or Swin unless aided by heavy pretraining and regularization.
+
+\noindent
+Nevertheless, the MLP-Mixer sparked a wave of related models attempting to remove attention:
+
+\begin{itemize}
+	\item \textbf{ResMLP} \cite{touvron2021_resmlp}: Introduces layer scale and deep residual paths.
+	\item \textbf{gMLP} \cite{liu2021_pay_attention_to_mlps}: Uses spatial gating to improve channel-token interactions.
+	\item \textbf{S2-MLP} \cite{yu2022_s2mlp}: Applies spatial shift for efficient MLP-based context mixing.
+	\item \textbf{CycleMLP} \cite{chen2022_cyclemlp}: Proposes local-global interactions via cycle-shaped MLPs.
+\end{itemize}
+
+\noindent
+While attention-free models remain conceptually appealing, their success typically depends on strong training regimes and large-scale data—an area where attention-based Transformers currently remain dominant.
+
+\subsection{Looking Ahead: Applying Transformers to Object Detection}
+
+\noindent
+So far, we’ve used Transformers primarily for image-level classification. In the next section, we turn our attention to a structured vision task—\textbf{object detection}. We will explore \textbf{DeTR} (Detection Transformer), a novel architecture that demonstrates how Transformers can replace both convolutional backbones and hand-crafted post-processing stages (like NMS) in object detection pipelines.
+
+\newpage
+\section{Detection Transformer (DeTR)}
+\label{sec:chapter18_detr_intro}
+
+\noindent
+The \textbf{Detection Transformer (DeTR)} \cite{carion2020_detr} is a seminal work that brought the transformer architecture into the object detection domain. Developed by Facebook AI Research (FAIR), DeTR introduced a novel framework that reformulates object detection as a \textbf{direct set prediction problem}, eliminating many traditional hand-crafted components like anchor boxes, region proposals, and non-maximum suppression (NMS).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Chapter_18/DeTR_Architecture.jpg}
+	\caption{Overview of the DeTR architecture. An image is passed through a CNN backbone (e.g., ResNet-50) to produce a feature map. These features are flattened and fed into a transformer encoder. A decoder attends to learned object queries and outputs a fixed number of predictions, each corresponding to a potential object. Adapted from \cite{carion2020_detr}.}
+	\label{fig:chapter18_detr_architecture}
+\end{figure}
+
+\paragraph{Architecture Overview}
+\begin{itemize}
+	\item The input image is first encoded by a convolutional backbone (e.g., ResNet-50), yielding a spatial feature map.
+	\item The flattened feature map is treated as a sequence and passed through a transformer encoder.
+	\item A transformer decoder receives a fixed number  \(N\) of learned object queries and produces a corresponding set of \(N\) object predictions.
+	\item Each prediction outputs both a class label and a bounding box.
+\end{itemize}
+
+\paragraph{Why Transformers for Detection?}
+DeTR leverages the global self-attention of transformers to enable long-range dependency modeling across the image. Whereas CNN-based detectors often rely on local context and multi-scale heuristics to infer object presence, transformers can integrate information from the entire image holistically in a single forward pass.
+
+\noindent
+However, this global modeling comes with a key design shift: DeTR produces a \textbf{fixed-size set of predictions}—typically \(N = 100\)—for every image, regardless of how many objects are present. This architectural choice is critical: it allows DeTR to frame detection as a set-to-set matching problem, enabling end-to-end training using a bipartite matching loss.
+
+\noindent
+This design immediately raises a natural question: \emph{What happens when the number of actual objects is fewer than \(N\)}?
+
+\noindent
+We address this in the next subsection, where we explore how DeTR matches predictions to targets using bipartite matching, and how “no-object” padding plays a central role in the loss function and training dynamics.
+
+\newpage
+\subsection{Matching Predictions and Ground Truth with No-Object Padding}
+\label{subsec:chapter18_detr_matching}
+
+\noindent
+A key innovation in \textbf{DEtection TRansformer (DETR)} \cite{carion2020_detr} is its formulation of object detection as a \emph{set prediction} task. Rather than producing a variable number of outputs filtered through anchors and non-maximum suppression (NMS), DETR predicts a fixed number \(N\) of object candidates per image (typically \(N=100\))—regardless of how many objects are actually present.
+
+\paragraph{Challenge:}
+Most images contain fewer than \(N\) objects. This creates a mismatch between the number of predictions and the number of ground-truth annotations (\(M < N\)). How can we supervise all predictions consistently?
+
+\paragraph{Solution: No-Object Padding}
+To address this, DETR pads the ground-truth set with \textbf{“no-object”} entries—placeholder targets that carry a special background class label. The model is trained to recognize these as background predictions.
+
+\begin{itemize}
+	\item Let the image contain \(M\) annotated boxes.
+	\item The padded target set is expanded to size \(N\), by appending \(N - M\) dummy targets with a designated “no-object” class label (e.g., class 91 in COCO).
+	\item This allows a \emph{one-to-one matching} between predicted boxes and targets using the Hungarian algorithm, even when many targets are artificial.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/DeTR_Predictions_Vs_PaddedGT.jpg}
+	\caption{
+		\textbf{Prediction–Ground Truth Matching in DeTR.}
+		DETR always outputs a fixed number \(N\) of predictions per image. To supervise all predictions uniformly, the ground-truth set is padded with “no-object” entries so its size matches \(N\). The Hungarian algorithm computes an optimal one-to-one matching between predictions and padded targets. Most predictions are matched to background entries, regularizing the model to produce confident “no-object” classifications for irrelevant tokens.
+	}
+	\label{fig:chapter18_detr_predictions_vs_paddedgt}
+\end{figure}
+
+\paragraph{Hungarian Matching:}
+Matching is solved globally using the Hungarian algorithm, which assigns each prediction to exactly one target (real or padded) to minimize the total matching cost:
+
+\[
+\mathcal{L}_{\text{match}}(i,j) = \lambda_{\text{cls}} \cdot \text{CE}(\hat{c}_i, c_j) + \lambda_{\text{L1}} \cdot \lVert \hat{b}_i - b_j \rVert_1 + \lambda_{\text{GIoU}} \cdot \bigl(1 - \text{GIoU}(\hat{b}_i, b_j)\bigr)
+\]
+
+\paragraph{Implementation Snippet:}
+\begin{mintedbox}[bgcolor=black!3, fontsize=\small, linenos]{python}
+	# Assume:
+	# targets = List[Dict] with keys 'boxes' and 'labels'
+	# num_queries = fixed number of DETR outputs (e.g., 100)
+	padded_targets = []
+	
+	for tgt in targets:
+	boxes  = tgt["boxes"]   # [num_objects, 4]
+	labels = tgt["labels"]  # [num_objects]
+	
+	num_objs = boxes.size(0)
+	pad_size = num_queries - num_objs
+	
+	# Pad with dummy boxes and no-object class label (e.g., 91 for COCO)
+	padded_boxes  = F.pad(boxes,  (0, 0, 0, pad_size))  # [num_queries, 4]
+	padded_labels = F.pad(labels, (0, pad_size), value=no_object_class)
+	
+	padded_targets.append({
+		"boxes": padded_boxes,
+		"labels": padded_labels
+	})
+\end{mintedbox}
+
+\paragraph{Why This Matters:}
+This matching-and-padding design:
+
+\begin{itemize}
+	\item \textbf{Eliminates} the need for anchor boxes or NMS.
+	\item \textbf{Supervises} every prediction, even those matched to background.
+	\item \textbf{Enables} fully end-to-end training with standard classification and regression losses.
+\end{itemize}
+
+\noindent
+By framing detection as bipartite matching, DETR achieves a clean and interpretable training objective. In the following subsection, we’ll detail the final loss function and how it combines classification, L1 distance, and GIoU penalties over the matched pairs.
+
+\subsection{Hungarian Matching Loss and Bounding Box Optimization}
+\label{subsec:chapter18_detr_loss}
+
+\noindent
+After performing bipartite matching between predicted and ground truth boxes (see \autoref{subsec:chapter18_detr_matching}), DETR computes a loss over these matched pairs to optimize both class predictions and bounding box regressions. This is known as the \textbf{Hungarian loss}, and it operates over a \emph{permutation} of predictions that minimizes the overall cost.
+
+\paragraph{Step 1: Optimal Bipartite Matching}
+Let the ground truth set be \( y = \{y_1, \dots, y_N\} \), padded with “no-object” entries if the image contains fewer than \( N \) objects. Each element \( y_i = (c_i, b_i) \) contains a class label \( c_i \in \{1, \dots, K\} \cup \{\varnothing\} \) and a bounding box \( b_i \in [0,1]^4 \). Similarly, let \( \hat{y} = \{\hat{y}_1, \dots, \hat{y}_N\} \) be the \( N \) predictions, where each \( \hat{y}_j = (\hat{c}_j, \hat{b}_j) \).
+
+We now seek a permutation \( \hat{\sigma} \in \mathfrak{S}_N \) (the set of all permutations over \( N \) elements) that minimizes the total matching cost:
+
+\[
+\hat{\sigma} = \underset{\sigma \in \mathfrak{S}_N}{\arg\min} \sum_{i=1}^N \mathcal{L}_\text{match}(y_i, \hat{y}_{\sigma(i)}).
+\]
+
+This permutation defines a unique one-to-one mapping between each ground truth box and a model prediction.
+
+\paragraph{Step 2: Matching Cost Definition}
+
+The pairwise cost function accounts for classification and box quality:
+
+\[
+\mathcal{L}_\text{match}(y_i, \hat{y}_{\sigma(i)}) = 
+-\ind_{\{c_i \neq \varnothing\}} \cdot \hat{p}_{\sigma(i)}(c_i) 
++ \ind_{\{c_i \neq \varnothing\}} \cdot \mathcal{L}_\text{box}(b_i, \hat{b}_{\sigma(i)}),
+\]
+
+where:
+\begin{itemize}
+	\item \( \hat{p}_{\sigma(i)}(c_i) \) is the predicted probability for class \( c_i \),
+	\item \( \mathcal{L}_\text{box} \) is a bounding box regression loss (see below),
+	\item \( \ind \) denotes the indicator function (equal to 1 when the condition holds, 0 otherwise).
+\end{itemize}
+
+The indicator ensures that background (\( c_i = \varnothing \)) entries do not contribute to the loss.
+
+\paragraph{Step 3: Final Loss Computation}
+
+Once the optimal matching \( \hat{\sigma} \) is found, the Hungarian loss is computed as:
+
+\[
+\mathcal{L}_\text{Hungarian}(y, \hat{y}) = \sum_{i=1}^N \left[
+- \log \hat{p}_{\hat{\sigma}(i)}(c_i)
++ \ind_{\{c_i \neq \varnothing\}} \cdot \mathcal{L}_\text{box}(b_i, \hat{b}_{\hat{\sigma}(i)})
+\right].
+\]
+
+In practice, DETR downweights the classification loss for no-object classes by a factor of 10 to reduce class imbalance effects.
+
+\paragraph{Bounding Box Loss: Smooth L1 and GIoU Components}
+\label{par:detr_bounding_box_loss_components}
+
+Once a ground truth box \( b_i \) is matched with a predicted box \( \hat{b}_{\sigma(i)} \) (via the Hungarian algorithm), DETR computes a localization loss that balances \textbf{numerical precision} and \textbf{spatial alignment}. This is achieved through a combination of \textbf{Smooth L1} (Huber) loss and \textbf{Generalized IoU (GIoU)} loss.
+
+\subparagraph{1. Smooth L1 Loss (Huber Variant)}
+
+The Smooth L1 loss—also known as the \textbf{Huber loss}—is a robust alternative to standard L1 or L2 losses. It behaves like an L2 loss near zero (ensuring smooth gradients) and like an L1 loss for larger errors (ensuring robustness to outliers). Formally:
+
+\[
+\text{SmoothL1}(x) = 
+\begin{cases}
+	0.5 \cdot \frac{x^2}{\beta}, & \text{if } |x| < \beta \\
+	|x| - 0.5 \cdot \beta, & \text{otherwise}
+\end{cases}
+\]
+
+\noindent
+The hyperparameter \( \beta \) controls the transition point between the quadratic and linear regimes. For DETR, \( \beta = 1.0 \) is typically used. This makes the box regression more stable, especially during early training.
+
+\begin{mintedbox}[bgcolor=black!3, fontsize=\small, linenos]{python}
+	# Smooth L1 (Huber) loss for bounding box regression
+	import torch.nn.functional as F
+	
+	smooth_l1 = F.smooth_l1_loss(
+	pred_boxes, target_boxes,
+	reduction="none", beta=1.0
+	)
+\end{mintedbox}
+
+\noindent
+Despite being a coordinate-wise loss, Smooth L1 doesn’t account for the box's spatial shape or overlap. This is where GIoU comes in.
+
+\subparagraph{2. Generalized IoU (GIoU) Loss}
+
+Intersection over Union (IoU) is a classic metric for bounding box overlap:
+\[
+\text{IoU}(A, B) = \frac{|A \cap B|}{|A \cup B|}.
+\]
+However, IoU suffers from a key weakness: if two boxes do not overlap, IoU is 0, providing no learning signal—regardless of how close the boxes are spatially.
+
+To overcome this, \cite{rezatofighi2019_giou} proposed the \textbf{Generalized IoU (GIoU)}:
+
+\[
+\text{GIoU}(A, B) = \text{IoU}(A, B) - \frac{|C \setminus (A \cup B)|}{|C|},
+\]
+where \( C \) is the \emph{smallest enclosing box} that fully contains both \( A \) and \( B \). This makes GIoU sensitive to the spatial distance between non-overlapping boxes.
+
+\begin{itemize}
+	\item \( C \) is found by taking the tightest box covering both \( A \) and \( B \), using min and max operations over the corners.
+	\item When \( A \) and \( B \) overlap perfectly, GIoU reduces to IoU.
+	\item When \( A \cap B = \emptyset \), GIoU is negative, providing a gradient toward reducing their separation.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Chapter_18/giou_illustration.jpg}
+	\caption{
+		\textbf{Illustration of GIoU behavior.} Although both examples have IoU = 0, the left prediction is spatially closer to the ground truth box than the right. GIoU correctly assigns a higher similarity to the left, allowing for useful gradients even when IoU = 0. Credit: Jinsol Kim.
+	}
+	\label{fig:chapter18_giou_illustration}
+\end{figure}
+
+\begin{mintedbox}[bgcolor=black!3, fontsize=\small, linenos]{python}
+	from torchvision.ops import generalized_box_iou
+	
+	# GIoU loss: 1 - GIoU score
+	giou = generalized_box_iou(pred_boxes, target_boxes)
+	giou_loss = 1.0 - giou
+\end{mintedbox}
+
+\subparagraph{3. Combining Smooth L1 and GIoU}
+
+Each loss captures a different notion of box quality:
+
+\begin{itemize}
+	\item \textbf{Smooth L1 (Huber)}: Enforces numerical closeness between box coordinates (good for center, width, height alignment).
+	\item \textbf{GIoU}: Encourages spatial alignment and overlap—especially helpful when predictions are far from the target.
+\end{itemize}
+
+DETR combines the two:
+\[
+\mathcal{L}_\text{box}(b_i, \hat{b}_{\sigma(i)}) = 
+\lambda_\text{L1} \cdot \text{SmoothL1}(b_i, \hat{b}_{\sigma(i)}) +
+\lambda_\text{GIoU} \cdot \left(1 - \text{GIoU}(b_i, \hat{b}_{\sigma(i)})\right),
+\]
+where \( \lambda_\text{L1}, \lambda_\text{GIoU} \) are loss weights (e.g., 5.0 and 2.0 in the DETR paper).
+
+\paragraph{Conclusion}
+
+By blending coordinate-wise error with geometric overlap, DETR ensures that the model:
+\begin{itemize}
+	\item Learns to predict numerically accurate box coordinates,
+	\item Gains spatial awareness even when predictions are initially far off,
+	\item Receives informative gradients during all training phases.
+\end{itemize}
+
+This elegant combination supports DETR’s end-to-end detection approach. Now that we’ve explored how predictions are matched and optimized via loss functions, we proceed to examine the \textbf{architecture and flow} of DETR, from feature extraction to transformer decoding and output prediction.
+
+\subsection{Architecture Overview: CNN Backbone + Transformer Decoder}
+\label{subsec:chapter18_detr_architecture}
+
+\noindent
+\textbf{DETR} integrates convolutional and transformer-based modules in an end-to-end object detection pipeline. The overall architecture consists of:
+
+\begin{enumerate}
+	\item A convolutional backbone (e.g., ResNet-50 or ResNet-101) that extracts dense visual features.
+	\item A transformer encoder-decoder that models global interactions and predicts \(N\) object candidates.
+	\item A bipartite matching and loss computation mechanism to supervise predictions (see \autoref{subsec:chapter18_detr_loss}).
+\end{enumerate}
+
+\paragraph{1.\ CNN Backbone}
+The input image \( X \in \mathbb{R}^{3 \times H_0 \times W_0} \) passes through a CNN backbone (e.g., ResNet-50), producing an activation map:
+\[
+f \in \mathbb{R}^{C \times H \times W}, \quad \text{where } C = 2048,\quad H = H_0 / 32,\quad W = W_0 / 32.
+\]
+These activations represent coarse spatial features extracted by the CNN. A \(1 \times 1\) convolution reduces the channel dimension from \(C\) to \(d = 256\), yielding \(d\)-dimensional patch embeddings. These are then flattened into a sequence of \(HW\) tokens, each representing a spatial location.
+
+\paragraph{2.\ Transformer Encoder}
+Each of the \(HW\) flattened patch vectors is enriched with a \textbf{2D sine/cosine positional encoding} and then passed through a standard transformer encoder (multi-head self-attention + MLP with residuals and LayerNorm). Unlike NLP models (e.g., BERT, GPT), DETR uses longer sequences (\(HW \approx 900\)) but with smaller hidden size (\(d = 256\)) to accommodate memory constraints.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Chapter_18/slide_122.jpg}
+	\caption{Overall DeTR architecture. A CNN backbone extracts image features that are fed into a transformer encoder. The decoder receives \(N\) learned object queries to generate predictions.}
+	\label{fig:chapter18_detr_overall_arch}
+\end{figure}
+
+\paragraph{3.\ Learned Object Queries and Transformer Decoder}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figures/Chapter_18/DeTR_Transformer_Encoder_Decoder.jpg}
+	\caption{Transformer architecture in DETR. The encoder aggregates image features. The decoder uses learned object queries to generate one output per prediction slot. Adapted from \cite{carion2020_detr}.}
+	\label{fig:chapter18_detr_transformer_arch}
+\end{figure}
+
+The decoder takes in \(N = 100\) learnable vectors called \emph{object queries}, each intended to produce one detection result. 
+These vectors are randomly initialized and updated during training to “ask” different questions about the image content.
+
+\begin{itemize}
+	\item The encoder outputs serve as \textbf{keys and values}.
+	\item The learned queries serve as \textbf{queries} in the decoder's cross-attention layers.
+\end{itemize}
+
+This mirrors the original Transformer decoder from \cite{vaswani2017_attention}, adapted for detection instead of autoregressive text generation.
+
+\paragraph{4.\ Interpreting Object Queries}
+Each object query can be imagined as an attention-driven \textit{question}, probing the image for different object types or regions. 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Figures/Chapter_18/detr_box_predictions.jpg}
+	\caption{Specialization of object queries across COCO images. Each prediction slot learns to attend to specific regions and box sizes. Color represents box scale and orientation. Source: \cite{carion2020_detr}.}
+	\label{fig:chapter18_detr_box_query_specialization}
+\end{figure}
+
+For example, in the above figure \ref{fig:chapter18_detr_box_query_specialization}, the colored boxes might be asking the following questions:
+
+\begin{itemize}
+	\item \textcolor{purple}{“What small object is in the bottom-left?”}
+	\item \textcolor{pink}{“Is there something large in the center?”}
+\end{itemize}
+
+Through training, each query vector specializes, covering distinct spatial areas, object sizes, or semantics. This is visualized in the following figure.
+
+\paragraph{5.\ Why Attention is a Natural Fit}
+
+Transformers are inherently suited for modeling pairwise relationships—making them a natural match for object detection, where understanding spatial interactions is key.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\textwidth]{Figures/Chapter_18/example_attention_matrix.png}
+	\caption{\textbf{Attention as Bounding Box Proxy.} Entries in the attention matrix may reflect spatial relationships between image regions—suggesting how attention can implicitly capture bounding box-like structures. This interpretation, proposed by \href{https://www.youtube.com/watch?v=T35ba_VXkMY}{Yannic Kilcher}.}
+	\label{fig:chapter18_detr_attention_matrix}
+\end{figure}
+
+\noindent
+Hence, the encoder’s attention matrix (\(HW \times HW\)) can be viewed as modeling how each spatial location attends to others—implicitly capturing potential object extents. Though DeTR does not exploit this directly, it highlights how attention mechanisms align naturally with the structure of visual tasks, hinting at promising directions for future work in detection and region proposal learning.
+
+\subsection{DeTR Results, Impact, and Follow-Up Work}
+\label{subsec:chapter18_detr_results}
+
+\noindent
+The introduction of \textbf{DEtection TRansformer (DeTR)} \cite{carion2020_detr} marked a turning point in object detection by demonstrating that transformer-based architectures can achieve strong results \emph{without anchors or non-maximum suppression (NMS)}. DeTR generalizes remarkably well across:
+\begin{itemize}
+	\item \textbf{Objects of varying sizes:} from small to large.
+	\item \textbf{Different object counts:} from sparse to cluttered scenes.
+	\item \textbf{Challenging layouts:} producing high-quality and coherent predictions.
+\end{itemize}
+
+\noindent
+DeTR’s learned object queries attend to semantically meaningful regions in the image. Some queries specialize in detecting small objects, others cover large or central regions, and many converge to interpretable modes that persist across datasets.
+
+\paragraph{From Detection to Segmentation}
+Thanks to its global attention mechanism and fixed set of learned queries, DeTR can be extended to perform \textbf{panoptic segmentation}. Instead of just bounding boxes, DeTR predicts a binary mask for each detected object in parallel. These masks are then merged using pixel-wise argmax, yielding instance segmentation results.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figures/Chapter_18/semantic_segmentation_detr.jpg}
+	\caption{\textbf{Object-wise mask prediction in DeTR.} Binary masks are predicted independently for each object query. These are later merged using a pixel-wise argmax operation, enabling detailed instance-level segmentation. Adapted from \cite{carion2020_detr}, Figure 8.}
+	\label{fig:chapter18_detr_segmentation_masks}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_18/detr_semantic_segmentation.jpg}
+	\caption{\textbf{Panoptic segmentation with DeTR-R101.} DETR can segment both “things” (object instances) and “stuff” (amorphous background regions) in a unified manner. The consistency and alignment of masks show that DETR learns strong spatial and semantic priors. Adapted from \cite{carion2020_detr}.}
+	\label{fig:chapter18_detr_panoptic}
+\end{figure}
+
+\paragraph{Real-World Usage: HuggingFace Implementation}
+The practicality of DeTR has led to wide adoption in research and industry. For example, the HuggingFace Computer Vision Course provides a user-friendly notebook for \emph{fine-tuning DeTR on custom datasets}, demonstrating its flexibility:
+\begin{center}
+	\href{https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%203%20-%20Vision%20Transformers/Fine-tuning%20Vision%20Transformers%20for%20Object%20detection.ipynb}{\texttt{Try DETR fine-tuning here}}
+\end{center}
+
+\paragraph{Follow-Up Works and Extensions}
+
+Since its release, DeTR has inspired a rich line of research focused on addressing its main limitations—particularly training speed and convergence—while extending its capabilities:
+
+\begin{itemize}
+	\item \textbf{DAB-DeTR} \cite{liu2022_dab_detr} was one of the first major improvements. It introduced \emph{dynamic anchor boxes} by injecting learnable reference points into the object queries. This allowed the model to more effectively initialize and refine box predictions throughout training, leading to faster convergence and improved accuracy.
+	
+	\item \textbf{DN-DeTR} \cite{li2022_dn_detr} further addressed the slow training issue by adding a \emph{denoising training objective}. During training, noisy object queries are added and explicitly supervised, which stabilizes learning and accelerates convergence. This technique makes DeTR more competitive in terms of training time without sacrificing accuracy.
+	
+	\item \textbf{Re-DETR} \cite{zhu2023_re_detr} builds on both prior ideas and rethinks the decoder itself. It enables \emph{iterative refinement} of predictions across decoder layers, where each stage progressively improves upon previous outputs. This dramatically speeds up convergence and reduces the computational footprint—bringing DeTR closer to real-time inference scenarios.
+	
+	\item Finally, \textbf{NMS Strikes Back} \cite{sun2023_nms_strikes_back} challenges one of DeTR’s founding principles: the removal of non-maximum suppression. This work shows that reintroducing a lightweight form of NMS can help refine predictions and improve performance in crowded scenes—suggesting that hybrid approaches can sometimes outperform purist, end-to-end designs.
+\end{itemize}
+
+\paragraph{Broader Impact}
+DeTR reshaped object detection by:
+\begin{itemize}
+	\item Eliminating the need for hand-designed anchors and post-processing.
+	\item Enabling a unified architecture for detection, segmentation, and panoptic tasks.
+	\item Inspiring a new wave of research around \textbf{set prediction} in vision.
+\end{itemize}
+
+\noindent
+Its clean, end-to-end formulation led to more interpretable and modular designs, with applications extending beyond vision to robotics, remote sensing, and beyond.
+
+\paragraph{Conclusion}
+DeTR is a prime example of how \textbf{Vision Transformers (ViTs)} can be used to build practical, high-performance systems in computer vision. Despite being architecturally different from traditional CNNs, ViTs can now tackle nearly every major vision task—\textit{classification}, \textit{detection}, \textit{segmentation}, and more.
+
+\medskip
+
+\noindent
+\textbf{The takeaway:} Vision Transformers are an evolution—not a revolution. They offer a different lens through which we solve the same core problems. But with strong hardware alignment (favoring matrix multiplications over convolutions), ViTs often train and run faster than CNNs at comparable FLOPs. More importantly, they provide a seamless path toward \textbf{multi-modal} understanding, as seen in models like CLIP and Vision-Language Models (VLMs), empowering unified reasoning across image, text, and video.
+
 
 
 

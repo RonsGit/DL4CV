@@ -81,13 +81,13 @@ Beyond industry, CV impacts daily life—enhancing security with facial
 
 This lecture offers a comprehensive journey through the evolution of computer vision, starting with its roots in neuroscience and progressing to its modern-day applications in artificial intelligence. The milestones covered are foundational to understanding the field, providing a historical perspective on the advancements that have shaped computer vision as we know it today. While many technical terms and concepts, such as convolutional neural networks (CNNs), vanishing gradients, recurrent neural networks (RNNs), long short-term memory (LSTM) networks, Transformers, and others, are briefly introduced, readers are encouraged not to feel deterred. Each of these topics will be explored in greater depth throughout the course and this summary, ensuring a thorough and accessible understanding of these pivotal ideas.
 
-
+\newpage
 \subsection{Hubel and Wiesel (1959): How Vision Works?}
 Hubel and Wiesel’s pioneering work in the late 1950s explored the visual cortex of cats using electrodes, uncovering two critical insights. First, they identified specialized neurons that respond to specific visual stimuli, such as edges with particular orientations. Second, they revealed a hierarchical structure in visual processing, where simple features combine to form complex patterns. These discoveries laid the foundation for artificial neural networks and convolutional architectures, which are integral to modern computer vision \cite{hubel1959_receptivefields}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_16.jpg}
+    \includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_16.jpg}
     \caption{Hubel \& Wiesel's study, revolutionizing our understanding of visual processing \cite{hubel1959_receptivefields}.}
     \label{fig:chapter1_slide16}
 \end{figure}
@@ -97,7 +97,7 @@ Larry Roberts’ groundbreaking PhD thesis in 1963 is often regarded as one of t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_17.jpg}
+    \includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_17.jpg}
     \caption{Larry Roberts' 1963 thesis introduced edge detection as a critical component of early computer vision systems \cite{roberts1963_3dsolids}.}
     \label{fig:chapter1_roberts}
 \end{figure}
@@ -222,7 +222,7 @@ The introduction of the \textbf{ImageNet} dataset in 2009 marked a new era in co
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_27.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_27.jpg}
 	\caption{Advances in the ImageNet Classification Challenge \cite{imagenet2009_hierarchicaldatabase, krizhevsky2012_alexnet}.}
 	\label{fig:chapter1_imagenet_challenge}
 \end{figure}
@@ -243,7 +243,7 @@ Key innovations in AlexNet included:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_28.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_28.jpg}
 	\caption{AlexNet’s performance in the 2012 ImageNet Challenge, showcasing its revolutionary impact on deep learning \cite{krizhevsky2012_alexnet}.}
 	\label{fig:chapter1_alexnet}
 \end{figure}
@@ -254,6 +254,7 @@ AlexNet’s success not only popularized GPUs for training but also showcased th
 
 The success of AlexNet in 2012 catalyzed a wave of advancements in convolutional neural networks (CNNs), setting the stage for deeper architectures, new paradigms, and transformative innovations in neural network design.
 
+\newpage
 \textbf{ResNets and Deeper CNN Architectures (2015)}
 
 While AlexNet showcased the power of deep CNNs, increasing network depth introduced the \textbf{vanishing gradient problem}, where gradients diminish as they propagate backward through the network, impeding effective training. This challenge was addressed by \textbf{Residual Networks (ResNets)}, proposed by He et al. in 2015 \cite{he2016_resnet}, which introduced \textbf{skip connections} (or residual connections). These connections allowed gradients to bypass certain layers, ensuring stable training even in networks with hundreds or thousands of layers.
@@ -320,7 +321,10 @@ The legacy of AlexNet extends far beyond its initial success, shaping the evolut
 The evolution of learning-based approaches in computer vision has been marked by pivotal milestones, each building upon its predecessors to push the boundaries of what artificial systems can achieve. From the early perceptron to the transformative AlexNet, these developments highlight the progression of ideas and innovations that laid the groundwork for modern deep learning.
 
 \subsection{The Perceptron (1958)}
-The \textbf{Perceptron}, introduced by Frank Rosenblatt in 1958, was the first neural network capable of learning from data. Designed as a single-layer classifier, it demonstrated that machines could adjust their weights iteratively based on error corrections, enabling them to classify data using linear boundaries. Despite its early promise, the perceptron had significant limitations, particularly its inability to solve non-linear problems such as XOR. These shortcomings were later critiqued in the influential book \textbf{"Perceptrons"} by Marvin Minsky and Seymour Papert in 1969, which highlighted the theoretical constraints of single-layer networks \cite{rosenblatt1958_perceptron, minsky1969_perceptrons}.
+The \textbf{Perceptron}, introduced by Frank Rosenblatt in 1958, was the first neural network capable of learning from data. Designed as a single-layer classifier, it demonstrated that machines could adjust their weights iteratively based on error corrections, enabling them to classify data using linear boundaries. 
+
+\newpage
+Despite its early promise, the perceptron had significant limitations, particularly its inability to solve non-linear problems such as XOR. These shortcomings were later critiqued in the influential book \textbf{"Perceptrons"} by Marvin Minsky and Seymour Papert in 1969, which highlighted the theoretical constraints of single-layer networks \cite{rosenblatt1958_perceptron, minsky1969_perceptrons}.
 
 \begin{figure}[H]
 	\centering
@@ -334,7 +338,7 @@ Minsky and Papert’s critique, while valid, inadvertently led to an "AI Winter,
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_30.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_30.jpg}
 	\caption{Minsky and Papert’s seminal book "Perceptrons," critiquing single-layer networks \cite{minsky1969_perceptrons}.}
 	\label{fig:chapter1_perceptrons_book}
 \end{figure}
@@ -344,7 +348,7 @@ In 1980, Kunihiko Fukushima introduced the \textbf{Neocognitron}, a hierarchical
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_32.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_32.jpg}
 	\caption{Kunihiko Fukushima’s Neocognitron: A precursor to modern CNNs \cite{fukushima1980_neocognitron}.}
 	\label{fig:chapter1_neocognitron}
 \end{figure}
@@ -354,8 +358,8 @@ The development of \textbf{Backpropagation} in 1986 by Rumelhart, Hinton, and Wi
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_33.jpg}
-	\caption{Backpropagation algorithm by Rumelhart et al., pivotal for training deep networks \cite{rumelhart1986_backpropagation}.}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_33.jpg}
+	\caption{Backpropagation algorithm by Rumelhart et al., pivotal for training DNNs \cite{rumelhart1986_backpropagation}.}
 	\label{fig:chapter1_backprop}
 \end{figure}
 
@@ -364,7 +368,7 @@ In 1998, Yann LeCun and colleagues introduced \textbf{LeNet-5}, a convolutional 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_34.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_34.jpg}
 	\caption{Yann LeCun’s LeNet-5: The first practical convolutional network \cite{lecun1998_lenet}.}
 	\label{fig:chapter1_lenet}
 \end{figure}
@@ -374,7 +378,7 @@ The 2000s marked the resurgence of neural networks as \textbf{Deep Learning} eme
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_1/Slide_35.jpg}
+	\includegraphics[width=0.7\textwidth]{Figures/Chapter_1/Slide_35.jpg}
 	\caption{The 2000s: Advances in hardware and algorithms enabling deep learning.}
 	\label{fig:chapter1_dl_2000s}
 \end{figure}
@@ -466,7 +470,7 @@ The exponential drop in computation costs has driven the deep learning revolutio
 	\label{fig:gpu_tensor_cores}
 \end{figure}
 
-
+\newpage
 \section{Key Challenges in CV and Future Directions}
 
 Despite remarkable progress, computer vision systems still face significant challenges that underscore their limitations and the need for continued innovation:

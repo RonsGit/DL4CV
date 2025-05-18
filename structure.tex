@@ -399,53 +399,52 @@ innerbottommargin=5pt]{cBox}
 % Toggle for showing/hiding enrichments
 \newif\ifenrichment
 \enrichmenttrue  
-%  ^ Switch to \enrichmentfalse to hide them (and remove TOC entries).
-
-% Track nesting depth (top-level vs. nested) if you still want some distinction:
-\newcounter{enrichOpenDepth}
+% ^ Switch to \enrichmentfalse to hide them (and remove TOC entries).
 
 \NewDocumentEnvironment{enrichment}{ O{} O{subsection} }{%
 	\ifenrichment
-	% Save the current header marks before setting the enrichment header
-	\let\savedLeftMark\leftmark
-	\let\savedRightMark\rightmark
-	% Determine the level and update the appropriate counter
+	% Only capture and manipulate the header if the enrichment is at 'section' level
 	\ifthenelse{\equal{#2}{section}}{%
+		% Save the current header marks
+		\let\savedLeftMark\leftmark
+		\let\savedRightMark\rightmark
+		% Step the section counter and record label/level
 		\refstepcounter{section}%
 		\def\theLabel{\thesection}%
 		\def\theTOClevel{section}%
-		% Print the heading in ocre (using unstarred \section to update header)
+		% Print the heading in ocre
 		\section*{\color{ocre}Enrichment \thesection: #1}%
+		% Update section-level header (so it appears in the running head)
 		\sectionmark{Enrichment \thesection: #1}%
 	}{%
+		% For subsection or subsubsection levels, do NOT save/restore headers
 		\ifthenelse{\equal{#2}{subsection}}{%
 			\refstepcounter{subsection}%
 			\def\theLabel{\thesubsection}%
 			\def\theTOClevel{subsection}%
 			\subsection*{\color{ocre}Enrichment \thesubsection: #1}%
-			\subsectionmark{Enrichment \thesubsection: #1}%
 		}{%
 			\refstepcounter{subsubsection}%
 			\def\theLabel{\thesubsubsection}%
 			\def\theTOClevel{subsubsection}%
 			\subsubsection*{\color{ocre}Enrichment \thesubsubsection: #1}%
-			% There's no default subsubsectionmark, so we use markboth:
-			\markboth{Enrichment \thesubsubsection: #1}{}%
 		}%
 	}%
-	% Add the enrichment to the TOC:
+	% Add enrichment to the TOC
 	\ifx\empty#1\empty
 	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel}%
 	\else
 	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel: #1}%
 	\fi
-	% Some vertical space and discourage a page break immediately:
+	% Some vertical space and discourage a page break immediately
 	\par\vspace{5pt}\nopagebreak[4]
 	\fi
 }{%
 	\ifenrichment
-	% Restore the previously saved header marks so subsequent pages display the correct header
-	\markboth{\savedLeftMark}{\savedRightMark}%
+	% Only restore header marks if the enrichment was at the 'section' level
+	\ifthenelse{\equal{#2}{section}}{%
+		\markboth{\savedLeftMark}{\savedRightMark}%
+	}{}%
 	\fi
 }
 

@@ -341,6 +341,7 @@ strong activations in meaningful regions without introducing artificial smoothin
 \noindent To overcome these limitations, we now explore \textbf{transposed convolution}, a \textbf{learnable upsampling method} that optimizes filter weights to produce high-resolution feature maps. This allows for fine-grained spatial reconstructions and greater adaptability compared to fixed unpooling strategies.
 
 \subsection{Transposed Convolution}
+\label{chapter15_subsec:transposed_convolution}
 
 \noindent \textbf{Transposed convolution}, also referred to as \textbf{deconvolution} or \textbf{fractionally strided convolution}, is an upsampling technique that enables the network to learn how to generate high-resolution feature maps from lower-resolution inputs. 
 
@@ -786,6 +787,7 @@ where:
 
 \newpage
 \begin{enrichment}[U-Net: A Fully Conv Architecture for Segmentation][section]
+	\label{enr:chapter15_unet}
 	
 	\begin{enrichment}[Overview][subsection]
 		
@@ -794,7 +796,6 @@ where:
 	\end{enrichment}
 	
 	\begin{enrichment}[U-Net Architecture][subsection]
-		
 		\noindent U-Net consists of two key components:
 		
 		\begin{itemize}
