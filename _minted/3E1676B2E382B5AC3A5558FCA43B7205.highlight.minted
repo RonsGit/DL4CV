@@ -1,5 +1,5 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-		\PYG{n}{cls\PYGZus{}loss} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{cross\PYGZus{}entropy}\PYG{p}{(}\PYG{n}{rpn\PYGZus{}cls\PYGZus{}logits}\PYG{p}{[}\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds}\PYG{p}{]}\PYG{p}{,} \PYG{n}{labels}\PYG{p}{[}\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds}\PYG{p}{]}\PYG{p}{)}
-		\PYG{n}{reg\PYGZus{}loss} \PYG{o}{=} \PYG{n}{smooth\PYGZus{}l1\PYGZus{}loss}\PYG{p}{(}\PYG{n}{rpn\PYGZus{}bbox\PYGZus{}deltas}\PYG{p}{[}\PYG{n}{pos\PYGZus{}inds}\PYG{p}{]}\PYG{p}{,} \PYG{n}{bbox\PYGZus{}targets}\PYG{p}{)}
-		\PYG{n}{total\PYGZus{}loss} \PYG{o}{=} \PYG{n}{cls\PYGZus{}loss} \PYG{o}{+} \PYG{n}{lambda\PYGZus{}} \PYG{o}{*} \PYG{n}{reg\PYGZus{}loss}
+\PYG{n}{cls\PYGZus{}loss} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{cross\PYGZus{}entropy}\PYG{p}{(}\PYG{n}{rpn\PYGZus{}cls\PYGZus{}logits}\PYG{p}{[}\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds}\PYG{p}{]}\PYG{p}{,} \PYG{n}{labels}\PYG{p}{[}\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds}\PYG{p}{]}\PYG{p}{)}
+\PYG{n}{reg\PYGZus{}loss} \PYG{o}{=} \PYG{n}{smooth\PYGZus{}l1\PYGZus{}loss}\PYG{p}{(}\PYG{n}{rpn\PYGZus{}bbox\PYGZus{}deltas}\PYG{p}{[}\PYG{n}{pos\PYGZus{}inds}\PYG{p}{]}\PYG{p}{,} \PYG{n}{bbox\PYGZus{}targets}\PYG{p}{)}
+\PYG{n}{total\PYGZus{}loss} \PYG{o}{=} \PYG{n}{cls\PYGZus{}loss} \PYG{o}{+} \PYG{n}{lambda\PYGZus{}} \PYG{o}{*} \PYG{n}{reg\PYGZus{}loss}
 \end{MintedVerbatim}

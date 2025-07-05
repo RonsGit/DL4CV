@@ -566,12 +566,12 @@ The name arises from information theory, where cross-entropy measures the differ
 
 The softmax function is named for its differentiable approximation to the max function, making it suitable for gradient-based optimization.
 
+\newpage
 \begin{enrichment}[Why Cross-Entropy Uses Logarithms, Not Squared Errors][subsubsection]
 	
 	\noindent
-	Cross-entropy loss is the standard choice for classification, especially when used with the softmax output layer. But why does it use logarithms, and not something seemingly simpler like squared error?
+	CE loss is the standard choice for classification, especially when used with the softmax output layer. But why does it use logarithms, and not something simpler like squared error?
 	
-	\newpage
 	\begin{itemize}
 		\item \textbf{(1) Mean Squared Error (MSE)} used as a loss for classification: 
 		\[

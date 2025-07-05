@@ -1,6 +1,6 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{n}{h} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w1}\PYG{p}{)}
-	\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{h}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
-	\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{p}{)}
-	\PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute loss}
+\PYG{n}{h} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w1}\PYG{p}{)}
+\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{h}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{p}{)}
+\PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute loss}
 \end{MintedVerbatim}

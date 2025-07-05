@@ -1,8 +1,8 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k+kn}{import} \PYG{n+nn}{torch}
-	
-	\PYG{k}{def} \PYG{n+nf}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
-		\PYG{k}{return} \PYG{n}{x} \PYG{o}{*} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
-	
-	\PYG{n}{scripted\PYGZus{}model} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{jit}\PYG{o}{.}\PYG{n}{script}\PYG{p}{(}\PYG{n}{model}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Convert to static graph}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+
+\PYG{k}{def} \PYG{n+nf}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+\PYG{k}{return} \PYG{n}{x} \PYG{o}{*} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+
+\PYG{n}{scripted\PYGZus{}model} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{jit}\PYG{o}{.}\PYG{n}{script}\PYG{p}{(}\PYG{n}{model}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Convert to static graph}
 \end{MintedVerbatim}

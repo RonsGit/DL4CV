@@ -1,9 +1,9 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-				\PYG{n}{Eigenvalues}\PYG{p}{:}
-				\PYG{n}{lam1} \PYG{o}{=} \PYG{l+m+mf}{3.000000}
-				\PYG{n}{lam2} \PYG{o}{=} \PYG{l+m+mf}{1.000000}
-				
-				\PYG{n}{Eigenvectors} \PYG{p}{(}\PYG{n}{each} \PYG{n}{column} \PYG{o+ow}{is} \PYG{n}{a} \PYG{n}{vector}\PYG{p}{)}\PYG{p}{:}
-				\PYG{n}{v1} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mf}{0.707107}\PYG{p}{,} \PYG{l+m+mf}{0.707107}\PYG{p}{]}
-				\PYG{n}{v2} \PYG{o}{=} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.707107}\PYG{p}{,} \PYG{l+m+mf}{0.707107}\PYG{p}{]}
+\PYG{n}{Eigenvalues}\PYG{p}{:}
+\PYG{n}{lam1} \PYG{o}{=} \PYG{l+m+mf}{3.000000}
+\PYG{n}{lam2} \PYG{o}{=} \PYG{l+m+mf}{1.000000}
+
+\PYG{n}{Eigenvectors} \PYG{p}{(}\PYG{n}{each} \PYG{n}{column} \PYG{o+ow}{is} \PYG{n}{a} \PYG{n}{vector}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{v1} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mf}{0.707107}\PYG{p}{,} \PYG{l+m+mf}{0.707107}\PYG{p}{]}
+\PYG{n}{v2} \PYG{o}{=} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.707107}\PYG{p}{,} \PYG{l+m+mf}{0.707107}\PYG{p}{]}
 \end{MintedVerbatim}

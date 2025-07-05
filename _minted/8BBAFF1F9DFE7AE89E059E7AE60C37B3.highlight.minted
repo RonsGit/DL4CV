@@ -1,31 +1,31 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k+kn}{import} \PYG{n+nn}{torch}
-	\PYG{n}{device} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{device}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cpu}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Change to \PYGZsq{}cuda:0\PYGZsq{} to run on GPU}
-	\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{10}  \PYG{c+c1}{\PYGZsh{} Batch size, input, hidden, output dimensions}
-	
-	\PYG{c+c1}{\PYGZsh{}Create random tensors for data and weights}
-	\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
-	\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
-	\PYG{n}{w1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
-	\PYG{n}{w2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
-	\PYG{n}{learning\PYGZus{}rate} \PYG{o}{=} \PYG{l+m+mf}{1e\PYGZhy{}6}
-	
-	\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}\PYG{p}{:}
-		\PYG{c+c1}{\PYGZsh{} Forward pass: compute predictions and loss}
-		\PYG{n}{h} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w1}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Matrix multiply (fully connected layer)}
-		\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{h}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Apply ReLU non\PYGZhy{}linearity}
-		\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Output prediction}
-		\PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute L2 loss}
-	
-	\PYG{c+c1}{\PYGZsh{} Backward pass: manually compute gradients}
-	\PYG{n}{grad\PYGZus{}y\PYGZus{}pred} \PYG{o}{=} \PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}
-	\PYG{n}{grad\PYGZus{}w2} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{grad\PYGZus{}y\PYGZus{}pred}\PYG{p}{)}
-	\PYG{n}{grad\PYGZus{}h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{grad\PYGZus{}y\PYGZus{}pred}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
-	\PYG{n}{grad\PYGZus{}h} \PYG{o}{=} \PYG{n}{grad\PYGZus{}h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{clone}\PYG{p}{(}\PYG{p}{)}
-	\PYG{n}{grad\PYGZus{}h}\PYG{p}{[}\PYG{n}{h} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}  \PYG{c+c1}{\PYGZsh{} Backpropagate ReLU}
-	\PYG{n}{grad\PYGZus{}w1} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{grad\PYGZus{}h}\PYG{p}{)}
-	
-	\PYG{c+c1}{\PYGZsh{}Gradient descent step on weights}
-	\PYG{n}{w1} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{grad\PYGZus{}w1}  \PYG{c+c1}{\PYGZsh{} Gradient update}
-	\PYG{n}{w2} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{grad\PYGZus{}w2}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+\PYG{n}{device} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{device}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{cpu}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Change to \PYGZsq{}cuda:0\PYGZsq{} to run on GPU}
+\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{10}  \PYG{c+c1}{\PYGZsh{} Batch size, input, hidden, output dimensions}
+
+\PYG{c+c1}{\PYGZsh{}Create random tensors for data and weights}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
+\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
+\PYG{n}{w1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
+\PYG{n}{w2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
+\PYG{n}{learning\PYGZus{}rate} \PYG{o}{=} \PYG{l+m+mf}{1e\PYGZhy{}6}
+
+\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}\PYG{p}{:}
+\PYG{c+c1}{\PYGZsh{} Forward pass: compute predictions and loss}
+\PYG{n}{h} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w1}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Matrix multiply (fully connected layer)}
+\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{h}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Apply ReLU non\PYGZhy{}linearity}
+\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Output prediction}
+\PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute L2 loss}
+
+\PYG{c+c1}{\PYGZsh{} Backward pass: manually compute gradients}
+\PYG{n}{grad\PYGZus{}y\PYGZus{}pred} \PYG{o}{=} \PYG{l+m+mf}{2.0} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)}
+\PYG{n}{grad\PYGZus{}w2} \PYG{o}{=} \PYG{n}{h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{grad\PYGZus{}y\PYGZus{}pred}\PYG{p}{)}
+\PYG{n}{grad\PYGZus{}h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{grad\PYGZus{}y\PYGZus{}pred}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{w2}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{grad\PYGZus{}h} \PYG{o}{=} \PYG{n}{grad\PYGZus{}h\PYGZus{}relu}\PYG{o}{.}\PYG{n}{clone}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{grad\PYGZus{}h}\PYG{p}{[}\PYG{n}{h} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}  \PYG{c+c1}{\PYGZsh{} Backpropagate ReLU}
+\PYG{n}{grad\PYGZus{}w1} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{t}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mm}\PYG{p}{(}\PYG{n}{grad\PYGZus{}h}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}Gradient descent step on weights}
+\PYG{n}{w1} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{grad\PYGZus{}w1}  \PYG{c+c1}{\PYGZsh{} Gradient update}
+\PYG{n}{w2} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{grad\PYGZus{}w2}
 \end{MintedVerbatim}

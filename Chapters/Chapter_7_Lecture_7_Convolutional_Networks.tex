@@ -2228,7 +2228,7 @@ A smoother loss landscape provides several advantages:
 
 \subsubsection{Why Does BatchNorm Smooth the Loss Surface?}
 
-Batch Normalization fundamentally re-parameterizes neural networks in a way that smooths the loss surface, making optimization more efficient. The key reasons behind this effect are:
+Batch Normalization has been shown empirically to improve optimization dynamics by smoothing the loss surface and allowing for more stable, faster convergence. While several hypotheses attempt to explain these benefits, the precise mechanism is still an active area of research. Below we outline the leading explanations, supported by both experimental evidence and partial theoretical justification.
 
 \paragraph{1. Hessian Eigenvalues and Loss Surface Curvature}
 
@@ -2299,25 +2299,45 @@ During training, each mini-batch is normalized with its \emph{own} mean and vari
 	The random normalization offsets per batch resemble an on-the-fly perturbation of inputs/activations, preventing overfitting to a single “static” distribution of feature maps.
 \end{itemize}
 
-\subsubsection{BN Helps Decoupling Weight Magnitude from Activation Scale}
+\paragraph{4. Decoupling Weight Norm from Direction: A Geometric Reparameterization}
 
-BatchNorm ensures that small parameter changes do not produce drastic changes in activation distributions, stabilizing the network’s behavior.
+Perhaps the most compelling theoretical insight comes from interpreting BatchNorm as a reparameterization of weight space. It effectively decouples the \emph{magnitude} and \emph{direction} of the weight vector~\cite{kohler2019_exponentialbn}.
 
-\textbf{Without BN:} A small weight increase in a deep layer might cause activations to shift significantly, propagating instability and leading to vanishing/exploding gradients.
+Let the output of a unit be:
 
-\textbf{With BN:} Because activations are normalized, small weight updates lead to controlled changes, preventing activations from blowing up or collapsing.
+\[
+f(w) = \mathbb{E}_x[\phi(x^\top w)],
+\]
 
-This effect allows for higher learning rates, as networks become less sensitive to parameter updates.
+where \( \phi \) is an activation function, and \( x \sim \mathcal{N}(0, S) \) with covariance matrix \( S \succ 0 \). After BatchNorm (ignoring bias for simplicity), this becomes:
 
-\paragraph{Mini Example: ReLU Dead Zone Prevention}
+\[
+f_{\text{BN}}(w, \gamma) = \mathbb{E}_x\left[\phi\left(\gamma \frac{x^\top w}{\sqrt{w^\top S w}}\right)\right].
+\]
 
-Consider a layer feeding into a ReLU activation. If the layer's bias or weights shift slightly, many inputs could enter ReLU’s "dead zone," where all outputs become zero $ (\text{inputs} <0)$. With BatchNorm, activations are re-centered and scaled to maintain unit variance, preventing small weight shifts from abruptly suppressing activations. This helps maintain a more expressive network, avoiding cases where neurons stop contributing to learning.
+This can be rewritten as:
 
-\subsubsection{Conclusion: The Real Reason BatchNorm Works}
+\[
+f_{\text{BN}}(w, \gamma) = \mathbb{E}_x\left[\phi\left(x^\top \tilde{w} \right)\right], \quad \text{where } \tilde{w} = \gamma \cdot \frac{w}{\| w \|_S}.
+\]
 
-While BatchNorm was originally introduced to address internal covariate shift, later research has shown that its primary benefit lies in smoothing the loss landscape and stabilizing gradients. By keeping activations within a well-behaved range, BatchNorm enables higher learning rates, reduces sensitivity to initialization, and allows deep networks to train more efficiently.
+The direction of \( w \) is now normalized (via \( \| w \|_S = \sqrt{w^\top S w} \)), and its magnitude is controlled separately via \( \gamma \). This decoupling stabilizes training because the optimization landscape becomes more symmetric and less sensitive to the absolute scaling of weights. It also allows faster convergence in practice.
 
-This insight has influenced the development of alternative normalization techniques such as Layer Normalization (LN), Instance Normalization (IN), and Group Normalization (GN), which similarly aim to improve optimization stability without relying on batch-level statistics. We'll cover these extensively later. 
+\paragraph{5. Stabilizing Deep Networks and Preventing Dead Activations}
+
+BatchNorm helps stabilize deep networks by maintaining well-scaled and centered activations across layers. This is particularly important in networks using non-linearities like ReLU, which zero out all negative inputs. Without normalization, small shifts in weights or biases can cause many activations to fall below zero, pushing neurons into the so-called \emph{dead zone}, where their output becomes identically zero and gradients cease to flow.
+
+By normalizing pre-activation values to have zero mean and unit variance, BatchNorm ensures that inputs to ReLU are consistently distributed around the activation threshold. This keeps more neurons active during training and reduces the chance of units becoming permanently inactive due to poor initialization or noisy updates. In doing so, it preserves the expressiveness of the network and improves gradient propagation, particularly in deep architectures.
+
+\newpage
+\subsubsection{Conclusion: Why BatchNorm Helps—With Caution}
+
+Although BatchNorm was originally introduced to reduce \emph{internal covariate shift}, subsequent empirical and theoretical work suggests that its most impactful contribution lies elsewhere: in stabilizing training dynamics and smoothing the loss surface. By normalizing activations across mini-batches, it helps keep gradients well-scaled, mitigates the risk of exploding or vanishing updates, and allows for the use of larger learning rates.
+
+However, it's important to emphasize that the precise \emph{mechanism} by which BatchNorm smooths the optimization landscape is still an area of active research. While studies have demonstrated effects such as reduced Hessian eigenvalues and improved gradient predictability~\cite{santurkar2019_howdoesbatchnormhelp}, these results are largely empirical and do not yet constitute a unified theoretical explanation. The improvement in trainability may stem from a combination of factors—including length-direction decoupling, Lipschitz control, and others. 
+
+This evolving understanding has motivated the development of alternative normalization methods such as \emph{Layer Normalization} (LN), \emph{Instance Normalization} (IN), and \emph{Group Normalization} (GN), which attempt to preserve the optimization benefits of BatchNorm while avoiding its reliance on batch-level statistics. These techniques are particularly useful in settings such as recurrent networks, small-batch training, or generative models, where BatchNorm may be less effective. We will explore these variants in detail in the following sections.
+
 
 \newpage
 \subsubsection{Batch Normalization in Test Time}

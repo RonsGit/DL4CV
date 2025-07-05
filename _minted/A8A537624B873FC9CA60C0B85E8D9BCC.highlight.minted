@@ -1,13 +1,13 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-				\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
-				
-				\PYG{c+c1}{\PYGZsh{} Create an example matrix X}
-				\PYG{n}{X} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{50}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Tall\PYGZhy{}and\PYGZhy{}skinny matrix}
-				
-				\PYG{c+c1}{\PYGZsh{} Compute the full SVD}
-				\PYG{n}{U}\PYG{p}{,} \PYG{n}{S}\PYG{p}{,} \PYG{n}{Vt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{svd}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{full\PYGZus{}matrices}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-				
-				\PYG{c+c1}{\PYGZsh{} U: left singular vectors (100x100)}
-				\PYG{c+c1}{\PYGZsh{} S: singular values (vector of length 50)}
-				\PYG{c+c1}{\PYGZsh{} Vt: transpose of right singular vectors (50x50)}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+
+\PYG{c+c1}{\PYGZsh{} Create an example matrix X}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{50}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Tall\PYGZhy{}and\PYGZhy{}skinny matrix}
+
+\PYG{c+c1}{\PYGZsh{} Compute the full SVD}
+\PYG{n}{U}\PYG{p}{,} \PYG{n}{S}\PYG{p}{,} \PYG{n}{Vt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{svd}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{full\PYGZus{}matrices}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} U: left singular vectors (100x100)}
+\PYG{c+c1}{\PYGZsh{} S: singular values (vector of length 50)}
+\PYG{c+c1}{\PYGZsh{} Vt: transpose of right singular vectors (50x50)}
 \end{MintedVerbatim}

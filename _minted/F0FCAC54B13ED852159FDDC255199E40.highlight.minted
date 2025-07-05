@@ -1,0 +1,14 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} From ldm/modules/autoencoder/modules.py}
+
+\PYG{k}{class} \PYG{n+nc}{AutoencoderKL}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{)}\PYG{p}{:}
+\PYG{k}{def} \PYG{n+nf}{encode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{h} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{encoder}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}              \PYG{c+c1}{\PYGZsh{} Conv + ResBlock + Attention}
+\PYG{n}{moments} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{quant\PYGZus{}conv}\PYG{p}{(}\PYG{n}{h}\PYG{p}{)}     \PYG{c+c1}{\PYGZsh{} Projects to (mu, logvar)}
+\PYG{k}{return} \PYG{n}{moments}
+
+\PYG{k}{def} \PYG{n+nf}{decode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{z}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{z} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{post\PYGZus{}quant\PYGZus{}conv}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)}      \PYG{c+c1}{\PYGZsh{} Linear 1x1 conv}
+\PYG{n}{x\PYGZus{}hat} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{decoder}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} Upsample + Conv stack}
+\PYG{k}{return} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tanh}\PYG{p}{(}\PYG{n}{x\PYGZus{}hat}\PYG{p}{)}         \PYG{c+c1}{\PYGZsh{} Outputs in [\PYGZhy{}1, 1]}
+\end{MintedVerbatim}

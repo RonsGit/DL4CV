@@ -1,6 +1,6 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-		\PYG{n}{labels}\PYG{p}{,} \PYG{n}{matched\PYGZus{}gt\PYGZus{}boxes} \PYG{o}{=} \PYG{n}{assign\PYGZus{}labels}\PYG{p}{(}\PYG{n}{all\PYGZus{}anchors}\PYG{p}{,} \PYG{n}{gt\PYGZus{}boxes}\PYG{p}{)}
-		\PYG{c+c1}{\PYGZsh{} labels: 1 = positive, 0 = negative, \PYGZhy{}1 = ignore}
-		\PYG{n}{pos\PYGZus{}inds} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{labels} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Indices of positive anchors}
-		\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{labels} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Anchors involved in loss}
+\PYG{n}{labels}\PYG{p}{,} \PYG{n}{matched\PYGZus{}gt\PYGZus{}boxes} \PYG{o}{=} \PYG{n}{assign\PYGZus{}labels}\PYG{p}{(}\PYG{n}{all\PYGZus{}anchors}\PYG{p}{,} \PYG{n}{gt\PYGZus{}boxes}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} labels: 1 = positive, 0 = negative, \PYGZhy{}1 = ignore}
+\PYG{n}{pos\PYGZus{}inds} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{labels} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Indices of positive anchors}
+\PYG{n}{fg\PYGZus{}bg\PYGZus{}inds} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{labels} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Anchors involved in loss}
 \end{MintedVerbatim}

@@ -1,25 +1,25 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k+kn}{import} \PYG{n+nn}{torch}
-	
-	\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{10}
-	\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{)}
-	\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
-	
-	\PYG{n}{model} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Sequential}\PYG{p}{(}
-	\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{)}\PYG{p}{,}
-	\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
-	\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
-	\PYG{p}{)}
-	
-	\PYG{n}{learning\PYGZus{}rate} \PYG{o}{=} \PYG{l+m+mf}{1e\PYGZhy{}2}
-	\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}\PYG{p}{:}
-		\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
-		\PYG{n}{loss} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{functional}\PYG{o}{.}\PYG{n}{mse\PYGZus{}loss}\PYG{p}{(}\PYG{n}{y\PYGZus{}pred}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
-		\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}
-	
-		\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-			\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{model}\PYG{o}{.}\PYG{n}{parameters}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-				\PYG{n}{param} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{param}\PYG{o}{.}\PYG{n}{grad}
-	
-	\PYG{n}{model}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+
+\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out} \PYG{o}{=} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{10}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{)}
+\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
+
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Sequential}\PYG{p}{(}
+\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{)}\PYG{p}{,}
+\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
+\PYG{p}{)}
+
+\PYG{n}{learning\PYGZus{}rate} \PYG{o}{=} \PYG{l+m+mf}{1e\PYGZhy{}2}
+\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\PYG{n}{loss} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{functional}\PYG{o}{.}\PYG{n}{mse\PYGZus{}loss}\PYG{p}{(}\PYG{n}{y\PYGZus{}pred}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}
+
+\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+\PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{model}\PYG{o}{.}\PYG{n}{parameters}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{param} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{param}\PYG{o}{.}\PYG{n}{grad}
+
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}
 \end{MintedVerbatim}

@@ -1,14 +1,14 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
-		\PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
-			\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride} \PYG{o}{+} \PYG{n}{xp0}  \PYG{c+c1}{\PYGZsh{} Bin\PYGZsq{}s top\PYGZhy{}left x coordinate}
-			\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{j} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride} \PYG{o}{+} \PYG{n}{yp0}  \PYG{c+c1}{\PYGZsh{} Bin\PYGZsq{}s top\PYGZhy{}left y coordinate}
-	
-			\PYG{c+c1}{\PYGZsh{} Generate 4 points for interpolation (no rounding!)}
-			\PYG{n}{x1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Quarter into the bin}
-			\PYG{n}{x2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Three\PYGZhy{}quarters inside}
-			\PYG{n}{y1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} \PYGZsh{} Quarter into the bin}
-			\PYG{n}{y2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Three\PYGZhy{}quarters inside}
-			
-			\PYG{c+c1}{\PYGZsh{} Bilinear interpolation will be performed at (x1, y1), (x1, y2), (x2, y1), and (x2, y2), and these values will be used to compute the final bin output for the per\PYGZhy{}region network.}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
+\PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}size}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride} \PYG{o}{+} \PYG{n}{xp0}  \PYG{c+c1}{\PYGZsh{} Bin\PYGZsq{}s top\PYGZhy{}left x coordinate}
+\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{=} \PYG{n}{j} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride} \PYG{o}{+} \PYG{n}{yp0}  \PYG{c+c1}{\PYGZsh{} Bin\PYGZsq{}s top\PYGZhy{}left y coordinate}
+
+\PYG{c+c1}{\PYGZsh{} Generate 4 points for interpolation (no rounding!)}
+\PYG{n}{x1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Quarter into the bin}
+\PYG{n}{x2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75} \PYG{o}{*} \PYG{n}{w\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Three\PYGZhy{}quarters inside}
+\PYG{n}{y1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.25} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} \PYGZsh{} Quarter into the bin}
+\PYG{n}{y2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{Tensor}\PYG{p}{(}\PYG{p}{[}\PYG{n}{y\PYGZus{}bin\PYGZus{}strt} \PYG{o}{+} \PYG{l+m+mf}{0.75} \PYG{o}{*} \PYG{n}{h\PYGZus{}stride}\PYG{p}{]}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Three\PYGZhy{}quarters inside}
+
+\PYG{c+c1}{\PYGZsh{} Bilinear interpolation will be performed at (x1, y1), (x1, y2), (x2, y1), and (x2, y2), and these values will be used to compute the final bin output for the per\PYGZhy{}region network.}
 \end{MintedVerbatim}

@@ -1,7 +1,7 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Prevents unnecessary graph construction}
-		\PYG{n}{w1} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{w1}\PYG{o}{.}\PYG{n}{grad}
-		\PYG{n}{w2} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{w2}\PYG{o}{.}\PYG{n}{grad}
-		\PYG{n}{w1}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{zero\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
-		\PYG{n}{w2}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{zero\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} Prevents unnecessary graph construction}
+\PYG{n}{w1} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{w1}\PYG{o}{.}\PYG{n}{grad}
+\PYG{n}{w2} \PYG{o}{\PYGZhy{}}\PYG{o}{=} \PYG{n}{learning\PYGZus{}rate} \PYG{o}{*} \PYG{n}{w2}\PYG{o}{.}\PYG{n}{grad}
+\PYG{n}{w1}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{zero\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{w2}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{zero\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
 \end{MintedVerbatim}

@@ -1,32 +1,32 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-	\PYG{k+kn}{import} \PYG{n+nn}{torch}
-	\PYG{k+kn}{import} \PYG{n+nn}{torch}\PYG{n+nn}{.}\PYG{n+nn}{nn}\PYG{n+nn}{.}\PYG{n+nn}{functional} \PYG{k}{as} \PYG{n+nn}{F}
-	
-	\PYG{k}{def} \PYG{n+nf}{self\PYGZus{}attention}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}\PYG{p}{:}
-\PYG{+w}{	}\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
-\PYG{l+s+sd}{	Computes self\PYGZhy{}attention for input batch X.}
-\PYG{l+s+sd}{	}
-\PYG{l+s+sd}{	X: Input tensor of shape (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}x)}
-\PYG{l+s+sd}{	W\PYGZus{}q, W\PYGZus{}k, W\PYGZus{}v: Weight matrices for queries, keys, and values}
-\PYG{l+s+sd}{	(each of shape (d\PYGZus{}x, d\PYGZus{}q), (d\PYGZus{}x, d\PYGZus{}q), (d\PYGZus{}x, d\PYGZus{}v))}
-\PYG{l+s+sd}{	\PYGZdq{}\PYGZdq{}\PYGZdq{}}
-	\PYG{n}{Q} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}q)}
-	\PYG{n}{K} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}q)}
-	\PYG{n}{V} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
-	
-	\PYG{c+c1}{\PYGZsh{} Compute scaled dot\PYGZhy{}product attention}
-	\PYG{n}{d\PYGZus{}q} \PYG{o}{=} \PYG{n}{K}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Dimensionality of queries}
-	\PYG{n}{E} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{Q}\PYG{p}{,} \PYG{n}{K}\PYG{o}{.}\PYG{n}{transpose}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)} \PYG{o}{/} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{(}\PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} (batch\PYGZus{}size, seq\PYGZus{}len, seq\PYGZus{}len)}
-	\PYG{n}{A} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{softmax}\PYG{p}{(}\PYG{n}{E}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Normalize attention weights}
-	\PYG{n}{Y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{A}\PYG{p}{,} \PYG{n}{V}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute final outputs, shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
-	
-	\PYG{k}{return} \PYG{n}{Y}\PYG{p}{,} \PYG{n}{A}  \PYG{c+c1}{\PYGZsh{} Returning attention outputs and weights}
-	
-	\PYG{c+c1}{\PYGZsh{} Example batch processing}
-	\PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{seq\PYGZus{}len}\PYG{p}{,} \PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{,} \PYG{n}{d\PYGZus{}v} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{32}\PYG{p}{,} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{64}
-	\PYG{n}{X} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{seq\PYGZus{}len}\PYG{p}{,} \PYG{n}{d\PYGZus{}x}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Random input batch}
-	\PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}v}\PYG{p}{)}
-	
-	\PYG{n}{Y}\PYG{p}{,} \PYG{n}{A} \PYG{o}{=} \PYG{n}{self\PYGZus{}attention}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Parallelized computation}
-	\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Output Shape:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Should be (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}\PYG{n+nn}{.}\PYG{n+nn}{nn}\PYG{n+nn}{.}\PYG{n+nn}{functional} \PYG{k}{as} \PYG{n+nn}{F}
+
+\PYG{k}{def} \PYG{n+nf}{self\PYGZus{}attention}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}\PYG{p}{:}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{Computes self\PYGZhy{}attention for input batch X.}
+
+\PYG{l+s+sd}{X: Input tensor of shape (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}x)}
+\PYG{l+s+sd}{W\PYGZus{}q, W\PYGZus{}k, W\PYGZus{}v: Weight matrices for queries, keys, and values}
+\PYG{l+s+sd}{(each of shape (d\PYGZus{}x, d\PYGZus{}q), (d\PYGZus{}x, d\PYGZus{}q), (d\PYGZus{}x, d\PYGZus{}v))}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{n}{Q} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}q)}
+\PYG{n}{K} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}q)}
+\PYG{n}{V} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
+
+\PYG{c+c1}{\PYGZsh{} Compute scaled dot\PYGZhy{}product attention}
+\PYG{n}{d\PYGZus{}q} \PYG{o}{=} \PYG{n}{K}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} Dimensionality of queries}
+\PYG{n}{E} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{Q}\PYG{p}{,} \PYG{n}{K}\PYG{o}{.}\PYG{n}{transpose}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)} \PYG{o}{/} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{(}\PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} (batch\PYGZus{}size, seq\PYGZus{}len, seq\PYGZus{}len)}
+\PYG{n}{A} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{softmax}\PYG{p}{(}\PYG{n}{E}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Normalize attention weights}
+\PYG{n}{Y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{A}\PYG{p}{,} \PYG{n}{V}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Compute final outputs, shape: (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
+
+\PYG{k}{return} \PYG{n}{Y}\PYG{p}{,} \PYG{n}{A}  \PYG{c+c1}{\PYGZsh{} Returning attention outputs and weights}
+
+\PYG{c+c1}{\PYGZsh{} Example batch processing}
+\PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{seq\PYGZus{}len}\PYG{p}{,} \PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{,} \PYG{n}{d\PYGZus{}v} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{32}\PYG{p}{,} \PYG{l+m+mi}{64}\PYG{p}{,} \PYG{l+m+mi}{64}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{seq\PYGZus{}len}\PYG{p}{,} \PYG{n}{d\PYGZus{}x}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Random input batch}
+\PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}q}\PYG{p}{)}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{d\PYGZus{}x}\PYG{p}{,} \PYG{n}{d\PYGZus{}v}\PYG{p}{)}
+
+\PYG{n}{Y}\PYG{p}{,} \PYG{n}{A} \PYG{o}{=} \PYG{n}{self\PYGZus{}attention}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W\PYGZus{}q}\PYG{p}{,} \PYG{n}{W\PYGZus{}k}\PYG{p}{,} \PYG{n}{W\PYGZus{}v}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Parallelized computation}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{Output Shape:}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Should be (batch\PYGZus{}size, seq\PYGZus{}len, d\PYGZus{}v)}
 \end{MintedVerbatim}

@@ -1091,6 +1091,7 @@ The core \textbf{MobileNetV3 block} builds upon the MobileNetV2 inverted residua
 	\item \textbf{MobileNetV3} Enhances MobileNetV2 with NAS-optimized activation functions and attention mechanisms.
 \end{itemize}
 
+\newpage
 \subsubsection{Why is MobileNetV3 More Efficient?}
 \label{subsubsec:mobilenetv3_efficiency}
 
@@ -1102,7 +1103,7 @@ At first glance, MobileNetV3 may seem computationally more expensive than Mobile
 	
 	\item \textbf{Selective Use of SE Blocks:} While SE blocks add computation, NAS \emph{only} places them in layers where they provide the most accuracy gain per FLOP. MobileNetV2 did not use the channel-attention mechanism at all, whereas MobileNetV3 strategically incorporates SE \emph{only in certain depthwise layers}, preventing unnecessary overhead.
 	
-	\item \textbf{h-swish Activation:} ReLU6 was initially introduced in MobileNetV2 for quantization robustness but has a hard threshold at 6, limiting its expressiveness. MobileNetV3 replaces it with \textbf{h-swish}, which approximates the smoothness of Swish activation while being computationally efficient:
+	\item \textbf{h-swish Activation:} ReLU6 was initially introduced in MobileNetV2 for quantization robustness but has a hard threshold at 6, limiting its expressiveness. MobileNetV3 replaces it with \textbf{h-swish}, approximates the smoothness of Swish (more computationally efficient):
 	\begin{equation}
 		\text{h-swish}(x) = x \cdot \frac{\max(0, \min(x+3, 6))}{6}.
 	\end{equation}
@@ -1113,24 +1114,33 @@ At first glance, MobileNetV3 may seem computationally more expensive than Mobile
 	\item \textbf{Better Parallelism and Memory Access Efficiency:} MobileNetV3 is designed to maximize memory access efficiency (avoiding network fragmentation) and parallel execution on ARM-based chips.
 \end{itemize}
 
-These optimizations make MobileNetV3 both \textbf{faster} and \textbf{more accurate} than MobileNetV2. Hence, MobileNetV3 outperforms its predecessors in terms of accuracy and efficiency.
+\paragraph{Empirical Comparison of MobileNetV3}
+\label{par:chapter11_mobilenetv3_empirical}
 
+\noindent
+MobileNetV3 introduces architecture search and network-level optimizations that make it both \textbf{faster} and \textbf{more accurate} than its predecessors. 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{lccc}
-		\toprule
-		\textbf{Network} & \textbf{Top-1 Acc. (\%)} & \textbf{MAdds (M)} & \textbf{Latency (ms)} \\
-		\midrule
-		MobileNetV1 & 70.6 & 575 & 113 \\
-		MobileNetV2 & 72.0 & 300 & 75 \\
-		MobileNetV3 & 75.2 & 219 & 43 \\
-		ShuffleNetV2 & 74.1 & 299 & - \\
-		NASNet-A & 74.0 & 564 & 183 \\
-		\bottomrule
-	\end{tabular}
-	\caption{Comparison of MobileNet variants and other efficient models on ImageNet MobileNetV3 achieves the best accuracy while maintaining low latency}
+	\caption{Performance comparison of efficient models on ImageNet. All results are reported at $224 \times 224$ resolution, with latency measured on a single big core of a Google Pixel phone CPU. Adapted from~\cite{howard2019_mobilenetv3}.}
 	\label{tab:chapter11_mobilenetv3_comparison}
+	\renewcommand{\arraystretch}{1.1}
+	\begin{tabular}{|l|l|c|c|c|}
+		\hline
+		\textbf{Family} & \textbf{Variant} & \textbf{Top-1 Acc. (\%)} & \textbf{MAdds (M)} & \textbf{Latency (ms)} \\
+		\hline
+		MobileNetV1~\cite{howard2017_mobilenets} & 1.0 MobileNet-224 & 70.6 & 569 & 119 \\
+		MobileNetV2~\cite{sandler2018_mobilenetv2} & 1.0 MobileNetV2-224 & 72.0 & 300 & 72 \\
+		MobileNetV3~\cite{howard2019_mobilenetv3} & \textbf{Large 1.0} & \textbf{75.2} & \textbf{219} & \textbf{51} \\
+		MobileNetV3~\cite{howard2019_mobilenetv3} & Small 1.0 & 67.4 & 66 & 15.8 \\
+		MnasNet~\cite{tan2019_mnasnet} & A1 (baseline) & 75.2 & 312 & 70 \\
+		ProxylessNAS~\cite{cai2019_proxylessnas} & GPU-targeted & 74.6 & 320 & 78 \\
+		\hline
+	\end{tabular}
 \end{table}
+
+\noindent
+MobileNetV3-Large matches the accuracy of MnasNet-A1 while using 30\% fewer multiply-add operations and achieving over 25\% lower latency. Compared to MobileNetV2, it improves Top-1 accuracy by more than 3\%, with a 27\% reduction in computation and substantially lower inference time—making it an attractive choice for high-performance mobile inference.
+
 
 \begin{figure}[H]
 	\centering
@@ -1184,8 +1194,9 @@ The authors propose four guiding principles to reduce overhead and improve paral
 	Operations such as channel shuffle, elementwise additions, and ReLUs can collectively add significant latency. Carefully minimizing these is crucial to real-world efficiency.
 \end{enumerate}
 
+\newpage
 \paragraph{From ShuffleNetV1 to ShuffleNetV2}
-ShuffleNetV1 showed that group convolutions plus channel shuffle could reduce FLOPs, but in practice:
+ShuffleNetV1 showed that group convs and channel shuffle could reduce FLOPs, but in practice:
 \begin{itemize}[leftmargin=2em]
 	\item Heavy reliance on grouped $1\times1$ convs (often with large group counts) clashed with G2 (increasing memory overhead).
 	\item The multi-stage channel split/shuffle mechanism frequently fragmented the network (clashing with G3).
@@ -1197,7 +1208,7 @@ Although ShuffleNetV2 demonstrates strong efficiency on real devices, it general
 
 \begin{itemize}[leftmargin=2em]
 	\item \textbf{Inverted bottlenecks} in MobileNetV3 (tuned via NAS) offer higher representational power, even if they appear to violate G1’s principle of uniform channel widths.
-	\item \textbf{NAS-guided design} in MobileNetV3, despite introducing seemingly fragmented connections (counter to G3), includes specialized operator fusions and expansions that improve efficiency in practice.
+	\item \textbf{NAS-guided design} in MobileNetV3, despite introducing seemingly fragmented connections (counter to G3), includes operator fusions and expansions that improve efficiency in practice.
 	\item \textbf{Real-world inference speed:} While ShuffleNetV2 aims to reduce memory access costs, it does not achieve a significant speedup over MobileNetV3 in practical deployments. MobileNetV3 remains faster in many scenarios, due to its superior layer fusion strategies. 
 \end{itemize}
 
@@ -1572,54 +1583,62 @@ EfficientNetV2 improves upon EfficientNetV1 in several ways:
 	\item \textbf{Improved Scaling:} Non-uniform scaling provides better efficiency than EfficientNetV1's uniform scaling.
 \end{itemize}
 
-\subsection{EfficientNetV2 vs. Other Models}
-\label{subsubsec:efficientnetv2_comparison}
+\newpage
+\subsection{EfficientNetV2 vs.\ Other Models}
+\label{subsec:efficientnetv2_comparison}
 
-EfficientNetV2 was designed to enhance \textbf{training speed, parameter efficiency, and real-world inference performance}. While it improves over EfficientNetV1, it is essential to compare it fairly against other architectures, including CNN-based and transformer-based models.
-
-\paragraph{Comparison in Accuracy, FLOPs, and Parameters}
+EfficientNetV2 is designed for improved training speed, parameter efficiency, and inference performance. The following table compares it to prior convolutional and transformer-based architectures using ImageNet Top-1 accuracy, model size, compute cost, and latency.
 
 \begin{table}[H]
 	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{lcccc}
-			\toprule
-			\textbf{Model} & \textbf{Top-1 Acc. (\%)} & \textbf{Params (M)} & \textbf{FLOPs (B)} & \textbf{Infer-time (ms)} \\
-			\midrule
-			ResNet-50 \cite{he2016_resnet} & 76.1 & 25.6 & 4.1 & -- \\
-			ResNet-101 \cite{he2016_resnet} & 77.4 & 44.5 & 7.9 & -- \\
-			DeiT-S \cite{touvron2021_deit} & 79.8 & 22.0 & 4.6 & -- \\
-			MobileNetV1 \cite{howard2017_mobilenets} & 70.6 & 4.2 & 0.58 & -- \\
-			MobileNetV2 (1.0) \cite{sandler2018_mobilenetv2} & 71.8 & 3.4 & 0.30 & -- \\
-			MobileNetV3-L \cite{howard2019_mobilenetv3} & 75.2 & 5.4 & 0.22 & -- \\
-			ShuffleNetV1 (1.5) \cite{zhang2018_shufflenet} & 71.5 & 3.4 & 0.29 & -- \\
-			ShuffleNetV2 (1.5) \cite{ma2018_shufflenetv2} & 72.6 & 3.5 & 0.30 & -- \\
-			RegNetY-8GF \cite{radosavovic2020_regnet} & 81.7 & 39 & 8.0 & 21 \\
-			RegNetY-16GF \cite{radosavovic2020_regnet} & 82.9 & 84 & 16.0 & 32 \\
-			EfficientNet-B3 \cite{tan2019_efficientnet} & 81.5 & 12 & 1.9 & 19 \\
-			EfficientNet-B4 \cite{tan2019_efficientnet} & 82.9 & 19 & 4.2 & 30 \\
-			EfficientNet-B5 \cite{tan2019_efficientnet} & 83.7 & 30 & 10.0 & 60 \\
-			\midrule
-			EfficientNetV2-S \cite{tan2021_efficientnetv2} & 83.9 & 22 & 8.8 & 24 \\
-			EfficientNetV2-M \cite{tan2021_efficientnetv2} & 85.1 & 54 & 24.0 & 57 \\
-			EfficientNetV2-L \cite{tan2021_efficientnetv2} & 85.7 & 120 & 53.0 & 98 \\
-			\bottomrule
-		\end{tabular}
-	}
-	\caption{Performance comparison of various models on ImageNet. Inference times (if available) are measured on an NVIDIA V100 GPU with FP16 precision and a batch size of 16, as reported in \cite{tan2021_efficientnetv2}. Entries with '--' indicate missing inference time data for those models.}
-	\label{tab:model_comparison}
+	\scriptsize
+	\caption{ImageNet performance. Inference measured on V100 GPU (FP16, batch size 16)~\cite{tan2021_efficientnetv2}.}
+	\label{tab:efficientnetv2_comparison}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\textbf{Model} & \textbf{Top-1} & \textbf{Params} & \textbf{FLOPs} & \textbf{Infer} & \textbf{Train} \\
+		& (\%) & (M) & (B) & (ms) & (hrs) \\
+		\hline
+		\multicolumn{6}{|c|}{\textbf{ConvNets / Hybrid}} \\
+		\hline
+		EffNet-B3~\cite{tan2019_efficientnet} & 81.5 & 12 & 1.9 & 9 & 3.1 \\
+		EffNet-B4~\cite{tan2019_efficientnet} & 82.9 & 19 & 4.2 & 10 & 6.2 \\
+		EffNet-B5~\cite{tan2019_efficientnet} & 83.6 & 30 & 9.9 & 14 & 12 \\
+		RegNetY-8GF~\cite{radosavovic2020_regnet} & 82.9 & 39 & 8.0 & 16 & 3.4 \\
+		RegNetY-16GF~\cite{radosavovic2020_regnet} & 83.4 & 84 & 16.0 & 24 & 6.8 \\
+		ResNeSt-101~\cite{zhang2020_resnest} & 83.0 & 48 & 11.0 & 20 & 3.8 \\
+		ResNeSt-200~\cite{zhang2020_resnest} & 83.8 & 66 & 15.0 & 25 & 5.9 \\
+		NFNet-F0~\cite{brock2021_nfnet} & 83.6 & 72 & 12.0 & 30 & 8.9 \\
+		NFNet-F1~\cite{brock2021_nfnet} & 84.7 & 132 & 35.0 & 42 & 21 \\
+		\hline
+		\multicolumn{6}{|c|}{\textbf{Vision Transformers}} \\
+		\hline
+		DeiT-B~\cite{touvron2021_deit} & 81.8 & 86 & 17.0 & 33 & -- \\
+		ViT-B/16~\cite{vit2020_transformers} & 77.9 & 86 & 55.0 & 36 & -- \\
+		\hline
+		\multicolumn{6}{|c|}{\textbf{EfficientNetV2 (Ours)}} \\
+		\hline
+		EffNetV2-S & 83.9 & 22 & 8.8 & 24 & 2.9 \\
+		EffNetV2-M & 85.1 & 55 & 24.0 & 54 & 11 \\
+		EffNetV2-L & 85.7 & 120 & 53.0 & 98 & 21 \\
+		EffNetV2-S (21k) & 85.9 & 22 & 8.8 & 24 & 5.2 \\
+		EffNetV2-M (21k) & 86.7 & 55 & 24.0 & 54 & 15 \\
+		EffNetV2-L (21k) & 87.3 & 120 & 53.0 & 98 & 34 \\
+		\hline
+	\end{tabular}
 \end{table}
 
 \noindent
 \textbf{Key Observations:}
 \begin{itemize}	
-	\item \textbf{EfficientNetV2 is significantly larger and slower than MobileNetV1, MobileNetV2, MobileNetV3, and ShuffleNetV2 but offers much better accuracy.} MobileNets and ShuffleNets prioritize extreme efficiency for mobile and real-time applications, whereas EfficientNetV2 targets a balance between accuracy and efficiency. This makes EfficientNetV2 unsuitable for ultra-lightweight applications but ideal for scenarios requiring higher accuracy while maintaining reasonable inference times.
+	\item \textbf{EfficientNetV2 achieves substantially higher accuracy than lightweight models like MobileNet and ShuffleNet, but with increased compute.} While MobileNetV1, MobileNetV2, MobileNetV3, and ShuffleNetV2 prioritize minimal parameters and ultra-fast inference for mobile scenarios, their Top-1 accuracies remain below 76\%. In contrast, EfficientNetV2-S achieves 83.9\% accuracy with a moderate compute footprint (22M parameters, 8.8B FLOPs), making it well-suited for high-accuracy applications with relaxed latency constraints.
 	
-	\item \textbf{DeiT-S has lower accuracy than EfficientNetV2-S.} Vision Transformers (ViTs) like DeiT-S struggle in real-world inference efficiency. Despite having moderate FLOPs, they require extensive parallelism and memory access, making them substantially slower than most EfficientNetV2 variants and CNNs of similar FLOP count. Additionally, smaller vision transformers like DeiT-S do not achieve competitive accuracy with EfficientNetV2. Only much larger transformer models rival EfficientNetV2 in accuracy, but they come with significantly higher compute and latency costs.
+	\item \textbf{EfficientNetV2-S outperforms DeiT-S in both accuracy and real-world latency.} Despite comparable model sizes and FLOPs, EfficientNetV2-S achieves 2.1\% higher accuracy than DeiT-S (83.9\% vs.\ 81.8\%) and is significantly faster during inference (24ms vs.\ 33ms). This highlights the practical efficiency gap between convolutional networks and vision transformers, especially in small-to-medium compute regimes.
 	
-	\item \textbf{EfficientNetV2 performs similarly to RegNets in terms of inference speed but achieves better accuracy.} Certain RegNet models have comparable FLOPs and inference times to EfficientNetV2 but do not reach the same level of accuracy. While RegNets are optimized for structured scaling, EfficientNetV2 benefits from progressive learning and optimized scaling strategies that boost accuracy at similar computational costs.
+	\item \textbf{EfficientNetV2 offers better accuracy–efficiency tradeoffs than RegNetY variants.} For instance, RegNetY-8GF and EfficientNetV2-S have similar latency (16--24ms) and parameter counts (39M vs.\ 22M), yet EfficientNetV2-S surpasses RegNetY-8GF by 1.0\% in accuracy. This demonstrates that EfficientNetV2’s compound scaling and progressive learning strategy yield superior results under comparable computational budgets.
 \end{itemize}
 
+\newpage
 \paragraph{Training Speed and Efficiency}
 EfficientNetV2 significantly reduces training time compared to EfficientNetV1, as shown in Table~\ref{tab:chapter11_efficientnetv2_training}.
 
@@ -1627,13 +1646,13 @@ EfficientNetV2 significantly reduces training time compared to EfficientNetV1, a
 	\centering
 	\begin{tabular}{lccc}
 		\toprule
-		\textbf{Model} & \textbf{Training Speedup} & \textbf{Trainable Params (M)} & \textbf{Epochs to Converge} \\
+		\textbf{Model} & \textbf{Training Speedup} & \textbf{Trainable Params (M)} & \textbf{Train-time (hours)} \\
 		\midrule
-		EfficientNet-B7 & 1.0× (baseline) & 66.3 & 350 \\
-		EfficientNetV2-L & 11× faster & 119.5 & 210 \\
+		EfficientNet-B7 & 1.0× (baseline) & 66.3 & 139 \\
+		EfficientNetV2-L & ~6× faster & 119.5 & 24 \\
 		\bottomrule
 	\end{tabular}
-	\caption{Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf{11× faster} while requiring fewer epochs.}
+	\caption{Training efficiency comparison of EfficientNetV2 vs. EfficientNetV1. EfficientNetV2-L converges \textbf{~6× faster} while requiring fewer epochs.}
 	\label{tab:chapter11_efficientnetv2_training}
 \end{table}
 

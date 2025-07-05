@@ -1,52 +1,52 @@
 \begin{MintedVerbatim}[commandchars=\\\{\}]
-			\PYG{k+kn}{import} \PYG{n+nn}{torch}
-			\PYG{k+kn}{from} \PYG{n+nn}{tqdm} \PYG{k+kn}{import} \PYG{n}{tqdm}
-			
-			\PYG{c+c1}{\PYGZsh{} Assumes the following are pre\PYGZhy{}initialized:}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} model: diffusion model (e.g., U\PYGZhy{}Net)}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} text\PYGZus{}encoder: a frozen CLIP/T5\PYGZhy{}style encoder}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} tokenizer: matching tokenizer}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} scheduler: DDPM or DDIM scheduler with .step()}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} guidance\PYGZus{}scale: e.g., 7.5}
-			\PYG{c+c1}{\PYGZsh{} \PYGZhy{} H, W: image dimensions (e.g., 64x64)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 1: Define prompt(s)}
-			\PYG{n}{prompts} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{a photo of a dog}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} List of text prompts}
-			\PYG{n}{batch\PYGZus{}size} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{prompts}\PYG{p}{)}
-			\PYG{n}{device} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{device}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cuda}\PYG{l+s+s2}{\PYGZdq{}} \PYG{k}{if} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{cuda}\PYG{o}{.}\PYG{n}{is\PYGZus{}available}\PYG{p}{(}\PYG{p}{)} \PYG{k}{else} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cpu}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 2: Tokenize conditional and unconditional prompts}
-			\PYG{n}{cond\PYGZus{}tokens} \PYG{o}{=} \PYG{n}{tokenizer}\PYG{p}{(}\PYG{n}{prompts}\PYG{p}{,} \PYG{n}{padding}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{return\PYGZus{}tensors}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pt}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
-			\PYG{n}{uncond\PYGZus{}tokens} \PYG{o}{=} \PYG{n}{tokenizer}\PYG{p}{(}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{padding}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{return\PYGZus{}tensors}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pt}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 3: Encode prompts into embeddings}
-			\PYG{n}{text\PYGZus{}cond} \PYG{o}{=} \PYG{n}{text\PYGZus{}encoder}\PYG{p}{(}
-			\PYG{n}{input\PYGZus{}ids}\PYG{o}{=}\PYG{n}{cond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{input\PYGZus{}ids}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}\PYG{p}{,}
-			\PYG{n}{attention\PYGZus{}mask}\PYG{o}{=}\PYG{n}{cond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{attention\PYGZus{}mask}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}
-			\PYG{p}{)}\PYG{o}{.}\PYG{n}{last\PYGZus{}hidden\PYGZus{}state}  \PYG{c+c1}{\PYGZsh{} Shape: (B, T, D)}
-			
-			\PYG{n}{text\PYGZus{}uncond} \PYG{o}{=} \PYG{n}{text\PYGZus{}encoder}\PYG{p}{(}
-			\PYG{n}{input\PYGZus{}ids}\PYG{o}{=}\PYG{n}{uncond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{input\PYGZus{}ids}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}\PYG{p}{,}
-			\PYG{n}{attention\PYGZus{}mask}\PYG{o}{=}\PYG{n}{uncond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{attention\PYGZus{}mask}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}
-			\PYG{p}{)}\PYG{o}{.}\PYG{n}{last\PYGZus{}hidden\PYGZus{}state}  \PYG{c+c1}{\PYGZsh{} Shape: (B, T, D)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 4: Concatenate for a single forward pass}
-			\PYG{n}{text\PYGZus{}embeddings} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{cat}\PYG{p}{(}\PYG{p}{[}\PYG{n}{text\PYGZus{}uncond}\PYG{p}{,} \PYG{n}{text\PYGZus{}cond}\PYG{p}{]}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (2B, T, D)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 5: Initialize Gaussian noise}
-			\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{model}\PYG{o}{.}\PYG{n}{in\PYGZus{}channels}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{W}\PYG{p}{)}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
-			
-			\PYG{c+c1}{\PYGZsh{} Step 6: Reverse sampling loop}
-			\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n}{tqdm}\PYG{p}{(}\PYG{n}{scheduler}\PYG{o}{.}\PYG{n}{timesteps}\PYG{p}{)}\PYG{p}{:}
-				\PYG{n}{t\PYGZus{}batch} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{full}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{long}\PYG{p}{)}
-			
-				\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-					\PYG{n}{noise\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{t\PYGZus{}batch}\PYG{p}{,} \PYG{n}{encoder\PYGZus{}hidden\PYGZus{}states}\PYG{o}{=}\PYG{n}{text\PYGZus{}embeddings}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sample}
-					\PYG{n}{noise\PYGZus{}uncond}\PYG{p}{,} \PYG{n}{noise\PYGZus{}cond} \PYG{o}{=} \PYG{n}{noise\PYGZus{}pred}\PYG{o}{.}\PYG{n}{chunk}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Split into (B, ...) chunks}
-					
-					\PYG{c+c1}{\PYGZsh{} Apply classifier\PYGZhy{}free guidance}
-					\PYG{n}{guided\PYGZus{}noise} \PYG{o}{=} \PYG{n}{noise\PYGZus{}uncond} \PYG{o}{+} \PYG{n}{guidance\PYGZus{}scale} \PYG{o}{*} \PYG{p}{(}\PYG{n}{noise\PYGZus{}cond} \PYG{o}{\PYGZhy{}} \PYG{n}{noise\PYGZus{}uncond}\PYG{p}{)}
-		
-				\PYG{c+c1}{\PYGZsh{} Step the scheduler using only guided samples}
-				\PYG{n}{x} \PYG{o}{=} \PYG{n}{scheduler}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{guided\PYGZus{}noise}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{p}{:}\PYG{n}{batch\PYGZus{}size}\PYG{p}{]}\PYG{p}{)}\PYG{o}{.}\PYG{n}{prev\PYGZus{}sample}  \PYG{c+c1}{\PYGZsh{} Shape: (B, C, H, W)}
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+\PYG{k+kn}{from} \PYG{n+nn}{tqdm} \PYG{k+kn}{import} \PYG{n}{tqdm}
+
+\PYG{c+c1}{\PYGZsh{} Assumes the following are pre\PYGZhy{}initialized:}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} model: diffusion model (e.g., U\PYGZhy{}Net)}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} text\PYGZus{}encoder: a frozen CLIP/T5\PYGZhy{}style encoder}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} tokenizer: matching tokenizer}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} scheduler: DDPM or DDIM scheduler with .step()}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} guidance\PYGZus{}scale: e.g., 7.5}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{} H, W: image dimensions (e.g., 64x64)}
+
+\PYG{c+c1}{\PYGZsh{} Step 1: Define prompt(s)}
+\PYG{n}{prompts} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{a photo of a dog}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} List of text prompts}
+\PYG{n}{batch\PYGZus{}size} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{prompts}\PYG{p}{)}
+\PYG{n}{device} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{device}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cuda}\PYG{l+s+s2}{\PYGZdq{}} \PYG{k}{if} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{cuda}\PYG{o}{.}\PYG{n}{is\PYGZus{}available}\PYG{p}{(}\PYG{p}{)} \PYG{k}{else} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cpu}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Step 2: Tokenize conditional and unconditional prompts}
+\PYG{n}{cond\PYGZus{}tokens} \PYG{o}{=} \PYG{n}{tokenizer}\PYG{p}{(}\PYG{n}{prompts}\PYG{p}{,} \PYG{n}{padding}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{return\PYGZus{}tensors}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pt}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{uncond\PYGZus{}tokens} \PYG{o}{=} \PYG{n}{tokenizer}\PYG{p}{(}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{]} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{padding}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{return\PYGZus{}tensors}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{pt}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Step 3: Encode prompts into embeddings}
+\PYG{n}{text\PYGZus{}cond} \PYG{o}{=} \PYG{n}{text\PYGZus{}encoder}\PYG{p}{(}
+\PYG{n}{input\PYGZus{}ids}\PYG{o}{=}\PYG{n}{cond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{input\PYGZus{}ids}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}\PYG{p}{,}
+\PYG{n}{attention\PYGZus{}mask}\PYG{o}{=}\PYG{n}{cond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{attention\PYGZus{}mask}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}
+\PYG{p}{)}\PYG{o}{.}\PYG{n}{last\PYGZus{}hidden\PYGZus{}state}  \PYG{c+c1}{\PYGZsh{} Shape: (B, T, D)}
+
+\PYG{n}{text\PYGZus{}uncond} \PYG{o}{=} \PYG{n}{text\PYGZus{}encoder}\PYG{p}{(}
+\PYG{n}{input\PYGZus{}ids}\PYG{o}{=}\PYG{n}{uncond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{input\PYGZus{}ids}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}\PYG{p}{,}
+\PYG{n}{attention\PYGZus{}mask}\PYG{o}{=}\PYG{n}{uncond\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{attention\PYGZus{}mask}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n}{device}\PYG{p}{)}
+\PYG{p}{)}\PYG{o}{.}\PYG{n}{last\PYGZus{}hidden\PYGZus{}state}  \PYG{c+c1}{\PYGZsh{} Shape: (B, T, D)}
+
+\PYG{c+c1}{\PYGZsh{} Step 4: Concatenate for a single forward pass}
+\PYG{n}{text\PYGZus{}embeddings} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{cat}\PYG{p}{(}\PYG{p}{[}\PYG{n}{text\PYGZus{}uncond}\PYG{p}{,} \PYG{n}{text\PYGZus{}cond}\PYG{p}{]}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Shape: (2B, T, D)}
+
+\PYG{c+c1}{\PYGZsh{} Step 5: Initialize Gaussian noise}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,} \PYG{n}{model}\PYG{o}{.}\PYG{n}{in\PYGZus{}channels}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{W}\PYG{p}{)}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Step 6: Reverse sampling loop}
+\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n}{tqdm}\PYG{p}{(}\PYG{n}{scheduler}\PYG{o}{.}\PYG{n}{timesteps}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{t\PYGZus{}batch} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{full}\PYG{p}{(}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{batch\PYGZus{}size}\PYG{p}{,}\PYG{p}{)}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{device}\PYG{o}{=}\PYG{n}{device}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{long}\PYG{p}{)}
+
+\PYG{k}{with} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{no\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+\PYG{n}{noise\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{t\PYGZus{}batch}\PYG{p}{,} \PYG{n}{encoder\PYGZus{}hidden\PYGZus{}states}\PYG{o}{=}\PYG{n}{text\PYGZus{}embeddings}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sample}
+\PYG{n}{noise\PYGZus{}uncond}\PYG{p}{,} \PYG{n}{noise\PYGZus{}cond} \PYG{o}{=} \PYG{n}{noise\PYGZus{}pred}\PYG{o}{.}\PYG{n}{chunk}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Split into (B, ...) chunks}
+
+\PYG{c+c1}{\PYGZsh{} Apply classifier\PYGZhy{}free guidance}
+\PYG{n}{guided\PYGZus{}noise} \PYG{o}{=} \PYG{n}{noise\PYGZus{}uncond} \PYG{o}{+} \PYG{n}{guidance\PYGZus{}scale} \PYG{o}{*} \PYG{p}{(}\PYG{n}{noise\PYGZus{}cond} \PYG{o}{\PYGZhy{}} \PYG{n}{noise\PYGZus{}uncond}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Step the scheduler using only guided samples}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{scheduler}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{guided\PYGZus{}noise}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{p}{:}\PYG{n}{batch\PYGZus{}size}\PYG{p}{]}\PYG{p}{)}\PYG{o}{.}\PYG{n}{prev\PYGZus{}sample}  \PYG{c+c1}{\PYGZsh{} Shape: (B, C, H, W)}
 \end{MintedVerbatim}

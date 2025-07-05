@@ -1,0 +1,24 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{c+c1}{\PYGZsh{} gs, gt: student and teacher networks}
+	\PYG{c+c1}{\PYGZsh{} C: center (K\PYGZhy{}dimensional)}
+	\PYG{c+c1}{\PYGZsh{} tps, tpt: student and teacher temperatures}
+	\PYG{c+c1}{\PYGZsh{} l, m: network and center momentum rates}
+	
+	\PYG{n}{gt}\PYG{o}{.}\PYG{n}{params} \PYG{o}{=} \PYG{n}{gs}\PYG{o}{.}\PYG{n}{params}  \PYG{c+c1}{\PYGZsh{} initialize teacher = student}
+	
+	\PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{loader}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} load a minibatch x with n samples}
+		\PYG{n}{x1}\PYG{p}{,} \PYG{n}{x2} \PYG{o}{=} \PYG{n}{augment}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{,} \PYG{n}{augment}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} random views}
+		\PYG{n}{s1}\PYG{p}{,} \PYG{n}{s2} \PYG{o}{=} \PYG{n}{gs}\PYG{p}{(}\PYG{n}{x1}\PYG{p}{)}\PYG{p}{,} \PYG{n}{gs}\PYG{p}{(}\PYG{n}{x2}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} student outputs (n x K)}
+		\PYG{n}{t1}\PYG{p}{,} \PYG{n}{t2} \PYG{o}{=} \PYG{n}{gt}\PYG{p}{(}\PYG{n}{x1}\PYG{p}{)}\PYG{p}{,} \PYG{n}{gt}\PYG{p}{(}\PYG{n}{x2}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} teacher outputs (n x K)}
+		\PYG{n}{loss} \PYG{o}{=} \PYG{n}{H}\PYG{p}{(}\PYG{n}{t1}\PYG{p}{,} \PYG{n}{s2}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n}{H}\PYG{p}{(}\PYG{n}{t2}\PYG{p}{,} \PYG{n}{s1}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}
+		\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}                 \PYG{c+c1}{\PYGZsh{} backprop through student}
+		\PYG{n}{update}\PYG{p}{(}\PYG{n}{gs}\PYG{p}{)}                      \PYG{c+c1}{\PYGZsh{} SGD step on student}
+		\PYG{n}{gt}\PYG{o}{.}\PYG{n}{params} \PYG{o}{=} \PYG{n}{l} \PYG{o}{*} \PYG{n}{gt}\PYG{o}{.}\PYG{n}{params} \PYG{o}{+} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{l}\PYG{p}{)} \PYG{o}{*} \PYG{n}{gs}\PYG{o}{.}\PYG{n}{params}
+		\PYG{n}{C} \PYG{o}{=} \PYG{n}{m} \PYG{o}{*} \PYG{n}{C} \PYG{o}{+} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{m}\PYG{p}{)} \PYG{o}{*} \PYG{n}{cat}\PYG{p}{(}\PYG{p}{[}\PYG{n}{t1}\PYG{p}{,} \PYG{n}{t2}\PYG{p}{]}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+	
+	\PYG{k}{def} \PYG{n+nf}{H}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,} \PYG{n}{s}\PYG{p}{)}\PYG{p}{:}
+		\PYG{n}{t} \PYG{o}{=} \PYG{n}{t}\PYG{o}{.}\PYG{n}{detach}\PYG{p}{(}\PYG{p}{)}                          \PYG{c+c1}{\PYGZsh{} stop gradient}
+		\PYG{n}{s} \PYG{o}{=} \PYG{n}{softmax}\PYG{p}{(}\PYG{n}{s} \PYG{o}{/} \PYG{n}{tps}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+		\PYG{n}{t} \PYG{o}{=} \PYG{n}{softmax}\PYG{p}{(}\PYG{p}{(}\PYG{n}{t} \PYG{o}{\PYGZhy{}} \PYG{n}{C}\PYG{p}{)} \PYG{o}{/} \PYG{n}{tpt}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}       \PYG{c+c1}{\PYGZsh{} center + sharpen}
+		\PYG{k}{return} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{t} \PYG{o}{*} \PYG{n}{log}\PYG{p}{(}\PYG{n}{s}\PYG{p}{)}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{p}{)}
+\end{MintedVerbatim}
