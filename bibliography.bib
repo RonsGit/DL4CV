@@ -107,6 +107,42 @@
 	isbn      = {0-262-18120-7}
 }
 
+@article{10.1145/37402.37422,
+	author = {Lorensen, William E. and Cline, Harvey E.},
+	title = {Marching cubes: A high resolution 3D surface construction algorithm},
+	year = {1987},
+	issue_date = {July 1987},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {21},
+	number = {4},
+	issn = {0097-8930},
+	url = {https://doi.org/10.1145/37402.37422},
+	doi = {10.1145/37402.37422},
+	abstract = {We present a new algorithm, called marching cubes, that creates triangle models of constant density surfaces from 3D medical data. Using a divide-and-conquer approach to generate inter-slice connectivity, we create a case table that defines triangle topology. The algorithm processes the 3D medical data in scan-line order and calculates triangle vertices using linear interpolation. We find the gradient of the original data, normalize it, and use it as a basis for shading the models. The detail in images produced from the generated surface models is the result of maintaining the inter-slice connectivity, surface data, and gradient information present in the original 3D data. Results from computed tomography (CT), magnetic resonance (MR), and single-photon emission computed tomography (SPECT) illustrate the quality and functionality of marching cubes. We also discuss improvements that decrease processing time and add solid modeling capabilities.},
+	journal = {SIGGRAPH Comput. Graph.},
+	month = aug,
+	pages = {163–169},
+	numpages = {7}
+}
+
+
+@inproceedings{lorensen1987_marchingcubes,
+	author = {Lorensen, William E. and Cline, Harvey E.},
+	title = {Marching cubes: A high resolution 3D surface construction algorithm},
+	year = {1987},
+	isbn = {0897912276},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/37401.37422},
+	doi = {10.1145/37401.37422},
+	abstract = {We present a new algorithm, called marching cubes, that creates triangle models of constant density surfaces from 3D medical data. Using a divide-and-conquer approach to generate inter-slice connectivity, we create a case table that defines triangle topology. The algorithm processes the 3D medical data in scan-line order and calculates triangle vertices using linear interpolation. We find the gradient of the original data, normalize it, and use it as a basis for shading the models. The detail in images produced from the generated surface models is the result of maintaining the inter-slice connectivity, surface data, and gradient information present in the original 3D data. Results from computed tomography (CT), magnetic resonance (MR), and single-photon emission computed tomography (SPECT) illustrate the quality and functionality of marching cubes. We also discuss improvements that decrease processing time and add solid modeling capabilities.},
+	booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+	pages = {163–169},
+	numpages = {7},
+	series = {SIGGRAPH '87}
+}
+
 @inproceedings{lowe1987_objectrecognition,
 	title={Three-dimensional object recognition from single two-dimensional images},
 	author={Lowe, David G},
@@ -239,6 +275,13 @@
 	year      = {2000}
 }
 
+@Article{zhang2001_shape_motion,
+	author  = {Zhang, Zhengyou and Faugeras, Olivier},
+	title   = {3‐D Shape and Motion Recovery Under Varying Illumination},
+	journal = {International Journal of Computer Vision (IJCV)},
+	year    = {2001}
+}
+
 @inproceedings{viola2001_boosteddetection,
 	title={Rapid object detection using a boosted cascade of simple features},
 	author={Viola, Paul and Jones, Michael},
@@ -265,6 +308,13 @@
 	keywords = {Alpha Matting, Foreground extraction, Graph Cuts, Image Editing, Interactive Image Segmentation},
 	location = {Los Angeles, California},
 	series = {SIGGRAPH '04}
+}
+
+@InProceedings{seitz2006_multiview,
+	author    = {Seitz, Steven M. and Curless, Brian and Diebel, James and Scharstein, Daniel and Szeliski, Richard},
+	title     = {A Comparison and Evaluation of Multi‐View Stereo Reconstruction Algorithms},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2006}
 }
 
 @inproceedings{hadsell2006_dimreduction, 
@@ -300,6 +350,18 @@
 	url     = {http://jmlr.org/papers/v9/vandermaaten08a.html}
 }
 
+@article{snavely2008_photo,
+	title   = {Modeling the World from {Internet} Photo Collections},
+	author  = {Snavely, Noah and Seitz, Steven M. and Szeliski, Richard},
+	journal = {International Journal of Computer Vision},
+	volume  = {80},
+	number  = {2},
+	pages   = {189--210},
+	year    = {2008},
+	month   = nov,
+	doi     = {10.1007/s11263-007-0107-3}
+}
+
 @inproceedings{imagenet2009_hierarchicaldatabase,
 	title={ImageNet: A large-scale hierarchical image database},
 	author={Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li},
@@ -321,6 +383,17 @@
 	title = {Learning Multiple Layers of Features from Tiny Images},
 	booktitle = {Technical Report, University of Toronto},
 	year = {2009}
+}
+
+@article{ji2010_3dcnn,
+	author       = {Shuiwang Ji and Wei Xu and Ming Yang and Kai Yu},
+	title        = {3D Convolutional Neural Networks for Human Action Recognition},
+	journal      = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+	volume       = {32},
+	number       = {1},
+	pages        = {220--233},
+	year         = {2010},
+	doi          = {10.1109/TPAMI.2009.23}
 }
 
 @inproceedings{glorot2010_understanding,
@@ -356,6 +429,22 @@
 	year={2011},
 	publisher={MIT Press},
 	doi={10.1162/NECO_a_00142}
+}
+
+@inproceedings{baccouche2011_seqdl,
+	author    = {Moussa Baccouche and Franck Mamalet and Christian Wolf and Christophe Garcia and Atilla Baskurt},
+	title     = {Sequential Deep Learning for Human Action Recognition},
+	booktitle = {International Conference on Human Behavior Understanding},
+	year      = {2011},
+	pages     = {29--39},
+	doi       = {10.1007/978-3-642-25446-8_4}
+}
+
+@inproceedings{chen2011_msvd,
+	title     = {Collecting Highly Parallel Data for Paraphrase Evaluation},
+	author    = {Chen, David L. and Dolan, William B.},
+	booktitle = {ACL Workshop on Monolingual Text-to-Text Generation},
+	year      = {2011}
 }
 
 @techreport{wah2011_cub,
@@ -449,6 +538,16 @@
 	year = {2013}
 }
 
+@inproceedings{krause2013_stanfordcars,
+	title     = {3D Object Representations for Fine-Grained Categorization},
+	author    = {Krause, Jonathan and Stark, Michael and Deng, Jia and Fei-Fei, Li},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision Workshops (ICCVW)},
+	year      = {2013},
+	pages     = {554--561},
+	doi       = {10.1109/ICCVW.2013.77},
+	url       = {https://ieeexplore.ieee.org/document/6755945}
+}
+
 @article{bengio2013_representation,
 	author    = {Bengio, Yoshua and Courville, Aaron and Vincent, Pascal},
 	title     = {Representation learning: A review and new perspectives},
@@ -481,6 +580,15 @@
 	doi       = {10.1109/CVPR.2014.220}
 }
 
+@inproceedings{karpathy2014_videocnn,
+	author       = {Andrej Karpathy and George Toderici and Sanketh Shetty and Thomas Leung and Rahul Sukthankar and Li Fei-Fei},
+	title        = {Large-scale Video Classification with Convolutional Neural Networks},
+	booktitle    = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	pages        = {1725--1732},
+	year         = {2014},
+	doi          = {10.1109/CVPR.2014.223}
+}
+
 @inproceedings{bossard2014_food101,
 	title     = {Food-101 -- Mining Discriminative Components with Random Forests},
 	author    = {Bossard, Lukas and Guillaumin, Matthieu and Van Gool, Luc},
@@ -502,6 +610,14 @@
 	pages={580--587},
 	year={2014}
 }
+
+@inproceedings{jiang2014_thumos14,
+	title     = {THUMOS Challenge: Action Recognition with a Large Number of Classes},
+	author    = {Jiang, Yu-Gang and Liu, Jingen and Roshan Zamir, Amir and Toderici, George and Laptev, Ivan and Shah, Mubarak and Sukthankar, Rahul},
+	booktitle = {ECCV Workshop on Large-Scale Video Classification},
+	year      = {2014}
+}
+
 
 @inproceedings{zitnick2014_edgeboxes,
 	title={Edge boxes: Locating object proposals from edges},
@@ -557,6 +673,14 @@
 	title     = {DeepPose: Human Pose Estimation via Deep Neural Networks},
 	journal   = {Computer Vision and Pattern Recognition (CVPR)},
 	year      = {2014}
+}
+
+@inproceedings{jensen2014_dtu,
+	title={Large scale multi-view stereopsis evaluation},
+	author={Jensen, Rasmus and Dahl, Anders and Vogiatzis, George and Tola, Engin and Aan{\ae}s, Henrik},
+	booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+	pages={406--413},
+	year={2014}
 }
 
 @article{guo2014_atari,
@@ -616,6 +740,16 @@
 	year = {2014}
 }
 
+@misc{eigen2014_depth,
+	title={Depth Map Prediction from a Single Image using a Multi-Scale Deep Network}, 
+	author={David Eigen and Christian Puhrsch and Rob Fergus},
+	year={2014},
+	eprint={1406.2283},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1406.2283}, 
+}
+
 @misc{cho2014_gru,
 	title={Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling}, 
 	author={Junyoung Chung and Caglar Gulcehre and KyungHyun Cho and Yoshua Bengio},
@@ -667,6 +801,26 @@
 	year={2015}
 }
 
+@misc{chang2015_shapenet,
+	title={ShapeNet: An Information-Rich 3D Model Repository}, 
+	author={Angel X. Chang and Thomas Funkhouser and Leonidas Guibas and Pat Hanrahan and Qixing Huang and Zimo Li and Silvio Savarese and Manolis Savva and Shuran Song and Hao Su and Jianxiong Xiao and Li Yi and Fisher Yu},
+	year={2015},
+	eprint={1512.03012},
+	archivePrefix={arXiv},
+	primaryClass={cs.GR},
+	url={https://arxiv.org/abs/1512.03012}, 
+}
+
+@misc{wu2015_shapenets,
+	title={3D ShapeNets: A Deep Representation for Volumetric Shapes}, 
+	author={Zhirong Wu and Shuran Song and Aditya Khosla and Fisher Yu and Linguang Zhang and Xiaoou Tang and Jianxiong Xiao},
+	year={2015},
+	eprint={1406.5670},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1406.5670}, 
+}
+
 @misc{hinton2015_distillation,
 	title={Distilling the Knowledge in a Neural Network}, 
 	author={Geoffrey Hinton and Oriol Vinyals and Jeff Dean},
@@ -710,6 +864,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/1504.08083}, 
+}
+
+@inproceedings{vedantam2015_cider,
+	title     = {CIDEr: Consensus-Based Image Description Evaluation},
+	author    = {Vedantam, Ramakrishna and Zitnick, C. Lawrence and Parikh, Devi},
+	booktitle = {CVPR},
+	year      = {2015}
 }
 
 @misc{ba2015_attention,
@@ -772,6 +933,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/1506.02078}, 
+}
+
+@article{tatarchenko2015_tco,
+	title        = {Single-View to Multi-View: Reconstructing Unseen Views with a Convolutional Network},
+	author       = {Tatarchenko, Maxim and Dosovitskiy, Alexey and Brox, Thomas},
+	journal      = {arXiv preprint arXiv:1511.06702},
+	year         = {2015}
 }
 
 @article{vinyals2015_captioning,
@@ -849,6 +1017,15 @@
 	primaryClass={cs.CV}
 }
 
+@inproceedings{tran2015_c3d,
+	author    = {Du Tran and Lubomir Bourdev and Rob Fergus and Lorenzo Torresani and Manohar Paluri},
+	title     = {Learning Spatiotemporal Features with 3D Convolutional Networks},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2015},
+	pages     = {4489--4497},
+	doi       = {10.1109/ICCV.2015.510}
+}
+
 @misc{noh2015_deconvnet,
 	title={Learning Deconvolution Network for Semantic Segmentation},
 	author={Hyeonwoo Noh and Seunghoon Hong and Bohyung Han},
@@ -856,6 +1033,20 @@
 	eprint={1505.04366},
 	archivePrefix={arXiv},
 	primaryClass={cs.CV}
+}
+
+@inproceedings{blundell2015_bnn,
+	title={Weight Uncertainty in Neural Networks},
+	author={Blundell, Charles and others},
+	booktitle={ICML},
+	year={2015}
+}
+
+@InProceedings{zhang2015_mvs_illum,
+	author    = {Zhang, Shuhan and Curless, Brian and Seitz, Steven M. and Huang, Qi},
+	title     = {Revisiting Photometric Consistency in Multi‐View Stereo},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2015}
 }
 
 @misc{ronneberger2015_unet,
@@ -934,6 +1125,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/1505.07376}, 
+}
+
+@inproceedings{bendale2015_openmax,
+	title={Towards Open Set Deep Networks},
+	author={Bendale, Abhijit and Boult, Terrance},
+	booktitle={CVPR},
+	year={2016}
 }
 
 @article{goodfellow2015_explaining,
@@ -1031,10 +1229,24 @@
 	url={https://arxiv.org/abs/1603.09382}, 
 }
 
+@inproceedings{sigurdsson2016_charades,
+	title     = {Hollywood in Homes: Crowdsourcing Data Collection for Activity Understanding},
+	author    = {Sigurdsson, Gunnar A. and Varol, Gul and Wang, Xiaolong and Farhadi, Ali and Laptev, Ivan and Gupta, Abhinav},
+	booktitle = {European Conference on Computer Vision (ECCV)},
+	year      = {2016}
+}
+
 @article{levy2016_medicalimaging,
 	author    = {Doron Levy, et al.},
 	title     = {Deep Learning in Medical Imaging: Revolutionizing Radiology},
 	journal   = {Nature Medicine},
+	year      = {2016}
+}
+
+@inproceedings{xu2016_msrvtt,
+	title     = {MSR-VTT: A Large Video Description Dataset for Bridging Video and Language},
+	author    = {Xu, Jun and Mei, Tao and Yao, Ting and Rui, Yong},
+	booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
 	year      = {2016}
 }
 
@@ -1092,6 +1304,13 @@
 	journal   = {Proceedings of the 29th Annual Conference on Learning Theory (COLT)},
 	year      = {2016},
 	pages     = {1517--1539}
+}
+
+@inproceedings{gal2016_dropout,
+	title={Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning},
+	author={Gal, Yarin and Ghahramani, Zoubin},
+	booktitle={ICML},
+	year={2016}
 }
 
 @article{eldan2016_power,
@@ -1180,6 +1399,13 @@
 	url       = {https://kevinzakka.github.io/2016/09/14/batch_normalization/}
 }
 
+@InProceedings{schonberger2016_structure,
+	author = {Schonberger, Johannes L. and Frahm, Jan-Michael},
+	title = {Structure-From-Motion Revisited},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year = {2016}
+}
+
 @inproceedings{gatys2016_stylization,
 	title={Image Style Transfer Using Convolutional Neural Networks},
 	author={Gatys, Leon A. and Ecker, Alexander S. and Bethge, Matthias},
@@ -1188,12 +1414,26 @@
 	year={2016}
 }
 
+@InProceedings{aanaes2016_mvs,
+	author    = {Aanaes, Henrik and Jensen, Rasmus and Vogiatzis, George and Tola, Engin and Dahl, Anders R.},
+	title     = {Large‐Scale Data for Multiple‐View Stereopsis},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2016}
+}
+
 @inproceedings{johnson2016_perceptual,
 	title={Perceptual Losses for Real-Time Style Transfer and Super-Resolution},
 	author={Johnson, Justin and Alahi, Alexandre and Fei-Fei, Li},
 	booktitle={European Conference on Computer Vision (ECCV)},
 	pages={694--711},
 	year={2016}
+}
+
+@inproceedings{ballas2016_delving,
+	author    = {Nicolas Ballas and Li Yao and Chris Pal and Aaron Courville},
+	title     = {Delving Deeper into Convolutional Networks for Learning Video Representations},
+	booktitle = {International Conference on Learning Representations (ICLR)},
+	year      = {2016}
 }
 
 @article{hendrycks2016_gelu,
@@ -1220,6 +1460,49 @@
 	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
 	year      = {2017},
 	pages     = {2223--2232}
+}
+
+@inproceedings{tatarchenko2017_ogn,
+	title={Octree generating networks: Efficient convolutional architectures for high-resolution 3d outputs},
+	author={Tatarchenko, Maxim and Dosovitskiy, Alexey and Brox, Thomas},
+	booktitle={Proceedings of the IEEE international conference on computer vision},
+	pages={2088--2096},
+	year={2017}
+}
+
+@inproceedings{fan2017_pointset,
+	title={A Point Set Generation Network for 3D Object Reconstruction from a Single Image},
+	author={Fan, Haoqiang and Su, Hao and Guibas, Leonidas J.},
+	booktitle={CVPR},
+	year={2017},
+	eprint={1612.00603},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV}
+}
+
+@inproceedings{qi2017_pointnet,
+	title={PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation},
+	author={Charles R. Qi and Hao Su and Kaichun Mo and Leonidas J. Guibas},
+	booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year={2017}
+}
+
+@inproceedings{kay2017_kinetics,
+	author    = {Will Kay and Jo{\~a}o Carreira and Karen Simonyan and Brian Zhang and Chloe Hillier and Sudheendra Vijayanarasimhan and Fabio Viola and Tim Green and Trevor Back and Paul Natsev and Mustapha Suleyman and Andrew Zisserman},
+	title     = {The Kinetics Human Action Video Dataset},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+	year      = {2017},
+	url       = {https://arxiv.org/abs/1705.06950},
+	eprint    = {1705.06950},
+	archivePrefix = {arXiv}
+}
+
+
+@inproceedings{qi2017_pointnetplusplus,
+	title={PointNet++: Deep Hierarchical Feature Learning on Point Sets in a Metric Space},
+	author={Charles R. Qi and Li Yi and Hao Su and Leonidas J. Guibas},
+	booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+	year={2017}
 }
 
 @inproceedings{moosavi2017_universal,
@@ -1355,6 +1638,25 @@
 	publisher = {IEEE}
 }
 
+@inproceedings{carreira2017_i3d,
+	author    = {Jo{\~a}o Carreira and Andrew Zisserman},
+	title     = {Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2017},
+	pages     = {4724--4733},
+	doi       = {10.1109/CVPR.2017.502}
+}
+
+@inproceedings{smith2017_clr,
+	author    = {Leslie N. Smith},
+	title     = {Cyclical Learning Rates for Training Neural Networks},
+	booktitle = {2017 IEEE Winter Conference on Applications of Computer Vision (WACV)},
+	year      = {2017},
+	pages     = {464--472},
+	doi       = {10.1109/WACV.2017.58},
+	url       = {https://arxiv.org/abs/1506.01186}
+}
+
 @inproceedings{dumoulin2017_cbn,
 	title={A learned representation for artistic style},
 	author={Dumoulin, Vincent and Shlens, Jonathon and Kudlur, Manjunath},
@@ -1369,6 +1671,27 @@
 	year = {2017},
 	pages = {484--492},
 	doi = {10.48550/arXiv.1704.04861}
+}
+
+@inproceedings{liu2017_sphereface,
+	title     = {SphereFace: Deep Hypersphere Embedding for Face Recognition},
+	author    = {Liu, Weiyang and Wen, Yandong and Yu, Zhiding and Li, Ming and Raj, Bhiksha and Song, Le},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2017},
+	pages     = {6738--6746},
+	publisher = {IEEE Computer Society},
+	doi       = {10.1109/CVPR.2017.713},
+	url       = {https://openaccess.thecvf.com/content_cvpr_2017/papers/Liu_SphereFace_Deep_Hypersphere_CVPR_2017_paper.pdf}
+}
+
+@misc{kingma2017_adam,
+	title={Adam: A Method for Stochastic Optimization}, 
+	author={Diederik P. Kingma and Jimmy Ba},
+	year={2017},
+	eprint={1412.6980},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/1412.6980}, 
 }
 
 @inproceedings{arandjelovic2017_look_listen,
@@ -1418,6 +1741,27 @@
 	year      = {2017}
 }
 
+@article{knapitsch2017_tanks,
+	author = {Knapitsch, Arno and Park, Jaesik and Zhou, Qian-Yi and Koltun, Vladlen},
+	title = {Tanks and temples: benchmarking large-scale scene reconstruction},
+	year = {2017},
+	issue_date = {August 2017},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {36},
+	number = {4},
+	issn = {0730-0301},
+	url = {https://doi.org/10.1145/3072959.3073599},
+	doi = {10.1145/3072959.3073599},
+	abstract = {We present a benchmark for image-based 3D reconstruction. The benchmark sequences were acquired outside the lab, in realistic conditions. Ground-truth data was captured using an industrial laser scanner. The benchmark includes both outdoor scenes and indoor environments. High-resolution video sequences are provided as input, supporting the development of novel pipelines that take advantage of video input to increase reconstruction fidelity. We report the performance of many image-based 3D reconstruction pipelines on the new benchmark. The results point to exciting challenges and opportunities for future work.},
+	journal = {ACM Trans. Graph.},
+	month = jul,
+	articleno = {78},
+	numpages = {13},
+	keywords = {structure from motion, multi-view stereo, large-scale scene reconstruction, image-based reconstruction}
+}
+
+
 @misc{xie2017_aggregated,
 	title={Aggregated Residual Transformations for Deep Neural Networks}, 
 	author={Saining Xie and Ross Girshick and Piotr Dollár and Zhuowen Tu and Kaiming He},
@@ -1465,6 +1809,13 @@
 	doi = {10.1109/CVPR.2017.195}
 }
 
+@inproceedings{carreira2017_kinetics,
+	title={Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset},
+	author={Carreira, Jo{\~a}o and Zisserman, Andrew},
+	booktitle={CVPR},
+	year={2017}
+}
+
 @INPROCEEDINGS{lin2017_fpn,
 	author={Lin, Tsung-Yi and Dollár, Piotr and Girshick, Ross and He, Kaiming and Hariharan, Bharath and Belongie, Serge},
 	booktitle={2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
@@ -1474,7 +1825,15 @@
 	number={},
 	pages={936-944},
 	keywords={Feature extraction;Detectors;Semantics;Computer architecture;Proposals;Object detection;Robustness},
-	doi={10.1109/CVPR.2017.106}}
+	doi={10.1109/CVPR.2017.106}
+}
+	
+@inproceedings{gao2017_charadessta,
+	title     = {TALL: Temporal Activity Localization via Language Query},
+	author    = {Gao, Jiyang and Sun, Chen and Yang, Zhenheng and Nevatia, Ram},
+	booktitle = {ICCV},
+	year      = {2017}
+}
 	
 @inproceedings{isola2017_pix2pix,
 	title     = {Image-to-Image Translation with Conditional Adversarial Networks},
@@ -1489,6 +1848,34 @@
 	author={Salimans, Tim and Karpathy, Andrej and Chen, Xi and Kingma, Diederik},
 	booktitle={ICLR},
 	year={2017}
+}
+
+@article{ponttuset2017_davis,
+	title   = {The 2017 DAVIS Challenge on Video Object Segmentation},
+	author  = {Pont-Tuset, Jordi and Perazzi, Federico and Caelles, Sergi and Arbel{\'a}ez, Pablo and Sorkine-Hornung, Alexander and Van Gool, Luc},
+	journal = {arXiv preprint arXiv:1704.00675},
+	year    = {2017}
+}
+
+@inproceedings{rohrbach2017_lsmdc,
+	title     = {The Large Scale Movie Description Challenge (LSMDC)},
+	author    = {Rohrbach, Anna and Rohrbach, Marcus and Tandon, Niket and Schiele, Bernt},
+	booktitle = {International Journal of Computer Vision (IJCV) --- Challenge Report},
+	year      = {2017}
+}
+
+@inproceedings{hendricks2017_didemo,
+	title     = {Localizing Moments in Video with Natural Language},
+	author    = {Hendricks, Lisa Anne and Wang, Oliver and Shechtman, Eli and Sivic, Josef and Darrell, Trevor and Russell, Bryan},
+	booktitle = {ICCV},
+	year      = {2017}
+}
+
+@inproceedings{krishna2017_activitynet_captions,
+	title     = {Dense-Captioning Events in Videos},
+	author    = {Krishna, Ranjay and Hata, Kenji and Ren, Frederic and Fei-Fei, Li and Carlos Niebles, Juan},
+	booktitle = {IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2017}
 }
 
 @inproceedings{arjovsky2017_wgan,
@@ -1535,6 +1922,13 @@
 	url={https://arxiv.org/abs/1607.08022}, 
 }
 
+@inproceedings{goyal2017_something,
+	title={The {“Something Something”} Video Database for Learning and Evaluating Visual Common Sense},
+	author={Goyal, Raghav and Kahou, Samira and Michalski, Vincent and others},
+	booktitle={ICCV},
+	year={2017}
+}
+
 @misc{gulrajani2017_improvedwgan,
 	title={Improved Training of Wasserstein GANs}, 
 	author={Ishaan Gulrajani and Faruk Ahmed and Martin Arjovsky and Vincent Dumoulin and Aaron Courville},
@@ -1543,6 +1937,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/1704.00028}, 
+}
+
+@inproceedings{dai2017_scannet,
+	title     = {ScanNet: Richly-Annotated 3D Reconstructions of Indoor Scenes},
+	author    = {Angela Dai and Angel X. Chang and Manolis Savva and Maciej Halber and Thomas Funkhouser and Matthias Nie{\ss}ner},
+	booktitle = {Proc. of the IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2017}
 }
 
 @inproceedings{mao2017_lsgan,
@@ -1578,6 +1979,15 @@
 	booktitle={International Conference on Learning Representations (ICLR)},
 	year={2017}
 }	
+
+@inproceedings{huang2017_adain,
+	title     = {Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization},
+	author    = {Xun Huang and Serge Belongie},
+	booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2017},
+	pages     = {1501--1510},
+	url       = {https://arxiv.org/abs/1703.06868}
+}
 
 @inproceedings{selvaraju2017_gradcam,
 	title={Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based Localization},
@@ -1625,6 +2035,14 @@
 	url={https://arxiv.org/abs/1711.07971}, 
 }
 
+@inproceedings{jacot2018_ntk,
+	title        = {Neural Tangent Kernel: Convergence and Generalization in Neural Networks},
+	author       = {Jacot, Arthur and Gabriel, Franck and Hongler, Cl{\'e}ment},
+	booktitle    = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year         = {2018},
+	url          = {https://arxiv.org/abs/1806.07572}
+}
+
 @misc{oord2018_vqvae,
 	title={Neural Discrete Representation Learning}, 
 	author={Aaron van den Oord and Oriol Vinyals and Koray Kavukcuoglu},
@@ -1653,6 +2071,15 @@
   volume    = {41},
   number    = {8},
   pages     = {1947--1962}
+}
+
+@inproceedings{anderson2018_nocaps,
+	title     = {Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering},
+	author    = {Anderson, Peter and He, Xiaodong and Buehler, Chris and Teney, Damien and Johnson, Mark and Gould, Stephen and Zhang, Lei},
+	booktitle = {CVPR},
+	year      = {2018},
+	note      = {Commonly referenced for the NoCaps/COCO captioning setups},
+	url       = {https://arxiv.org/abs/1707.07998}
 }
 
 @inproceedings{hoang2018_mgan,
@@ -1802,6 +2229,15 @@
 	year={2018}
 }
 
+@inproceedings{wang2018_videograph,
+	title     = {Videos as Space-Time Region Graphs},
+	author    = {Wang, Xiaolong and Gupta, Abhinav},
+	booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+	year      = {2018},
+	pages     = {399--417},
+	url       = {https://openaccess.thecvf.com/content_ECCV_2018/html/Xiaolong_Wang_Videos_as_Space-Time_ECCV_2018_paper.html}
+}
+
 @article{santurkar2018_howdoesbatchnormhelp,
 	author    = {Shibani Santurkar and Dimitris Tsipras and Andrew Ilyas and Aleksander Madry},
 	title     = {How Does Batch Normalization Help Optimization?},
@@ -1820,6 +2256,16 @@
 	url={https://arxiv.org/abs/1711.00937}, 
 }
 
+@article{eslami2018_dgqn,
+	title        = {Neural Scene Representation and Rendering},
+	author       = {Eslami, SM and Rezende, Danilo Jimenez and Besse, Fr{\'e}d{\'e}ric and Viola, Fabio and Morcos, Ari and Garnelo, Marta and Ruderman, Avraham and Rusu, Andrei and Danihelka, Daniel and others},
+	journal      = {Science},
+	volume       = {360},
+	number       = {6394},
+	pages        = {1204--1210},
+	year         = {2018}
+}
+
 @inproceedings{buolamwini2018_gendershades,
 	title={Gender shades: Intersectional accuracy disparities in commercial gender classification},
 	author={Buolamwini, Joy and Gebru, Timnit},
@@ -1836,6 +2282,15 @@
 	pages = {6848--6856},
 	doi = {10.1109/CVPR.2018.00716}
 }
+
+@article{smith2018_superconvergence,
+	author  = {Leslie N. Smith and Nicholay Topin},
+	title   = {Super-Convergence: Very Fast Training of Neural Networks Using Large Learning Rates},
+	journal = {arXiv preprint arXiv:1708.07120},
+	year    = {2018},
+	url     = {https://arxiv.org/abs/1708.07120}
+}
+
 
 @inproceedings{ma2018_shufflenetv2,
 	author = {Ma, Ningning and Zhang, Xiangyu and Zheng, Hai-Tao and Sun, Jian},
@@ -1863,6 +2318,14 @@
 	url       = {https://arxiv.org/abs/1710.10196}
 }
 
+@inproceedings{xu2018_youtubevos,
+	title     = {YouTube-VOS: A Large-Scale Video Object Segmentation Benchmark},
+	author    = {Xu, Ning and Yang, Linjie and Fan, Yuchen and Yang, Jianchao and Yue, Dingcheng and Liang, Yuchen and Price, Brian and Cohen, Scott and Huang, Thomas S.},
+	booktitle = {ECCV},
+	pages     = {603--619},
+	year      = {2018},
+	doi       = {10.1007/978-3-030-01228-1_36}
+}
 
 @misc{krishnamoorthi2018_quantizing,
 	title={Quantizing deep convolutional networks for efficient inference: A whitepaper}, 
@@ -1937,6 +2400,27 @@
 	primaryClass={cs.CV}
 }
 
+@misc{sun2018_pix3d,
+	title={Pix3D: Dataset and Methods for Single-Image 3D Shape Modeling}, 
+	author={Xingyuan Sun and Jiajun Wu and Xiuming Zhang and Zhoutong Zhang and Chengkai Zhang and Tianfan Xue and Joshua B. Tenenbaum and William T. Freeman},
+	year={2018},
+	eprint={1804.04610},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1804.04610}, 
+}
+
+@article{wang2018_amsoftmax,
+	title         = {Additive Margin Softmax for Face Verification},
+	author        = {Wang, Feng and Liu, Weiyang and Liu, Haijun and Cheng, Jian},
+	journal       = {arXiv preprint arXiv:1801.05599},
+	year          = {2018},
+	url           = {https://arxiv.org/abs/1801.05599},
+	eprint        = {1801.05599},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV}
+}
+
 @misc{zhang2018_resunet,
 	title={Road Extraction by Deep Residual U-Net},
 	author={Zhengxu Zhang and Qingjie Liu and Yunhong Wang},
@@ -1965,6 +2449,16 @@
 	url={https://arxiv.org/abs/1608.06993}, 
 }
 
+@misc{wang2018_pixel2mesh,
+	title={Pixel2Mesh: Generating 3D Mesh Models from Single RGB Images}, 
+	author={Nanyang Wang and Yinda Zhang and Zhuwen Li and Yanwei Fu and Wei Liu and Yu-Gang Jiang},
+	year={2018},
+	eprint={1804.01654},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1804.01654}, 
+}
+
 @misc{oktay2018_attentionunet,
 	title={Attention U-Net: Learning Where to Look for the Pancreas}, 
 	author={Ozan Oktay and Jo Schlemper and Loic Le Folgoc and Matthew Lee and Mattias Heinrich and Kazunari Misawa and Kensaku Mori and Steven McDonagh and Nils Y Hammerla and Bernhard Kainz and Ben Glocker and Daniel Rueckert},
@@ -1975,11 +2469,31 @@
 	url={https://arxiv.org/abs/1804.03999}, 
 }
 
+@misc{shin2018_pixelsvoxelsviews,
+	title={Pixels, voxels, and views: A study of shape representations for single view 3D object shape prediction}, 
+	author={Daeyun Shin and Charless C. Fowlkes and Derek Hoiem},
+	year={2018},
+	eprint={1804.06032},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1804.06032}, 
+}
+
 @inproceedings{gu2018_nonautoregressive,
 	author = {Jiatao Gu and Chris Bradbury and Zhengdong Lu and Victor O. K. Li and Xavier Chen},
 	title = {Non-autoregressive neural machine translation},
 	booktitle = {International Conference on Learning Representations (ICLR)},
 	year = {2018}
+}
+
+@misc{yao2018_mvsnet,
+	title={MVSNet: Depth Inference for Unstructured Multi-view Stereo}, 
+	author={Yao Yao and Zixin Luo and Shiwei Li and Tian Fang and Long Quan},
+	year={2018},
+	eprint={1804.02505},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1804.02505}, 
 }
 
 @misc{zhang2018_lpips,
@@ -1992,14 +2506,11 @@
 	url={https://arxiv.org/abs/1801.03924}, 
 }
 
-@misc{chen2019_neuralode,
-	title={Neural Ordinary Differential Equations}, 
-	author={Ricky T. Q. Chen and Yulia Rubanova and Jesse Bettencourt and David Duvenaud},
-	year={2019},
-	eprint={1806.07366},
-	archivePrefix={arXiv},
-	primaryClass={cs.LG},
-	url={https://arxiv.org/abs/1806.07366}, 
+@inproceedings{wang2018_nonlocal,
+	title={Non-local Neural Networks},
+	author={Xiaolong Wang and Ross Girshick and Abhinav Gupta and Kaiming He},
+	booktitle={CVPR},
+	year={2018}
 }
 
 @article{lucic2018_ganstudy,
@@ -2009,6 +2520,33 @@
 	volume    = {31},
 	year      = {2018},
 	url       = {https://proceedings.neurips.cc/paper/2018/file/7a982f24ad653db0e0e92fd2bba507a3-Paper.pdf}
+}
+
+@inproceedings{hedman2018_nrwinwild,
+	author    = {Meshry, Moustafa and Goldman, Dan B. and Khamis, Sameh and Hoppe, Hugues and Pandey, Rohit and Snavely, Noah and Martin{-}Brualla, Ricardo},
+	title     = {Neural Rerendering in the Wild},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2019},
+	month     = jun,
+	pages     = {6878--6887},
+	doi       = {10.1109/CVPR.2019.00704}
+}
+
+@misc{tran2018_closer,
+	title={A Closer Look at Spatiotemporal Convolutions for Action Recognition}, 
+	author={Du Tran and Heng Wang and Lorenzo Torresani and Jamie Ray and Yann LeCun and Manohar Paluri},
+	year={2018},
+	eprint={1711.11248},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1711.11248}, 
+}
+
+@inproceedings{hedman2018_deepblending,
+	title     = {Deep Blending for Free-Viewpoint Image-Based Rendering},
+	author    = {Hedman, Peter and Philip, Julien and Price, Toby and Drettakis, George},
+	booktitle = {SIGGRAPH Asia},
+	year      = {2018}
 }
 
 @misc{wu2018_groupnorm,
@@ -2063,6 +2601,52 @@
 	year={2018}
 }
 
+@inproceedings{chao2018_tal,
+	author    = {Chao, Yu-Wei and Vijayanarasimhan, Sudheendra and Seybold, Bryan and Ross, David A. and Deng, Jia and Fei-Fei, Li},
+	title     = {Rethinking the Faster R-CNN Architecture for Temporal Action Localization},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2018},
+	pages     = {1130--1139},
+	url       = {https://openaccess.thecvf.com/content_cvpr_2018/html/Chao_Rethinking_the_Faster_CVPR_2018_paper.html}
+}
+
+@inproceedings{gu2018_ava,
+	author    = {Gu, Chunhui and Sun, Chen and Ross, David A. and Vondrick, Carl and Pantofaru, Caroline and Li, Yeqing and Vijayanarasimhan, Sudheendra and Toderici, George and Ricco, Susanna and Sukthankar, Rahul and Schmid, Cordelia and Malik, Jitendra},
+	title     = {AVA: A Video Dataset of Spatio-Temporally Localized Atomic Visual Actions},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2018},
+	pages     = {6047--6056},
+	url       = {https://openaccess.thecvf.com/content_cvpr_2018/html/Gu_AVA_A_Video_CVPR_2018_paper.html}
+}
+
+@inproceedings{feichtenhofer2018_deepreps,
+	author    = {Feichtenhofer, Christoph and Pinz, Axel and Zisserman, Andrew},
+	title     = {What Have We Learned from Deep Representations for Action Recognition?},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2018},
+	pages     = {7844--7853},
+	url       = {https://openaccess.thecvf.com/content_cvpr_2018/html/Feichtenhofer_What_Have_We_CVPR_2018_paper.html}
+}
+
+@article{feichtenhofer2019_deepinsights,
+	author    = {Feichtenhofer, Christoph and Fan, Haoqi and Malik, Jitendra and He, Kaiming},
+	title     = {Deep Insights into Convolutional Networks for Video Recognition},
+	journal   = {International Journal of Computer Vision (IJCV)},
+	year      = {2019},
+	volume    = {128},
+	number    = {2},
+	pages     = {420--439},
+	doi       = {10.1007/s11263-019-01247-2},
+	url       = {https://link.springer.com/article/10.1007/s11263-019-01247-2}
+}
+
+@inproceedings{lin2019_tsm,
+	title={TSM: Temporal Shift Module for Efficient Video Understanding},
+	author={Lin, Ji and Gan, Chuang and Han, Song},
+	booktitle={ICCV},
+	year={2019}
+}
+
 @misc{zhou2019_unifiedvqa,
 	title={Unified Vision-Language Pre-Training for Image Captioning and VQA}, 
 	author={Luowei Zhou and Hamid Palangi and Lei Zhang and Houdong Hu and Jason J. Corso and Jianfeng Gao},
@@ -2089,6 +2673,24 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/1807.03748}, 
+}
+
+@misc{park2019_deepsdf,
+	title={DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation}, 
+	author={Jeong Joon Park and Peter Florence and Julian Straub and Richard Newcombe and Steven Lovegrove},
+	year={2019},
+	eprint={1901.05103},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1901.05103}, 
+}
+
+@inproceedings{mescheder2019_occupancy,
+	title={Occupancy networks: Learning 3d reconstruction in function space},
+	author={Mescheder, Lars and Oechsle, Michael and Niemeyer, Michael and Nowozin, Sebastian and Geiger, Andreas},
+	booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+	pages={4460-4470},
+	year={2019}
 }
 
 @inproceedings{grathwohl2019_ffjord,
@@ -2138,6 +2740,13 @@
 	pages={101552}
 }
 
+@inproceedings{wang2019_vatex,
+	title     = {VATEX: A Large-Scale, High-Quality Multilingual Dataset for Video-and-Language Research},
+	author    = {Wang, Xin and Wu, Jiawei and Chen, Junkun and Li, Lei and Wang, Yuan-Fang and Yuille, Alan and Wang, William Yang},
+	booktitle = {IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2019}
+}
+
 @misc{razavi2019_vqvae2,
 	title={Generating Diverse High-Fidelity Images with VQ-VAE-2}, 
 	author={Ali Razavi and Aaron van den Oord and Oriol Vinyals},
@@ -2170,6 +2779,16 @@
 	url     = "https://kazemnejad.com/blog/transformer_architecture_positional_encoding/"
 }
 
+@misc{chen2019_neuralode,
+	title={Neural Ordinary Differential Equations}, 
+	author={Ricky T. Q. Chen and Yulia Rubanova and Jesse Bettencourt and David Duvenaud},
+	year={2019},
+	eprint={1806.07366},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/1806.07366}, 
+}
+
 @inproceedings{tan2019_efficientnet,
 	author = {Tan, Mingxing and Le, Quoc V.},
 	title = {EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks},
@@ -2187,6 +2806,26 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CL},
 	url={https://arxiv.org/abs/1810.04805}, 
+}
+
+@misc{wen2019_pixel2meshplusplus,
+	title={Pixel2Mesh++: Multi-View 3D Mesh Generation via Deformation}, 
+	author={Chao Wen and Yinda Zhang and Zhuwen Li and Yanwei Fu},
+	year={2019},
+	eprint={1908.01491},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1908.01491}, 
+}
+
+@misc{smith2019_geometric,
+	title={GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects}, 
+	author={Edward J. Smith and Scott Fujimoto and Adriana Romero and David Meger},
+	year={2019},
+	eprint={1901.11461},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1901.11461}, 
 }
 
 @misc{rezatofighi2019_giou,
@@ -2235,6 +2874,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/1904.01355}, 
+}
+
+@inproceedings{mo2019_partnet,
+	title={PartNet: A Large-Scale Benchmark for Fine-Grained and Hierarchical Part-Level 3D Object Understanding},
+	author={Mo, Kaichun and others},
+	booktitle={CVPR},
+	year={2019}
 }
 
 @article{xie2019_unsupervised,
@@ -2287,6 +2933,34 @@
 	primaryClass = {cs.CV}
 }
 
+@inproceedings{tran2019_ipcsn,
+	title     = {Video Classification with Channel-Separated Convolutional Networks},
+	author    = {Tran, Du and others},
+	booktitle = {ICCV},
+	year      = {2019}
+}
+
+@inproceedings{yang2019_youtube_vis,
+	title     = {Video Instance Segmentation},
+	author    = {Yang, Linjie and Fan, Yuchen and Xu, Ning and others},
+	booktitle = {IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2019}
+}
+
+@inproceedings{zhao2019_hacs,
+	title={{HACS}: Human Action Clips and Segments Dataset for Recognition and Temporal Localization},
+	author={Zhao, Hang and Yan, Zhicheng and Torresani, Lorenzo and others},
+	booktitle={ICCV},
+	year={2019}
+}
+
+@inproceedings{feichtenhofer2019_slowfast,
+	title     = {SlowFast Networks for Video Recognition},
+	author    = {Feichtenhofer, Christoph and Fan, Haoqi and Malik, Jitendra and He, Kaiming},
+	booktitle = {ICCV},
+	year      = {2019}
+}
+
 @inproceedings{berman2019_multigrain,
 	title     = {MultiGrain: a Unified Image Embedding for Classes and Instances},
 	author    = {Maxim Berman and Herve Jegou and Andrea Vedaldi and Iasonas Kokkinos and Matthijs Douze},
@@ -2297,6 +2971,77 @@
 	primaryClass = {cs.CV}
 }
 
+@misc{tatarchenko2019_singleview,
+	title={What Do Single-view 3D Reconstruction Networks Learn?}, 
+	author={Maxim Tatarchenko and Stephan R. Richter and René Ranftl and Zhuwen Li and Vladlen Koltun and Thomas Brox},
+	year={2019},
+	eprint={1905.03678},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1905.03678}, 
+}
+
+@article{lombardi2019_neuralvolumes,
+	author    = {Stephen Lombardi and Tomas Simon and Jason M. Saragih and Gabriel Schwartz and Andreas Lehrmann and Yaser Sheikh},
+	title     = {Neural Volumes: Learning Dynamic Renderable Volumes from Images},
+	journal   = {ACM Transactions on Graphics},
+	volume    = {38},
+	number    = {4},
+	year      = {2019},
+	articleno = {65},
+	numpages  = {14},
+	pages     = {65:1--65:14},
+	doi       = {10.1145/3306346.3323020},
+	url       = {https://dl.acm.org/doi/10.1145/3306346.3323020}
+}
+
+@misc{sitzmann2019_srn,
+	title          = {Scene Representation Networks: Continuous 3D-Structure-Aware Neural Scene Representations},
+	author         = {Vincent Sitzmann and Michael Zollhöfer and Gordon Wetzstein},
+	year           = {2019},
+	eprint         = {1906.01618},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/1906.01618}
+}
+
+@misc{zhang2019_blurpool,
+	title={Making Convolutional Networks Shift-Invariant Again}, 
+	author={Richard Zhang},
+	year={2019},
+	eprint={1904.11486},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1904.11486}, 
+}
+
+@misc{sitzmann2019_deepvoxels,
+	title          = {DeepVoxels: Learning Persistent 3D Feature Embeddings},
+	author         = {Vincent Sitzmann and Justus Thies and Felix Heide and Matthias Nießner and Gordon Wetzstein and Michael Zollhöfer},
+	year           = {2018},
+	eprint         = {1812.01024},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/1812.01024}
+}
+
+@inproceedings{lin2019_bmn,
+	title={BMN: Boundary-Matching Network for Temporal Action Proposal Generation},
+	author={Lin, Tianwei and others},
+	booktitle={ICCV},
+	year={2019}
+}
+
+@misc{mildenhall2019_llff,
+	title          = {Local Light Field Fusion: Practical View Synthesis with Prescriptive Sampling Guidelines},
+	author         = {Ben Mildenhall and Pratul P. Srinivasan and Rodrigo Ortiz-Cayon and Nima Khademi Kalantari and Ravi Ramamoorthi and Ren Ng and Abhishek Kar},
+	year           = {2019},
+	eprint         = {1905.00889},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/1905.00889}
+}
+
 @inproceedings{howard2019_mobilenetv3,
 	author = {Howard, Andrew and Sandler, Mark and Chu, Grace and Chen, Liang-Chieh and Chen, Bo and Tan, Mingxing and Wang, Weijun and Zhu, Yukun and Pang, Ruoming and Vasudevan, Vijay and Le, Quoc V. and Adam, Hartwig},
 	title = {Searching for MobileNetV3},
@@ -2304,6 +3049,29 @@
 	year = {2019},
 	pages = {1314--1324},
 	doi = {10.1109/ICCV.2019.00140}
+}
+
+@article{loshchilov2019_adamw,
+	author  = {Ilya Loshchilov and Frank Hutter},
+	title   = {Decoupled Weight Decay Regularization},
+	journal = {International Conference on Learning Representations (ICLR)},
+	year    = {2019},
+	url     = {https://arxiv.org/abs/1711.05101}
+}
+
+@inproceedings{sun2019_videobert,
+	title     = {VideoBERT: A Joint Model for Video and Language Representation Learning},
+	author    = {Sun, Chen and Myers, Austin and Vondrick, Carl and Murphy, Kevin and Schmid, Cordelia},
+	booktitle = {ICCV},
+	year      = {2019},
+	url       = {https://arxiv.org/abs/1904.01766}
+}
+
+@inproceedings{miech2019_howto100m,
+	title={HowTo100M: Learning a Text-Video Embedding by Watching Hundred Million Narrated Video Clips},
+	author={Miech, Antoine and Zhukov, Denis and Alayrac, Jean-Baptiste and others},
+	booktitle={ICCV},
+	year={2019}
 }
 
 @misc{zhang2019_fixup,
@@ -2333,6 +3101,13 @@
 	publisher={The University of Texas at Austin}
 }
 
+@inproceedings{koch2019_abc,
+	title     = {ABC: A Big CAD Model Dataset For Geometric Deep Learning},
+	author    = {Sebastian Koch and Nikolay Averkin and Tristan Lauth and Thomas R. Jones and Olaf Holtmannspötter and Ralf Habel and Hao R. Zhang and Nico Pietroni and Luigi Malomo and Niloy J. Mitra and Mario Botsch},
+	booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2019}
+}
+
 @misc{touvron2019_fixres,
 	title={Fixing the train-test resolution discrepancy}, 
 	author={Hugo Touvron and Andrea Vedaldi and Matthijs Douze and Hervé Jégou},
@@ -2352,6 +3127,21 @@
 	primaryClass={stat.ML},
 	url={https://arxiv.org/abs/1805.11604}, 
 }
+
+@InProceedings{rahaman2019_spectralbias,
+	author    = {Rahaman, Nasim and Baratin, Aristide and Arpit, Devansh and Draxler, Felix and Lin, Min and Hamprecht, Fred and Bengio, Yoshua and Courville, Aaron},
+	title     = {On the Spectral Bias of Neural Networks},
+	booktitle = {Proceedings of the International Conference on Machine Learning (ICML)},
+	year      = {2019}
+}
+
+@inproceedings{lee2019_bts,
+	title     = {From Big to Small: Multi‑Scale Local Planar Guidance for Monocular Depth Estimation},
+	author    = {Pil Sun Lee and Ye Na Paek and Hyoungseok Park and Sungmin Yoo and Hyunjung Shim},
+	booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2019},
+}
+
 
 @inproceedings{kohler2019_exponentialbn,
 	title={Exponential convergence rates for batch normalization: The power of length-direction decoupling in non-convex optimization},
@@ -2415,6 +3205,13 @@
 	howpublished={ACL}
 }
 
+@inproceedings{wang2019_dgcnn,
+	title={Dynamic Graph CNN for Learning on Point Clouds},
+	author={Wang, Yue and Sun, Yongbin and Liu, Ziwei and Sarma, Sanjay E. and Bronstein, Michael M. and Solomon, Justin M.},
+	booktitle={ACM Transactions on Graphics (TOG)},
+	year={2019}
+}
+
 @inproceedings{zhang2019_sagan,
 	title={Self-Attention Generative Adversarial Networks},
 	author={Zhang, Han and Goodfellow, Ian and Metaxas, Dimitris and Odena, Augustus},
@@ -2469,6 +3266,20 @@
 	journal = {arXiv preprint},
 	eprint = {2012.14561},
 	year = {2020}
+}
+
+@inproceedings{dupont2020_enr,
+	title        = {Equivariant Neural Rendering},
+	author       = {Dupont, Emilien and Bautista, Miguel {\'A}ngel and Colburn, Alex and Sankar, Aditya and Guestrin, Carlos and Susskind, Joshua and Shan, Qi},
+	booktitle    = {International Conference on Machine Learning (ICML)},
+	year         = {2020}
+}
+
+@inproceedings{murahari2020_vd,
+	title     = {Large-scale Pretraining for Visual Dialog: A Simple State-of-the-Art Baseline},
+	author    = {Murahari, Vishvak and Batra, Dhruv and Parikh, Devi and Das, Abhishek},
+	booktitle = {ECCV},
+	year      = {2020}
 }
 
 @article{richemond2020_byol_no_batch,
@@ -2542,6 +3353,16 @@
 	note         = {\url{https://wandb.ai/authors/swav-tf/reports/Unsupervised-Visual-Representation-Learning-with-SwAV--VmlldzoyMjg3Mzg}},
 }
 
+@inproceedings{kirillov2020_pointrend,
+	title     = {PointRend: Image Segmentation as Rendering},
+	author    = {Kirillov, Alexander and Wu, Yuxin and He, Kaiming and Girshick, Ross},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2020},
+	pages     = {9799--9808},
+	doi       = {10.1109/CVPR42600.2020.00982},
+	url       = {https://openaccess.thecvf.com/content_CVPR_2020/html/Kirillov_PointRend_Image_Segmentation_as_Rendering_CVPR_2020_paper.html}
+}
+
 @article{vit2020_transformers,
 	author    = {Alexey Dosovitskiy and Lucas Beyer and Alexander Kolesnikov and Dirk Weissenborn and Xiaohua Zhai and Thomas Unterthiner and Mostafa Dehghani and Matthias Minderer and Georg Heigold and Sylvain Gelly and Jakob Uszkoreit and Neil Houlsby},
 	title     = {An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
@@ -2568,12 +3389,41 @@
 	url       = {https://arxiv.org/abs/1912.04958}
 }
 
+@inproceedings{feichtenhofer2020_x3d,
+	title={X3D: Expanding Architectures for Efficient Video Recognition},
+	author={Feichtenhofer, Christoph},
+	booktitle={CVPR},
+	year={2020}
+}
+
 @InProceedings{chen2020_gpt_pixels,
 	title = 	 {Generative Pretraining From Pixels},
 	author =       {Chen, Mark and Radford, Alec and Child, Rewon and Wu, Jeffrey and Jun, Heewoo and Luan, David and Sutskever, Ilya},
 	year = 	 {2020}
 }
 
+@inproceedings{chen2020_uniter,
+	title     = {UNITER: Learning Universal Image-Text Representations},
+	author    = {Chen, Yen-Chun and Li, Linjie and Yu, Licheng and El Kholy, Ahmed and Ahmed, Faisal and Gan, Zhe and Cheng, Yu and Liu, Jingjing},
+	booktitle = {ECCV},
+	year      = {2020},
+	url       = {https://arxiv.org/abs/1909.11740}
+}
+
+@inproceedings{li2020_oscar,
+	title     = {OSCAR: Object-Semantics Aligned Pre-training for Vision-Language Tasks},
+	author    = {Li, Xiujun and Yin, Xi and et al.},
+	booktitle = {ECCV},
+	year      = {2020},
+	url       = {https://arxiv.org/abs/2004.06165}
+}
+
+@InProceedings{tancik2020_fourierfeatures,
+	author    = {Tancik, Matthew and Srinivasan, Pratul P. and Mildenhall, Ben and Fridovich-Keil, Sara and Raghavan, Nithin and Singhal, Utkarsh and Ramamoorthi, Ravi and Barron, Jonathan T. and Ng, Ren},
+	title     = {Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2020}
+}
 
 @article{bochkovskiy2020_yolov4,
 	title={Yolov4: Optimal speed and accuracy of object detection},
@@ -2610,12 +3460,59 @@
 	note         = {Accessed: 2025-04-12}
 }
 
+@inproceedings{liu2020_nsvf,
+	author = {Liu, Lingjie and Gu, Jiatao and Zaw Lin, Kyaw and Chua, Tat-Seng and Theobalt, Christian},
+	booktitle = {Advances in Neural Information Processing Systems},
+	editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
+	pages = {15651--15663},
+	publisher = {Curran Associates, Inc.},
+	title = {Neural Sparse Voxel Fields},
+	url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/b4b758962f17808746e9bb832a6fa4b8-Paper.pdf},
+	volume = {33},
+	year = {2020}
+}
+
 @inproceedings{song2020_ddim,
 	title={Denoising Diffusion Implicit Models},
 	author={Song, Jiaming and Meng, Chenlin and Ermon, Stefano},
 	booktitle={International Conference on Learning Representations (ICLR)},
 	year={2021},
 	url={https://arxiv.org/abs/2010.02502}
+}
+
+@inproceedings{luo2020_univl,
+	title     = {UniVL: A Unified Video and Language Pre-Training Model for Multimodal Understanding and Generation},
+	author    = {Luo, Hao and Ji, Lei and Shi, Botian and Huang, Haoyang and Duan, Nan and Li, Tianrui and Chen, Xilin and Zhou, Ming},
+	booktitle = {ACL},
+	year      = {2020},
+	url       = {https://arxiv.org/abs/2002.06353}
+}
+
+@misc{radosavovic2020_dnds,
+	title={Designing Network Design Spaces}, 
+	author={Ilija Radosavovic and Raj Prateek Kosaraju and Ross Girshick and Kaiming He and Piotr Dollár},
+	year={2020},
+	eprint={2003.13678},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2003.13678}, 
+}
+
+@inproceedings{li2020_tanet,
+	title     = {TAM: Temporal Adaptive Module for Video Recognition},
+	author    = {Liu, Zhaoyang and Wang, Limin and Wu, Wayne and Qian, Chen and Lu, Tong},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+	pages     = {13708--13718},
+	url       = {https://arxiv.org/abs/2005.06803}
+}
+
+@article{wang2020_corrnet,
+	title   = {Video Modeling with Correlation Networks},
+	author  = {Wang, Heng and Tran, Du and Torresani, Lorenzo and Feiszli, Matt},
+	journal = {arXiv preprint arXiv:1906.03349},
+	year    = {2019},
+	url     = {https://arxiv.org/abs/1906.03349}
 }
 
 @misc{raffel2020_t5,
@@ -2634,6 +3531,16 @@
 	eprint={1910.13461},
 	archivePrefix={arXiv},
 	primaryClass={cs.CL}
+}
+
+@misc{yu2020_pixelnerf,
+	title          = {pixelNeRF: Neural Radiance Fields from One or Few Images},
+	author         = {Alex Yu and Vickie Ye and Matthew Tancik and Angjoo Kanazawa},
+	year           = {2020},
+	eprint         = {2012.02190},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2012.02190}
 }
 
 @article{nakkiran2020_deep_double_descent,
@@ -2655,6 +3562,70 @@
 	url          = {https://blog.tensorflow.org/2020/03/higher-accuracy-on-vision-models-with-efficientnet-lite.html},
 }
 
+@inproceedings{zhu2020_actbert,
+	title     = {ActBERT: Learning Global-Local Video-Text Representations},
+	author    = {Zhu, Linchao and Yang, Yi},
+	booktitle = {CVPR},
+	year      = {2020},
+	url       = {https://arxiv.org/abs/2011.07231}
+}
+
+@inproceedings{li2020_relationalmaps,
+	title={Detailed 2D-3D Joint Representation for Human Actions},
+	author={Li, Yuxi and others},
+	booktitle={ECCV},
+	year={2020}
+}
+
+@inproceedings{yue2020_v4d,
+	title={V4D: 4D Convolutional Neural Networks for Video},
+	author={Yue, Zijian and others},
+	booktitle={ICLR},
+	year={2020}
+}
+
+@misc{tancik2020_fourier,
+	title={Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains}, 
+	author={Matthew Tancik and Pratul P. Srinivasan and Ben Mildenhall and Sara Fridovich-Keil and Nithin Raghavan and Utkarsh Singhal and Ravi Ramamoorthi and Jonathan T. Barron and Ren Ng},
+	year={2020},
+	eprint={2006.10739},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2006.10739}, 
+}
+
+@inproceedings{li2020_tea,
+	title={TEA: Temporal Excitation and Aggregation for Action Recognition},
+	author={Li, Yali and Ji, Lei and Shi, Xun and Zhang, Xiaolin and Wang, Yuchao and Zhang, Y., and others},
+	booktitle={CVPR},
+	year={2020}
+}
+
+@inproceedings{wu2020_msf,
+	title={Multi-Scale Feature Aggregation for Spatio-Temporal Action Detection},
+	author={Wu, Chao-Yuan and others},
+	booktitle={ECCV},
+	year={2020}
+}
+
+@inproceedings{xu2020_rtdnet,
+	title={G-TAD: Sub-Graph Localization for Temporal Action Detection},
+	author={Xu, Mingze and others},
+	booktitle={CVPR},
+	year={2020},
+	note={(RTD-Net results often reported alongside)}
+}
+
+@misc{zhang2020_nerfplusplus,
+	title          = {NeRF++: Analyzing and Improving Neural Radiance Fields},
+	author         = {Kai Zhang and Gernot Riegler and Noah Snavely and Vladlen Koltun},
+	year           = {2020},
+	eprint         = {2010.07492},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2010.07492}
+}
+
 @misc{radosavovic2020_regnet,
 	title={Designing Network Design Spaces}, 
 	author={Ilija Radosavovic and Raj Prateek Kosaraju and Ross Girshick and Kaiming He and Piotr Dollár},
@@ -2673,6 +3644,46 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2004.08955}, 
+}
+
+@misc{gropp2020implicit,
+	title={Implicit Geometric Regularization for Learning Shapes}, 
+	author={Amos Gropp and Lior Yariv and Niv Haim and Matan Atzmon and Yaron Lipman},
+	year={2020},
+	eprint={2002.10099},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/2002.10099}, 
+}
+
+@misc{yariv2020_idr,
+	title={Multiview Neural Surface Reconstruction by Disentangling Geometry and Appearance}, 
+	author={Lior Yariv and Yoni Kasten and Dror Moran and Meirav Galun and Matan Atzmon and Ronen Basri and Yaron Lipman},
+	year={2020},
+	eprint={2003.09852},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2003.09852}, 
+}
+
+@misc{mildenhall2020_nerf,
+	title={NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis}, 
+	author={Ben Mildenhall and Pratul P. Srinivasan and Matthew Tancik and Jonathan T. Barron and Ravi Ramamoorthi and Ren Ng},
+	year={2020},
+	eprint={2003.08934},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2003.08934}, 
+}
+
+@article{nilsson2020_understanding_ssim,
+	title         = {Understanding SSIM},
+	author        = {Nilsson, Jim and Akenine-M{\"o}ller, Tomas},
+	year          = {2020},
+	eprint        = {2006.13846},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2006.13846}
 }
 
 @article{erdem2020_RoIAlign,
@@ -2722,6 +3733,14 @@
 	url={https://arxiv.org/abs/2003.04297}, 
 }
 
+@inproceedings{han2020_memdpc,
+	title={Memory-augmented Dense Predictive Coding
+	for Video Representation Learning},
+	author={Han, Tengda and Xie, Weidi and Zisserman, Andrew},
+	booktitle={ECCV},
+	year={2020}
+}
+
 @misc{henaff2020_cpcv2,
 	title={Data-Efficient Image Recognition with Contrastive Predictive Coding}, 
 	author={Olivier J. Hénaff and Aravind Srinivas and Jeffrey De Fauw and Ali Razavi and Carl Doersch and S. M. Ali Eslami and Aaron van den Oord},
@@ -2740,6 +3759,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/2010.07922}, 
+}
+
+@inproceedings{chen2020_rpl,
+	title={Learning Open Set Network with Discriminative Reciprocal Points},
+	author={Chen, Guangyao and Qiao, Limeng and Shi, Yemin and Peng, Peixi and Li, Jia and Huang, Tiejun and Pu, Shiliang and Tian, Yonghong},
+	booktitle={ECCV},
+	year={2020}
 }
 
 @InProceedings{huang2020_tfixup,
@@ -2763,6 +3789,15 @@
 	booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
 	year={2020},
 	url={https://arxiv.org/abs/2006.11239}
+}
+
+@inproceedings{gabeur2020_ttce,
+	title     = {Multi-modal Transformer for Video Retrieval},
+	author    = {Gabeur, Valentin and Sun, Chen and Alahari, Karteek and Schmid, Cordelia},
+	booktitle = {ECCV},
+	year      = {2020},
+	note      = {Commonly referred to as TT-CE / TT-CE+},
+	url       = {https://arxiv.org/abs/2007.10639}
 }
 
 @article{carlini2020_adaptive,
@@ -2795,6 +3830,23 @@
 	author    = {Jerome Jabri and Jean-Baptiste Alayrac and Andrew Zisserman},
 	booktitle = {European Conference on Computer Vision (ECCV)},
 	year      = {2020}
+}
+
+@inproceedings{niemeyer2020_dvr,
+	title        = {Differentiable Volumetric Rendering: Learning Implicit 3D Representations without 3D Supervision},
+	author       = {Niemeyer, Michael and Mescheder, Lars and Oechsle, Michael and Geiger, Andreas},
+	booktitle    = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year         = {2020}
+}
+
+@misc{aliev2020_npbg,
+	title={Neural Point-Based Graphics}, 
+	author={Kara-Ali Aliev and Artem Sevastopolsky and Maria Kolos and Dmitry Ulyanov and Victor Lempitsky},
+	year={2020},
+	eprint={1906.08240},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/1906.08240}, 
 }
 
 @article{chen2020_simclrv2,
@@ -2837,6 +3889,24 @@
 	year = {2021}
 }
 
+@inproceedings{yu2021_plenoctrees,
+	title     = {PlenOctrees for Real-Time Rendering of Neural Radiance Fields},
+	author    = {Alex Yu and Ruilong Li and Matthew Tancik and Hao Li and Ren Ng and Angjoo Kanazawa},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+	url       = {https://openaccess.thecvf.com/content/ICCV2021/papers/Yu_PlenOctrees_for_Real-Time_Rendering_of_Neural_Radiance_Fields_ICCV_2021_paper.pdf},
+	eprint    = {2103.14024},
+	archivePrefix = {arXiv}
+}
+
+@inproceedings{recasens2021_broaden,
+	title={Broaden Your Views for Self-Supervised Video Learning},
+	author={Recasens, Albert and Luc, Paul and Alayrac, Jean-Baptiste and Wang, Luyu and Strub, Florian and Malinowski, Mateusz and Valko, Michal and Laptev, Ivan and Sivic, Josef and Carreira, Jo{\~a}o},
+	booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year={2021},
+	url={https://openaccess.thecvf.com/content/ICCV2021/papers/Recasens_Broaden_Your_Views_for_Self-Supervised_Video_Learning_ICCV_2021_paper.pdf}
+}
+
 @inproceedings{tian2021_understanding,
 	title={Understanding self-supervised learning dynamics without contrastive pairs},
 	author={Tian, Yuandong and Chen, Xinlei and Ganguli, Surya},
@@ -2844,6 +3914,16 @@
 	pages={10268--10278},
 	year={2021},
 	organization={PMLR}
+}
+
+@misc{hedman2021_snerg,
+	title={Baking Neural Radiance Fields for Real-Time View Synthesis}, 
+	author={Peter Hedman and Pratul P. Srinivasan and Ben Mildenhall and Jonathan T. Barron and Paul Debevec},
+	year={2021},
+	eprint={2103.14645},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2103.14645}, 
 }
 
 @article{zbontar2021_barlow,
@@ -2869,6 +3949,132 @@
 	year={2021}
 }
 
+@inproceedings{pumarola2021_dnerf,
+	title        = {D-NeRF: Neural Radiance Fields for Dynamic Scenes},
+	author       = {Albert Pumarola and Enric Corona and Gerard Pons-Moll and Francesc Moreno-Noguer},
+	booktitle    = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year         = {2021},
+	pages        = {10313-10322},
+	publisher    = {IEEE},
+	doi          = {10.1109/CVPR46437.2021.01018},
+	url          = {https://ieeexplore.ieee.org/document/9578753},
+	note         = {Preprint at arXiv:2011.13961},
+	arxivId      = {2011.13961},
+}
+
+@misc{barron2021_mipnerf,
+	title={Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields}, 
+	author={Jonathan T. Barron and Ben Mildenhall and Matthew Tancik and Peter Hedman and Ricardo Martin-Brualla and Pratul P. Srinivasan},
+	year={2021},
+	eprint={2103.13415},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2103.13415}, 
+}
+
+@inproceedings{tan2021_vimpac,
+	title     = {VIMPAC: Video Pre-Training via Masked Token Prediction and Contrastive Learning},
+	author    = {Tan, Hao and others},
+	booktitle = {NeurIPS},
+	year      = {2021}
+}
+
+@inproceedings{lu2021_omnimatte,
+	title     = {Omnimatte: Associating Objects and Their Effects in Video},
+	author    = {Erika Lu and Forrester Cole and Tali Dekel and Weidi Xie and Andrew Zisserman and William T. Freeman and Fr{\'e}do Durand},
+	booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2021},
+	pages     = {4507--4516},
+	url       = {https://openaccess.thecvf.com/content/CVPR2021/html/Lu_Omnimatte_Associating_Objects_and_Their_Effects_in_Video_CVPR_2021_paper.html}
+}
+
+@misc{barron2022_mipnerf360,
+	title          = {Mip-NeRF 360: Unbounded Anti-Aliased in-the-Wild Scene Rendering},
+	author         = {Jonathan T. Barron and Ben Mildenhall and Dor Verbin and Pratul P. Srinivasan and Peter Hedman},
+	year           = {2022},
+	eprint         = {2111.12077},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2111.12077}
+}
+
+@inproceedings{yu2022_coca,
+	title={CoCa: Contrastive Captioners are Image-Text Foundation Models},
+	author={Yu, Jiahui and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@inproceedings{li2021_tanet,
+	title     = {Temporal Aggregation Network for Video Recognition},
+	author    = {Li, Xian and others},
+	booktitle = {CVPR},
+	year      = {2021}
+}
+
+@inproceedings{wang2021_tdn,
+	title     = {TDN: Temporal Difference Networks for Efficient Video Understanding},
+	author    = {Wang, Limin and others},
+	booktitle = {CVPR},
+	year      = {2021}
+}
+
+@inproceedings{li2021_learnable_fourier,
+	title        = {Learnable Fourier Features for Multi-dimensional Spatial Positional Encoding},
+	author       = {Li, Yang and Si, Si and Li, Gang and Hsieh, Cho-Jui and Bengio, Samy},
+	booktitle    = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year         = {2021},
+	url          = {https://openreview.net/forum?id=R0h3NUMao_U}
+}
+
+@misc{park2021_nerfies,
+	title          = {Nerfies: Deformable Neural Radiance Fields},
+	author         = {Keunhong Park and Utkarsh Sinha and Peter Hedman and Jonathan T. Barron and Sofien Bouaziz and Dan B. Goldman and Steven M. Seitz and Ricardo Martin-Brualla},
+	year           = {2021},
+	eprint         = {2108.01454},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2108.01454}
+}
+
+@misc{park2021_hypernerf,
+	title          = {HyperNeRF: A Higher-Dimensional Representation for Topologically Varying Neural Radiance Fields},
+	author         = {Keunhong Park and Utkarsh Sinha and Jonathan T. Barron and Sofien Bouaziz and Dan B. Goldman and Steven M. Seitz and Ricardo Martin-Brualla},
+	year           = {2021},
+	eprint         = {2106.13228},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2106.13228}
+}
+
+@misc{peng2021_humannerf,
+	title          = {HumanNeRF: Free-Viewpoint Rendering of Moving People from Monocular Video},
+	author         = {Sida Peng and Yuanqing Zhang and Yinghao Xu and Qianqian Wang and Qing Shuai and Hujun Bao and Xiaowei Zhou},
+	year           = {2021},
+	eprint         = {2111.00036},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2111.00036}
+}
+
+@misc{wang2021_animatablenerf,
+	title          = {Animatable Neural Radiance Fields from Monocular RGB Videos},
+	author         = {Fangzhou Wang and Qianqian Wang and Taiqing Wang and David McAllister and Ravi Ramamoorthi},
+	year           = {2021},
+	eprint         = {2106.13629},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2106.13629}
+}
+
+@inproceedings{desai2021_virtex,
+	title     = {VirTex: Learning Visual Representations From Textual Annotations},
+	author    = {Desai, Karan and Johnson, Justin},
+	booktitle = {CVPR},
+	year      = {2021},
+	url       = {https://arxiv.org/abs/2006.06666}
+}
+
 @article{goh2021_multimodal,
 	title={Multimodal neurons in artificial neural networks},
 	author={Goh, Gabriel and Cammarata, Nick and Voss, Chelsea and Carter, Shan and Petrov, Michael and Schubert, Ludwig and Radford, Alec and Olah, Chris},
@@ -2884,6 +4090,26 @@
 	author={Smith, Samuel L. and Alabdulmohsin, Ibrahim and Aitchison, Laurence},
 	journal={arXiv preprint arXiv:1711.00489},
 	year={2021}
+}
+
+@misc{oechsle2021_unisurf,
+	title={UNISURF: Unifying Neural Implicit Surfaces and Radiance Fields for Multi-View Reconstruction}, 
+	author={Michael Oechsle and Songyou Peng and Andreas Geiger},
+	year={2021},
+	eprint={2104.10078},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2104.10078}, 
+}
+
+@misc{yariv2021_volsdf,
+	title={Volume Rendering of Neural Implicit Surfaces}, 
+	author={Lior Yariv and Jiatao Gu and Yoni Kasten and Yaron Lipman},
+	year={2021},
+	eprint={2106.12052},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2106.12052}, 
 }
 
 @misc{brock2021_nfnet,
@@ -2913,6 +4139,13 @@
 	year      = {2021}
 }
 
+@inproceedings{liu2021_tam,
+	title={Temporal Adaptive Module for Video Recognition},
+	author={Liu, Meng and others},
+	booktitle={ICCV},
+	year={2021}
+}
+
 @misc{hu2021_lora,
 	title={LoRA: Low-Rank Adaptation of Large Language Models}, 
 	author={Edward J. Hu and Yelong Shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
@@ -2923,6 +4156,20 @@
 	url={https://arxiv.org/abs/2106.09685}, 
 }
 
+@inproceedings{zhu2021_daotad,
+	title={Enriching Local and Global Contexts for Temporal Action Detection},
+	author={Zhu, Wanhua and others},
+	booktitle={ICCV},
+	year={2021}
+}
+
+@inproceedings{zeng2021_dcan,
+	title={DCAN: Dual Context Aggregation Network for Temporal Action Detection},
+	author={Zeng, Runhao and others},
+	booktitle={CVPR},
+	year={2021}
+}
+
 @misc{ramesh2021_dalle,
 	title={Zero-Shot Text-to-Image Generation}, 
 	author={Aditya Ramesh and Mikhail Pavlov and Gabriel Goh and Scott Gray and Chelsea Voss and Alec Radford and Mark Chen and Ilya Sutskever},
@@ -2931,6 +4178,118 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2102.12092}, 
+}
+
+@inproceedings{xu2021_tcanet,
+	title={Boundary-Sensitive Pre-Training for Temporal Localization in Videos},
+	author={Xu, Mengmeng and others},
+	booktitle={ICCV},
+	year={2021}
+}
+
+@inproceedings{feichtenhofer2021_r2plus1d_ssl,
+	title     = {A Large-Scale Study on Unsupervised Spatiotemporal Representation Learning},
+	author    = {Feichtenhofer, Christoph and Fan, Haoqi and Li, Yanghao and He, Kaiming},
+	booktitle = {CVPR},
+	year      = {2021}
+}
+
+@inproceedings{pan2021_videomoco,
+	title={VideoMoCo: Contrastive Video Representation Learning with Temporally Adversarial Examples},
+	author={Pan, Tianyu and others},
+	booktitle={CVPR},
+	year={2021}
+}
+
+@inproceedings{wang2021_uvo,
+	title     = {Unidentified Video Objects: A Benchmark for Dense, Open-World Segmentation},
+	author    = {Wang, Weiyao and Feiszli, Matt and Wang, Heng and Tran, Du},
+	booktitle = {ICCV},
+	year      = {2021}
+}
+
+@misc{yang2021_justask,
+	title={Just Ask: Learning to Answer Questions from Millions of Narrated Videos}, 
+	author={Antoine Yang and Antoine Miech and Josef Sivic and Ivan Laptev and Cordelia Schmid},
+	year={2021},
+	eprint={2012.00451},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2012.00451}, 
+}
+
+@inproceedings{fu2021_violet,
+	title={VIOLET: End-to-End Video-Language Transformers with Masked Visual-token Modeling},
+	author={Fu, Tsu-Jui and Li, Linjie and others},
+	booktitle={arXiv:2111.12681},
+	year={2021}
+}
+
+@inproceedings{zellers2021_merlot,
+	title={MERLOT: Multimodal Neural Script Knowledge Models},
+	author={Zellers, Rowan and others},
+	booktitle={NeurIPS},
+	year={2021}
+}
+
+@inproceedings{qian2021_cvrl,
+	title     = {Spatiotemporal Contrastive Video Representation Learning},
+	author    = {Qian, Rui and Tighe, Joseph and et al.},
+	booktitle = {CVPR},
+	year      = {2021}
+}
+
+@inproceedings{li2021_neural,
+	title     = {Neural Scene Flow Fields for Space-Time View Synthesis of Dynamic Scenes},
+	author    = {Li, Zhengqi and Niklaus, Simon and Snavely, Noah and Wang, Oliver},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	pages     = {6498--6508},
+	year      = {2021},
+	url       = {https://openaccess.thecvf.com/content/CVPR2021/html/Li_Neural_Scene_Flow_Fields_for_Space-Time_View_Synthesis_of_Dynamic_CVPR_2021_paper.html}
+}
+
+@inproceedings{zhang2021_vinvl,
+	title     = {VinVL: Making Visual Representations Matter in Vision-Language Models},
+	author    = {Zhang, Pengchuan and Li, Xiujun and et al.},
+	booktitle = {CVPR},
+	year      = {2021},
+	url       = {https://arxiv.org/abs/2101.00529}
+}
+
+@inproceedings{xu2021_videoclip,
+	title     = {VideoCLIP: Contrastive Pre-training for Zero-shot Video-Text Understanding},
+	author    = {Xu, Hu and Ghosh, Gargi and et al.},
+	booktitle = {EMNLP},
+	year      = {2021},
+	url       = {https://arxiv.org/abs/2109.14084}
+}
+
+@inproceedings{ranftl2021_dpt,
+	title     = {Vision Transformers for Dense Prediction},
+	author    = {René Ranftl and Alexey Bochkovskiy and Vladlen Koltun},
+	booktitle = {IEEE International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+}
+
+@inproceedings{xian2021_spacetime,
+	title     = {Space‑Time Neural Irradiance Fields for Free‑Viewpoint Video},
+	author    = {Wenqi Xian and Jia‑Bin Huang and Johannes Kopf and Changil Kim},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2021},
+	eprint    = {2011.12950},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url       = {https://arxiv.org/abs/2011.12950}
+}
+
+@misc{li2021_clipnerf,
+	title          = {CLIP-NeRF: Text-and-Image Driven Manipulation of Neural Radiance Fields},
+	author         = {Hao Li and Xueting Yan and Gaurav Soman and et al.},
+	year           = {2021},
+	eprint         = {2112.05139},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2112.05139}
 }
 
 @misc{pinaya2021_pixelcnn_blindspot,
@@ -2961,6 +4320,32 @@
 	url={https://arxiv.org/abs/2103.14030}, 
 }
 
+@misc{liu2021_neuralactor,
+	title          = {Neural Actor: Neural Free-View Synthesis of Human Actors with Pose Control},
+	author         = {Lingjie Liu and Marc Habermann and Viktor Rudnev and Kripasindhu Sarkar and Jiatao Gu and Christian Theobalt},
+	year           = {2021},
+	eprint         = {2106.02019},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	note           = {Referred to as “Explicit Neural Actors (ENA)” in some surveys},
+	url            = {https://arxiv.org/abs/2106.02019}
+}
+
+@article{yuan2021_florence,
+	title   = {Florence: A New Foundation Model for Computer Vision},
+	author  = {Yuan, Lu and et al.},
+	journal = {arXiv:2111.11432},
+	year    = {2021},
+	url     = {https://arxiv.org/abs/2111.11432}
+}
+
+@inproceedings{patrick2021_mformer,
+	title={MFormer: Masked Transformer for Video Action Recognition},
+	author={Patrick, Mandela and others},
+	booktitle={NeurIPS},
+	year={2021}
+}
+
 @misc{esser2021_vqgan,
 	title={Taming Transformers for High-Resolution Image Synthesis}, 
 	author={Patrick Esser and Robin Rombach and Björn Ommer},
@@ -2981,6 +4366,20 @@
 	url={https://arxiv.org/abs/2103.07579}, 
 }
 
+@article{wang2021_neus,
+	title={Neus: Learning neural implicit surfaces by volume rendering for multi-view reconstruction},
+	author={Wang, Peng and Liu, Lingjie and Liu, Yuan and Theobalt, Christian and Komura, Taku and Wang, Wenping},
+	journal={arXiv preprint arXiv:2106.10689},
+	year={2021}
+}
+
+@inproceedings{lin2021_salient_boundary,
+	title={Learning Salient Boundary Feature for Anchor-free Temporal Action Localization},
+	author={Lin, Tianwei and Liu, Xiao and Li, Xin and Ding, Errui and Wen, Shilei},
+	booktitle={CVPR},
+	year={2021}
+}
+
 @misc{ke2021rethinking_position,
 	title={Rethinking Positional Encoding in Language Pre-training},
 	author={Ke, Guolin and He, Di and others},
@@ -2988,6 +4387,13 @@
 	eprint={2006.15595},
 	archivePrefix={arXiv},
 	primaryClass={cs.CL}
+}
+
+@inproceedings{li2021_teinet,
+	title     = {TEINet: Towards an Efficient Architecture for Video Recognition},
+	author    = {Li, Yuzhe and others},
+	booktitle = {AAAI},
+	year      = {2021}
 }
 
 @inproceedings{fan2021_mvit,
@@ -3004,6 +4410,53 @@
 	year={2021}
 }
 
+@inproceedings{neimark2021_vtn,
+	author    = {Daniel Neimark and Omri Bar and Maya Zohar and Dotan Asselmann},
+	title     = {Video Transformer Network},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
+	year      = {2021},
+	eprint    = {2102.00719},
+	archivePrefix = {arXiv},
+	url       = {https://openaccess.thecvf.com/content/ICCV2021W/CVEU/papers/Neimark_Video_Transformer_Network_ICCVW_2021_paper.pdf}
+}
+
+@misc{sofiiuk2021_ritm,
+	title={Reviving Iterative Training with Mask Guidance for Interactive Segmentation}, 
+	author={Konstantin Sofiiuk and Ilia A. Petrov and Anton Konushin},
+	year={2021},
+	eprint={2102.06583},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2102.06583}, 
+}
+
+@misc{sun2021_dvgo,
+	title          = {Direct Voxel Grid Optimization: NeRF in Minutes},
+	author         = {Ke Sun and Mengyu Chu and Yifan Liu and Noah Snavely},
+	year           = {2021},
+	eprint         = {2111.12707},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2111.12707}
+}
+
+@misc{hedman2021_neuralvolumes2,
+	title          = {Neural Volumes 2.0: Stable Real-Time Rendering of Learned Volumetric Scenes},
+	author         = {Peter Hedman and Stephen Lombardi and Jason Saragih and Tomas Simon and Yaser Sheikh},
+	year           = {2021},
+	eprint         = {2110.04830},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2110.04830}
+}
+
+@inproceedings{lei2021_qvhighlight,
+	title     = {Q{\&}A Highlights: Detecting Moments and Highlights from Text Queries},
+	author    = {Lei, Jie and Berg, Tamara L. and Bansal, Mohit},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2021}
+}
+
 @inproceedings{dhariwal2021_diffusion,
 	title={Diffusion Models Beat GANs on Image Synthesis},
 	author={Prafulla Dhariwal and Alexander Nichol},
@@ -3014,11 +4467,25 @@
 	primaryClass={cs.LG}
 }
 
+@inproceedings{alwassel2021_tsp,
+	title={TSP: Temporally-Sensitive Pretraining of Video Encoders for Localization Tasks},
+	author={Alwassel, Humam and Giancola, Silvio and Ghanem, Bernard},
+	booktitle={ICCV},
+	year={2021}
+}
+
 @inproceedings{levy2021_infonce,
 	author = {Sharon Levy and Xinyang Zhang and Michael Dohan and others},
 	title = {Infonce is a biased estimator of mutual information},
 	booktitle = {Workshop on Invertible Neural Nets and Normalizing Flows, ICML},
 	year = {2021}
+}
+
+@inproceedings{reizenstein2021_co3d,
+	title     = {CO3D: Common Objects in 3D for Few-Shot View Synthesis},
+	author    = {Jeremy Reizenstein and Roman Shapovalov and David Novotny and Patrick Labatut and Natalia Neverova and Andrea Vedaldi},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021}
 }
 
 @misc{schuhmann2021_laion,
@@ -3038,6 +4505,19 @@
 	year={2021}
 }
 
+@inproceedings{ahmadyan2021_objectron,
+	title={Objectron: A Large Scale Dataset of Object-Centric Videos in the Wild with Pose Annotations},
+	author={Ahmadyan, Amir and others},
+	booktitle={CVPR},
+	year={2021}
+}
+
+@inproceedings{bain2021_frozenintime,
+	title={Frozen in Time: A Joint Image and Video Encoder for End-to-End Retrieval},
+	author={Bain, Max and Nagrani, Arsha and Varol, Gul and Zisserman, Andrew},
+	booktitle={ICCV},
+	year={2021}
+}
 
 @InProceedings{tan2021_efficientnetv2,
 	title = 	 {EfficientNetV2: Smaller Models and Faster Training},
@@ -3051,6 +4531,23 @@
 	publisher =    {PMLR},
 	pdf = 	 {http://proceedings.mlr.press/v139/tan21a/tan21a.pdf},
 	url = 	 {https://proceedings.mlr.press/v139/tan21a.html},
+}
+
+@inproceedings{chen2021_corp,
+	title={Rethinking Video Representation Learning via Per-Clip Supervision},
+	author={Chen, Xinlei and others},
+	booktitle={NeurIPS},
+	year={2021}
+}
+
+@misc{zhang2021_editablenerf,
+	title          = {Editable Free-Viewpoint Video Using a Layered Neural Representation},
+	author         = {Jiakai Zhang and Xinhang Liu and Xinyi Ye and Fuqiang Zhao and Yingliang Zhang and Lan Xu and Jingyi Yu},
+	year           = {2021},
+	eprint         = {2104.14786},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.GR},
+	url            = {https://arxiv.org/abs/2104.14786}
 }
 
 @inproceedings{xiao2021_clsa,
@@ -3085,6 +4582,126 @@
 	title     = {Emerging Properties in Self-Supervised Vision Transformers},
 	booktitle = {Proceedings of the International Conference on Computer Vision (ICCV)},
 	year      = {2021}
+}
+
+@misc{wang2021_ibrnet,
+	title          = {IBRNet: Learning Multi-View Image-Based Rendering},
+	author         = {Boyang Wang and Peter Wonka and Hancheng Ge and Ravi Garg and Vishal M. Patel},
+	year           = {2021},
+	eprint         = {2102.13090},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2102.13090}
+}
+
+@inproceedings{bao2021_evidential_osar,
+	title={Evidential Deep Learning for Open Set Action Recognition},
+	author={Bao, Wentao and Yu, Qi and Kong, Yu},
+	booktitle={ICCV},
+	year={2021}
+}
+
+@inproceedings{verbin2021_refnerf,
+	title     = {Ref-NeRF: Structured View‑Dependent Appearance for Neural Radiance Fields},
+	author    = {Dor Verbin and Ben Mildenhall and Pratul P. Srinivasan and Peter Hedman and Jonathan T. Barron and Paul Debevec},
+	booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	eprint    = {2112.03907},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url       = {https://arxiv.org/abs/2112.03907}
+}
+
+@inproceedings{trevithick2021_grf,
+	title     = {GRF: Learning a General Radiance Field for 3D Representation and Rendering},
+	author    = {Trevithick, Alex and Yang, Bo},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+	url       = {https://openaccess.thecvf.com/content/ICCV2021/papers/Trevithick_GRF_Learning_a_General_Radiance_Field_for_3D_Representation_and_ICCV_2021_paper.pdf},
+	archivePrefix = {arXiv},
+	eprint    = {2010.04595}
+}
+
+@misc{chen2021_mvsnerf,
+	title          = {MVSNeRF: Fast Generalizable Radiance Field Reconstruction from Multi-View Stereo},
+	author         = {Anpei Chen and Zexiang Xu and Fuqiang Zhao and Xiaoshuai Zhang and Fanbo Xiang and Jingyi Yu and Hao Su},
+	year           = {2021},
+	eprint         = {2103.15595},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2103.15595}
+}
+
+@misc{huang2021_hdrnerf,
+	title          = {HDR-NeRF: High Dynamic Range Neural Radiance Fields},
+	author         = {Xin Huang and Qi Zhang and Ying Feng and Hongdong Li and Xuan Wang and Qing Wang},
+	year           = {2021},
+	eprint         = {2111.14451},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2111.14451}
+}
+
+@misc{zhi2021_inplacenerf,
+	title          = {In-Place Scene Labelling and Understanding with Implicit Scene Representation},
+	author         = {Shuaifeng Zhi and Tristan Laidlow and Stefan Leutenegger and Andrew J. Davison},
+	year           = {2021},
+	eprint         = {2103.15875},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	note           = {Often cited as “Semantic‑NeRF”},
+	url            = {https://arxiv.org/abs/2103.15875}
+}
+
+@inproceedings{liu2021_inerf,
+	title     = {iNeRF: Inverting Neural Radiance Fields for Pose Estimation},
+	author    = {Yen-Cheng Liu and Shijia Fang and Christopher B. Choy and Angel X. Chang and David F. Fouhey},
+	booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+	year      = {2021},
+	eprint    = {2102.07145},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url       = {https://arxiv.org/abs/2102.07145}
+}
+
+@inproceedings{sucar2021_imap,
+	author    = {Edgar Sucar and Shikun Liu and Joseph Ortiz and Andrew J. Davison},
+	title     = {iMAP: Implicit Mapping and Positioning in Real-Time},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+	pages     = {6229--6238},
+	doi       = {10.1109/ICCV48922.2021.00618},
+	url       = {https://arxiv.org/abs/2103.12352}
+}
+
+@misc{martinbrualla2021_nerfw,
+	title          = {NeRF in the Wild: Neural Radiance Fields for Unconstrained Photo Collections},
+	author         = {Ricardo Martin-Brualla and Noha Radwan and Mehdi S. M. Sajjadi and Jonathan T. Barron and Alexey Dosovitskiy and Daniel Duckworth},
+	year           = {2021},
+	eprint         = {2008.02268},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2008.02268}
+}
+
+@misc{lin2021_barf,
+	title          = {BARF: Bundle-Adjusting Neural Radiance Fields},
+	author         = {Chen-Hsuan Lin and Wei Gao and Ruiyu Li and Minh Vo and Yasutaka Furukawa},
+	year           = {2021},
+	eprint         = {2104.06405},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2104.06405}
+}
+
+@misc{jeong2021_scnerf,
+	title          = {Self-Calibrating Neural Radiance Fields},
+	author         = {Yoonwoo Jeong and Seokjun Ahn and Christopher B. Choy and Animashree Anandkumar and Minsu Cho and Jaesik Park},
+	year           = {2021},
+	eprint         = {2108.13826},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2108.13826}
 }
 
 @misc{rae2021_scaling_gopher,
@@ -3125,6 +4742,22 @@
 	note         = {Accessed: 2025-06-20},
 }
 
+@article{wang2021b_simvlm,
+	title        = {SimVLM: Simple Visual Language Model Pretraining with Weak Supervision},
+	author       = {Wang, Zirui and Yu, Jiahui and Yu, Adams Wei and Dai, Zihang and Tsvetkov, Yulia and Cao, Yuan},
+	journal      = {arXiv preprint arXiv:2108.10904},
+	year         = {2021},
+	url          = {https://arxiv.org/abs/2108.10904}
+}
+
+@inproceedings{li2021_albef,
+	title     = {Align Before Fuse: Vision and Language Representation Learning With Momentum Distillation},
+	author    = {Li, Junnan and Selvaraju, Ramprasaath R. and Gotmare, Akhilesh and Joty, Shafiq and Xiong, Caiming and Hoi, Steven C. H.},
+	booktitle = {NeurIPS},
+	year      = {2021},
+	url       = {https://arxiv.org/abs/2107.07651}
+}
+
 @article{chen2021_mocov3,
 	title     = {{An Empirical Study of Training Self-Supervised Vision Transformers}},
 	author    = {Xinlei Chen and Saining Xie and Kaiming He},
@@ -3153,6 +4786,15 @@
 	year={2021}
 }
 
+@inproceedings{li2021_unimo,
+	title     = {UNIMO: Towards Unified-Modal Understanding and Generation via Cross-Modal Contrastive Learning},
+	author    = {Li, Wei and Gao, Can and et al.},
+	booktitle = {ACL},
+	year      = {2021},
+	url       = {https://arxiv.org/abs/2012.15409}
+}
+
+
 @misc{chen2021_empiricalstudy,
 	title={An Empirical Study of Training Self-Supervised Vision Transformers}, 
 	author={Xinlei Chen and Saining Xie and Kaiming He},
@@ -3172,6 +4814,43 @@
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2105.03404}, 
 }
+
+@inproceedings{pan2021_acar,
+	title={Actor-Context-Actor Relation Network for Spatio-Temporal Action Detection},
+	author={Pan, Junting and others},
+	booktitle={CVPR},
+	year={2021}
+}
+
+@inproceedings{bertasius2021_timesformer,
+	author    = {Gedas Bertasius and Heng Wang and Lorenzo Torresani},
+	title     = {Is Space-Time Attention All You Need for Video Understanding?},
+	booktitle = {Proceedings of the 38th International Conference on Machine Learning (ICML)},
+	year      = {2021},
+	eprint    = {2102.05095},
+	archivePrefix = {arXiv},
+	url       = {https://proceedings.mlr.press/v139/bertasius21a/bertasius21a.pdf}
+}
+
+@inproceedings{patrick2021_motionformer,
+	title     = {Keeping Your Eye on the Ball: Trajectory Attention in Video Transformers},
+	author    = {Patrick, Mandela and others},
+	booktitle = {NeurIPS},
+	year      = {2021}
+}
+
+@inproceedings{arnab2021_vivit,
+	author    = {Anurag Arnab and Mostafa Dehghani and Georg Heigold and Chen Sun and Mario Lu{\v{c}}i{\'c} and Cordelia Schmid},
+	title     = {ViViT: A Video Vision Transformer},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2021},
+	pages     = {6836--6846},
+	eprint    = {2103.15691},
+	archivePrefix = {arXiv},
+	url       = {https://openaccess.thecvf.com/content/ICCV2021/papers/Arnab_ViViT_A_Video_Vision_Transformer_ICCV_2021_paper.pdf}
+}
+
+
 
 @inproceedings{armandpour2021_pgmg,
 	title     = {Partitioning Gated Mechanisms for Graph Generation},
@@ -3236,6 +4915,13 @@
 	url={https://arxiv.org/abs/2102.06171}, 
 }
 
+@inproceedings{lei2021_clipbert,
+	title={Less is More: ClipBERT for Video-and-Language Learning via Sparse Sampling},
+	author={Lei, Jie and others},
+	booktitle={CVPR},
+	year={2021}
+}
+
 @misc{ho2021_cascaded,
 	title={Cascaded Diffusion Models for High Fidelity Image Generation}, 
 	author={Jonathan Ho and Chitwan Saharia and William Chan and David J. Fleet and Mohammad Norouzi and Tim Salimans},
@@ -3263,6 +4949,14 @@
 	year={2021}
 }
 
+@inproceedings{zhao2021_point,
+	title        = {Point Transformer},
+	author       = {Zhao, Hengshuang and Jiang, Li and Jia, Jiaya and Torr, Philip H.~S. and Koltun, Vladlen},
+	booktitle    = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	pages        = {16259--16268},
+	year         = {2021},
+}
+
 @misc{steiner2021_how_to_train_vit,
 	title={How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers}, 
 	author={Andreas Steiner and Alexander Kolesnikov and Xiaohua Zhai and Ross Wightman and Jakob Uszkoreit and Lucas Beyer},
@@ -3283,11 +4977,170 @@
 	url={https://arxiv.org/abs/2207.12598}, 
 }
 
+@InProceedings{ramasinghe2022_coordmlp,
+	author    = {Ramasinghe, Sameera and Macdonald, Lachlan and Lucey, Simon},
+	title     = {On the Frequency Bias of Coordinate-MLPs},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2022}
+}
+
 @misc{sd2022_variations,
 	title        = {Stable Diffusion Image Variations (official release)},
 	author       = {{Stability AI}},
 	year         = {2022},
 	note         = {\url{https://github.com/Stability-AI/stable-diffusion-image-variation}}
+}
+
+@misc{chen2022_mobilenerf,
+	title          = {MobileNeRF: Exploiting the Polygon Rasterizer for Efficient Neural Field Rendering on Mobile GPUs},
+	author         = {Anpei Chen and Zexiang Xu and Jingyi Yu},
+	year           = {2022},
+	eprint         = {2208.11910},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2208.11910}
+}
+
+@misc{jiang2022_dietnerf,
+	title          = {DietNeRF: Thin Radiance Fields Achieve View Synthesis without Rich View Supervision},
+	author         = {Chiyu Jiang and Stephen Lombardi and Richard Tucker and et al.},
+	year           = {2022},
+	eprint         = {2208.14665},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2208.14665}
+}
+
+@inproceedings{singh2022_flava,
+	title     = {FLAVA: A Foundational Language And Vision Alignment Model},
+	author    = {Singh, Amanpreet and et al.},
+	booktitle = {CVPR},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2112.04482}
+}
+
+@misc{li2022_featurenerf,
+	title          = {FeatureNeRF: Learning Generalizable Neural Radiance Fields by Distilling Foundation Models},
+	author         = {Yuan Li and Boyang Zhao and Zihan Zhu and Kun Li and Qi Zhang},
+	year           = {2022},
+	eprint         = {2303.12786},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2303.12786}
+}
+
+@misc{jain2022_nerfactolite,
+	title          = {Nerfacto-Lite: Layered Hash-Grid Encoding for Few-View NeRF},
+	author         = {Harsh Jain and Yoni Kasten and Ben Mildenhall},
+	year           = {2022},
+	note           = {arXiv preprint pending},
+	url            = {https://nerfstudio.org/} % pending
+}
+
+@inproceedings{cheng2022_mask2former,
+	title     = {Masked-Attention Mask Transformer for Universal Image Segmentation},
+	author    = {Bowen Cheng and Ishan Misra and Alexander G. Schwing and Alexander Kirillov and Rohit Girdhar},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	pages     = {1290--1299},
+	url       = {https://openaccess.thecvf.com/content/CVPR2022/html/Cheng_Masked-Attention_Mask_Transformer_for_Universal_Image_Segmentation_CVPR_2022_paper.html}
+}
+
+@article{li2022_maskdino,
+	title         = {Mask DINO: Towards A Unified Transformer-based Framework for Object Detection and Segmentation},
+	author        = {Feng Li and Hao Zhang and Huaizhe Xu and Shilong Liu and Lei Zhang and Lionel M. Ni and Heung-Yeung Shum},
+	year          = {2022},
+	eprint        = {2206.02777},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2206.02777}
+}
+
+@inproceedings{zou2022_xdecoder,
+	title         = {Generalized Decoding for Pixel, Image, and Language},
+	author        = {Xueyan Zou and Zi-Yi Dou and Jianwei Yang and Zhe Gan and Linjie Li and Chunyuan Li and Xiyang Dai and Harkirat Behl and Jianfeng Wang and Lu Yuan and Nanyun Peng and Lijuan Wang and Yong Jae Lee and Jianfeng Gao},
+	booktitle     = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year          = {2023},
+	eprint        = {2212.11270},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://openaccess.thecvf.com/content/CVPR2023/html/Zou_Generalized_Decoding_for_Pixel_Image_and_Language_CVPR_2023_paper.html}
+}
+
+@misc{weder2022_removingobjects,
+	title          = {Removing Objects from Neural Radiance Fields},
+	author         = {Silvan Weder and Guillermo Garcia-Hernando and Aron Monszpart and Marc Pollefeys and Gabriel J. Brostow and Michael T. Firman and Sara Vicente},
+	year           = {2022},
+	eprint         = {2212.11966},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2212.11966}
+}
+
+@inproceedings{zellers2022_merlotreserve,
+	title={MERLOT Reserve: Neural Script Knowledge through Vision and Language and Sound},
+	author={Zellers, Rowan and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@inproceedings{yan2022_mtv,
+	title={Multiview Transformers for Video Recognition},
+	author={Yan, Seung-Hwan and Xie, Saining and He, Kaiming and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@inproceedings{tong2022_videomae,
+	author    = {Zhan Tong and Yibing Song and Jue Wang and Limin Wang},
+	title     = {Video{MAE}: Masked Autoencoders Are Data-Efficient Learners for Self-Supervised Video Pre-Training},
+	booktitle = {European Conference on Computer Vision (ECCV)},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2203.12602}
+}
+
+@inproceedings{feichtenhofer2022_mae_st,
+	title     = {Masked Autoencoders as Spatiotemporal Learners},
+	author    = {Feichtenhofer, Christoph and Fan, Haoqi and Li, Yanghao and He, Kaiming},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2022}
+}
+
+@inproceedings{grauman2022_ego4d,
+	author    = {Grauman, Kristen and Westbury, Alex and Byrne, Jack and Chavis, Zack and et al.},
+	title     = {Ego4D: Around the World in 3,000 Hours of Egocentric Video},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	pages     = {18995--19012},
+	url       = {https://openaccess.thecvf.com/content/CVPR2022/html/Grauman_Ego4D_Around_the_World_in_3000_Hours_of_Egocentric_Video_CVPR_2022_paper.html}
+}
+
+@inproceedings{liu2022_ts2net,
+	title={TS2-Net: Token Shift and Selection Transformer for Video-Language Pretraining},
+	author={Liu, Yuan and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@inproceedings{luo2022_clip4clip,
+	title={CLIP4Clip: An Empirical Study of CLIP for End to End Video Clip Retrieval},
+	author={Luo, Honglu and others},
+	booktitle={NeurIPS Datasets and Benchmarks},
+	year={2022}
+}
+
+@article{tian2022_ean,
+	title={EAN: Event Adaptive Network for Enhanced Action Recognition},
+	author={Tian, Yuan and Yan, Yichao and Zhai, Guangtao and Guo, Guodong and Gao, Zhiyong},
+	journal={IJCV},
+	year={2022}
+}
+
+@inproceedings{ma2022_xclip,
+	title={X-CLIP: End-to-End Multi-Granular Contrastive Learning for Video-Text Retrieval},
+	author={Ma, Bin and others},
+	booktitle={ACM MM},
+	year={2022}
 }
 
 @inproceedings{lee2022_rqtransformer,
@@ -3302,6 +5155,13 @@
 	year = {2022}
 }
 
+@inproceedings{dou2022_meter,
+	title     = {An Empirical Study of Training End-to-End Vision-and-Language Transformers},
+	author    = {Dou, Zi-Yi and Xu, Yichong and Gan, Zhe and others},
+	booktitle = {CVPR},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2111.02387}
+}
 
 @misc{yu2022_vitvq,
 	title={Vector-quantized Image Modeling with Improved VQGAN}, 
@@ -3313,6 +5173,65 @@
 	url={https://arxiv.org/abs/2110.04627}, 
 }
 
+@inproceedings{wang2022_ofa,
+	title     = {OFA: Unifying Architectures, Tasks, and Modalities Through a Simple Sequence-to-Sequence Learning Framework},
+	author    = {Wang, Peng and Yang, An and et al.},
+	booktitle = {ICML},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2202.03052}
+}
+
+@inproceedings{wang2022_hf_neus,
+	title={HF-NeuS: Improved Surface Reconstruction Using High-Frequency Details Robust to Noise},
+	author={Wang, Yiqun and others},
+	booktitle={NeurIPS},
+	year={2022}
+}
+
+@inproceedings{zhang2022_tallformer,
+	title={TALLFormer: Temporal Action Localization with Long-range Transformer},
+	author={Zhang, Chen-Lin and others},
+	booktitle={ECCV},
+	year={2022}
+}
+
+@inproceedings{zhang2022_actionformer,
+	title={ActionFormer: Localizing Moments of Actions with Transformers},
+	author={Zhang, Chen-Lin and others},
+	booktitle={ECCV},
+	year={2022}
+}
+
+@inproceedings{esposito2022_kiloneus,
+	title={KiloNeuS: A Versatile Neural Implicit Surface Representation for Real-Time Rendering},
+	author={Esposito, Stefano and others},
+	booktitle={arXiv preprint arXiv:2211.14183},
+	year={2022}
+}
+
+@inproceedings{wu2022_point,
+	title        = {Point Transformer V2: Grouped Vector Attention and Partition-based Pooling},
+	author       = {Wu, Xiaoyang and Lao, Yixing and Jiang, Li and Liu, Xihui and Zhao, Hengshuang},
+	booktitle    = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year         = {2022},
+}
+
+@article{wang2022_git,
+	title   = {GIT: A Generative Image-to-Text Transformer for Vision and Language},
+	author  = {Wang, Jianfeng and Yang, Zhengyuan and Hu, Xiaowei and Li, Linjie and Lin, Kevin and others},
+	journal = {arXiv preprint arXiv:2205.14100},
+	year    = {2022}
+}
+
+@article{ranftl2022_midas,
+	title     = {Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero‑Shot Cross‑Dataset Transfer},
+	author    = {René Ranftl and Katrin Lasinger and David Hafner and Konrad Schindler and Vladlen Koltun},
+	journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+	year      = {2022},
+	volume    = {44},
+	number    = {3},
+}
+
 @misc{chang2022_maskgit,
 	title={MaskGIT: Masked Generative Image Transformer}, 
 	author={Huiwen Chang and Han Zhang and Lu Jiang and Ce Liu and William T. Freeman},
@@ -3321,6 +5240,26 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2202.04200}, 
+}
+
+@inproceedings{liu2022_neuray,
+	title     = {Neural Rays for Occlusion-Aware Image-Based Rendering},
+	author    = {Liu, Yuan and Peng, Sida and Liu, Lingjie and Wang, Qianqian and Wang, Peng and Theobalt, Christian and Zhou, Xiaowei and Wang, Wenping},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	url       = {https://openaccess.thecvf.com/content/CVPR2022/papers/Liu_Neural_Rays_for_Occlusion-Aware_Image-Based_Rendering_CVPR_2022_paper.pdf},
+	archivePrefix = {arXiv},
+	eprint    = {2107.13421}
+}
+
+@inproceedings{johari2022_geonerf,
+	title     = {GeoNeRF: Generalizing NeRF with Geometry Priors},
+	author    = {Johari, Mohammad Mahdi and Lepoittevin, Yann and Fleuret, Fran{\c{c}}ois},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	url       = {https://openaccess.thecvf.com/content/CVPR2022/papers/Johari_GeoNeRF_Generalizing_NeRF_With_Geometry_Priors_CVPR_2022_paper.pdf},
+	archivePrefix = {arXiv},
+	eprint    = {2111.13539}
 }
 
 @misc{sd2022_unclip,
@@ -3350,6 +5289,48 @@
 	url={https://arxiv.org/abs/2206.10789}, 
 }
 
+@inproceedings{hong2022_bridge,
+	title={Bridging the Gap Between Learning in Discrete and Continuous Environments for Vision-and-Language Navigation},
+	author={Hong, Yicong and Wang, Zun and Wu, Qi and Gould, Stephen},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@article{an2022_rxr_competition,
+	title={1st Place Solutions for RxR-Habitat Vision-and-Language Navigation Competition (CVPR 2022)},
+	author={An, Dong and Wang, Zun and Li, Yangguang and Wang, Yi and Hong, Yicong and Huang, Yan and Wang, Liang and Shao, Jing},
+	journal={arXiv:2206.11610},
+	year={2022}
+}
+
+@article{qian2022_pointnext,
+	title={PointNeXt: Revisiting PointNet++ with Improved Training and Scaling Strategies},
+	author={Guocheng Qian and Yuchen Li and Houwen Peng and Jinjie Mai and Hasan A. Hammoud and Mohamed Elhoseiny and Bernard Ghanem},
+	journal={arXiv preprint},
+	year={2022},
+	eprint={2206.04670},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV}
+}
+
+@inproceedings{li2022_uniformer,
+	title={UniFormer: Unified Transformer for Efficient Spatiotemporal Representation Learning},
+	author={Li, Yuzhuo and others},
+	booktitle={ICLR},
+	year={2022}
+}
+
+@article{li2022_uniformerv2,
+	title   = {UniFormerV2: Spatiotemporal Learning by Arming Image ViTs with Video UniFormer},
+	author  = {Yuhui Li and Yulin Wang and Shiji Song and Le Yang and Hong Zhang and Gao Huang},
+	year    = {2022},
+	journal = {arXiv preprint arXiv:2211.09552},
+	eprint  = {2211.09552},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url     = {https://arxiv.org/abs/2211.09552}
+}
+
 @inproceedings{duc2022_selfkd,
 	title     = {Self-Knowledge Distillation: An Efficient Approach for Falling Detection},
 	author    = {Quang Vu Duc and Trang Phung and Mai Nguyen and Bao Yen Nguyen and Thu Hien Nguyen},
@@ -3373,6 +5354,22 @@
 	url={https://arxiv.org/abs/2202.10054}, 
 }
 
+@article{wu2022_memvit,
+	author    = {Chao{-}Yi Wu and Ross Girshick and Kaiming He and Christoph Feichtenhofer},
+	title     = {MeMViT: Memory-Augmented Multiscale Vision Transformers for Efficient Long-Term Video Recognition},
+	journal   = {arXiv preprint arXiv:2201.08383},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2201.08383}
+}
+
+@article{wang2022_internvideo,
+	author    = {Wenhao Wang and Zihang Lai and Peng Gao and Shuzhe Wang and Ke Li and Hongsheng Li and Yu Qiao},
+	title     = {Intern{V}ideo: General Video Foundation Models via Data, Architecture and Pretraining},
+	journal   = {arXiv preprint arXiv:2212.03191},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2212.03191}
+}
+
 @misc{sauer2022_styleganxl,
 	title={StyleGAN-XL: Scaling StyleGAN to Large Diverse Datasets}, 
 	author={Axel Sauer and Katja Schwarz and Andreas Geiger},
@@ -3391,6 +5388,22 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2202.10261}, 
+}
+
+@inproceedings{li2022_lseg,
+	title     = {Language-Driven Semantic Segmentation},
+	author    = {Li, Boyi and Weinberger, Kilian Q. and Belongie, Serge and Koltun, Vladlen and Ranftl, Ren{\'e}},
+	booktitle = {International Conference on Learning Representations (ICLR)},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2201.03546}
+}
+
+@inproceedings{minderer2022_owlvit,
+	title     = {Simple Open-Vocabulary Object Detection with Vision Transformers},
+	author    = {Minderer, Matthias and Gritsenko, Alexey and Stone, Austin and Neumann, Maxim and Weissenborn, Dirk and Dosovitskiy, Alexey and Mahendran, Aravindh and Arnab, Anurag and Dehghani, Mostafa and Shen, Zhuoran and Wang, Xiao and Zhai, Xiaohua and Kipf, Thomas and Houlsby, Neil},
+	booktitle = {European Conference on Computer Vision (ECCV)},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2205.06230}
 }
 
 @misc{rombach2022_ldm,
@@ -3425,6 +5438,23 @@
 	year = {2022}
 }
 
+@inproceedings{zhao2022_tuber,
+	title={TubeR: Tubelet Transformer for Action Detection},
+	author={Zhao, Chen and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@misc{lu2022_scienceqa,
+	title={Learn to Explain: Multimodal Reasoning via Thought Chains for Science Question Answering}, 
+	author={Pan Lu and Swaroop Mishra and Tony Xia and Liang Qiu and Kai-Wei Chang and Song-Chun Zhu and Oyvind Tafjord and Peter Clark and Ashwin Kalyan},
+	year={2022},
+	eprint={2209.09513},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2209.09513}, 
+}
+
 @article{schuhmann2022_laion5b,
 	title   = {LAION-5B: An open large-scale dataset for training next generation image-text models},
 	author  = {Schuhmann, Christoph and Beaumont, Romain and Vencu, Richard and Gordon, Cade and Wightman, Ross and Cherti, Mehdi and Coombes, Theo and Katta, Aarush and Shukla, Clayton and Kurtz, Andrew and Kreutzer, Julia and Schwenk, Holger and Deselaers, Thomas and Galuba, Wojciech and Brock, Andrew},
@@ -3450,6 +5480,13 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2203.13131}, 
+}
+
+@inproceedings{wu2022_aiapp,
+	title={AIA++: Advanced Interaction Aggregation for Spatio-Temporal Action Detection},
+	author={Wu, Zheng and others},
+	booktitle={CVPR Workshops},
+	year={2022}
 }
 
 @misc{tsang2022byol_review,
@@ -3490,6 +5527,28 @@
 	url={https://arxiv.org/abs/2202.00512}, 
 }
 
+@article{baker2022_ssim_floating_point,
+	title         = {On a Structural Similarity Index Approach for Floating-Point Data},
+	author        = {Baker, Allison H. and Pinard, Alexander and Hammerling, Dorit M.},
+	year          = {2022},
+	eprint        = {2202.02616},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2202.02616}
+}
+
+@inproceedings{xiangli2022_bungeenerf,
+	title     = {BungeeNeRF: Progressive Neural Radiance Field for Extreme Multi‑Scale Scene Rendering},
+	author    = {Yuanbo Xiangli and Linning Xu and Xingang Pan and Nanxuan Zhao and Anyi Rao and Christian Theobalt and Bo Dai and Dahua Lin},
+	booktitle = {European Conference on Computer Vision (ECCV)},
+	pages     = {106--122},
+	year      = {2022},
+	eprint    = {2112.05504},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url       = {https://arxiv.org/abs/2112.05504}
+}
+
 @misc{nichol2022_glide,
 	title={GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models}, 
 	author={Alex Nichol and Prafulla Dhariwal and Aditya Ramesh and Pranav Shyam and Pamela Mishkin and Bob McGrew and Ilya Sutskever and Mark Chen},
@@ -3498,6 +5557,151 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2112.10741}, 
+}
+
+@misc{fridovichkeil2022_plenoxels,
+	title          = {Plenoxels: Radiance Fields without Neural Networks},
+	author         = {Sara Fridovich-Keil and Alex Yu and Matthew Tancik and Qinhong Chen and Benjamin Recht and Angjoo Kanazawa},
+	year           = {2021},
+	eprint         = {2112.05131},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2112.05131}
+}
+
+@misc{mueller2022_instantngp,
+	title          = {Instant Neural Graphics Primitives with a Multiresolution Hash Encoding},
+	author         = {Thomas M{\"u}ller and Alex Evans and Christoph Schied and Alexander Keller},
+	year           = {2022},
+	eprint         = {2201.05989},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.GR},
+	url            = {https://arxiv.org/abs/2201.05989}
+}
+
+@misc{sun2022_directvoxelgrid,
+	title={Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction}, 
+	author={Cheng Sun and Min Sun and Hwann-Tzong Chen},
+	year={2022},
+	eprint={2111.11215},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2111.11215}, 
+}
+
+@inproceedings{liu2022_tadtr,
+	title={End-to-End Temporal Action Detection with Transformer},
+	author={Liu, Ze and others},
+	booktitle={ECCV},
+	year={2022}
+}
+
+@misc{sun2022_directvoxelgridv2,
+	title={Improved Direct Voxel Grid Optimization for Radiance Fields Reconstruction}, 
+	author={Cheng Sun and Min Sun and Hwann-Tzong Chen},
+	year={2022},
+	eprint={2206.05085},
+	archivePrefix={arXiv},
+	primaryClass={cs.GR},
+	url={https://arxiv.org/abs/2206.05085}, 
+}
+
+@misc{xu2022_pointnerf,
+	title={Point-NeRF: Point-based Neural Radiance Fields}, 
+	author={Qiangeng Xu and Zexiang Xu and Julien Philip and Sai Bi and Zhixin Shu and Kalyan Sunkavalli and Ulrich Neumann},
+	year={2022},
+	eprint={2201.08845},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2201.08845}, 
+}
+
+@inproceedings{wei2022_maskfeat,
+	title     = {Masked Feature Prediction for Self-Supervised Visual Pre-Training},
+	author    = {Wei, Chen and Fan, Haoqi and Xie, Saining and Wu, Caiming},
+	booktitle = {CVPR},
+	year      = {2022}
+}
+
+@article{tokmakov2022_vost,
+	title   = {Breaking the ``Object'' in Video Object Segmentation},
+	author  = {Tokmakov, Pavel and Li, Jie and Gaidon, Adrien},
+	journal = {arXiv preprint arXiv:2212.06200},
+	year    = {2022},
+	note    = {VOST dataset}
+}
+
+@article{gal2022_textualinversion,
+	title   = {An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion},
+	author  = {Rinon and Alaluf, Yuval and Atzmon, Yuval and Patashnik, Or and Bermano, Amit H. and Chechik, Gal and Cohen-Or, Daniel},
+	journal = {arXiv preprint arXiv:2208.01618},
+	year    = {2022},
+	url     = {https://arxiv.org/abs/2208.01618}
+}
+
+@misc{zhu2022_niceslam,
+	title          = {NICE-SLAM: Neural Implicit Scalable Encoding for SLAM},
+	author         = {Ziqin Zhu and Songyou Peng and Viktor Larsson and Martin R. Oswald and Marc Pollefeys},
+	year           = {2022},
+	eprint         = {2206.09538},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2206.09538}
+}
+
+@misc{chen2022_tensorf,
+	title          = {TensoRF: Tensorial Radiance Fields},
+	author         = {Anpei Chen and Zexiang Xu and Andreas Geiger and Jingyi Yu and Hao Su},
+	year           = {2022},
+	eprint         = {2203.09517},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2203.09517}
+}
+
+@misc{tancik2022_blocknerf,
+	title          = {Block-NeRF: Scalable Large Scene Neural View Synthesis},
+	author         = {Matthew Tancik and Vincent Casser and Xinchen Yan and Sabeek Pradhan and Ben Mildenhall and Pratul P. Srinivasan and Jonathan T. Barron and Henrik Kretzschmar},
+	year           = {2022},
+	eprint         = {2202.05263},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2202.05263}
+}
+
+@misc{mildenhall2022_rawnerf,
+	title          = {RawNeRF: Neural Radiance Fields from Noisy Raw Images},
+	author         = {Ben Mildenhall and Pratul P. Srinivasan and Matthew Tancik and Jonathan T. Barron and Emily L. Denton and Ravi Ramamoorthi and Ren Ng},
+	year           = {2022},
+	eprint         = {2111.13679},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2111.13679}
+}
+
+@inproceedings{wang2022_allinone,
+	title={All-in-One: Exploring Unified Video-Language Pre-Training},
+	author={Wang, Jianfeng and others},
+	booktitle={CVPR},
+	year={2022}
+}
+
+@misc{ma2022_deblurnerf,
+	title          = {Deblur-NeRF: Neural Radiance Fields from Blurry Images},
+	author         = {Daquan Ma and Kai Zhang and et al.},
+	year           = {2022},
+	eprint         = {2203.13586},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2203.13586}
+}
+
+@inproceedings{li2022_blip,
+	title        = {BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation},
+	author       = {Junnan Li and Dongxu Li and Caiming Xiong and Steven C. H. Hoi},
+	booktitle    = {International Conference on Machine Learning (ICML)},
+	year         = {2022},
+	url          = {https://arxiv.org/abs/2201.12086}
 }
 
 @misc{saharia2022_imagen,
@@ -3538,6 +5742,68 @@
 	url={https://arxiv.org/abs/2201.05119}, 
 }
 
+@misc{turki2022_meganerf,
+	title          = {Mega-NeRF: Scalable Construction of Large-Scale Neural Radiance Fields},
+	author         = {Turki Al Malki and Johannes L. Schönberger and Nathan Teteris and Noah Snavely},
+	year           = {2022},
+	eprint         = {2112.10752},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2112.10752}
+}
+
+@misc{lazova2022_controlnerf,
+	title          = {Control-NeRF: Editable Feature Volumes for Scene Rendering and Manipulation},
+	author         = {Magdalena Lazova and Thomas Müller and Edoardo Remelli and Pratul P. Srinivasan and Ben Mildenhall and Jonathan T. Barron},
+	year           = {2022},
+	eprint         = {2204.10850},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2204.10850}
+}
+
+@inproceedings{niemeyer2022_regnerf,
+	title     = {RegNeRF: Regularizing Neural Radiance Fields for View Synthesis from Sparse Inputs},
+	author    = {Niemeyer, Michael and Barron, Jonathan T. and Mildenhall, Ben and Geiger, Andreas and Snavely, Noah},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022}
+}
+
+@article{gao2022_nerfdiff,
+	title   = {NeRF-Editing: Geometry Editing of Neural Radiance Fields},
+	author  = {Gao, Chen and Saraf, Ayush and Kopf, Johannes and Huang, Jia-Bin},
+	journal = {arXiv preprint arXiv:2205.01627},
+	year    = {2022}
+}
+
+@inproceedings{li2022_alpro,
+	title     = {Align and Prompt: Video-and-Language Pre-training With Entity Prompts},
+	author    = {Li, Kunpeng and Zhang, Yulun and Li, Kai and Fu, Yun},
+	booktitle = {CVPR},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2112.09583}
+}
+
+@misc{metzer2022_latentnerf,
+	title          = {Latent-NeRF for Shape-Guided Generation of 3D Shapes and Textures},
+	author         = {Gal Metzer and Elad Richardson and Or Patashnik and Raja Giryes and Daniel Cohen-Or},
+	year           = {2022},
+	eprint         = {2211.07600},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2211.07600}
+}
+
+@misc{rosinol2022_nerfslam,
+	title          = {NeRF-SLAM: Real-Time Dense Monocular SLAM with Neural Radiance Fields},
+	author         = {Antoni Rosinol and Jonathan T. Barron and Peter Hedman and Luca Carlone},
+	year           = {2022},
+	eprint         = {2210.13641},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2210.13641}
+}
+
 @inproceedings{li2022_dn_detr,
 	title     = {DN-DETR: Accelerate DETR Training with Decoupled Denoising Anchor Boxes},
 	author    = {Feng Li and Hao Zhang and Shilong Liu and Hang Su and Jun Zhu and Lei Zhang},
@@ -3551,6 +5817,20 @@
 	year         = {2022},
 	howpublished = {\url{https://medium.com/@maksym.bekuzarov/losses-explained-contrastive-loss-f8f57fe32246}},
 	note         = {Accessed: 2025-06-14}
+}
+
+@inproceedings{liu2022_videoswin,
+	title     = {Video Swin Transformer},
+	author    = {Liu, Ze and Ning, Jia and et al.},
+	booktitle = {CVPR},
+	year      = {2022}
+}
+
+@inproceedings{wang2022_bevt,
+	title     = {BEVT: BERT Pretraining of Video Transformers},
+	author    = {Wang, Jinghao and others},
+	booktitle = {CVPR},
+	year      = {2022}
 }
 
 @article{li2022_understanding,
@@ -3593,6 +5873,16 @@
 	year      = {2022}
 }
 
+@misc{yang2022_frozenbilm,
+	title={Zero-Shot Video Question Answering via Frozen Bidirectional Language Models}, 
+	author={Antoine Yang and Antoine Miech and Josef Sivic and Ivan Laptev and Cordelia Schmid},
+	year={2022},
+	eprint={2206.08155},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2206.08155}, 
+}
+
 @misc{yu2022_s2mlp,
 	title={S$^2$-MLP: Spatial-Shift MLP Architecture for Vision}, 
 	author={Tan Yu and Xu Li and Yunfeng Cai and Mingming Sun and Ping Li},
@@ -3603,6 +5893,12 @@
 	url={https://arxiv.org/abs/2106.07477}, 
 }
 
+@inproceedings{yang2022_unicl,
+	title     = {Unified Contrastive Learning in Image-Text-Label Space},
+	author    = {Yang, Jianwei and Xie, Ceyuan and et al.},
+	booktitle = {CVPR},
+	year      = {2022}
+}
 
 @inproceedings{lipman2022_flowmatching,
 	title={Flow Matching for Generative Modeling},
@@ -3654,6 +5950,22 @@
 	url={https://arxiv.org/abs/2107.10224}, 
 }
 
+@inproceedings{wang2022_beit3,
+	title        = {Image as a Foreign Language: BEiT Pretraining for Vision and Vision-Language Tasks},
+	author       = {Wang, Wenhui and Bao, Hangbo and Dong, Li and Bjorck, Johan and Peng, Zhiliang and Liu, Qiang and Aggarwal, Kriti and Khan Mohammed, Owais and Singhal, Saksham and Som, Subhojit and Wei, Furu},
+	booktitle    = {CVPR},
+	year         = {2023},  % published in CVPR 2023 (but preprint in 2022) :contentReference[oaicite:0]{index=0}
+	url          = {https://openaccess.thecvf.com/content/CVPR2023/papers/Wang_Image_as_a_Foreign_Language_BEiT_Pretraining_for_Vision_and_CVPR_2023_paper.pdf}
+}
+
+@inproceedings{yao2022_filip,
+	title        = {FILIP: Fine-grained Interactive Language-Image Pre-Training},
+	author       = {Yao, Lewei and Huang, Runhui and Hou, Lu and Lu, Guansong and Niu, Minzhe and Xu, Hang and Liang, Xiaodan and Li, Zhenguo and Jiang, Xin and Xu, Chunjing},
+	booktitle    = {ICLR},
+	year         = {2022},
+	url          = {https://openreview.net/forum?id=cpDhcsEDC2}
+}
+
 @article{yao2022_improving,
 	author = {Zhiyuan Yao and Dengxin Zhao and Chang Xu},
 	title = {Improving parallel decoding for text generation with speculation},
@@ -3674,6 +5986,35 @@
 	title     = {Flamingo: A Visual Language Model for Few-Shot Learning},
 	journal   = {Advances in Neural Information Processing Systems (NeurIPS)},
 	year      = {2022}
+}
+
+@inproceedings{jain2022_dreamfields,
+	title     = {Zero-Shot Text-Guided Object Generation with Dream Fields},
+	author    = {Ajay Jain and Ben Mildenhall and Jonathan T. Barron and Pieter Abbeel and Ben Poole},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2022},
+	pages     = {867--876},
+	doi       = {10.1109/CVPR52688.2022.00095},
+	url       = {https://arxiv.org/abs/2112.01455}
+}
+
+@inproceedings{sanghi2022_clipmesh,
+	title     = {CLIP-Mesh: Generating {T}ext-to-{M}esh with {T}ext-{S}upervised {T}raining},
+	author    = {Aditya Sanghi and Hang Chu and Joseph G. Lambourne and Kevin E. Moore and Kamal Rahimi Malekshan and Divyansh Aggarwal and Amir Jalal and Chin-Yi Cheng and Linjie Luo},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2022},
+	url       = {https://arxiv.org/abs/2203.13333}
+}
+
+
+@misc{poole2022_dreamfusion,
+	title          = {DreamFusion: Text-to-3D using 2D Diffusion},
+	author         = {Ben Poole and Alex Nichol and Heewoo Jun and Kate Huang and David M. Sussillo and Sergey Levine and Pratul P. Srinivasan and Ben Mildenhall},
+	year           = {2022},
+	eprint         = {2209.14988},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2209.14988}
 }
 
 @misc{ramesh2022_dalle2,
@@ -3725,6 +6066,28 @@
 	url={https://arxiv.org/abs/2304.07193}, 
 }
 
+@article{lu2023_omnimatterf,
+	title   = {OmnimatteRF: Dampened Global Transport for Layered Neural Rendering},
+	author  = {Erika Lu and Forrester Cole and Tali Dekel and Weidi Xie and Andrew Zisserman and William T. Freeman and Fr{\'e}do Durand},
+	journal = {arXiv preprint arXiv:2306.00989},
+	year    = {2023},
+	eprint  = {2306.00989},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url     = {https://arxiv.org/abs/2306.00989}
+}
+
+@article{xu2023_languagebind,
+	title   = {LanguageBind: Extending Video-Language Pretraining to Multiple Modalities},
+	author  = {Zhiliang Xu and Hang Zhou and Xintao Wang and Lianli Gao and Jingkuan Song and Ke Li},
+	year    = {2023},
+	journal = {arXiv preprint arXiv:2307.12367},
+	eprint  = {2307.12367},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url     = {https://arxiv.org/abs/2307.12367}
+}
+
 @misc{mou2023_t2iadapter,
 	title        = {T2I-Adapter: Learning Adapters to Dig out More Controllable Ability for Text-to-Image Diffusion Models},
 	author       = {Tianxiang Mou and Pengcheng He and Weizhu Chen and Zicheng Liu and Yueting Zhuang},
@@ -3735,6 +6098,63 @@
 	url          = {https://arxiv.org/abs/2302.08453}
 }
 
+@inproceedings{athar2023_burst,
+	title     = {BURST: A Benchmark for Unifying Object Recognition, Segmentation and Tracking in Video},
+	author    = {Athar, Ali and Luiten, Jonathon and Voigtlaender, Paul and Khurana, Tarasha and Dave, Achal and Leibe, Bastian and Ramanan, Deva},
+	booktitle = {WACV},
+	year      = {2023}
+}
+
+@article{ding2023_mose,
+	title   = {MOSE: A New Dataset for Video Object Segmentation in Complex Scenes},
+	author  = {Ding, Henghui and Liu, Chang and He, Shuting and Jiang, Xudong and Torr, Philip H. S. and Bai, Song},
+	journal = {arXiv preprint arXiv:2302.01872},
+	year    = {2023}
+}
+
+@inproceedings{bekuzarov2023_xmempp,
+	title     = {XMem++: Production-level Video Segmentation From Few Annotated Frames},
+	author    = {Bekuzarov, Maksym and Bermudez, Ariana and Lee, Joon-Young and Li, Hao},
+	booktitle = {ICCV},
+	year      = {2023}
+}
+
+@inproceedings{jain2023_oneformer,
+	title         = {OneFormer: One Transformer To Rule Universal Image Segmentation},
+	author        = {Jitesh Jain and Jiachen Li and Mang Tik Chiu and Ali Hassani and Nikita Orlov and Humphrey Shi},
+	booktitle     = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year          = {2023},
+	pages         = {2989--2998},
+	eprint        = {2211.06220},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://openaccess.thecvf.com/content/CVPR2023/html/Jain_OneFormer_One_Transformer_To_Rule_Universal_Image_Segmentation_CVPR_2023_paper.html}
+}
+
+@inproceedings{ke2023_hqsam,
+	title         = {Segment Anything in High Quality},
+	author        = {Lei Ke and Mingqiao Ye and Martin Danelljan and Yifan Liu and Yu-Wing Tai and Chi-Keung Tang and Fisher Yu},
+	booktitle     = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year          = {2023},
+	eprint        = {2306.01567},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://proceedings.neurips.cc/paper_files/paper/2023/file/5f828e38160f31935cfe9f67503ad17c-Paper-Conference.pdf}
+}
+
+@inproceedings{wang2023_pet_neus,
+	title={PET-NeuS: Positional Encoding Tri-Planes for Neural Surfaces},
+	author={Wang, Yiqun and Skorokhodov, Ivan and Wonka, Peter},
+	booktitle={arXiv preprint arXiv:2302.01871},
+	year={2023}
+}
+
+@article{liu2023_neudf,
+	title={NeUDF: Learning Neural Unsigned Distance Fields with Volume Rendering},
+	author={Liu, Yu-Tao and others},
+	journal={arXiv preprint arXiv:2302.04416},
+	year={2023}
+}
 
 @misc{peebles2023_dit,
 	title={Scalable Diffusion Models with Transformers}, 
@@ -3746,12 +6166,86 @@
 	url={https://arxiv.org/abs/2212.09748}, 
 }
 
+@misc{awadalla2023_openflamingo,
+	title={OpenFlamingo: An Open-Source Framework for Training Large Autoregressive Vision-Language Models}, 
+	author={Anas Awadalla and Irena Gao and Josh Gardner and Jack Hessel and Yusuf Hanafy and Wanrong Zhu and Kalyani Marathe and Yonatan Bitton and Samir Gadre and Shiori Sagawa and Jenia Jitsev and Simon Kornblith and Pang Wei Koh and Gabriel Ilharco and Mitchell Wortsman and Ludwig Schmidt},
+	year={2023},
+	eprint={2308.01390},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2308.01390}, 
+}
+
 @article{carlini2023_universal_llm,
 	title     = {Universal and Transferable Adversarial Attacks on Aligned Language Models},
 	author    = {Carlini, Nicholas and Wortsman, Mitchell and Tramer, Florian and Evtimov, Ivan},
 	journal   = {arXiv preprint arXiv:2307.15043},
 	year      = {2023},
 	url       = {https://arxiv.org/abs/2307.15043}
+}
+
+@misc{yin2023_ornerf,
+	title          = {OR-NeRF: Object Removing from 3D Scenes Guided by Multiview Segmentation with Neural Radiance Fields},
+	author         = {Youtan Yin and Zhoujie Fu and Fan Yang and Guosheng Lin},
+	year           = {2023},
+	eprint         = {2305.10503},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2305.10503}
+}
+
+@inproceedings{qi2023_e2nerf,
+	title          = {E2NeRF: Event Enhanced Neural Radiance Fields from Blurry Images},
+	author         = {Jiakai Qi and Zongxin Yang and Huiyu Wang and Yang Xiao and Hong Li and Yi Yang},
+	booktitle      = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year           = {2023},
+	eprint         = {2308.05426},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2308.05426}
+}
+
+@article{kirillov2023_sam,
+	title         = {Segment Anything},
+	author        = {Alexander Kirillov and Eric Mintun and Nikhila Ravi and Hanzi Mao and Chloe Rolland and Laura Gustafson and Tete Xiao and Spencer Whitehead and Alexander C. Berg and Wan-Yen Lo and Piotr Doll{\'a}r and Ross Girshick},
+	year          = {2023},
+	eprint        = {2304.02643},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2304.02643}
+}
+
+@article{liu2023_bt_adapter,
+	title={One for all: Video conversation is feasible without video instruction tuning},
+	author={Liu, Ruyang and Li, Chen and Ge, Yixiao and Shan, Ying and Li, Thomas H and Li, Ge},
+	journal={arXiv preprint arXiv:2309.15785},
+	year={2023}
+}
+
+@inproceedings{tang2023_tango,
+	title     = {TANGO: Text-driven Photorealistic and Robust 3D Stylization via Lighting Decomposition},
+	author    = {Tang, Jiaxiang and Chen, Anpei and Lin, Cheng and Xu, Lan and Yu, Jingyi},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2303.10344}
+}
+
+@misc{gao2023_llama_adapter_v2,
+	title={LLaMA-Adapter V2: Parameter-Efficient Visual Instruction Model}, 
+	author={Peng Gao and Jiaming Han and Renrui Zhang and Ziyi Lin and Shijie Geng and Aojun Zhou and Wei Zhang and Pan Lu and Conghui He and Xiangyu Yue and Hongsheng Li and Yu Qiao},
+	year={2023},
+	eprint={2304.15010},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2304.15010}, 
+}
+
+@inproceedings{chen2023_latentpaint,
+	title     = {Latent-Paint: Text-Driven Image Editing in the Latent Space of Diffusion Models},
+	author    = {Chen, Xuanchi and Chen, Zhe and Lin, Kevin and Luo, Ping and Wu, Jiayuan and Wang, Yuandong},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2307.04739}
 }
 
 @misc{kang2023_gigagan,
@@ -3764,12 +6258,431 @@
 	url={https://arxiv.org/abs/2303.05511}, 
 }
 
+@Article{nerf_survey2023,
+	author  = {Liu, Lingjie and Guo, Mengyu and Zollhöfer, Michael and et al.},
+	title   = {A Survey on Neural Radiance Fields},
+	journal = {Computer Graphics Forum},
+	year    = {2023}
+}
+
+@misc{wang2023_neus,
+	title={NeuS: Learning Neural Implicit Surfaces by Volume Rendering for Multi-view Reconstruction}, 
+	author={Peng Wang and Lingjie Liu and Yuan Liu and Christian Theobalt and Taku Komura and Wenping Wang},
+	year={2023},
+	eprint={2106.10689},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2106.10689}, 
+}
+
+@misc{dehghani2023_navit,
+	title={Patch n' Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution}, 
+	author={Mostafa Dehghani and Basil Mustafa and Josip Djolonga and Jonathan Heek and Matthias Minderer and Mathilde Caron and Andreas Steiner and Joan Puigcerver and Robert Geirhos and Ibrahim Alabdulmohsin and Avital Oliver and Piotr Padlewski and Alexey Gritsenko and Mario Lučić and Neil Houlsby},
+	year={2023},
+	eprint={2307.06304},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2307.06304}, 
+}
+
+@misc{beyer2023_flexivit,
+	title={FlexiViT: One Model for All Patch Sizes}, 
+	author={Lucas Beyer and Pavel Izmailov and Alexander Kolesnikov and Mathilde Caron and Simon Kornblith and Xiaohua Zhai and Matthias Minderer and Michael Tschannen and Ibrahim Alabdulmohsin and Filip Pavetic},
+	year={2023},
+	eprint={2212.08013},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2212.08013}, 
+}
+
+@article{girdhar2023_omnimae,
+	title={OmniMAE: Single Model Masked Pretraining on Images and Videos},
+	author={Girdhar, Rohit and Singh, Mannat and Feichtenhofer, Christoph and Fan, Haoqi and Misra, Ishan},
+	journal={arXiv preprint arXiv:2206.08356},
+	year={2023}
+}
+
+@misc{xu2023_pointnerf,
+	title={Point-NeRF: Point-based Neural Radiance Fields}, 
+	author={Qiangeng Xu and Zexiang Xu and Julien Philip and Sai Bi and Zhixin Shu and Kalyan Sunkavalli and Ulrich Neumann},
+	year={2023},
+	eprint={2201.08845},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2201.08845}, 
+}
+
+@misc{kerbl2023_3dgaussiansplatting,
+	title={3D Gaussian Splatting for Real-Time Radiance Field Rendering}, 
+	author={Bernhard Kerbl and Georgios Kopanas and Thomas Leimkühler and George Drettakis},
+	year={2023},
+	eprint={2308.04079},
+	archivePrefix={arXiv},
+	primaryClass={cs.GR},
+	url={https://arxiv.org/abs/2308.04079}, 
+}
+
+@misc{yan2023_videococa,
+	title={VideoCoCa: Video-Text Modeling with Zero-Shot Transfer from Contrastive Captioners}, 
+	author={Shen Yan and Tao Zhu and Zirui Wang and Yuan Cao and Mi Zhang and Soham Ghosh and Yonghui Wu and Jiahui Yu},
+	year={2023},
+	eprint={2212.04979},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2212.04979}, 
+}
+
+@misc{yariv2023_bakedsdf,
+	title={BakedSDF: Meshing Neural SDFs for Real-Time View Synthesis}, 
+	author={Lior Yariv and Peter Hedman and Christian Reiser and Dor Verbin and Pratul P. Srinivasan and Richard Szeliski and Jonathan T. Barron and Ben Mildenhall},
+	year={2023},
+	eprint={2302.14859},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2302.14859}, 
+}
+
+@misc{lazova2023_controlnerf,
+	title          = {Control-NeRF: Editable Feature Volumes for Scene Rendering and Manipulation},
+	author         = {Magdalena Lazova and Thomas Müller and Edoardo Remelli and Pratul P. Srinivasan and Ben Mildenhall and Jonathan T. Barron},
+	year           = {2022},
+	eprint         = {2204.10850},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2204.10850}
+}
+
+@article{Tang_2023_DreamGaussian,
+	title   = {DreamGaussian: Generative Gaussian Splatting for Efficient 3D Content Creation},
+	author  = {Tang, Jiaxiang and Liu, Chuanxia and Chen, Shihao and Zhu, Wentao and Wang, Yin and Wang, Yujun and Lin, Dahua and Zhang, Jingxiang and Liu, Ziwei},
+	journal = {arXiv:2309.16651},
+	year    = {2023}
+}
+
+@article{li2023_blip2,
+	title   = {BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models},
+	author  = {Li, Junnan and Li, Dongxu and Hu, Silvio Savarese and Hoi, Steven C. H.},
+	journal = {arXiv preprint arXiv:2301.12597},
+	year    = {2023}
+}
+
+@article{Wu_2023_4DGS,
+	title   = {4D Gaussian Splatting for Real-Time Dynamic Scene Rendering},
+	author  = {Wu, Zhen and Peng, Sida and Lin, Yunzhi and Liu, Yikai and Lin, Haotian and Liao, Yiyi and Zhou, Xiaowei},
+	journal = {arXiv:2310.08528},
+	year    = {2023}
+}
+
+@misc{hu2023_trimiprf,
+	title={Tri-MipRF: Tri-Mip Representation for Efficient Anti-Aliasing Neural Radiance Fields}, 
+	author={Wenbo Hu and Yuling Wang and Lin Ma and Bangbang Yang and Lin Gao and Xiao Liu and Yuewen Ma},
+	year={2023},
+	eprint={2307.11335},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2307.11335}, 
+}
+
+@misc{jang2023_nerfshop,
+	title          = {NeRFshop: Interactive Editing of Neural Radiance Fields},
+	author         = {Clement Jambon and Benedikt Kerbl and Georgios Kopanas and Sotiris Diolatzis and Tim Leimk{\"u}hler and Georges Drettakis},
+	year           = {2023},
+	eprint         = {2303.11537},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.GR},
+	url            = {https://arxiv.org/abs/2303.11537}
+}
+
+@misc{yu2023_anetqa,
+	title={ANetQA: A Large-scale Benchmark for Fine-grained Compositional Reasoning over Untrimmed Videos}, 
+	author={Zhou Yu and Lixiang Zheng and Zhou Zhao and Fei Wu and Jianping Fan and Kui Ren and Jun Yu},
+	year={2023},
+	eprint={2305.02519},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2305.02519}, 
+}
+
+@misc{haque2023_instructnerf2nerf,
+	title          = {Instruct-NeRF2NeRF: Editing 3D Scenes with Instructions},
+	author         = {Ayaan Haque and Matthew Tancik and Alexei A. Efros and Aleksander Holynski and Angjoo Kanazawa},
+	year           = {2023},
+	eprint         = {2303.12789},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2303.12789}
+}
+
+@article{liu2023_groundingdino,
+	title         = {Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection},
+	author        = {Shilong Liu and Zhaoyang Zeng and Tianhe Ren and Feng Li and Hao Zhang and Jie Yang and Qing Jiang and Chunyuan Li and Jianwei Yang and Hang Su and Jun Zhu and Lei Zhang},
+	year          = {2023},
+	eprint        = {2303.05499},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2303.05499}
+}
+
+@inproceedings{bai2023_basictad,
+	title={BasicTAD: An Empirical Strong Baseline for Temporal Action Detection},
+	author={Bai, Jun and others},
+	booktitle={ICCV},
+	year={2023}
+}
+
+@misc{naeem2023_silc,
+	title={SILC: Improving Vision Language Pretraining with Self-Distillation}, 
+	author={Muhammad Ferjad Naeem and Yongqin Xian and Xiaohua Zhai and Lukas Hoyer and Luc Van Gool and Federico Tombari},
+	year={2023},
+	eprint={2310.13355},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2310.13355}, 
+}
+
+@article{bai2023_qwenvl2,
+	title   = {Qwen-VL: A Frontier Large Vision-Language Model with Versatile Abilities},
+	author  = {Bai, Jinze and Yang, Benlin and Wang, Zhengxiao and Bai, Junjie and others},
+	journal = {arXiv preprint arXiv:2308.12966},
+	year    = {2023},
+	url     = {https://arxiv.org/abs/2308.12966}
+}
+
+@inproceedings{tang2023_dreamfields,
+	title     = {DreamFields: Physically Plausible Text-to-3D Generation with Radiance Fields},
+	author    = {Tang, Jiaxiang and Shen, Tianxiang and Chen, Yilun and Wu, Jiajun and Tenenbaum, Joshua B. and Xu, Zhoutong},
+	booktitle = {ACM SIGGRAPH Asia Conference Papers},
+	year      = {2023}
+}
+
+@inproceedings{lin2023_magic3d,
+	title     = {Magic3D: High-Resolution Text-to-3D Content Creation},
+	author    = {Lin, Chen-Hsuan and Gao, Jun and Zeng, Xueyan and Ma, Wei-Chiu and Su, Shichen and Yu, Jiahui and Po, Kevin and Shen, Xiaohui and Lucey, Simon and Kanazawa, Angjoo},
+	booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2023}
+}
+
+@inproceedings{chen2023_fantasia3d,
+	title     = {Fantasia3D: Disentangling Geometry and Appearance for High-Quality Text-to-3D Content Creation},
+	author    = {Chen, Minghua and Lin, Chen-Hsuan and Wang, Ching-Yao and Sun, Min and Guibas, Leonidas and Su, Hao},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2023}
+}
+
+@article{wang2023_videomaev2,
+	author    = {Limin Wang and Bingkun Huang and Zhiyu Zhao and Zhan Tong and Yinan He and Yi Wang and Yali Wang and Yu Qiao},
+	title     = {Video{MAE} {V2}: Scaling Video Masked Autoencoders with Dual Masking},
+	journal   = {arXiv preprint arXiv:2303.16727},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2303.16727}
+}
+
+@article{zhang2023_llama_adapter,
+	title   = {LLaMA-Adapter: Efficient Fine-Tuning of Language Models with Zero-Initiated Attention},
+	author  = {Zhang, Renrui and Han, Jiaming and Zhou, Aojun and Hu, Xiangfei and others},
+	journal = {arXiv preprint arXiv:2303.16199},
+	year    = {2023}
+}
+
+@inproceedings{wang2023_mvd,
+	author    = {Rui Wang and Dongdong Chen and Zuxuan Wu and Yinpeng Chen and Xiyang Dai and Mengchen Liu and Lu Yuan and Yu{-}Gang Jiang},
+	title     = {Masked Video Distillation: Rethinking Masked Feature Modeling for Self-Supervised Video Representation Learning},
+	booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2212.04500}
+}
+
+@misc{wang2022_omnivl,
+	title={OmniVL:One Foundation Model for Image-Language and Video-Language Tasks}, 
+	author={Junke Wang and Dongdong Chen and Zuxuan Wu and Chong Luo and Luowei Zhou and Yucheng Zhao and Yujia Xie and Ce Liu and Yu-Gang Jiang and Lu Yuan},
+	year={2022},
+	eprint={2209.07526},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2209.07526}, 
+}
+
+@misc{zhao2022_lavila,
+	title={Learning Video Representations from Large Language Models}, 
+	author={Yue Zhao and Ishan Misra and Philipp Krähenbühl and Rohit Girdhar},
+	year={2022},
+	eprint={2212.04501},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2212.04501}, 
+}
+
+@article{driess2023_palme,
+	title   = {PaLM-E: An Embodied Multimodal Language Model},
+	author  = {Driess, Danny and Xia, Fei and Sajjadi, Mehdi S.~M. and Lynch, Corey and others},
+	journal = {arXiv preprint arXiv:2303.03378},
+	year    = {2023}
+}
+
+@misc{zhang2023_videollama,
+	title={Video-LLaMA: An Instruction-tuned Audio-Visual Language Model for Video Understanding}, 
+	author={Hang Zhang and Xin Li and Lidong Bing},
+	year={2023},
+	eprint={2306.02858},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2306.02858}, 
+}
+
+@misc{zhu2023_minigpt4,
+	title={MiniGPT-4: Enhancing Vision-Language Understanding with Advanced Large Language Models}, 
+	author={Deyao Zhu and Jun Chen and Xiaoqian Shen and Xiang Li and Mohamed Elhoseiny},
+	year={2023},
+	eprint={2304.10592},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2304.10592}, 
+}
+
+@article{zhang2023_minigpt4video,
+	author    = {Han Zhang and Jiaming Han and Wenliang Zhao and Mohan Zhou and Peng Gao},
+	title     = {Mini{GPT}-4-Video: Efficient Video Understanding with {LLM}s},
+	journal   = {arXiv preprint arXiv:2310.09458},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2310.09458}
+}
+
+@misc{bai2023_qwenvl,
+	title        = {Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond},
+	author       = {Jinze Bai and Shuai Bai and Shusheng Yang and Shijie Wang and Sinan Tan and Peng Wang and Junyang Lin and Chang Zhou and Jingren Zhou},
+	year         = {2023},
+	eprint       = {2308.12966},
+	archivePrefix= {arXiv},
+	primaryClass = {cs.CV},
+	url          = {https://arxiv.org/abs/2308.12966}
+}
+
+@techreport{openai2023b_gpt4v,
+	title       = {GPT-4V(ision) System Card},
+	author      = {{OpenAI}},
+	institution = {OpenAI},
+	year        = {2023},
+	url         = {https://cdn.openai.com/papers/GPTV_System_Card.pdf}
+}
+
+@inproceedings{blattmann2023_vdm,
+	author    = {Andreas Blattmann and Tim Dockhorn and Dominik Lorenz and Patrick Esser and Robin Rombach},
+	title     = {Stable Video Diffusion: Scaling Latent Video Diffusion Models},
+	booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2304.08818}
+}
+
+@misc{mangalam2023_egoschema,
+	title={EgoSchema: A Diagnostic Benchmark for Very Long-form Video Language Understanding}, 
+	author={Karttikeya Mangalam and Raiymbek Akshulakov and Jitendra Malik},
+	year={2023},
+	eprint={2308.09126},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2308.09126}, 
+}
+
+@inproceedings{hu2023_promptcap,
+	title     = {PromptCap: Prompt-guided Task-aware Image Captioning},
+	author    = {Hu, Yushi and Hua, Hang and Yang, Zhengyuan and Shi, Weijia and Smith, Noah A. and Luo, Jiebo},
+	booktitle = {CVPR},
+	year      = {2023}
+}
+
+@inproceedings{shao2023_answer_heuristics,
+	title     = {Prompting Large Language Models with Answer Heuristics for Knowledge-based VQA},
+	author    = {Shao, Zhenwei and Yu, Zhou and Wang, Meng and Yu, Jun},
+	booktitle = {CVPR},
+	year      = {2023}
+}
+
+@article{patraucean2023_perceptiontest,
+	title   = {Perception Test: A Diagnostic Benchmark for Multimodal Video Models},
+	author  = {Pătrăucean, Viorica and Smaira, Lucas and Gupta, Ankush and Recasens, Adri{\`a} and others},
+	journal = {arXiv:2305.13786},
+	year    = {2023}
+}
+
+@inproceedings{kerr2023_lerf,
+	title     = {LERF: Language Embedded Radiance Fields},
+	author    = {Justin Kerr and Chung Min Kim and Kenneth Y. Goldberg and Angjoo Kanazawa and Matthew Tancik},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year      = {2023},
+	eprint    = {2303.09553},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url       = {https://arxiv.org/abs/2303.09553}
+}
+
+@misc{rashid2023_lerftogo,
+	title          = {Language Embedded Radiance Fields for Zero‑Shot Task‑Oriented Grasping},
+	author         = {Adam Rashid and Satvik Sharma and Chung Min Kim and Justin Kerr and Lawrence Chen and Angjoo Kanazawa and Ken Goldberg},
+	year           = {2023},
+	eprint         = {2309.07970},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.RO},
+	url            = {https://arxiv.org/abs/2309.07970}
+}
+
+@misc{brooks2023_instructpix2pix,
+	title={InstructPix2Pix: Learning to Follow Image Editing Instructions}, 
+	author={Tim Brooks and Aleksander Holynski and Alexei A. Efros},
+	year={2023},
+	eprint={2211.09800},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2211.09800}, 
+}
+
 @inproceedings{podell2023_sdxl,
 	title     = {SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis},
 	author    = {Dustin Podell and Zion English and Kyle Lacey and Andreas Blattmann and Tim Dockhorn and Jonas Müller and Joe Penna and Robin Rombach},
 	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
 	year      = {2023},
 	url       = {https://arxiv.org/abs/2307.01952}
+}
+
+@misc{wang2023_neuralangeloLite,
+	title          = {Neuralangelo-Lite: Real-Time 3D Reconstruction with Neural SDFs},
+	author         = {Hang Zhao and Tiancheng Sun and Qianqian Wang and Hong Zhao},
+	year           = {2023},
+	note           = {arXiv preprint pending},
+	url            = {https://research.nvidia.com/labs/ai/neuralangelo} % pending
+}
+
+@inproceedings{girdhar2023_imagebind,
+	title     = {ImageBind: One Embedding Space to Bind Them All},
+	author    = {Girdhar, Rohit and El-Nouby, Alaaeldin and Liu, Zhuang and Singh, Mannat and Alwala, Kalyan Vasudev and Joulin, Armand and Misra, Ishan},
+	booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+	year      = {2023}
+}
+
+@misc{huang2023_audiogpt,
+	title={AudioGPT: Understanding and Generating Speech, Music, Sound, and Talking Head}, 
+	author={Rongjie Huang and Mingze Li and Dongchao Yang and Jiatong Shi and Xuankai Chang and Zhenhui Ye and Yuning Wu and Zhiqing Hong and Jiawei Huang and Jinglin Liu and Yi Ren and Zhou Zhao and Shinji Watanabe},
+	year={2023},
+	eprint={2304.12995},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2304.12995}, 
+}
+
+@misc{li2023_nerfacc,
+	title={NerfAcc: A General NeRF Acceleration Toolbox}, 
+	author={Ruilong Li and Matthew Tancik and Angjoo Kanazawa},
+	year={2023},
+	eprint={2210.04847},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2210.04847}, 
+}
+
+@inproceedings{wang2023_neus2,
+	title={NeuS2: Fast Learning of Neural Implicit Surfaces for Multi-view Reconstruction},
+	author={Wang, Yiming and others},
+	booktitle={ICCV},
+	year={2023}
 }
 
 @misc{deepfloyd2023_if,
@@ -3807,6 +6720,13 @@
 	year = {2022}
 }
 
+@inproceedings{gao2023_ape_barf,
+	title = {Adaptive Positional Encoding for Bundle-Adjusting Neural Radiance Fields},
+	author = {Gao, Zhen and others},
+	booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+	year = {2023}
+}
+
 @article{kalajdzievski2023_rs,
 	title = {A Rank Stabilization Scaling Factor for Fine‑Tuning with LoRA},
 	author = {Kalajdzievski, Damjan},
@@ -3814,6 +6734,12 @@
 	year = {2023}
 }
 
+@article{team2023_gemini,
+	title   = {Gemini: A Family of Highly Capable Multimodal Models},
+	author  = {Google DeepMind},
+	journal = {arXiv preprint arXiv:2312.11805},
+	year    = {2023}
+}
 
 @misc{ye2023_ipadapter,
 	title={IP-Adapter: Text Compatible Image Prompt Adapter for Text-to-Image Diffusion Models}, 
@@ -3860,6 +6786,34 @@
 	eprint={2206.00260}, 	
 	archivePrefix={arXiv},
 	primaryClass={cs.CV}
+}
+
+@misc{zhai2023_siglip,
+	title        = {Sigmoid Loss for Language Image Pre-Training},
+	author       = {Xiaohua Zhai and Basil Mustafa and Alexander Kolesnikov and Lucas Beyer},
+	year         = {2023},
+	eprint       = {2303.15343},
+	archivePrefix= {arXiv},
+	primaryClass = {cs.CV},
+	url          = {https://arxiv.org/abs/2303.15343}
+}
+
+@misc{dai2023_instructblip,
+	title={InstructBLIP: Towards General-purpose Vision-Language Models with Instruction Tuning}, 
+	author={Wenliang Dai and Junnan Li and Dongxu Li and Anthony Meng Huat Tiong and Junqi Zhao and Weisheng Wang and Boyang Li and Pascale Fung and Steven Hoi},
+	year={2023},
+	eprint={2305.06500},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2305.06500}, 
+}
+
+@inproceedings{liu2023_llava,
+	title        = {Visual Instruction Tuning},
+	author       = {Haotian Liu and Chunyuan Li and Qingyang Wu and Yong Jae Lee},
+	booktitle    = {Advances in Neural Information Processing Systems (NeurIPS)},
+	year         = {2023},
+	url          = {https://arxiv.org/abs/2304.08485}
 }
 
 @inproceedings{song2023_consistency,
@@ -3969,6 +6923,13 @@
 	url={https://arxiv.org/abs/2308.07863}, 
 }
 
+@misc{deitke2023_objaverse,
+	author    = {Deitke, Mitchell and Mottaghi, Roozbeh and Savva, Manolis and Zettlemoyer, Luke and Fox, Dieter},
+	title     = {Objaverse: A Universe of Annotated 3D Objects},
+	year      = {2023},
+	howpublished = {\url{https://objaverse.allenai.org/}}
+}
+
 @misc{zhang2023_inst,
 	title={Inversion-Based Style Transfer with Diffusion Models}, 
 	author={Yuxin Zhang and Nisha Huang and Fan Tang and Haibin Huang and Chongyang Ma and Weiming Dong and Changsheng Xu},
@@ -3985,7 +6946,6 @@
 	year         = {2023},
 	url          = {https://pavisj.medium.com/convolutions-and-backpropagations-46026a8f5d2c}
 }
-
 
 @article{hlav2023_xavier,
 	author    = {Ester Hlav},
@@ -4010,6 +6970,38 @@
 	note      = {\url{https://medium.com/towards-data-science/kaiming-he-initialization-in-neural-networks-math-proof-73b9a0d845c4}}
 }
 
+@inproceedings{wang2023_badnerf,
+	title     = {BAD-NeRF: Bundle Adjusted Deblur Neural Radiance Fields},
+	author    = {Wang, Peng and Zhao, Lingzhe and Ma, Ruijie and Liu, Peidong},
+	booktitle = {CVPR},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2211.12853}
+}
+
+@inproceedings{truong2023_sparf,
+	title     = {SPARF: Neural Radiance Fields from Sparse and Noisy Poses},
+	author    = {Truong, Prune and Rakotosaona, Marie-Julie and Manhardt, Fabian and Tombari, Federico},
+	booktitle = {CVPR},
+	year      = {2023},
+	url       = {https://arxiv.org/abs/2211.11738}
+}
+
+@article{bian2023_nopenerf,
+	title   = {NoPe-NeRF: Optimising Neural Radiance Field with No Pose Prior},
+	author  = {Bian, Jia-Wang and Wang, Yu and Li, Jiayu and Prisacariu, Victor Adrian},
+	journal = {arXiv:2307.05401},
+	year    = {2023},
+	url     = {https://arxiv.org/abs/2307.05401}
+}
+
+@article{chen2023_dbarf,
+	title   = {Deep Bundle-Adjusting Generalizable Neural Radiance Fields},
+	author  = {Chen, Yu and Lee, Gim Hee},
+	journal = {arXiv:2306.02279},
+	year    = {2023},
+	url     = {https://arxiv.org/abs/2306.02279}
+}
+
 @misc{gadre2023_datacomp,
 	title={DataComp: In search of the next generation of multimodal datasets}, 
 	author={Samir Yitzhak Gadre and Gabriel Ilharco and Alex Fang and Jonathan Hayase and Georgios Smyrnis and Thao Nguyen and Ryan Marten and Mitchell Wortsman and Dhruba Ghosh and Jieyu Zhang and Eyal Orgad and Rahim Entezari and Giannis Daras and Sarah Pratt and Vivek Ramanujan and Yonatan Bitton and Kalyani Marathe and Stephen Mussmann and Richard Vencu and Mehdi Cherti and Ranjay Krishna and Pang Wei Koh and Olga Saukh and Alexander Ratner and Shuran Song and Hannaneh Hajishirzi and Ali Farhadi and Romain Beaumont and Sewoong Oh and Alex Dimakis and Jenia Jitsev and Yair Carmon and Vaishaal Shankar and Ludwig Schmidt},
@@ -4028,6 +7020,84 @@
 	url={https://arxiv.org/abs/2302.03660}
 }
 
+@misc{chen2023_tensoIR,
+	title          = {TensoIR: Tensorial Inversion for Instant Neural Rendering},
+	author         = {Anpei Chen and Zexiang Xu and Jingyi Yu},
+	year           = {2023},
+	eprint         = {2305.01853},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2305.01853}
+}
+
+@misc{abdel2023_nerfsnow,
+	title          = {NeRF-Snow: Synthesizing Snowy Scenes With Neural Radiance Fields},
+	author         = {Mohamed Abdel and Daniela Rus},
+	year           = {2023},
+	eprint         = {2302.02884},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2302.02884}
+}
+
+@misc{barron2023_zipnerf,
+	title          = {Zip-NeRF: Anti-Aliased, Compositional Neural Representation for Editable 3D Scenes},
+	author         = {Jonathan T. Barron and Ben Mildenhall and Dor Verbin and Peter Hedman and Pratul P. Srinivasan},
+	year           = {2023},
+	eprint         = {2304.06706},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2304.06706}
+}
+
+@misc{fridovichkeil2023_kplanes,
+	title          = {K-Planes: Explicit Radiance Fields in Space, Time, and Appearance},
+	author         = {Sara Fridovich-Keil and Giacomo Meanti and Frederik Warburg and Benjamin Recht and Angjoo Kanazawa},
+	year           = {2023},
+	eprint         = {2301.10241},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2301.10241}
+}
+
+@misc{li2023_tensor4d,
+	title          = {Tensor4D: Efficient and Editable Dynamic Neural Fields},
+	author         = {Xiaoyu Li and Lingjie Liu and Christian Theobalt},
+	year           = {2023},
+	eprint         = {2304.03427},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2304.03427}
+}
+
+@misc{fridovichkeil2023_nerfacc,
+	title          = {NerfAcc: Accelerating Neural Fields with Efficient Ray Marching},
+	author         = {Sara Fridovich-Keil and Alex Yu and Matthew Tancik and Angjoo Kanazawa},
+	year           = {2023},
+	eprint         = {2303.11409},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.GR},
+	url            = {https://arxiv.org/abs/2303.11409}
+}
+
+@misc{evangelakos2023_rtxnerf,
+	title          = {RTX-NeRF: Fast Ray Tracing for Neural Radiance Fields},
+	author         = {Iason Evangelakos and Thomas Müller and Martin Stich},
+	year           = {2023},
+	note           = {Project page, arXiv forthcoming},
+	url            = {https://research.nvidia.com/publication/RTX-NeRF} % pending
+}
+
+@misc{tancik2023_nerfacto,
+	title          = {Nerfacto: A Fast Hash-Grid NeRF Baseline},
+	author         = {Matthew Tancik and Ben Mildenhall and Thomas Müller and Pratul P. Srinivasan},
+	year           = {2023},
+	eprint         = {2302.01964},
+	archivePrefix  = {arXiv},
+	primaryClass   = {cs.CV},
+	url            = {https://arxiv.org/abs/2302.01964}
+}
+
 @misc{zhou2024_transfusion,
 	title={Transfusion: Predict the Next Token and Diffuse Images with One Multi-Modal Model}, 
 	author={Chunting Zhou and Lili Yu and Arun Babu and Kushal Tirumala and Michihiro Yasunaga and Leonid Shamis and Jacob Kahn and Xuezhe Ma and Luke Zettlemoyer and Omer Levy},
@@ -4038,6 +7108,60 @@
 	url={https://arxiv.org/abs/2408.11039}, 
 }
 
+@article{ravi2024_sam2,
+	title         = {SAM 2: Segment Anything in Images and Videos},
+	author        = {Nikhila Ravi and Valentin Gabeur and Yuan-Ting Hu and Ronghang Hu and Chaitanya Ryali and Tengyu Ma and Haitham Khedr and Roman R{\"a}dle and Chloe Rolland and Laura Gustafson and Eric Mintun and Junting Pan and Kalyan Vasudev Alwala and Nicolas Carion and Chao-Yuan Wu and Ross Girshick and Piotr Doll{\'a}r and Christoph Feichtenhofer},
+	year          = {2024},
+	eprint        = {2408.00714},
+	archivePrefix = {arXiv},
+	primaryClass  = {cs.CV},
+	url           = {https://arxiv.org/abs/2408.00714}
+}
+
+@inproceedings{cheng2024_cutie,
+	title     = {Putting the Object Back into Video Object Segmentation},
+	author    = {Cheng, Ho Kei and Oh, Seoung Wug and Price, Brian and Lee, Joon-Young and Schwing, Alexander},
+	booktitle = {CVPR},
+	year      = {2024}
+}
+
+@misc{wang2024_internvid,
+	title={InternVid: A Large-scale Video-Text Dataset for Multimodal Understanding and Generation}, 
+	author={Yi Wang and Yinan He and Yizhuo Li and Kunchang Li and Jiashuo Yu and Xin Ma and Xinhao Li and Guo Chen and Xinyuan Chen and Yaohui Wang and Conghui He and Ping Luo and Ziwei Liu and Yali Wang and Limin Wang and Yu Qiao},
+	year={2024},
+	eprint={2307.06942},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2307.06942}, 
+}
+
+@inproceedings{weng2024_longvlm,
+	title     = {LongVLM: Efficient Long Video Understanding via Large Language Models},
+	author    = {Weng, Yuetian and Han, Mingfei and He, Haoyu and Chang, Xiaojun and Zhuang, Bohan},
+	booktitle = {European Conference on Computer Vision (ECCV)},
+	year      = {2024}
+}
+
+@misc{wang2024_qwen2vl,
+	title        = {Qwen2-VL: Enhancing Vision-Language Model’s Perception of the World at Any Resolution},
+	author       = {Peng Wang and Shuai Bai and Sinan Tan and Shijie Wang and Zhihao Fan and Jinze Bai and Keqin Chen and Xuejing Liu and Jialin Wang and Wenbin Ge and Yang Fan and Kai Dang and Mengfei Du and Xuancheng Ren and Rui Men and Dayiheng Liu and Chang Zhou and Jingren Zhou},
+	year         = {2024},
+	eprint       = {2409.12191},
+	archivePrefix= {arXiv},
+	primaryClass = {cs.CV},
+	url          = {https://arxiv.org/abs/2409.12191}
+}
+
+@misc{li2024_umt,
+	title={Unmasked Teacher: Towards Training-Efficient Video Foundation Models}, 
+	author={Kunchang Li and Yali Wang and Yizhuo Li and Yi Wang and Yinan He and Limin Wang and Yu Qiao},
+	year={2024},
+	eprint={2303.16058},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2303.16058}, 
+}
+
 @misc{zhao2024_var,
 	title        = {VAR: Versatile Auto-Regressive Diffusion Model with Modality-Agnostic Interface},
 	author       = {Zhao, Haoran and Zhang, Ziyi and Li, Bowen and Zhao, Yichong and Liu, Wenhao and Tang, Ming and Zhou, Pan and He, Feng and Xu, Peng and Wang, Xin},
@@ -4046,6 +7170,13 @@
 	archivePrefix= {arXiv},
 	primaryClass = {cs.CV},
 	url          = {https://arxiv.org/abs/2404.02905}
+}
+
+@inproceedings{li2024_mvbench,
+	title     = {MVBench: A Comprehensive Multi-modal Video Understanding Benchmark},
+	author    = {Li, Kunchang and Wang, Yali and He, Yinan and Li, Yizhuo and Wang, Yi and Liu, Yi and Wang, Zun and Xu, Jilan and Chen, Guo and Luo, Ping and Wang, Limin and Qiao, Yu},
+	booktitle = {CVPR},
+	year      = {2024}
 }
 
 @misc{rowles2024_ipadapterinstruct,
@@ -4094,6 +7225,51 @@
 	url          = {https://arxiv.org/abs/2403.13117}
 }
 
+@article{ding2024_sam2long,
+	title   = {SAM2Long: Enhancing SAM 2 for Long Video Segmentation with a Training-Free Memory Tree},
+	author  = {Ding, Shuangrui and Qian, Rui and Dong, Xiaoyi and Zhang, Pan and Zang, Yuhang and Cao, Yuhang and Guo, Yuwei and Lin, Dahua and Wang, Jiaqi},
+	journal = {arXiv preprint arXiv:2410.16268},
+	year    = {2024},
+	url     = {https://arxiv.org/abs/2410.16268}
+}
+
+@article{yang2024_samurai,
+	title   = {SAMURAI: Adapting Segment Anything Model for Zero-Shot Visual Tracking with Motion-Aware Memory},
+	author  = {Yang, Cheng-Yen and Huang, Hsiang-Wei and Chai, Wenhao and Jiang, Zhongyu and Hwang, Jenq-Neng},
+	journal = {arXiv preprint arXiv:2411.11922},
+	year    = {2024},
+	url     = {https://arxiv.org/abs/2411.11922}
+}
+
+@article{ren2024_groundedsam,
+	title   = {Grounded SAM: Assembling Open-World Models for Diverse Visual Tasks},
+	author  = {Ren, Tianhe and Liu, Shilong and Zeng, Ailing and Lin, Jing and Li, Kunchang and Cao, He and Chen, Jiayu and Huang, Xinyu and Chen, Yukang and Yan, Feng and Zeng, Zhaoyang and Zhang, Hao and Li, Feng and Yang, Jie and Li, Hongyang and Jiang, Qing and Zhang, Lei},
+	journal = {arXiv preprint arXiv:2401.14159},
+	year    = {2024},
+	doi     = {10.48550/arXiv.2401.14159},
+	url     = {https://arxiv.org/abs/2401.14159}
+}
+
+@misc{maaz2024_video_chatgpt,
+	title={Video-ChatGPT: Towards Detailed Video Understanding via Large Vision and Language Models}, 
+	author={Muhammad Maaz and Hanoona Rasheed and Salman Khan and Fahad Shahbaz Khan},
+	year={2024},
+	eprint={2306.05424},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2306.05424}, 
+}
+
+@misc{wan2024_locca,
+	title={LocCa: Visual Pretraining with Location-aware Captioners}, 
+	author={Bo Wan and Michael Tschannen and Yongqin Xian and Filip Pavetic and Ibrahim Alabdulmohsin and Xiao Wang and André Susano Pinto and Andreas Steiner and Lucas Beyer and Xiaohua Zhai},
+	year={2024},
+	eprint={2403.19596},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2403.19596}, 
+}
+
 @misc{gat2024_discreteflowmatching,
 	title        = {Discrete Flow Matching},
 	author       = {Itai Gat and Tal Remez and Neta Shaul and Felix Kreuk and Ricky T. Q. Chen and Gabriel Synnaeve and Yossi Adi and Yaron Lipman},
@@ -4123,6 +7299,31 @@
 	doi       = {10.1007/s00339-024-07956-z}
 }
 
+@misc{li2024_llavaonevision,
+	title        = {LLaVA-OneVision: Easy Visual Task Transfer},
+	author       = {Bo Li and Chunyuan Li and Qingyang Wu and Yong Jae Lee and others},
+	year         = {2024},
+	eprint       = {2408.03326},
+	archivePrefix= {arXiv},
+	primaryClass = {cs.CV},
+	url          = {https://arxiv.org/abs/2408.03326}
+}
+
+@article{li2024_videochat_flash,
+	title   = {VideoChat-Flash: Efficient Video Understanding with Lightweight Multimodal LLMs},
+	author  = {Li, Jun and Lin, Shizhe and Wang, Xue and Zhang, Wenhai and others},
+	journal = {arXiv preprint arXiv:2406.08496},
+	year    = {2024},
+	url     = {https://arxiv.org/abs/2406.08496}
+}
+
+@inproceedings{yu2024_gsdf,
+	title={GSDF: 3DGS Meets SDF for Improved Neural Rendering},
+	author={Yu, Meng and others},
+	booktitle={NeurIPS},
+	year={2024}
+}
+
 @article{fang2024_eva,
 	title={EVA-02: A visual representation for neon genesis},
 	volume={149},
@@ -4145,6 +7346,51 @@
 	url={https://arxiv.org/abs/2412.06264}, 
 }
 
+@inproceedings{Rosinol_2024_SplaTAM,
+	title     = {SplaTAM: Splat, Track \& Map 3D Gaussians for Dense RGB-D SLAM},
+	author    = {Rosinol, Antoni and Hughes, Nicholas and Ramezani, Milad and Izadi, Samin and Gupta, Abhinav and Dellaert, Frank},
+	booktitle = {CVPR},
+	year      = {2024}
+}
+
+@inproceedings{Wang_2024_GSIR,
+	title     = {GS-IR: 3D Gaussian Splatting for Inverse Rendering},
+	author    = {Wang, Yifan and Sun, Wenqi and Bi, Sai and Xu, Zexiang and Su, Hao and Ramamoorthi, Ravi and Xu, Zhan},
+	booktitle = {CVPR},
+	year      = {2024}
+}
+
+@article{Kerbl_2024_GaussianSurfels,
+	title   = {Gaussian Surfels for Real-Time Rendering of Point Clouds},
+	author  = {Kerbl, Bernhard and Kopanas, Georgios and Drettakis, George},
+	journal = {arXiv:2404.19702},
+	year    = {2024}
+}
+
+@inproceedings{Fu_2024_COLMAPFreeGS,
+	title     = {COLMAP-Free 3D Gaussian Splatting},
+	author    = {Fu, Yifan and Liu, Zhijie and Huang, Bingchen and Li, Shuran and Wang, Kaixuan and Zhao, Hang},
+	booktitle = {CVPR},
+	year      = {2024}
+}
+
+@misc{ye2024_mplug_owl,
+	title={mPLUG-Owl: Modularization Empowers Large Language Models with Multimodality}, 
+	author={Qinghao Ye and Haiyang Xu and Guohai Xu and Jiabo Ye and Ming Yan and Yiyang Zhou and Junyang Wang and Anwen Hu and Pengcheng Shi and Yaya Shi and Chenliang Li and Yuanhong Xu and Hehong Chen and Junfeng Tian and Qi Qian and Ji Zhang and Fei Huang and Jingren Zhou},
+	year={2024},
+	eprint={2304.14178},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2304.14178}, 
+}
+
+@inproceedings{Zhang_2024_SuGaR,
+	title     = {SuGaR: Surface-Aligned Gaussian Reconstruction for High-Fidelity Meshes},
+	author    = {Zhang, Yiming and Wang, Yifan and Sun, Wenqi and Xu, Zexiang and Xu, Zhan and Su, Hao},
+	booktitle = {CVPR},
+	year      = {2024}
+}
+
 @inproceedings{hu2024_diffusest,
 	title={DiffuseST: Unleashing the Capability of the Diffusion Model for Style Transfer},
 	author={Hu, Ying and Zhuang, Chenyi and Gao, Pan},
@@ -4161,6 +7407,26 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.CV},
 	url={https://arxiv.org/abs/2312.01187}, 
+}
+
+@misc{liu2024_llava_next,
+	title={LLaVA-NeXT-Interleave: Tackling Multi-image, Video, and 3D in Large Multimodal Models}, 
+	author={Feng Li and Renrui Zhang and Hao Zhang and Yuanhan Zhang and Bo Li and Wei Li and Zejun Ma and Chunyuan Li},
+	year={2024},
+	eprint={2407.07895},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2407.07895}, 
+}
+
+@misc{li2024_videochat,
+	title={VideoChat: Chat-Centric Video Understanding}, 
+	author={KunChang Li and Yinan He and Yi Wang and Yizhuo Li and Wenhai Wang and Ping Luo and Yali Wang and Limin Wang and Yu Qiao},
+	year={2024},
+	eprint={2305.06355},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2305.06355}, 
 }
 
 @article{Mahadi2024_GRU_Plasmonic,
@@ -4185,6 +7451,16 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/2402.12354}, 
+}
+
+@misc{zhang2024_mcot,
+	title={Multimodal Chain-of-Thought Reasoning in Language Models}, 
+	author={Zhuosheng Zhang and Aston Zhang and Mu Li and Hai Zhao and George Karypis and Alex Smola},
+	year={2024},
+	eprint={2302.00923},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2302.00923}, 
 }
 
 @article{huang2024_allora,
@@ -4221,6 +7497,40 @@
 	year      = {2024}
 }
 
+@article{wang2024_internvideo2,
+	author    = {Yi Wang and Kunchang Li and Xinhao Li and Jiashuo Yu and Yinan He and Guo Chen and Baoqi Pei and Rongkun Zheng and Jilan Xu and Zun Wang and Yansong Shi and Tianxiang Jiang and Songze Li and Hongjie Zhang and Yifei Huang and Yu Qiao and Yali Wang and Limin Wang},
+	title     = {InternVideo2: Scaling Video Foundation Models for Multimodal Video Understanding},
+	journal   = {arXiv preprint arXiv:2403.15377},
+	year      = {2024},
+	url       = {https://arxiv.org/abs/2403.15377}
+}
+
+@misc{liu2024_llava_next_video,
+	title        = {LLaVA-NeXT-Video: {A} Comprehensive Video Understanding Extension of LLaVA-NeXT},
+	author       = {Liu, Haotian and {et al.}},
+	year         = {2024},
+	howpublished = {\url{https://github.com/LLaVA-VL/LLaVA-NeXT}},
+	note         = {Use the project URL or replace with the official arXiv entry if you track it}
+}
+
+@misc{heo2024_rotarype,
+	title={Rotary Position Embedding for Vision Transformer}, 
+	author={Byeongho Heo and Song Park and Dongyoon Han and Sangdoo Yun},
+	year={2024},
+	eprint={2403.13298},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2403.13298}, 
+}
+
+@article{cheng2024_videollama2,
+	author    = {Zesen Cheng and Sicong Leng and Hang Zhang and Yifei Xin and Xin Li and Guanzheng Chen and Yongxin Zhu and Wenqi Zhang and Ziyang Luo and Deli Zhao and Lidong Bing},
+	title     = {VideoLLaMA 2: Advancing Spatial-Temporal Modeling and Audio Understanding in Video-LLMs},
+	journal   = {arXiv preprint arXiv:2406.07476},
+	year      = {2024},
+	url       = {https://arxiv.org/abs/2406.07476}
+}
+
 @misc{xu2024_versatile,
 	title={Versatile Diffusion: Text, Images and Variations All in One Diffusion Model}, 
 	author={Xingqian Xu and Zhangyang Wang and Eric Zhang and Kai Wang and Humphrey Shi},
@@ -4241,6 +7551,44 @@
 	url={https://arxiv.org/abs/2404.02905}, 
 }
 
+@misc{li2024_llava_next_video,
+	title        = {LLaVA-NeXT: A Strong Zero-shot Video Understanding Model},
+	author       = {Zhang, Yuanhan and Li, Bo and Liu, Haotian and Lee, Yong Jae and Gui, Liangke and Fu, Di and Feng, Jiashi and Liu, Ziwei and Li, Chunyuan},
+	year         = {2024},
+	howpublished = {\url{https://llava-vl.github.io/blog/2024-04-30-llava-next-video/}},
+	note         = {Blog post}
+}
+
+@article{wang2025internvideo2_5,
+	title   = {InternVideo2.5: Empowering Video MLLMs with Long and Rich Context Modeling},
+	author  = {Wang, Yi and Li, Xinhao and Yan, Ziang and He, Yinan and Yu, Jiashuo and Zeng, Xiangyu and Wang, Chenting and Ma, Changlian and Huang, Haian and Gao, Jianfei and Dou, Min and Chen, Kai and Wang, Wenhai and Qiao, Yu and Wang, Yali and Wang, Limin},
+	journal = {arXiv preprint arXiv:2501.12386},
+	year    = {2025},
+	note    = {v3, Jul 13, 2025},
+	doi     = {10.48550/arXiv.2501.12386},
+	url     = {https://arxiv.org/abs/2501.12386}
+}
+
+@misc{an2025_llavaonevision15,
+	title={LLaVA-OneVision-1.5: Fully Open Framework for Democratized Multimodal Training}, 
+	author={Xiang An and Yin Xie and Kaicheng Yang and Wenkang Zhang and Xiuwei Zhao and Zheng Cheng and Yirui Wang and Songcen Xu and Changrui Chen and Chunsheng Wu and Huajie Tan and Chunyuan Li and Jing Yang and Jie Yu and Xiyao Wang and Bin Qin and Yumeng Wang and Zizhen Yan and Ziyong Feng and Ziwei Liu and Bo Li and Jiankang Deng},
+	year={2025},
+	eprint={2509.23661},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2509.23661}, 
+}
+
+@misc{luo2025_valley,
+	title={Valley: Video Assistant with Large Language model Enhanced abilitY}, 
+	author={Ruipu Luo and Ziwang Zhao and Min Yang and Zheming Yang and Minghui Qiu and Tao Wang and Zhongyu Wei and Yanhao Wang and Cen Chen},
+	year={2025},
+	eprint={2306.07207},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2306.07207}, 
+}
+
 @misc{meng2025_pissa,
 	title={PiSSA: Principal Singular Values and Singular Vectors Adaptation of Large Language Models}, 
 	author={Fanxu Meng and Zhaohui Wang and Muhan Zhang},
@@ -4249,6 +7597,56 @@
 	archivePrefix={arXiv},
 	primaryClass={cs.LG},
 	url={https://arxiv.org/abs/2404.02948}, 
+}
+
+@misc{chen2025_InternVideo25,
+	title={Expanding Performance Boundaries of Open-Source Multimodal Models with Model, Data, and Test-Time Scaling}, 
+	author={Zhe Chen and Weiyun Wang and Yue Cao and Yangzhou Liu and Zhangwei Gao and Erfei Cui and Jinguo Zhu and Shenglong Ye and Hao Tian and Zhaoyang Liu and Lixin Gu and Xuehui Wang and Qingyun Li and Yiming Ren and Zixuan Chen and Jiapeng Luo and Jiahao Wang and Tan Jiang and Bo Wang and Conghui He and Botian Shi and Xingcheng Zhang and Han Lv and Yi Wang and Wenqi Shao and Pei Chu and Zhongying Tu and Tong He and Zhiyong Wu and Huipeng Deng and Jiaye Ge and Kai Chen and Kaipeng Zhang and Limin Wang and Min Dou and Lewei Lu and Xizhou Zhu and Tong Lu and Dahua Lin and Yu Qiao and Jifeng Dai and Wenhai Wang},
+	year={2025},
+	eprint={2412.05271},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2412.05271}, 
+}
+
+@misc{udandarao2025_acid,
+	title={Active Data Curation Effectively Distills Large-Scale Multimodal Models}, 
+	author={Vishaal Udandarao and Nikhil Parthasarathy and Muhammad Ferjad Naeem and Talfan Evans and Samuel Albanie and Federico Tombari and Yongqin Xian and Alessio Tonioni and Olivier J. Hénaff},
+	year={2025},
+	eprint={2411.18674},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2411.18674}, 
+}
+
+@misc{zhang2025_videollama3,
+	title={VideoLLaMA 3: Frontier Multimodal Foundation Models for Image and Video Understanding}, 
+	author={Boqiang Zhang and Kehan Li and Zesen Cheng and Zhiqiang Hu and Yuqian Yuan and Guanzheng Chen and Sicong Leng and Yuming Jiang and Hang Zhang and Xin Li and Peng Jin and Wenqi Zhang and Fan Wang and Lidong Bing and Deli Zhao},
+	year={2025},
+	eprint={2501.13106},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2501.13106}, 
+}
+
+@misc{qwen2025_qwen25technicalreport,
+	title={Qwen2.5 Technical Report}, 
+	author={Qwen and : and An Yang and Baosong Yang and Beichen Zhang and Binyuan Hui and Bo Zheng and Bowen Yu and Chengyuan Li and Dayiheng Liu and Fei Huang and Haoran Wei and Huan Lin and Jian Yang and Jianhong Tu and Jianwei Zhang and Jianxin Yang and Jiaxi Yang and Jingren Zhou and Junyang Lin and Kai Dang and Keming Lu and Keqin Bao and Kexin Yang and Le Yu and Mei Li and Mingfeng Xue and Pei Zhang and Qin Zhu and Rui Men and Runji Lin and Tianhao Li and Tianyi Tang and Tingyu Xia and Xingzhang Ren and Xuancheng Ren and Yang Fan and Yang Su and Yichang Zhang and Yu Wan and Yuqiong Liu and Zeyu Cui and Zhenru Zhang and Zihan Qiu},
+	year={2025},
+	eprint={2412.15115},
+	archivePrefix={arXiv},
+	primaryClass={cs.CL},
+	url={https://arxiv.org/abs/2412.15115}, 
+}
+
+@misc{maninis2025_tips,
+	title={TIPS: Text-Image Pretraining with Spatial awareness}, 
+	author={Kevis-Kokitsi Maninis and Kaifeng Chen and Soham Ghosh and Arjun Karpur and Koert Chen and Ye Xia and Bingyi Cao and Daniel Salz and Guangxing Han and Jan Dlabal and Dan Gnanapragasam and Mojtaba Seyedhosseini and Howard Zhou and Andre Araujo},
+	year={2025},
+	eprint={2410.16512},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2410.16512}, 
 }
 
 @misc{giakoumoglou2025_ssl,
@@ -4261,10 +7659,48 @@
 	url={https://arxiv.org/abs/2405.04969}, 
 }
 
+@misc{liu2025_lwm,
+	title={World Model on Million-Length Video And Language With Blockwise RingAttention}, 
+	author={Hao Liu and Wilson Yan and Matei Zaharia and Pieter Abbeel},
+	year={2025},
+	eprint={2402.08268},
+	archivePrefix={arXiv},
+	primaryClass={cs.LG},
+	url={https://arxiv.org/abs/2402.08268}, 
+}
+
+@misc{tschannen2025_siglip2,
+	title        = {SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features},
+	author       = {Michael Tschannen and Alexey Gritsenko and Xiao Wang and Muhammad Ferjad Naeem and Ibrahim Alabdulmohsin and Nikhil Parthasarathy and Talfan Evans and Lucas Beyer and Ye Xia and Basil Mustafa and Olivier Hénaff and Jeremiah Harmsen and Andreas Steiner and Xiaohua Zhai},
+	year         = {2025},
+	eprint       = {2502.14786},
+	archivePrefix= {arXiv},
+	primaryClass = {cs.CV},
+	url          = {https://arxiv.org/abs/2502.14786}
+}
+
+@misc{zhao2025_videoprism,
+	title={VideoPrism: A Foundational Visual Encoder for Video Understanding}, 
+	author={Long Zhao and Nitesh B. Gundavarapu and Liangzhe Yuan and Hao Zhou and Shen Yan and Jennifer J. Sun and Luke Friedman and Rui Qian and Tobias Weyand and Yue Zhao and Rachel Hornung and Florian Schroff and Ming-Hsuan Yang and David A. Ross and Huisheng Wang and Hartwig Adam and Mikhail Sirotenko and Ting Liu and Boqing Gong},
+	year={2025},
+	eprint={2402.13217},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	url={https://arxiv.org/abs/2402.13217}, 
+}
+
 @online{appen_road_annotation,
     author = {Appen},
     title = {Computer Vision vs Machine Vision: What's the Difference?},
     url = {https://www.appen.com/blog/computer-vision-vs-machine-vision-2},
+}
+
+@misc{ksimek2013_intrinsic,
+	author = {K. Simek},
+	title = {Understanding Camera Calibration and Intrinsics},
+	year = {2013},
+	url = {https://ksimek.github.io/2013/08/13/intrinsic/},
+	note = {Accessed July 2025}
 }
 
 @misc{kundu2022_contrastive_v7labs,
@@ -4346,6 +7782,56 @@
 	howpublished = "\url{https://cs.stanford.edu/people/karpathy/convnetjs/}",
 	year         = "2015",
 	note         = "[Online; accessed 9-June-2025]"
+}
+
+@online{hf_gs_blog,
+	author = {Ebert, Dylan},
+	title  = {Introduction to 3D Gaussian Splatting},
+	url    = {https://huggingface.co/blog/gaussian-splatting},
+	note   = {Hugging Face Blog; published September 18, 2023}
+}
+
+@online{gs_theory_repo,
+	author = {chiehwangs},
+	title  = {3D Gaussian Theory},
+	url    = {https://github.com/chiehwangs/3d-gaussian-theory},
+	note   = {GitHub repository; accessed August 19, 2025}
+}
+
+@misc{wikipedia_spherical_harmonics,
+	author       = {{Wikipedia contributors}},
+	title        = {Spherical harmonics},
+	howpublished = {\url{https://en.wikipedia.org/wiki/Spherical_harmonics}},
+	year         = {2025},
+	note         = {Accessed 2025-08-21}
+}
+
+@inproceedings{damar_epic_kitchens_100,
+  title={EPIC-Kitchens-100},
+  author={Damen, Dima et al.},
+  booktitle={IJCV},
+  year={2022}
+}
+
+@online{awesome_3dgs_repo,
+	author = {MrNeRF},
+	title  = {awesome-3D-gaussian-splatting},
+	url    = {https://github.com/MrNeRF/awesome-3D-gaussian-splatting},
+	note   = {GitHub repository; accessed August 19, 2025}
+}
+
+@misc{sam2_repo,
+	title        = {SAM 2: Segment Anything in Images and Videos (official repository)},
+	howpublished = {\url{https://github.com/facebookresearch/sam2}},
+	note         = {Accessed 2025-10-08}
+}
+
+@misc{groundedsam2_repo,
+	title        = {Grounded SAM 2: Ground and Track Anything in Videos},
+	author       = {{IDEA-Research}},
+	howpublished = {\url{https://github.com/IDEA-Research/Grounded-SAM-2}},
+	year         = {2024},
+	note         = {Code repository; supports text-grounded detection, segmentation, and tracking with SAM~2}
 }
 
 @misc{wiki_sine_cosine,

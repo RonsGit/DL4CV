@@ -1,0 +1,36 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+			\PYG{c+c1}{\PYGZsh{} Inputs: labeled clips B\PYGZus{}l=\PYGZob{}(x\PYGZus{}i, y\PYGZus{}i)\PYGZcb{}, unlabeled clips B\PYGZus{}u=\PYGZob{}x\PYGZus{}j\PYGZcb{}}
+			\PYG{c+c1}{\PYGZsh{} Models: video encoder f\PYGZus{}theta, text encoder g\PYGZus{}phi}
+			\PYG{c+c1}{\PYGZsh{} LLMs: REPHRASER (y \PYGZhy{}\PYGZgt{} y\PYGZsq{}\PYGZsq{}), NARRATOR (x \PYGZhy{}\PYGZgt{} y\PYGZsq{})}
+			\PYG{c+c1}{\PYGZsh{} Temps: tau\PYGZus{}r for REPHRASER pairs, tau\PYGZus{}n for NARRATOR pairs}
+			
+			\PYG{k}{for} \PYG{n}{step} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{num\PYGZus{}steps}\PYG{p}{)}\PYG{p}{:}
+				\PYG{c+c1}{\PYGZsh{} 1) Build supervision from cached LLM outputs}
+				\PYG{n}{tilde\PYGZus{}B\PYGZus{}l} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+				\PYG{k}{for} \PYG{p}{(}\PYG{n}{x\PYGZus{}i}\PYG{p}{,} \PYG{n}{y\PYGZus{}i}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{sample}\PYG{p}{(}\PYG{n}{B\PYGZus{}l}\PYG{p}{)}\PYG{p}{:}
+					\PYG{k}{if} \PYG{n}{coin\PYGZus{}flip}\PYG{p}{(}\PYG{n}{p}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{:}
+						\PYG{n}{y\PYGZus{}sup} \PYG{o}{=} \PYG{n}{REPHRASER}\PYG{p}{(}\PYG{n}{y\PYGZus{}i}\PYG{p}{)}   \PYG{c+c1}{\PYGZsh{} paraphrase human narration}
+						\PYG{n}{src\PYGZus{}temp} \PYG{o}{=} \PYG{n}{tau\PYGZus{}r}
+					\PYG{k}{else}\PYG{p}{:}
+						\PYG{n}{y\PYGZus{}sup} \PYG{o}{=} \PYG{n}{NARRATOR}\PYG{p}{(}\PYG{n}{x\PYGZus{}i}\PYG{p}{)}    \PYG{c+c1}{\PYGZsh{} narrate from video}
+						\PYG{n}{src\PYGZus{}temp} \PYG{o}{=} \PYG{n}{tau\PYGZus{}n}
+						\PYG{n}{tilde\PYGZus{}B\PYGZus{}l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{p}{(}\PYG{n}{x\PYGZus{}i}\PYG{p}{,} \PYG{n}{y\PYGZus{}sup}\PYG{p}{,} \PYG{n}{src\PYGZus{}temp}\PYG{p}{)}\PYG{p}{)}
+				
+				\PYG{n}{tilde\PYGZus{}B\PYGZus{}u} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+				\PYG{k}{for} \PYG{n}{x\PYGZus{}j} \PYG{o+ow}{in} \PYG{n}{sample}\PYG{p}{(}\PYG{n}{B\PYGZus{}u}\PYG{p}{)}\PYG{p}{:}
+					\PYG{n}{y\PYGZus{}sup} \PYG{o}{=} \PYG{n}{NARRATOR}\PYG{p}{(}\PYG{n}{x\PYGZus{}j}\PYG{p}{)}        \PYG{c+c1}{\PYGZsh{} narrate unlabeled clip}
+					\PYG{n}{tilde\PYGZus{}B\PYGZus{}u}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{p}{(}\PYG{n}{x\PYGZus{}j}\PYG{p}{,} \PYG{n}{y\PYGZus{}sup}\PYG{p}{,} \PYG{n}{tau\PYGZus{}n}\PYG{p}{)}\PYG{p}{)}
+				
+				\PYG{n}{batch} \PYG{o}{=} \PYG{n}{tilde\PYGZus{}B\PYGZus{}l} \PYG{o}{+} \PYG{n}{tilde\PYGZus{}B\PYGZus{}u}
+				
+				\PYG{c+c1}{\PYGZsh{} 2) Encode and normalize}
+				\PYG{n}{V} \PYG{o}{=} \PYG{p}{[}\PYG{n}{normalize}\PYG{p}{(}\PYG{n}{f\PYGZus{}theta}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)} \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{]}
+				\PYG{n}{T} \PYG{o}{=} \PYG{p}{[}\PYG{n}{normalize}\PYG{p}{(}\PYG{n}{g\PYGZus{}phi}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}\PYG{p}{)}   \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{]}
+				\PYG{n}{Tau} \PYG{o}{=} \PYG{p}{[}\PYG{n}{src\PYGZus{}temp} \PYG{k}{for} \PYG{p}{(}\PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{src\PYGZus{}temp}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{]}
+				
+				\PYG{c+c1}{\PYGZsh{} 3) CLIP\PYGZhy{}style symmetric loss with source\PYGZhy{}aware temperatures}
+				\PYG{n}{loss} \PYG{o}{=} \PYG{n}{symmetric\PYGZus{}infonce}\PYG{p}{(}\PYG{n}{V}\PYG{p}{,} \PYG{n}{T}\PYG{p}{,} \PYG{n}{Tau}\PYG{p}{)}
+				
+				\PYG{c+c1}{\PYGZsh{} 4) Optimize dual\PYGZhy{}encoders}
+				\PYG{n}{update}\PYG{p}{(}\PYG{n}{f\PYGZus{}theta}\PYG{p}{,} \PYG{n}{g\PYGZus{}phi}\PYG{p}{,} \PYG{n}{loss}\PYG{p}{)}
+\end{MintedVerbatim}

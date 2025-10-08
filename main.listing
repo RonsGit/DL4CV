@@ -1,19 +1,26 @@
-	from peft import LoraConfig, get_peft_model
-	from transformers import ViTForImageClassification
-	
-	model = ViTForImageClassification.from_pretrained("facebook/dinov2-base")
-	
-	lora_cfg = LoraConfig(
-	r=8,
-	lora_alpha=8,
-	target_modules=["query", "value"],
-	lora_dropout=0.05,
-	bias="none",
-	task_type="IMAGE_CLASSIFICATION",
-	)
-	
-	model = get_peft_model(model, lora_cfg)
-	model.print_trainable_parameters()  # View compression
-	
-	# After training:
-	model.merge_and_unload()  # Remove LoRA modules for inference
+			# Pseudocode (faithful to the paper's Sec. 3.2 definitions; not source code).
+			# Inputs: segment s with K frames, frame tokens {P^t in R^{u x d}}_{t=1..K}
+			# Output: Z^s in R^{M x d} (M << K*u)
+			
+			def hierarchical_token_merging(P_list, M, C):
+				# Flatten K x u tokens in the segment to a list T (length R0 = K*u)
+				T = concat([P for P in P_list])          # T: [R0, d]
+				R = len(T)
+				while R > M:
+					# Random disjoint partition (|P_i| = r_i, |Q_i| = R - r_i)
+					P_i, Q_i = random_partition(T)
+					# Head-averaged cosine similarity between every p in P_i and q in Q_i
+					S = {}
+					for p in P_i:
+						for q in Q_i:
+							S[(p,q)] = (1/C) * sum(cos(p[c], q[c]) for c in range(C))
+					# Select top-|P_i| pairs by similarity (greedy, disjoint matching)
+					matches = top_pairs(S, k=len(P_i))
+					# Merge each matched pair by average pooling
+					merged = [avg(p, q) for (p, q) in matches]
+					# Unpaired tokens are carried over; update T and R
+					unpaired = list(set(P_i + Q_i) - set([x for pair in matches for x in pair]))
+					T = merged + unpaired
+					R = len(T)
+					# Return first M tokens in temporal order within the segment (implementation detail)
+				return select_order_preserving(T, M)     # Z^s: [M, d]

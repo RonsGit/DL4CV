@@ -1,0 +1,27 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+			\PYG{c+c1}{\PYGZsh{} Schematic pipeline: native\PYGZhy{}resolution vision, 2x2 token merger, M\PYGZhy{}RoPE assignment}
+			
+			\PYG{k}{def} \PYG{n+nf}{encode\PYGZus{}image\PYGZus{}or\PYGZus{}video}\PYG{p}{(}\PYG{n}{frames}\PYG{p}{,} \PYG{n}{vit}\PYG{p}{,} \PYG{n}{merger2x2}\PYG{p}{)}\PYG{p}{:}
+\PYG{+w}{				}\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{				frames: list of HxW images (len=1 for image; \PYGZgt{}1 for video)}
+\PYG{l+s+sd}{				vit: ViT with 2D\PYGZhy{}RoPE on spatial axes}
+\PYG{l+s+sd}{				merger2x2: MLP that maps 4 patch tokens \PYGZhy{}\PYGZgt{} 1 token}
+\PYG{l+s+sd}{				\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+				\PYG{n}{visual\PYGZus{}tokens} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+				\PYG{k}{for} \PYG{n}{t}\PYG{p}{,} \PYG{n}{img} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{frames}\PYG{p}{)}\PYG{p}{:}
+					\PYG{c+c1}{\PYGZsh{} 1) Native\PYGZhy{}resolution patching and ViT encoding (no global resize).}
+					\PYG{n}{F\PYGZus{}hw} \PYG{o}{=} \PYG{n}{vit}\PYG{o}{.}\PYG{n}{patch\PYGZus{}encode}\PYG{p}{(}\PYG{n}{img}\PYG{p}{)}                 \PYG{c+c1}{\PYGZsh{} [H/p, W/p, C]}
+					\PYG{c+c1}{\PYGZsh{} 2) 2x2 merger to control token count content\PYGZhy{}proportionally.}
+					\PYG{n}{F\PYGZus{}merge} \PYG{o}{=} \PYG{n}{block\PYGZus{}merge\PYGZus{}2x2}\PYG{p}{(}\PYG{n}{F\PYGZus{}hw}\PYG{p}{)}              \PYG{c+c1}{\PYGZsh{} [H/(2p), W/(2p), C]}
+					\PYG{c+c1}{\PYGZsh{} 3) Flatten to [N\PYGZus{}t, C] and attach 3D position ids (t,h,w) for M\PYGZhy{}RoPE.}
+					\PYG{n}{T} \PYG{o}{=} \PYG{n}{flatten\PYGZus{}with\PYGZus{}ids}\PYG{p}{(}\PYG{n}{F\PYGZus{}merge}\PYG{p}{,} \PYG{n}{t\PYGZus{}axis}\PYG{o}{=}\PYG{n}{t}\PYG{p}{)}      \PYG{c+c1}{\PYGZsh{} [(N\PYGZus{}t, C), (ids\PYGZus{}t,h,w)]}
+					\PYG{n}{visual\PYGZus{}tokens}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{T}\PYG{p}{)}
+					\PYG{k}{return} \PYG{n}{concat}\PYG{p}{(}\PYG{n}{visual\PYGZus{}tokens}\PYG{p}{)}                     \PYG{c+c1}{\PYGZsh{} Variable\PYGZhy{}length visual sequence}
+			
+			\PYG{k}{def} \PYG{n+nf}{fuse\PYGZus{}with\PYGZus{}text}\PYG{p}{(}\PYG{n}{visual\PYGZus{}tokens}\PYG{p}{,} \PYG{n}{text\PYGZus{}tokens}\PYG{p}{,} \PYG{n}{llm}\PYG{p}{)}\PYG{p}{:}
+\PYG{+w}{				}\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{				Interleave markers and feed to LLM with multimodal RoPE activated on Q/K.}
+\PYG{l+s+sd}{				\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+				\PYG{n}{seq} \PYG{o}{=} \PYG{p}{[}\PYG{n}{TOK}\PYG{o}{.}\PYG{n}{VISION\PYGZus{}START}\PYG{p}{]} \PYG{o}{+} \PYG{n}{visual\PYGZus{}tokens} \PYG{o}{+} \PYG{p}{[}\PYG{n}{TOK}\PYG{o}{.}\PYG{n}{VISION\PYGZus{}END}\PYG{p}{]} \PYG{o}{+} \PYG{n}{text\PYGZus{}tokens}
+				\PYG{k}{return} \PYG{n}{llm}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{n}{seq}\PYG{p}{)}
+\end{MintedVerbatim}

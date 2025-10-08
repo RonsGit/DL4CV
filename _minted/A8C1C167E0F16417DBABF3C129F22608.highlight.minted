@@ -1,0 +1,16 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+				\PYG{c+c1}{\PYGZsh{} VideoMAEv2 pre\PYGZhy{}training step (schematic)}
+				\PYG{c+c1}{\PYGZsh{} I: clip [T,H,W,3]; rho\PYGZus{}e: encoder mask ratio; rho\PYGZus{}d: decoder mask ratio}
+				\PYG{c+c1}{\PYGZsh{} Phi\PYGZus{}emb: cube embedding; Enc: ViT encoder; Dec: lightweight ViT decoder}
+				
+				\PYG{k}{def} \PYG{n+nf}{step}\PYG{p}{(}\PYG{n}{I}\PYG{p}{,} \PYG{n}{rho\PYGZus{}e}\PYG{o}{=}\PYG{l+m+mf}{0.9}\PYG{p}{,} \PYG{n}{rho\PYGZus{}d}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{:}
+					\PYG{n}{X} \PYG{o}{=} \PYG{n}{Phi\PYGZus{}emb}\PYG{p}{(}\PYG{n}{cubeify}\PYG{p}{(}\PYG{n}{I}\PYG{p}{)}\PYG{p}{)}                 \PYG{c+c1}{\PYGZsh{} tokens T\PYGZus{}1..T\PYGZus{}N}
+					\PYG{n}{Ve}\PYG{p}{,} \PYG{n}{Ee} \PYG{o}{=} \PYG{n}{tube\PYGZus{}mask\PYGZus{}indices}\PYG{p}{(}\PYG{n}{N}\PYG{o}{=}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{ratio}\PYG{o}{=}\PYG{n}{rho\PYGZus{}e}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} visible / masked for encoder}
+					\PYG{n}{Z} \PYG{o}{=} \PYG{n}{Enc}\PYG{p}{(}\PYG{n}{X}\PYG{p}{[}\PYG{n}{Ve}\PYG{p}{]}\PYG{p}{)}                          \PYG{c+c1}{\PYGZsh{} encode only visible tokens}
+					\PYG{n}{D} \PYG{o}{=} \PYG{n}{running\PYGZus{}cell\PYGZus{}mask\PYGZus{}indices}\PYG{p}{(}\PYG{n}{N}\PYG{o}{=}\PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{ratio}\PYG{o}{=}\PYG{n}{rho\PYGZus{}d}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} decoder\PYGZhy{}kept positions}
+					\PYG{n}{masked\PYGZus{}tokens} \PYG{o}{=} \PYG{n}{learnable\PYGZus{}mask\PYGZus{}tokens}\PYG{p}{(}\PYG{n}{indexes}\PYG{o}{=}\PYG{n}{D}\PYG{p}{)}
+					\PYG{n}{U} \PYG{o}{=} \PYG{n}{concat}\PYG{p}{(}\PYG{n}{Z}\PYG{p}{,} \PYG{n}{masked\PYGZus{}tokens}\PYG{p}{)}            \PYG{c+c1}{\PYGZsh{} decoder sequence}
+					\PYG{n}{I\PYGZus{}hat} \PYG{o}{=} \PYG{n}{Dec}\PYG{p}{(}\PYG{n}{U}\PYG{p}{)}                          \PYG{c+c1}{\PYGZsh{} predictions at positions in D}
+					\PYG{n}{idx} \PYG{o}{=} \PYG{n}{intersect}\PYG{p}{(}\PYG{n}{Ee}\PYG{p}{,} \PYG{n}{D}\PYG{p}{)}                  \PYG{c+c1}{\PYGZsh{} loss only on encoder\PYGZhy{}invisible \PYGZam{} decoder\PYGZhy{}visible}
+					\PYG{k}{return} \PYG{n}{mse}\PYG{p}{(}\PYG{n}{I\PYGZus{}hat}\PYG{p}{[}\PYG{n}{idx}\PYG{p}{]}\PYG{p}{,} \PYG{n}{targets}\PYG{p}{(}\PYG{n}{I}\PYG{p}{)}\PYG{p}{[}\PYG{n}{idx}\PYG{p}{]}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{idx}\PYG{p}{)}
+\end{MintedVerbatim}

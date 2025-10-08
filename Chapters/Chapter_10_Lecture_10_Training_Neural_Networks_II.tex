@@ -208,6 +208,199 @@ The idea is to select the checkpoint where the model achieves the highest valida
 	\label{fig:chapter10_early_stopping}
 \end{figure}
 
+\newpage
+
+\begin{enrichment}[Super-Convergence and OneCycle][subsection]
+	\label{enr:chapter10_superconvergence}
+	
+	\paragraph{Motivation}
+	Section~10.1 reviewed monotone learning-rate (LR) schedules—step (\autoref{subsec:step_lr}), cosine (\autoref{subsubsec:cosine_lr}), linear (\autoref{subsubsec:linear_lr}), inverse-square-root (\autoref{subsec:inverse_sqrt_decay})—plus a constant baseline (\autoref{subsec:constant_lr}). These steadily \emph{decrease} LR to stabilize convergence, but they often under-explore early and require hand-tuned drop epochs. \emph{OneCycle} \cite{smith2017_clr, smith2018_superconvergence} flips the pattern: it briefly \emph{increases} LR to a large peak, then \emph{anneals} for the remainder of training, while momentum varies \emph{inversely}. The short high-LR burst adds beneficial stochastic regularization (escaping sharp minima); the long decay polishes in flat regions—often reaching top accuracy in roughly $1/3$–$1/10$ of the epochs of conventional schedules.
+	
+	\subsubsection{Method: schedule and inverse momentum coupling}
+	\label{enr:subsubsec_chapter10_onecycle_method}
+	
+	\paragraph{What we are scheduling (symbols at a glance)}
+	At each optimizer update $t$ ($t=0,1,\dots,T$; $T$ is the total number of updates in the cycle) we control:
+	\begin{itemize}
+		\item \textbf{Learning rate} $\boldsymbol{\eta_t}$ (step size at update $t$), bounded by three anchors:
+		\emph{start} $\eta_{\text{min}}$, \emph{peak} $\eta_{\text{max}}$ (chosen via the LR-range test; see below figure), and \emph{end} $\eta_{\text{final}}$ (very small, for fine polishing).
+		\item \textbf{Momentum} $\boldsymbol{m_t}$ (inertia/averaging).\footnote{For SGD this is classical momentum; for AdamW interpret $m_t$ as the time-varying $\beta_1(t)$.} We bound it between $m_{\text{min}}$ and $m_{\text{max}}$ and \emph{couple it inversely} to LR (low $m_t$ when LR is high; high $m_t$ when LR is low).
+	\end{itemize}
+	A single scalar \textbf{peak fraction} $p\in(0,1)$ allocates time: the first $pT$ updates \emph{rise} to $\eta_{\text{max}}$ (exploration), the remaining $(1-p)T$ \emph{decay} to $\eta_{\text{final}}$ (refinement).
+	
+	\paragraph{Notation and helper ramps (defined before use)}
+	We describe each phase on its own local timeline.
+	\begin{itemize}
+		\item \textbf{Phase lengths.} Warm-up length \(L_1 := pT\); anneal length \(L_2 := (1-p)T\).
+		\item \textbf{Normalized progress.} For any phase of length \(L\), set \(\tau := t/L \in [0,1]\). In Phase~1 we use \(\tau_1 = t/L_1\); in Phase~2 we use \(\tau_2 = (t-pT)/L_2\).
+		\item \textbf{Cosine building blocks.} The \emph{half-cosine ramp-up}
+		\[
+		\mathrm{hc}(\tau) := \frac{1-\cos(\pi\tau)}{2}
+		\]
+		smoothly maps \(0\mapsto 0\) and \(1\mapsto 1\) with zero slope at both ends. Its \emph{ramp-down} companion is
+		\[
+		\overline{\mathrm{hc}}(\tau) := 1-\mathrm{hc}(\tau) = \frac{1+\cos(\pi\tau)}{2},
+		\]
+		which maps \(0\mapsto 1\) and \(1\mapsto 0\). Any bounds \(a\to b\) are obtained by \(a+(b-a)\,\mathrm{hc}(\tau)\) (up) or \(a+(b-a)\,\overline{\mathrm{hc}}(\tau)\) (down).
+	\end{itemize}
+	
+	\paragraph{Why this shape? (intuition)}
+	Monotone decays excel at refinement but can miss broad basins. OneCycle \emph{budgets} for both: a short, high-LR \textbf{exploration} to inject noise and cross sharp valleys, then a long, low-LR \textbf{refinement} to settle. Stability comes from \emph{inverse momentum}: near the LR peak we lower momentum (less inertia during big steps); in the tail we raise it (more damping during tiny steps) \cite{smith2017_clr, smith2018_superconvergence}. Cosine ramps give smooth, zero-slope transitions (no kinks or shocks).
+	
+	\paragraph{Step-by-step construction of the schedules}
+	\textbf{Phase 1 (exploration, $0\le t\le pT$).} With $\tau_1=t/L_1$,
+	\[
+	\eta_t=\eta_{\text{min}}+(\eta_{\text{max}}-\eta_{\text{min}})\,\mathrm{hc}(\tau_1),
+	\qquad
+	m_t=m_{\text{max}}-(m_{\text{max}}-m_{\text{min}})\,\mathrm{hc}(\tau_1).
+	\]
+	\textbf{Phase 2 (refinement, $pT< t\le T$).} With $\tau_2=(t-pT)/L_2$,
+	\[
+	\eta_t=\eta_{\text{final}}+(\eta_{\text{max}}-\eta_{\text{final}})\,\overline{\mathrm{hc}}(\tau_2),
+	\qquad
+	m_t=m_{\text{min}}+(m_{\text{max}}-m_{\text{min}})\,\mathrm{hc}(\tau_2).
+	\]
+	Putting the two pieces together:
+	\begin{equation}
+		\eta_t=
+		\begin{cases}
+			\displaystyle \eta_{\text{min}}+(\eta_{\text{max}}-\eta_{\text{min}})\;\frac{1-\cos\!\big(\pi\,\tfrac{t}{pT}\big)}{2}, & 0\le t\le pT\\[8pt]
+			\displaystyle \eta_{\text{final}}+(\eta_{\text{max}}-\eta_{\text{final}})\;\frac{1+\cos\!\big(\pi\,\tfrac{t-pT}{(1-p)T}\big)}{2}, & pT< t\le T
+		\end{cases}
+		\label{eq:chapter10_onecycle_lr}
+	\end{equation}
+	\begin{equation}
+		m_t=
+		\begin{cases}
+			\displaystyle m_{\text{max}}-(m_{\text{max}}-m_{\text{min}})\;\frac{1-\cos\!\big(\pi\,\tfrac{t}{pT}\big)}{2}, & 0\le t\le pT\\[8pt]
+			\displaystyle m_{\text{min}}+(m_{\text{max}}-m_{\text{min}})\;\frac{1-\cos\!\big(\pi\,\tfrac{t-pT}{(1-p)T}\big)}{2}, & pT< t\le T
+		\end{cases}
+		\label{eq:chapter10_onecycle_mom}
+	\end{equation}
+	
+	\noindent\textbf{What this guarantees.} We begin at $(\eta_{\text{min}},\,m_{\text{max}})$, pass the peak at $(\eta_{\text{max}},\,m_{\text{min}})$ with \emph{zero-slope} continuity, and finish at $(\eta_{\text{final}},\,m_{\text{max}})$. Heuristically, the SGD noise scale scales like $\eta/(1-m)$, so OneCycle makes it \emph{large} early (explore) and \emph{small} late (refine).
+	
+	\paragraph{Parameterization and defaults}
+	Choose \(\eta_{\text{max}}\) with the LR-range test (\autoref{fig:chapter10_superconv_lr_range}). Set
+	\[
+	\begin{aligned}
+		\eta_{\text{min}}   &= \frac{\eta_{\text{max}}}{\texttt{div\_factor}},      &\quad \texttt{div\_factor}      &\in [3,10],\\
+		\eta_{\text{final}} &= \frac{\eta_{\text{max}}}{\texttt{final\_div\_factor}},&\quad \texttt{final\_div\_factor}&\in [10^3,10^4].
+	\end{aligned}
+	\]
+	Use \(p\in[0.2,0.4]\) (start with \(0.3\)). For SGD or AdamW~\cite{loshchilov2019_adamw}, robust momentum bounds are \(m_{\text{max}}\approx 0.95\), \(m_{\text{min}}\approx 0.85\).
+	
+	\paragraph{What each hyper-parameter controls}
+	\begin{itemize}
+		\item \textbf{$\eta_{\text{max}}$ (peak LR)} — \emph{Exploration depth.} Higher $\Rightarrow$ bolder, noisier early steps (faster escape; higher spike risk). Lower $\Rightarrow$ safer but under-explores. Pick just \emph{before} instability in the range test.
+		\item \textbf{$\eta_{\text{min}}$ via \texttt{div\_factor}} — \emph{Launch smoothness.} Larger divisor (smaller start LR) $\Rightarrow$ gentler warm-up (useful for small batches/fragile nets). Smaller $\Rightarrow$ quicker ramp, more early jitter.
+		\item \textbf{$\eta_{\text{final}}$ via \texttt{final\_div\_factor}} — \emph{Endgame precision.} Larger divisor (smaller end LR) $\Rightarrow$ finer polishing, longer tail. Smaller $\Rightarrow$ finishes sooner, slightly higher floor.
+		\item \textbf{$p$ (peak fraction)} — \emph{Explore vs.\ refine budget.} Larger $p$ $\Rightarrow$ more high-LR time (often modest generalization gains; more instability). Smaller $p$ $\Rightarrow$ earlier refinement (safer for short/fragile runs).
+		\item \textbf{$m_{\text{min}}$ (momentum dip)} — \emph{Peak control.} Lowering loosens control at the LR peak (bolder, riskier); raising tightens control (safer, less regularization).
+		\item \textbf{$m_{\text{max}}$ (late momentum)} — \emph{Tail damping.} Higher smooths the anneal (fewer oscillations, slower response); lower is snappier but jittery.
+	\end{itemize}
+	
+	\subsubsection{Diagnostics: the LR range test}
+	\label{enr:subsubsec_chapter10_onecycle_diagnostics}
+	Run a short \emph{LR range test} \cite{smith2017_clr}: increase LR over a few epochs (linearly or exponentially), record validation loss/accuracy versus LR, and read off a usable LR band. Select $\eta_{\text{max}}$ just before divergence or where accuracy peaks; choose $\eta_{\text{min}}$ where the curve first improves meaningfully. This simple diagnostic removes guesswork and enables OneCycle.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Figures/Chapter_10/SuperConvergence_lr_range.jpg}
+		\caption{LR range test diagnostics: (a) typical curve with a clear peak indicating $\eta_{\text{max}}$ and a shoulder for $\eta_{\text{min}}$ (b) ResNet-56 on CIFAR-10 shows a noisier curve that still reveals a practical LR band. Source: ~\cite{smith2018_superconvergence}.}
+		\label{fig:chapter10_superconv_lr_range}
+	\end{figure}
+	
+	\subsubsection{Empirical picture: CIFAR-10 and ImageNet}
+	\label{enr:subsubsec_chapter10_onecycle_empirics}
+	On CIFAR-10 with ResNet-56, using the LR band in a single-cycle schedule yields pronounced speedups and often higher accuracy. Panel~(a) in \autoref{fig:chapter10_superconv_examples} contrasts a typical piecewise-constant baseline (e.g., fixed low LR with scheduled drops) with a OneCycle policy that sweeps between $\eta_{\text{min}}\!\approx\!0.1$ and $\eta_{\text{max}}\!\approx\!3.0$, reaching higher accuracy in far fewer iterations; panel~(b) shows that longer cycles (larger stepsize) generally improve final generalization by allowing broader exploration before refinement.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Figures/Chapter_10/SuperConvergence_examples.jpg}
+		\caption{Super-convergence on CIFAR-10 with ResNet-56: (a) test accuracy of OneCycle versus a piecewise-constant schedule (b) test accuracy across different cycle lengths (stepsizes). Source: ~\cite{smith2018_superconvergence}.}
+		\label{fig:chapter10_superconv_examples}
+	\end{figure}
+	
+	\newpage
+	
+	These dynamics scale to ImageNet. \autoref{fig:chapter10_superconv_imagenet} compares standard training (blue) to a 1cycle policy that displays super-convergence (red/yellow), illustrating that modern backbones (ResNet-50, Inception-ResNet-v2) can train much faster—on the order of $\sim 20$ versus $\sim 100$ epochs in representative setups—without loss in final accuracy.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Figures/Chapter_10/SuperConvergence_training_resnet_inception.jpg}
+		\caption{Scaling to ImageNet: (a) ResNet-50 (b) Inception-ResNet-v2 trained with a standard LR policy (blue) versus a 1cycle policy that exhibits super-convergence, reducing epochs substantially. Source: ~\cite{smith2018_superconvergence}.}
+		\label{fig:chapter10_superconv_imagenet}
+	\end{figure}
+	
+	\subsubsection{Intuition and comparisons}
+	\label{enr:subsubsec_chapter10_onecycle_intuition}
+	
+	\noindent\textbf{Big picture.} OneCycle makes the exploration–exploitation trade-off \emph{explicit}: a short high–learning-rate (LR) burst to search broadly, followed by a long low-LR anneal to refine. Momentum is coupled \emph{inversely} to LR (small $m_t$ when $\eta_t$ is large; large $m_t$ when $\eta_t$ is small) so the optimizer is agile during exploration and well-damped during refinement. Heuristically, the effective SGD noise scale grows like $\eta/(1-m)$; OneCycle deliberately makes this \emph{large} early (regularization, basin jumping) and \emph{small} late (precision).
+	
+	\medskip
+	\noindent\textbf{How it differs from the schedules in \S~10.1—and what this means in practice.}
+	\begin{itemize}
+		\item \textbf{Versus step decay} (\autoref{subsec:step_lr}). \emph{Difference:} step uses abrupt, hand-chosen drops; OneCycle is a single smooth rise–then–fall. \emph{Practice:} fewer plateaus and less guesswork about ``drop epochs'', typically faster time-to-target accuracy when drops are not perfectly tuned. \emph{Try:} if migrating from step, pick $p\!\approx\!0.3$; if keeping step, place the largest drop near $t\!\approx\!pT$ to mimic the OneCycle peak.
+		\item \textbf{Versus cosine decay} (\autoref{subsubsec:cosine_lr}). \emph{Difference:} cosine is smooth but strictly \emph{monotone}; OneCycle inserts a deliberate LR \emph{rise} before a cosine-like tail. \emph{Practice:} the rise acts as a stronger regularizer, often reaching flatter minima sooner at the same epoch budget. \emph{Try:} start from your cosine baseline, switch to OneCycle with $\eta_{\max}$ from the range test and $p\!\in[0.2,0.3]$; add a very short warm-up if needed.
+		\item \textbf{Versus linear decay} (\autoref{subsubsec:linear_lr}). \emph{Difference:} linear steadily shrinks LR from the start; OneCycle allocates a fixed high-LR window of length $pT$ before decay. \emph{Practice:} linear under-spends time at large LR; OneCycle front-loads exploration then refines. \emph{Try:} inject a brief rise ($p\!\approx\!0.2$) or switch fully to OneCycle to reduce time-to-quality.
+		\item \textbf{Versus inverse-square-root} (\autoref{subsec:inverse_sqrt_decay}). \emph{Difference:} $1/\sqrt{t}$ drops quickly early, limiting time at high LR; OneCycle \emph{schedules} that exploration window (e.g., $p\!\approx\!0.3$) and then decays more aggressively to a tiny $\eta_{\text{final}}$. \emph{Practice:} inverse–sqrt is a safe long-run default for transformers; OneCycle can still help if you cap $\eta_{\max}$ and keep $p$ small. \emph{Try:} for attention-heavy models, use smaller $\eta_{\max}$ and $p{=}0.2$; add a very short pre-warm-up if needed.
+		\item \textbf{Versus constant LR} (\autoref{subsec:constant_lr}). \emph{Difference:} constant LR is flat and simple; OneCycle adds a peak and a long anneal using four anchors $(\eta_{\min},\eta_{\max},\eta_{\text{final}},p)$. \emph{Practice:} constants are great for debugging but need manual decay/early-stopping; OneCycle bakes in exploration and finishing polish, usually reaching equal or better accuracy in fewer epochs. \emph{Try:} after a range test, set the three LRs via divisors and choose $p$.
+		\item \textbf{With adaptive optimizers / large models} (\autoref{subsec:adaptive_lr}). \emph{Difference:} OneCycle inverts momentum relative to LR (for AdamW, interpret $m_t$ as $\beta_1(t)$) to stabilize the LR peak and damp the tail. \emph{Practice:} works well with SGD+momentum and AdamW; attention layers and BN statistics are typical sensitivity points near $\eta_{\max}$. \emph{Try:} cap $\eta_{\max}$ lower than your CNN default, set $p\!\approx\!0.2$, and consider a very short warm-up; if you see peak-time spikes, reduce $\eta_{\max}$, increase $m_{\min}$ slightly, or shorten $p$.
+	\end{itemize}
+	
+	\subsubsection{When to use—and caveats}
+	\label{enr:subsubsec_chapter10_onecycle_when}
+	
+	\noindent\textbf{Where it shines.} Use OneCycle when
+	\begin{itemize}
+		\item \textbf{Compute / epochs are limited:} you need near-peak accuracy in fewer epochs or shorter wall-clock than step/cosine baselines.
+		\item \textbf{You want a strong baseline quickly:} only the LR-range test is required to set $\eta_{\max}$; the rest follows from simple divisors and a single $p$ (\autoref{enr:subsubsec_chapter10_onecycle_method}).
+		\item \textbf{Standard supervised setups:} CNNs and transformers trained with SGD\,+\,momentum or AdamW on mid/large datasets, where an early regularization pulse and a long anneal are beneficial.
+		\item \textbf{You can run an LR-range test:} selecting $\eta_{\max}$ empirically is part of the method.
+	\end{itemize}
+	
+	\medskip
+	\noindent\textbf{Gray areas—use with care (why, and what to try).}
+	\begin{itemize}
+		\item \textbf{Very small or very noisy datasets.} \emph{Why:} the LR peak can over-regularize or destabilize. \emph{Try:} reduce $\eta_{\max}$ by $20$–$50\%$; use $p{=}0.2$; or switch to cosine with a brief warm-up.
+		\item \textbf{Attention-heavy models (ViTs/LLMs).} \emph{Why:} large LR can perturb attention/normalization scales. \emph{Try:} cap $\eta_{\max}$ below your CNN default; set $p{=}0.2$; optionally add a short pre–warm-up (few hundred steps); raise $m_{\min}$ slightly for more control.
+		\item \textbf{Strong regularization stacks (heavy aug + large WD).} \emph{Why:} the peak adds noise on top of existing regularizers, risking underfit. \emph{Try:} keep WD fixed and lower $\eta_{\max}$; extend $p$ only if training loss remains smooth; prefer the cosine tail.
+		\item \textbf{Tight gradient clipping or tiny microbatches.} \emph{Why:} small clip norms nullify the intended large steps at the peak. \emph{Try:} relax clipping (e.g., clip $\approx 1$) or lower $\eta_{\max}$; otherwise use a monotone cosine schedule.
+		\item \textbf{BatchNorm drift near the peak.} \emph{Why:} high LR perturbs running means/variances. \emph{Try:} reduce $\eta_{\max}$; increase $m_{\min}$ by $0.02$–$0.05$; shorten $p$; consider freezing BN stats for a short window around the peak if absolutely necessary.
+	\end{itemize}
+	
+	\medskip
+	\noindent\textbf{Generally not a win (prefer other schedules).}
+	\begin{itemize}
+		\item \textbf{Already well-tuned long cosine.} If your baseline already uses a long, smooth anneal with strong results, OneCycle’s gains may be marginal. \emph{Alternative:} keep cosine or inject a very short initial ramp (small $p$) for a modest speedup.
+		\item \textbf{No LR-range test possible.} If you cannot estimate $\eta_{\max}$ (e.g., streaming/online constraints), prefer a conservative cosine with warm-up.
+		\item \textbf{Extremely short runs.} If $pT$ would be only a handful of steps, the peak is poorly resolved. \emph{Alternative:} use warm-up\,$\rightarrow$\,cosine or linear decay.
+	\end{itemize}
+	
+	\medskip
+	\noindent\textbf{Rule of thumb.} If uncertain, start with the recipe in \autoref{enr:subsubsec_chapter10_onecycle_method}: range-test $\eta_{\max}$, set $\eta_{\min}$ and $\eta_{\text{final}}$ by divisors, choose $p{=}0.3$, and adjust only when you observe peak-time spikes (lower $\eta_{\max}$ / raise $m_{\min}$ / shorten $p$) or late plateaus (smaller $\eta_{\text{final}}$ via larger \texttt{final\_div\_factor}).
+	
+	\paragraph{Practical tuning guide}
+	\begin{enumerate}
+		\item \textbf{Pick the LR band (required).} Run the LR-range test; set $\eta_{\max}$ just before instability. Set $\eta_{\min}=\eta_{\max}/\texttt{div\_factor}$ with \texttt{div\_factor}$\in[10,25]$ for stability (use $[3,10]$ if you want a faster launch). Set $\eta_{\text{final}}=\eta_{\max}/\texttt{final\_div\_factor}$ with \texttt{final\_div\_factor}$\in[10^3,10^4]$.
+		\item \textbf{Allocate time.} Start with $p{=}0.3$. If the peak region is spiky, shorten to $p{=}0.2$; if validation keeps improving with longer exploration, consider $p{=}0.35$–$0.40$.
+		\item \textbf{Stabilize the peak (priority order).} 
+		\begin{enumerate}
+			\item Reduce $\eta_{\max}$ by $10$–$20\%$.
+			\item Increase $m_{\min}$ by $0.02$–$0.05$ (adds control at the peak).
+			\item Increase \texttt{div\_factor} (smaller $\eta_{\min}$ for a gentler launch).
+			\item Optionally shorten $p$ by $0.05$.
+		\end{enumerate}
+		\item \textbf{Polish the tail.} If the final metric plateaus high, increase \texttt{final\_div\_factor} (smaller $\eta_{\text{final}}$). If time-limited, accept a slightly larger $\eta_{\text{final}}$ for a faster finish.
+		\item \textbf{Keep the rest steady.} Use decoupled weight decay (AdamW/SGD+WD) held constant; avoid very tight gradient clipping at the peak (clip $\approx 1$ is a common ceiling). Ensure the scheduler steps once per optimizer update.
+		\item \textbf{Transformer-specific tip.} Map $m_t$ to $\beta_1(t)$ for AdamW; prefer $p{=}0.2$ and a slightly smaller $\eta_{\max}$; add a very short pre-warm-up if attention becomes unstable.
+	\end{enumerate}
+
+\end{enrichment}
+
+\newpage
+
 \section{Hyperparameter Selection}
 \label{sec:hyperparameter_selection}
 
@@ -648,4 +841,3 @@ Despite this, pretraining followed by fine-tuning remains superior when datasets
 	\end{itemize}
 	
 \end{enrichment}
-

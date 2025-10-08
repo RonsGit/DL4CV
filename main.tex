@@ -63,14 +63,16 @@
 
 \begingroup
 \thispagestyle{empty}
-\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{esahubble}}} % Image background
+\setlength{\parskip}{0pt} % remove extra paragraph gaps
+\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{esahubble}}} % background
 \centering
-\vspace*{5cm}
+\vspace*{4.3cm} % <-- adjust this to position the whole block vertically (smaller = higher)
 \par\normalfont\fontsize{35}{35}\sffamily\selectfont
 \textbf{EECS498 - Deep Learning for Computer Vision}\\
-{\LARGE An essential guide to modern computer vision based on UMich's EECS498 (Instructor: Justin Johnson)}\par % Book title
-\vspace*{1cm}
-{\LARGE Ron Korine, 2025}\par % Author name
+{\LARGE An essential guide to modern computer vision based on UMich's EECS498 (Instructor: Justin Johnson)}\par
+\vspace*{0.7cm}
+{\LARGE Ron Korine, 2025}\\[-0.35em] % tighten the gap to the thanks line
+{\large With thanks to the computer vision research community}\par
 \endgroup
 
 %----------------------------------------------------------------------------------------
@@ -86,7 +88,7 @@
 \noindent \textsc{github.com/RonsGit/}\\ % URL
 This document is based on content from various sources—including books and lecture notes. Each source used is duly cited to give proper credit to the original authors. If you find any content in this document that you would prefer to be removed, please feel free to contact me by clicking \textbf{\href{mailto:eecs498summary@gmail.com}{here}}, and I will address your request promptly.\\ % License information
 
-\noindent \textit{First release, July 2025} % Printing/edition date
+\noindent \textit{Pre Release, October 2025} % Printing/edition date
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -109,9 +111,12 @@ This document is based on content from various sources—including books and lec
 
 \subsection{Why This Document?}
 
-This document was created to serve as a structured and accessible entry point into deep learning and computer vision for students and early-stage practitioners. As a data scientist with a strong interest in democratizing knowledge, I observed that many newcomers—particularly those from science and engineering backgrounds—struggled to identify a coherent path through the rapidly growing ecosystem of courses, papers, and tutorials. The abundance of resources often leads to confusion rather than clarity.
+\noindent
+This document is intended as a structured, accessible on-ramp to deep learning and computer vision—both for students and early-stage practitioners, and for experienced engineers who want a quick way to enter new subfields or refresh core ideas. The aim is to replace resource overload with a coherent path: concise explanations, consistent notation, and curated references that connect lectures, key papers, and practical recipes into a navigable whole.
 
-To address this, I began compiling this guide in December 2023, grounded in the outstanding curriculum of the University of Michigan’s EECS498 course, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture and distilling its core concepts, I have assembled a practical and pedagogically structured resource. This document supplements and extends the original course with clarified explanations, curated references, and additional context that support long-term understanding.
+\medskip
+\noindent
+This volume originated in the summer of 2024 as a structured companion to the University of Michigan’s EECS498 curriculum, taught by \href{https://web.eecs.umich.edu/~justincj/}{Justin Johnson}. By revisiting each lecture and distilling its core ideas, the text organizes the material into a practical, pedagogically coherent resource that extends the course with clarified explanations, curated references, and contextual notes designed to support durable understanding.
 
 The material is tailored for undergraduate and early graduate students in computer science, electrical engineering, software engineering, and related fields. Readers are expected to have foundational knowledge in Python programming, calculus, and linear algebra. If you feel uncertain about these prerequisites, I recommend reviewing the following: 
 \begin{itemize}
@@ -120,6 +125,8 @@ The material is tailored for undergraduate and early graduate students in comput
 	\item \href{https://www.3blue1brown.com/topics/linear-algebra}{3Blue1Brown's Linear Algebra series} for geometric intuition and matrix operations.
 \end{itemize}
 
+\medskip
+\noindent
 While prior coursework in machine learning is not strictly required, it can be highly beneficial. For a beginner-friendly option, I recommend \href{https://www.coursera.org/learn/machine-learning}{Andrew Ng's Machine Learning course on Coursera}. For those seeking a more theoretical treatment, \href{https://cs229.stanford.edu/}{Stanford’s CS229: Machine Learning} offers a rigorous mathematical perspective.
 
 \newpage
@@ -133,12 +140,6 @@ This document is intended to evolve into a living resource—open, modular, and 
 \end{itemize}
 
 The goal is to build a shared, reliable foundation for learning deep learning and computer vision—one that reflects the generosity and rigor of the research community it draws from.
-
-\subsection{Acknowledgments and Contributions}
-
-This document draws extensively on the work of many outstanding educators and researchers—most notably, the lecture materials from Justin Johnson’s EECS498 course at the University of Michigan. It also incorporates publicly available figures, tutorials, and visual explanations, all of which are cited either at the beginning of each section or directly alongside the relevant content.
-
-If you are the creator or copyright holder of a figure, diagram, or other artifact referenced in this document and would prefer that it not be included, please contact me via \href{mailto:eecs498summary@gmail.com}{email}. I will respectfully review and address your request without delay.
 
 \subsection{Your Feedback Matters}
 
@@ -155,8 +156,8 @@ This document is designed to support a wide range of learners—from students di
 	Begin by following the 
 	\href{https://www.youtube.com/watch?v=dJYGatp4SvA\&list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r\&index=1\&ab_channel=MichiganOnline}{EECS498 lecture series on YouTube}, and read the corresponding sections in parallel. Use this document to:
 	\begin{itemize}
-		\item Clarify ideas presented quickly in the video,
-		\item Reference equations or diagrams while watching,
+		\item Clarify ideas presented quickly in the video.
+		\item Reference equations or diagrams while watching.
 		\item Revisit chapters after the lecture to solidify your understanding.
 	\end{itemize}
 	Try pausing to reflect on key definitions or derivations before reading through the explanations—they’re designed to help you reason things out.
@@ -170,19 +171,22 @@ This document is designed to support a wide range of learners—from students di
 	\end{itemize}
 	
 	\item \textbf{Use It Selectively:}  
-	There is no expectation that you read the entire document. Each section is written to stand on its own, so feel free to explore topics nonlinearly. If you're preparing for a specific project, paper, or interview, jump directly to relevant chapters—such as optimization, normalization, transformers, or generative models.
+	There is no expectation that you read the entire document. Each section is written to stand on its own (as much as possible), so feel free to explore topics nonlinearly. If you're preparing for a specific project, paper, or interview, jump directly to relevant chapters—such as optimization, normalization, transformers, or generative models.
 	
-	\item \textbf{Refresh Your Knowledge Over Time:}  
-	This document can serve as a long-term companion. When returning to a concept after months away—say, backpropagation, attention, or KL divergence—you can revisit just the section you need. Clear explanations, definitions, and enrichment boxes are designed to support both first-time learning and second-pass reviewing.
+	\newpage
 	
-	\item \textbf{Leverage RAG Tools for Interactive Exploration:}  
-	To enhance your learning, consider uploading this document into retrieval-augmented tools like \textbf{NotebookLM} or \textbf{ChatGPT with file support}. These tools allow you to:
+	\item \textbf{Refresh your knowledge over time}  
+	Use this as a long-term companion. When you return after months to backpropagation, attention, or KL divergence, jump directly to the relevant section. Short definitions, worked mini-examples, and “enrichment” boxes are designed to support both first-pass learning and quick second-pass review
+	
+	\item \textbf{Turn the notes into an interactive guide (RAG + podcast workflows)}  
+	Upload this document—together with a short reading list of papers on your target topic—into retrieval-augmented tools such as \textbf{NotebookLM} or \textbf{ChatGPT/Gemini with file support}. You can then:
 	\begin{itemize}
-		\item Ask custom follow-up questions in natural language.
-		\item Summarize long derivations.
-		\item Quiz yourself on key concepts without manually searching.
+		\item Generate \emph{podcast-style briefings} or episode outlines that walk through the papers in a narrative order.
+		\item Ask follow-up questions in natural language and get citations back to specific sections, figures, or equations.
+		\item Summarize long derivations, contrast methods head-to-head, and extract recurring themes or assumptions.
+		\item Auto-create quizzes, flashcards, and timelines to reinforce retention.
 	\end{itemize}
-	This transforms a static reading experience into an interactive dialogue.
+	This workflow turns a static reading list into an interactive study companion, letting you survey a subfield, revisit concepts, or spin up a quick refresher with minimal friction.
 \end{enumerate}
 
 \subsection{Staying Updated in the Field}
@@ -192,7 +196,7 @@ While this document aims to provide a reliable and up-to-date foundation, deep l
 To stay current with developments:
 \begin{itemize}
 	\item Use tools like \href{https://www.connectedpapers.com/}{\textbf{Connected Papers}} to explore the citation graph and discover related work.
-	\item Follow \href{https://www.paperswithcode.com/}{\textbf{Papers with Code}} to track trending papers, benchmark results, and open-source implementations.
+	\item Follow \href{https://huggingface.co/papers/trending}{\textbf{Trending Papers}} to track trending papers, benchmark results, and open-source implementations.
 	\item Subscribe to \href{https://www.dailyarxiv.com/}{\textbf{DailyArxiv}} to receive daily email digests of new arXiv submissions in machine learning, computer vision, and related fields.
 	\item Watch high-level paper reviews and discussions on YouTube channels such as \href{https://www.youtube.com/@yannickilcher}{Yannic Kilcher} and \href{https://www.youtube.com/@andrejkarpathy}{Andrej Karpathy}.
 	\item Follow key researchers and labs on \textbf{X} (formerly Twitter), such as \texttt{@ylecun}, \texttt{@karpathy}, \texttt{@smerity}, and \texttt{@david\_ha}, to stay informed about emerging ideas and discussions that may precede formal publication.
@@ -202,14 +206,39 @@ To stay current with developments:
 
 By combining this foundational document with regular engagement in the broader research ecosystem, you can maintain both conceptual depth and up-to-date knowledge as the field progresses.
 
+\subsection{Dependency Tree}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.65\textwidth]{Pictures/book_dependencies.png}
+	\caption{\textbf{Book chapter dependencies}  
+		Arrows indicate prerequisite relationships between chapters. Earlier foundations support later topics such as self-supervised learning, segmentation, video understanding, and 3D vision.}
+	\label{fig:book_dependencies}
+\end{figure}
+
+\newpage
+
+\subsection{Contributors}
+
+\begin{itemize}
+	\item \textbf{Lead author and editor} — Ron Korine: compilation, writing, and curation across all sections.
+	\item \textbf{Curriculum source} — Justin Johnson’s EECS498 (University of Michigan): structure, topic sequencing, and foundational materials.
+	\item \textbf{Figure and asset creators} — authors of publicly available figures, tutorials, and visualizations cited in-context throughout.
+\end{itemize}
+
+\paragraph{Named contributors}
+\begin{itemize}
+	\item \textbf{Adi Arbel} — contributions to the \emph{ReLIC} family and \emph{Plenoxels} sections; broad manuscript feedback on clarity, organization, and emphasis.
+\end{itemize}
+
+\paragraph{Community feedback}
+\noindent
+Thanks to colleagues and readers who suggested clarifications, spotted errors, and recommended references.  
+If you have contributed content or identify material that should be credited differently or removed, please write to \href{mailto:eecs498summary@gmail.com}{eecs498summary@gmail.com}. Updates will be reflected in subsequent revisions.
+
+\newpage
+
 \subsection{The Importance of Practice}
-Practice is crucial to mastering computer vision. As Richard Feynman famously said, “What I cannot build, I do not understand”. Actively engaging with exercises and implementing concepts is one of the most effective ways to solidify your understanding.
-
-To maximize learning, I highly recommend completing the course assignments provided for the EECS498 course, available \href{https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/}{here}. These assignments are designed to complement the lectures and provide hands-on experience with key concepts in deep learning and computer vision.
-
-Platforms like \href{https://www.colab.research.google.com/}{Google Colab} are excellent for running experiments, while \href{https://www.kaggle.com/}{Kaggle} offers competitive challenges to apply your skills. Pairing your efforts with tools like \href{https://wandb.ai/}{WandB}, \href{https://clear.ml/}{ClearML}, or \href{https://www.tensorflow.org/tensorboard}{TensorBoard} can streamline your workflow and enhance your learning journey.
-
-By tackling exercises alongside the lectures, you deepen your theoretical understanding and gain practical insights that are invaluable for real-world applications.
+“What I cannot build, I do not understand”. Hands-on work is essential for mastering vision. Pair the lectures with the EECS498 assignments (\href{https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/}{link}) to solidify core ideas through implementation. Use \href{https://colab.research.google.com/}{Google Colab} for experiments and \href{https://www.kaggle.com/}{Kaggle} for applied challenges, and track runs with \href{https://wandb.ai/}{WandB}, \href{https://clear.ml/}{ClearML}, or \href{https://www.tensorflow.org/tensorboard}{TensorBoard}. Building as you learn deepens theory and yields practical intuition for real-world tasks.
 
 \subsection{Final Remarks}
 

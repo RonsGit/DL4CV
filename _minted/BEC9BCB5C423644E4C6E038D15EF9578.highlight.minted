@@ -1,0 +1,23 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+				\PYG{c+c1}{\PYGZsh{} Pretrained Stable Diffusion: encoder E, decoder D, UNet eps\PYGZus{}phi}
+				\PYG{c+c1}{\PYGZsh{} Radiance field f\PYGZus{}theta: (x, y, z, d) \PYGZhy{}\PYGZgt{} (c1..c4, sigma)}
+				
+				\PYG{k}{for} \PYG{n}{step} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{num\PYGZus{}steps}\PYG{p}{)}\PYG{p}{:}
+					\PYG{c+c1}{\PYGZsh{} 1) Random camera pose; render latent z via volumetric rendering}
+					\PYG{n}{z} \PYG{o}{=} \PYG{n}{render\PYGZus{}latent}\PYG{p}{(}\PYG{n}{f\PYGZus{}theta}\PYG{p}{,} \PYG{n}{sample\PYGZus{}camera}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+					
+					\PYG{c+c1}{\PYGZsh{} 2) Pick diffusion time t and add noise}
+					\PYG{n}{t}   \PYG{o}{=} \PYG{n}{sample\PYGZus{}t}\PYG{p}{(}\PYG{p}{)}
+					\PYG{n}{eps} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn\PYGZus{}like}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)}
+					\PYG{n}{x\PYGZus{}t} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{alpha\PYGZus{}bar}\PYG{p}{[}\PYG{n}{t}\PYG{p}{]}\PYG{p}{)} \PYG{o}{*} \PYG{n}{z} \PYG{o}{+} \PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{alpha\PYGZus{}bar}\PYG{p}{[}\PYG{n}{t}\PYG{p}{]}\PYG{p}{)} \PYG{o}{*} \PYG{n}{eps}
+					
+					\PYG{c+c1}{\PYGZsh{} 3) Denoise with text T and form SDS gradient wrt z}
+					\PYG{n}{eps\PYGZus{}pred} \PYG{o}{=} \PYG{n}{eps\PYGZus{}phi}\PYG{p}{(}\PYG{n}{x\PYGZus{}t}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{T}\PYG{p}{)}                \PYG{c+c1}{\PYGZsh{} Stable Diffusion UNet}
+					\PYG{n}{g\PYGZus{}sds}    \PYG{o}{=} \PYG{n}{w}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{n}{eps\PYGZus{}pred} \PYG{o}{\PYGZhy{}} \PYG{n}{eps}\PYG{p}{)}
+					
+					\PYG{c+c1}{\PYGZsh{} 4) Backprop through rendering to update theta}
+					\PYG{n}{loss\PYGZus{}main}   \PYG{o}{=} \PYG{p}{(}\PYG{n}{g\PYGZus{}sds}\PYG{o}{.}\PYG{n}{detach}\PYG{p}{(}\PYG{p}{)} \PYG{o}{*} \PYG{n}{z}\PYG{p}{)}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{p}{)}     \PYG{c+c1}{\PYGZsh{} autograd handles chain rule}
+					\PYG{n}{loss\PYGZus{}sparse} \PYG{o}{=} \PYG{n}{binary\PYGZus{}entropy}\PYG{p}{(}\PYG{n}{w\PYGZus{}blend}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)}\PYG{p}{)}
+					\PYG{n}{loss}        \PYG{o}{=} \PYG{n}{lambda\PYGZus{}sds}\PYG{o}{*}\PYG{n}{loss\PYGZus{}main} \PYG{o}{+} \PYG{n}{lambda\PYGZus{}sparse}\PYG{o}{*}\PYG{n}{loss\PYGZus{}sparse}
+					\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;} \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;} \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{(}\PYG{p}{)}
+\end{MintedVerbatim}

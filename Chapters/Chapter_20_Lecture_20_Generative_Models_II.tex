@@ -2292,8 +2292,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		\noindent
 		A natural question arises: could increasing the dimensionality of the original latent vector \( z \) achieve the same effect as using a mapping network? In practice, the answer is no — the limitation lies not in the capacity of \( z \), but in its \emph{geometry}.
 		
-		\smallskip
-		\noindent
+		\newpage
 		Latents drawn from \( \mathcal{N}(0, I) \) are distributed isotropically: all directions in \( \mathcal{Z} \) are equally likely, with no preference for meaningful directions of variation. This forces the generator to learn highly nonlinear transformations to decode useful structure from \( z \), often leading to entangled image features. Merely increasing the dimension expands the space without addressing this fundamental mismatch.
 		
 		\smallskip
@@ -2306,84 +2305,78 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		
 		\smallskip
 		\noindent
-		\textbf{StyleGAN replaces PixelNorm with \textbf{Adaptive Instance Normalization (AdaIN)}, inspired by earlier work in neural style transfer.} Like classical \textbf{Instance Normalization (IN)}, AdaIN first normalizes feature maps \( x \in \mathbb{R}^{C \times H \times W} \) channel-wise:
+		\textbf{StyleGAN replaces PixelNorm with \textbf{Adaptive Instance Normalization (AdaIN)}, building on neural style transfer~\cite{huang2017_adain}.} In its \emph{original form}, AdaIN contains no learnable parameters: given a content feature map \( x \) and a style feature map \( y \), the operation aligns their channel-wise mean and variance,
 		\[
-		\mathrm{IN}(x) = \frac{x - \mu(x)}{\sigma(x)},
+		\mathrm{AdaIN}(x, y) = \sigma(y) \cdot \frac{x - \mu(x)}{\sigma(x)} + \mu(y),
 		\]
-		where \( \mu(x) \) and \( \sigma(x) \) are the per-channel mean and standard deviation, computed across spatial dimensions.
+		where \( \mu(\cdot) \) and \( \sigma(\cdot) \) are computed per channel across spatial dimensions. Here, the “style” is literally the statistics of another image, so AdaIN directly fuses content and style in feature space.
 		
 		\smallskip
 		\noindent
-		However, unlike IN — which uses fixed statistics — AdaIN modulates the normalized activations with \emph{learned, image-specific parameters} derived from the intermediate latent vector \( w \in \mathcal{W} \). This is achieved via a per-layer \textbf{affine transformation} (a fully connected layer, or linear map) denoted as \textbf{Block A}, which produces both a scale and a bias vector:
+		\textbf{StyleGAN adapts this idea to generative modeling.} Instead of borrowing statistics from an external style image, StyleGAN learns to \emph{predict} them from the latent vector. Concretely, the intermediate latent \( w \in \mathcal{W} \) is passed through a per-layer \textbf{affine transform} (Block~A), producing both scale and bias:
 		\[
-		\gamma(w), \; \beta(w) \in \mathbb{R}^{C},
+		\gamma(w), \; \beta(w) \in \mathbb{R}^C ,
 		\]
-		where \( C \) is the number of feature channels at that layer. The AdaIN operation is then:
+		where \( C \) is the number of channels at that layer. These act as the “style statistics” in the AdaIN equation:
 		\[
-		\mathrm{AdaIN}(x, w) = \gamma(w) \cdot \frac{x - \mu(x)}{\sigma(x)} + \beta(w),
+		\mathrm{AdaIN}(x, w) = \gamma(w) \cdot \frac{x - \mu(x)}{\sigma(x)} + \beta(w).
 		\]
-		where \( \gamma(w) \) (multiplicative modulation) is sometimes referred to as the “style,” and \( \beta(w) \) (additive bias) as the “bias.” This terminology aligns with the language used in classical neural style transfer, and is reused in StyleGAN to emphasize that these parameters shape visual attributes of the output.
+		This modification effectively turns AdaIN into a parametric, sample-dependent modulation layer.
 		
 		\smallskip
 		\noindent
-		\textbf{Why are there \(2 \times C\) outputs per layer from the affine transform?} Since AdaIN requires both a scale and a bias vector for each channel, the affine projection of \( w \) must output \( 2C \) parameters per layer: one for \(\gamma(w)\), one for \(\beta(w)\).
+		\textbf{Why are there \(2C\) outputs per layer?} Because each channel requires both a multiplicative scale \(\gamma\) and an additive bias \(\beta\), the affine projection of \( w \) must produce \( 2C \) values per layer.
 		
 		\medskip
 		\noindent
 		\textbf{Why this matters:}
 		\begin{itemize}
-			\item \textbf{Fine-grained, hierarchical control:} Injecting \( w \) at every layer allows coarse semantic factors (e.g., pose or head shape) to be modulated in early layers, while fine-grained details (e.g., lighting, skin texture) are refined deeper in the network.
-			
-			\item \textbf{Image-specific styling:} Unlike fixed normalization schemes like PixelNorm or BatchNorm, AdaIN allows each generated sample to have its own unique normalization behavior, guided by \( w \).
-			
-			\item \textbf{Explicit separation of content and style:} Since normalization removes original feature statistics and AdaIN reintroduces new ones, the generator separates structural content (from the constant input) from stylistic variation (from \( w \)). This contributes to the model’s ability to learn disentangled and controllable representations.
+			\item \textbf{Fine-grained, hierarchical control:} Injecting \( w \) at every layer allows coarse semantic factors (pose, head shape) to be set in early layers, while fine-grained details (lighting, skin texture) are refined in deeper layers.
+			\item \textbf{Image-specific styling:} Unlike fixed normalization schemes (PixelNorm, BatchNorm), AdaIN-with-affine grants each sample unique normalization behavior guided by \( w \).
+			\item \textbf{Explicit separation of content and style:} Normalization removes feature statistics, then AdaIN reintroduces new, learnable ones. Thus the generator cleanly separates spatial content (from its fixed input) from stylistic variation (from \( w \)).
 		\end{itemize}
 		
 		\paragraph{(3) Fixed Learned Input (Constant Tensor):}
 		\noindent
-		Another departure from prior GANs is the use of a \textbf{fixed learned input tensor} — a constant trainable block of shape \( 4 \times 4 \times C \), shared across all samples. Unlike traditional designs where the latent vector \( z \) or \( w \) is projected and reshaped into an initial feature map, StyleGAN uses this learned constant as a base “canvas.”
+		A second innovation in StyleGAN is the use of a \textbf{fixed learned input tensor}: a constant trainable block of shape \( 4 \times 4 \times C \), shared across all samples. Unlike earlier GANs, where \( z \) or \( w \) was reshaped into an initial feature map, StyleGAN treats this constant as a base canvas.
 		
 		\smallskip
 		\noindent
-		All sample-specific variation is introduced \emph{after} this input through style-based modulation (via AdaIN) and additive noise. This decouples the spatial origin of generation from the latent space, allowing the network to focus on progressively stylizing content rather than encoding layout directly into the input.
+		All variation is introduced \emph{after} this tensor, via style-based AdaIN modulation and additive noise. This decoupling is only viable because AdaIN provides a mechanism to inject sample-specific statistics into every layer. Without such modulation, a fixed input would collapse to identical outputs; with AdaIN, global structure emerges from the constant canvas, while semantic and stylistic variation is progressively layered in.
 		
 		\smallskip
 		\noindent
-		This design helps enforce:
+		This design enforces:
 		\begin{itemize}
-			\item \textbf{Consistent spatial structure:} With a shared initial canvas, early semantic features (e.g., face layout) emerge from convolutional patterns guided by style modulation — not by variations in input shape.
-			\item \textbf{Stronger disentanglement:} Since the generator no longer depends on \( z \) to define spatial structure, the latent code \( w \) can focus on controlling semantic and appearance attributes.
+			\item \textbf{Consistent spatial structure:} A shared input encourages stable layouts (e.g., facial geometry), while variations arise from modulation.
+			\item \textbf{Stronger disentanglement:} Since \( w \) no longer defines spatial structure, it can focus on semantic and appearance attributes.
 		\end{itemize}
 		
 		\paragraph{(4) Stochastic Detail Injection (Block B):}
 		\noindent
-		To introduce variation in fine-grained image details, StyleGAN adds uncorrelated Gaussian noise to each layer’s activation maps. Specifically, for each spatial location, a single-channel noise map (one value per pixel) is sampled from \( \mathcal{N}(0, 1) \) and broadcast across all feature channels. This noise is then scaled by a set of \textbf{learned per-channel weights} and added to the layer output:
-		
+		To introduce variation in fine-grained details, StyleGAN adds Gaussian noise per spatial location. A single-channel noise map is drawn from \( \mathcal{N}(0,1) \), broadcast across channels, scaled by learned per-channel strengths, and added:
 		\[
-		x' = x + \gamma \cdot \text{noise}, \quad \text{where } \gamma \in \mathbb{R}^C \text{ is learned}, \text{ and noise} \sim \mathcal{N}(0, 1).
+		x' = x + \gamma \cdot \text{noise}, \qquad \gamma \in \mathbb{R}^C.
 		\]
+		This stochastic injection (\textbf{Block~B}) allows natural variability (e.g., freckles, hair strands) without affecting global style.
 		
 		\smallskip
 		\noindent
-		This mechanism, illustrated in \textbf{Block B} of Figure~\ref{fig:chapter20_stylegan1_block}, injects spatially localized stochasticity without modifying the style code \( w \). It enables the model to synthesize realistic, non-deterministic textures such as freckles, hair strand variations, or subtle skin imperfections — all of which are naturally variable in real images.
-		
-		\smallskip
-		\noindent
-		Together, Blocks A and B represent a departure from the standard latent-to-image paradigm. Rather than learning a single deterministic mapping from latent space, StyleGAN decomposes image generation into two orthogonal factors:
+		Together, Blocks~A and~B mark a conceptual shift. Instead of mapping latent codes directly into images, StyleGAN decomposes generation into:
 		\begin{itemize}
-			\item \textbf{Global, semantic variation:} modulated by \( w \) through style-based affine transformations.
-			\item \textbf{Local, stochastic variation:} introduced via per-layer additive noise scaled by learned strengths.
+			\item \textbf{Global, semantic variation:} style-modulated via affine AdaIN.
+			\item \textbf{Local, stochastic variation:} injected via per-layer noise.
 		\end{itemize}
 		
 		\noindent
-		This separation of global and local effects improves sample diversity and realism, and supports stronger disentanglement across both coarse and fine image features.
+		\textbf{Summary of changes from the original AdaIN:} In Huang \& Belongie’s work, AdaIN is a non-parametric alignment of statistics between two images~\cite{huang2017_adain}. StyleGAN modifies it into a parametric operator: style statistics are no longer extracted but \emph{predicted} from latent codes. This repurposing enables a constant input tensor, because all per-sample variation is reintroduced through AdaIN and noise.
 		
 		\paragraph{(5) Style Mixing Regularization: Breaking Co-Adaptation Across Layers}
 		\noindent
 		A key goal of StyleGAN is to enable \emph{disentangled, scale-specific control} over the synthesis process: early generator layers should influence coarse structure (e.g., face shape, pose), while later layers refine medium and fine details (e.g., eye color, skin texture). This structured control relies on the assumption that styles injected at each layer should work independently of one another.
 		
-		\smallskip
-		\noindent
+		\newpage
+		
 		However, if the generator always receives the \emph{same latent vector} \( w \in \mathcal{W} \) at all layers during training, it may fall into a form of \textbf{co-adaptation}: early and late layers jointly specialize to particular combinations of attributes (e.g., blond hair \emph{only} appears with pale skin), resulting in entangled features and reduced diversity.
 		
 		\medskip
@@ -7122,7 +7115,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		
 		\newpage
 		\subsubsection*{Classifier-Free Guidance}
-		\label{subsubsec:classifier_free_guidance}
+		\label{subsubsec:chapter20_classifier_free_guidance}
 		
 		While classifier guidance enables powerful class-conditional generation, it comes with practical drawbacks: it requires training and storing a separate classifier, and incurs additional gradient computations at each sampling step. To overcome these limitations, Ho and Salimans~\cite{ho2022_classifierfree} proposed a remarkably simple alternative: \emph{classifier-free guidance}.
 		
@@ -10954,7 +10947,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		\]
 		
 		\noindent
-		where \( \vec{z}_t \) is the latent at timestep \( t \), \( \tau \) is the CLIP-based text embedding, and \( \lambda \in \mathbb{R}_+ \) is a guidance weight. This simple yet powerful mechanism allows the diffusion process to be steered toward text-conformant latents while balancing visual diversity. For a detailed derivation and architectural breakdown, see Section~\ref{subsubsec:classifier_free_guidance}.
+		where \( \vec{z}_t \) is the latent at timestep \( t \), \( \tau \) is the CLIP-based text embedding, and \( \lambda \in \mathbb{R}_+ \) is a guidance weight. This simple yet powerful mechanism allows the diffusion process to be steered toward text-conformant latents while balancing visual diversity. For a detailed derivation and architectural breakdown, see Section~\ref{subsubsec:chapter20_classifier_free_guidance}.
 		
 		\paragraph{Empirical Results and Ablations}
 		
@@ -11085,7 +11078,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		\label{subsubsec:chapter20_imagen_cfg}
 		
 		\noindent
-		As outlined in Section~\ref{subsubsec:classifier_free_guidance}, \emph{classifier-free guidance} (CFG) improves text-image alignment by combining predictions from a conditional and an unconditional denoising model. In particular, given a noisy sample \( \vec{z}_t \) at timestep \( t \), the denoised prediction is adjusted as
+		As outlined in Section~\ref{subsubsec:chapter20_classifier_free_guidance}, \emph{classifier-free guidance} (CFG) improves text-image alignment by combining predictions from a conditional and an unconditional denoising model. In particular, given a noisy sample \( \vec{z}_t \) at timestep \( t \), the denoised prediction is adjusted as
 		
 		\[
 		\hat{{x}}_0^{\,(\text{CFG})} = (1 + \lambda) \, \hat{\epsilon}_\theta(\vec{z}_t, t, y) - \lambda \, \hat{\epsilon}_\theta(\vec{z}_t, t, \varnothing),
@@ -12366,7 +12359,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 				
 				\medskip
 				\noindent
-				\textbf{Classifier-Free Guidance (CFG)} that we've covered in \ref{subsubsec:classifier_free_guidance} operates by training the diffusion model to handle both conditional and unconditional scenarios. During training, the conditioning input (e.g., text prompt \( y \)) is randomly omitted in a subset of training instances (commonly 50\%), compelling the model to learn representations that are robust to the absence of explicit conditions. At inference, the model combines the conditional prediction \( \epsilon_{\text{cond}} \) and the unconditional prediction \( \epsilon_{\text{uncond}} \) using a guidance scale \( \lambda \):
+				\textbf{Classifier-Free Guidance (CFG)} that we've covered in \ref{subsubsec:chapter20_classifier_free_guidance} operates by training the diffusion model to handle both conditional and unconditional scenarios. During training, the conditioning input (e.g., text prompt \( y \)) is randomly omitted in a subset of training instances (commonly 50\%), compelling the model to learn representations that are robust to the absence of explicit conditions. At inference, the model combines the conditional prediction \( \epsilon_{\text{cond}} \) and the unconditional prediction \( \epsilon_{\text{uncond}} \) using a guidance scale \( \lambda \):
 				
 				\[
 				\epsilon_{\text{CFG}} = \epsilon_{\text{uncond}} +\lambda \cdot (\epsilon_{\text{cond}} - \epsilon_{\text{uncond}})
@@ -13928,7 +13921,252 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
 		\noindent
 		Nonetheless, VAR’s success opens up multiple promising research directions: extending the coarse-to-fine AR paradigm to \textbf{multimodal transformers}, integrating with \textbf{prompt-based editing}, and exploring \textbf{learned topologies} beyond rectangular grids. Its architectural clarity and empirical strength position it as a foundation for the next generation of efficient generative models.
 		
+	\end{enrichment}
+	
+	\newpage
+	
+	\begin{enrichment}[DiT: Diffusion Transformers][subsection]
+		\label{enr:chapter20_dit}
 		
+		\paragraph{Motivation and context}
+		Most high-performing diffusion models have used U-Net backbones that combine convolutional biases (locality, translation equivariance) with occasional attention for long-range interactions~\cite{dhariwal2021_beats,rombach2022_ldm}. The central question addressed by \emph{Diffusion Transformers (DiT)}~\cite{peebles2023_dit} is whether a \emph{pure Vision-Transformer} denoiser operating in latent space can match or surpass U-Net diffusion when scaled. DiT answers in the affirmative: by patchifying VAE latents and processing tokens with transformer blocks modulated via \textbf{adaptive LayerNorm} (adaLN / adaLN-Zero), DiT exhibits clean scaling laws and achieves state-of-the-art ImageNet sample quality at competitive compute.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DiT_examples.jpg}
+			\caption{\textbf{Selected DiT samples on ImageNet}. Curated generations from class-conditional DiT-XL/2 at 512$\times$512 and 256$\times$256 illustrate fidelity and diversity across categories; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_examples}
+		\end{figure}
+		
+		\paragraph{High-level overview}
+		DiT is a standard DDPM/latent-diffusion denoiser $\epsilon_\theta$ that operates on VAE latents $z_0=E(x)\in\mathbb{R}^{I\times I\times C}$ (e.g., $I{=}32$, $C{=}4$ for $256^2$ images). With $q(z_t\!\mid\!z_0)=\mathcal{N}\!\big(\sqrt{\bar\alpha_t}z_0,(1{-}\bar\alpha_t)I\big)$ and $z_t=\sqrt{\bar\alpha_t}z_0+\sqrt{1{-}\bar\alpha_t}\,\epsilon$, the denoiser predicts $\epsilon_\theta(z_t,t,c)$ (and a diagonal covariance) by minimizing the usual noise MSE. Class-conditional training uses classifier-free guidance at sampling time.
+		
+		\subparagraph{Why transformers? Intuition.}
+		Transformers have appeared repeatedly in earlier parts of this chapter: as attention submodules inside U-Nets, as text encoders, and even as full transformer U-Nets. What distinguishes DiT is the decision to use a \emph{pure ViT backbone} directly on latent \emph{patch tokens}, removing convolutional pyramids and skip connections entirely. 
+		
+		\newpage
+		
+		This shift yields several concrete benefits that are hard to obtain with U-Nets:
+		\begin{itemize}
+			\item \textbf{Global-first context at every depth.} Self-attention connects all tokens in all layers, coordinating layout and long-range dependencies continuously, rather than bottlenecking global context at specific resolutions as in U-Nets.
+			\item \textbf{Simpler, predictable scaling.} DiT exposes two orthogonal knobs—\emph{backbone size} (S/B/L/XL) and \emph{token count} via patch size $p$—so quality tracks \emph{forward Gflops} in a near-linear fashion. This clarity is difficult with U-Nets whose compute varies non-trivially with resolution and pyramid design.
+			\item \textbf{Uniform conditioning via normalization.} Instead of injecting conditions via cross-attention at a few scales, DiT uses adaLN-style modulation in \emph{every} block, giving cheap, global, step-aware control without the sequence-length overhead of cross-attention.
+			\item \textbf{Latent-space efficiency.} Operating on VAE latents keeps sequence lengths manageable while retaining semantics. Convolutional U-Nets still pay per-pixel costs that grow with resolution, even in latent space.
+		\end{itemize}
+		In short, transformers are not merely “also used” here; the \emph{pure transformer} backbone plus \emph{compute-centric scaling} and \emph{adaLN-based conditioning} together produce a qualitatively different, more scalable denoiser than a U-Net.
+		
+		\paragraph{Method: architecture and components}
+		\subparagraph{Tokenization (patchify) of the latent.}
+		The noised latent $z_t\in\mathbb{R}^{I\times I\times C}$ is split into non-overlapping $p{\times}p{\times}C$ patches, each linearly projected to $d$-dim tokens with sine–cos positional embeddings. The sequence length is $T=(I/p)^2$. Reducing $p$ increases tokens (and Gflops) without changing parameters, acting as a clean \emph{compute knob}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_20/DiT_input_specification.jpg}
+			\caption{\textbf{Input specification and patchify}. A spatial latent of shape $I{\times}I{\times}C$ becomes $T{=}(I/p)^2$ tokens of width $d$. Smaller $p$ increases sequence length and compute; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_input}
+		\end{figure}
+		
+		\subparagraph{High-level overview: DiT as a transformer backbone for diffusion}
+		\noindent After tokenization, the task is to predict the additive noise on latent patches at diffusion timestep $t$ (and, optionally, class/text label $y$). \emph{Diffusion Transformers (DiT)}~\cite{peebles2023_dit} replace the U-Net with a stack of transformer blocks that operate on the patch-token sequence: (i) \textbf{patchify} latents into tokens; (ii) \textbf{transform} them with $N$ conditional blocks that inject $(t,y)$ at every depth; (iii) \textbf{project} tokens back to per-patch predictions (noise and optionally variance). The motivation is simple: self-attention offers global receptive fields and scales cleanly with depth/width; conditioning via adaptive normalization is cheap and pervasive.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DiT_architecture.jpg}
+			\caption{\textbf{DiT architecture at a glance.} Latent patches are embedded and passed through $N$ transformer blocks, then a per-token head maps back to the latent grid. Right: conditioning variants evaluated by \cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_arch}
+		\end{figure}
+		
+		\subparagraph{From AdaIN to adaLN: motivation and adaptation}
+		\label{par:chapter20_dit_adain}
+		\noindent Adaptive normalization offers cheap, global control by modulating normalized activations with per-channel scale/shift. StyleGAN’s AdaIN~\ref{enr:chapter20_stylegan1} applies $(\gamma,\beta)$ (from a style code) after InstanceNorm in convnets, broadcasting ``style’’ through every layer with negligible overhead. \textbf{DiT} carries this idea to transformers and diffusion by:
+		\begin{itemize}
+			\item Swapping \emph{InstanceNorm on feature maps} for \emph{LayerNorm on token embeddings}.
+			\item Replacing \emph{style latents} with \emph{diffusion timestep $t$ and label/text $y$} as the condition.
+			\item Adding \emph{zero-initialized residual gates} so very deep stacks start near identity and ``open’’ gradually (stability under heavy noise).
+		\end{itemize}
+		This preserves AdaIN’s low-cost, layer-wise control while fitting the sequence setting and the iterative denoising objective.
+		
+		\subparagraph{DiT block: adaLN and the adaLN-Zero variant}
+		\noindent The DiT backbone is a \emph{sequential} stack of $N$ standard Pre-LN transformer blocks. Each block consumes a token sequence $X\in\mathbb{R}^{L\times d}$ and applies
+		\[
+		\text{(i) LN} \rightarrow \text{MHSA} \rightarrow \text{residual},\qquad
+		\text{(ii) LN} \rightarrow \text{MLP} \rightarrow \text{residual}.
+		\]
+		\emph{Why this works.} MHSA lets every latent patch-token attend to all others, building \emph{global} spatial coherence; the MLP adds channel-wise capacity after attention has mixed information. Conditioning the \emph{LayerNorms} lets $t,y$ shape what MHSA/MLP see—cheaply and pervasively—so early steps favor coarse denoising and later steps focus on fine details.
+		
+		\newpage
+		 
+		\noindent\textbf{How conditioning is produced (per-block MLPs, as in DiT).}
+		Embed the diffusion timestep and label/text and concatenate to form
+		$c=\mathrm{Embed}(t,y)\in\mathbb{R}^e$ (sinusoidal $t$-embed + learned $y$-embed).
+		\emph{Each transformer block} $i$ owns a tiny modulation MLP
+		$g_i:\mathbb{R}^e\!\to\!\mathbb{R}^{6d}$ that outputs six $d$-vectors
+		\[
+		(\gamma_{1,i},\beta_{1,i},\alpha_{1,i},\gamma_{2,i},\beta_{2,i},\alpha_{2,i}) \;=\; g_i(c),
+		\]
+		one triplet for the attention branch ($k{=}1$) and one for the MLP branch ($k{=}2$).
+		This gives shallow and deep layers different ``views'' of $(t,y)$ with negligible parameter cost.\footnote{An equivalent implementation shares a trunk MLP across blocks and uses per-block linear heads to project into $(\gamma,\beta,\alpha)$; the official DiT code uses \emph{per-block} modulation MLPs.}
+		
+		\medskip
+		\noindent\textbf{adaLN (adaptive LayerNorm).}
+		At each Pre-LN site (before self-attention and before the MLP), replace vanilla LayerNorm
+		by a condition-dependent affine transform:
+		\[
+		\mathrm{adaLN}_k(X;c)\;=\;\gamma_{k,i}(c)\odot \mathrm{LN}(X)\;+\;\beta_{k,i}(c),\qquad k\in\{1,2\}.
+		\]
+		This injects $(t,y)$ everywhere using only elementwise operations, so the subsequent
+		computations \emph{see} features already bent toward the current diffusion step and class.
+		
+		\medskip
+		\noindent\textbf{adaLN-Zero (the variant used in practice).}
+		DiT’s best-performing blocks add \emph{gates} on the two residual branches via
+		$\alpha_{1,i}(c),\alpha_{2,i}(c)$ that are \emph{zero-initialized}.
+		With $X\!\in\!\mathbb{R}^{L\times d}$, a full block computes
+		\[
+		\begin{aligned}
+			Z_1 &= \mathrm{adaLN}_1(X;c), \qquad H \;=\; \mathrm{SelfAttn}(Z_1), \qquad U \;=\; X \;+\; \alpha_{1,i}(c)\odot H,\\
+			Z_2 &= \mathrm{adaLN}_2(U;c), \qquad M \;=\; \mathrm{MLP}(Z_2), \qquad Y \;=\; U \;+\; \alpha_{2,i}(c)\odot M.
+		\end{aligned}
+		\]
+		Here $\mathrm{SelfAttn}$ is the standard \emph{multi-head} scaled dot-product self-attention
+		(MHSA); some figures abbreviate it as ``self-attn''. \emph{Self-attention} lets every token
+		attend to every other (global communication); the \emph{multi-head} factorization runs several
+		attentions in parallel so different heads can specialize (e.g., shape vs.\ texture), then
+		concatenates and projects them back to $d$.
+		Zero-initialized gates make the whole stack start near identity ($Y\!\approx\!X$), preventing
+		early instabilities on very noisy inputs; during training the model learns where to ``open''
+		attention/MLP paths. Empirically, \textbf{adaLN-Zero} is the variant used for final models;
+		plain adaLN appears mainly in ablations.
+		
+		\subparagraph{Head and parameterization}
+		\noindent After the final LayerNorm, a linear head maps each token to $p{\times}p{\times}(2C)$ values
+		(per patch; commonly $p{=}1$), then reshapes to the latent grid. The first $C$ channels parameterize
+		the predicted noise; the remaining $C$ optionally parameterize a diagonal variance.
+		Across $T$ denoising steps, DiT iteratively predicts and removes noise to recover a clean latent
+		$x_0$; a pretrained VAE decoder then converts $x_0$ to pixels (e.g., $256{\times}256$ RGB).
+		Intuitively: MHSA builds global structure across patches, the MLP refines channel-wise details,
+		adaLN/Zero injects timestep/class signals at every depth, and the head ``de-tokenizes'' back to a
+		spatial latent that the VAE upsamples to the final image.
+		
+		\newpage
+		
+		\subparagraph{Conditioning and guidance}
+		\noindent The condition $c$ is the concatenation of timestep and class/text embeddings. Classifier-free guidance is enabled by randomly replacing the label with a learned ``null’’ embedding during training. At inference, combine unconditional and conditional predictions as
+		\[
+		\tilde{\epsilon}\;=\;\epsilon_{\emptyset}\;+\;s\,(\epsilon_{y}-\epsilon_{\emptyset}),\qquad s>1,
+		\]
+		steering samples toward the target class/text. Among conditioning routes (in-context tokens, cross-attention, adaLN, adaLN-Zero), \textbf{adaLN-Zero} consistently converges fastest and achieves the best FID with negligible overhead; cross-attention is more flexible for long text but typically adds $\sim 15\%$ compute.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DiT_conditioning_strategies.jpg}
+			\caption{\textbf{Conditioning ablations.} On DiT-XL/2, adaLN-Zero outperforms alternatives in both speed and FID; cross-attention trades flexibility for extra compute~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_cond}
+		\end{figure}
+		
+		\subparagraph{Training objective and setup}
+		\noindent DiT trains end-to-end in latent space with the standard denoising objective. For VAE-encoded images $x_0$, noise $\epsilon\!\sim\!\mathcal{N}(0,I)$, timestep $t$, and condition $y$,
+		\[
+		\mathcal{L} \;=\; \mathbb{E}_{x_0,\epsilon,t,y}\Big[\;\big\|\epsilon \;-\; \hat{\epsilon}_\theta(x_t,t,y)\big\|_2^2\;\Big], 
+		\quad x_t \;=\; \sqrt{\bar{\alpha}_t}\,x_0 \;+\; \sqrt{1-\bar{\alpha}_t}\,\epsilon.
+		\]
+		Classifier-free guidance is enabled by dropping $y$ with some probability during training and learning a null embedding. In practice, AdamW with cosine LR decay and a brief warm-up are used; adaLN-Zero’s identity start helps avoid early instabilities in deep attention stacks while maintaining the capacity benefits of transformers.
+		
+		\newpage
+		
+		\subsubsection{Experiments and ablations}
+		\subparagraph{Scaling and SOTA comparisons.}
+		Compute-centric scaling is the core story. DiT exposes two orthogonal axes: \emph{backbone size} (S/B/L/XL) and \emph{token count} via patch size ($p\!\in\!\{8,4,2\}$). Increasing either axis improves FID at fixed training steps; the best results combine large backbones and small patches.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{Figures/Chapter_20/DiT_comparison_of_scaling.jpg}
+			\caption{\textbf{Scaling behavior and comparison to diffusion baselines}. Left: FID steadily improves with model flops over 400K iterations across S/B/L/XL. Right: DiT-XL/2 is compute-efficient and outperforms prior U-Net diffusion baselines (ADM/LDM). Bubble area indicates flops; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_scaling_sota}
+		\end{figure}
+		
+		\subparagraph{Training-time scaling trends.}
+		Holding $p$ fixed and increasing backbone (S$\rightarrow$XL) lowers FID throughout training; holding backbone fixed and decreasing $p$ (more tokens) also lowers FID. The separation between curves indicates robust compute-to-quality scaling across 12 configurations.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.8\textwidth]{Figures/Chapter_20/DiT_scaling.jpg}
+			\caption{\textbf{FID-50K vs.\ training steps under model/patch sweeps}. Scaling depth/width and reducing patch size (more tokens) both improve sample quality at all stages; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_scaling_curves}
+		\end{figure}
+		
+		\newpage
+		
+		\subparagraph{Qualitative scaling: more flops $\rightarrow$ better images.}
+		A large grid sampled at 400K steps from \emph{the same} noise and label shows that increasing transformer Gflops—either via larger backbones or more tokens—improves visual fidelity. Left-to-right increases backbone size; top-to-bottom decreases patch size (more tokens).
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DiT_larger_transformer_ablation.jpg}
+			\caption{\textbf{Qualitative scaling analysis}. Bigger backbones and smaller patches yield sharper textures and more coherent structure. The most convincing results appear in the bottom-right (XL with $p{=}2$); credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_visual_scaling}
+		\end{figure}
+		
+		\newpage
+		
+		\subparagraph{Gflops predict FID.}
+		Across all 12 DiTs at 400K steps, transformer \emph{forward} Gflops strongly correlates with FID (reported correlation $\approx\!-0.93$). This metric predicts quality better than parameter count and makes design trade-offs explicit.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.65\textwidth]{Figures/Chapter_20/DiT_GFLOPS_FID.jpg}
+			\caption{\textbf{Transformer Gflops vs.\ FID-50K}. A strong inverse correlation indicates predictable quality gains with higher compute; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_gflops_fid}
+		\end{figure}
+		
+		\subparagraph{Total training compute vs.\ FID.}
+		Plotting FID against \emph{total training compute} shows smooth, near power-law improvements. Larger models form a lower envelope: for the same train compute, bigger models reach better FID than smaller ones trained longer.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.65\textwidth]{Figures/Chapter_20/DiT_compute_FID.jpg}
+			\caption{\textbf{Training compute vs.\ FID}. Larger DiTs use training compute more efficiently, suggesting “train larger for shorter” can be superior to “train smaller for longer”; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_compute_fid}
+		\end{figure}
+		
+		\subparagraph{Sampling compute cannot replace model compute.}
+		Increasing denoising steps improves quality for \emph{each} model, but small models cannot catch large ones even with more sampling steps (higher inference Gflops). For a fixed sampling budget, it is typically better to deploy a larger DiT at fewer steps than a smaller DiT at many steps.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_20/DiT_compute_FID_ablation.jpg}
+			\caption{\textbf{Sampling compute vs.\ FID-10K}. Small models do not close the gap to large ones by sampling longer; large models constitute the lower envelope of the quality–budget frontier; credit: Peebles \& Xie~\cite{peebles2023_dit}.}
+			\label{fig:chapter20_dit_sampling_vs_modelcompute}
+		\end{figure}
+		
+		\subparagraph{Benchmark summary (ImageNet 256/512).}
+		On ImageNet-256, DiT-XL/2 with classifier-free guidance (scale $\approx$1.5) attains \textbf{FID $\approx$ 2.27}, \textbf{sFID $\approx$ 4.60}, and \textbf{IS $\approx$ 278}, exceeding LDM and ADM variants. At 512, DiT maintains strong results with \emph{FID $\approx$ 3.04}. Precision/Recall indicate balanced fidelity/diversity relative to GAN and diffusion baselines. (Exact tables are in \cite{peebles2023_dit}; summarized here for brevity.)
+		
+		\paragraph{What changed vs.\ Stable Diffusion and why it matters}
+		\begin{itemize}
+			\item \textbf{Backbone.} U-Net (ResNet blocks + spatial attention at select scales) $\Rightarrow$ \textbf{pure ViT} over patch tokens. DiT’s global-first attention coordinates layout at all depths; no hand-crafted multi-scale pyramid or skip connections are required.
+			\item \textbf{Conditioning.} Cross-attention to text (costly, sequence-length dependent) $\Rightarrow$ \textbf{adaLN / adaLN-Zero} (cheap, global, step-aware). This adapts \textbf{AdaIN}-style modulation (\autoref{enr:chapter20_stylegan1}) to LayerNorm, distributing conditioning throughout the network with near-zero overhead and superior FID (see \autoref{fig:chapter20_dit_cond}).
+			\item \textbf{Scaling lens.} Params and resolution-dependent conv costs $\Rightarrow$ \textbf{forward Gflops} as the primary metric. As shown in \autoref{fig:chapter20_dit_gflops_fid}, Gflops strongly predicts FID and guides trade-offs between model size and token count.
+			\item \textbf{Compute knobs.} Channel/width heuristics and UNet depth $\Rightarrow$ \textbf{orthogonal knobs} (backbone size S/B/L/XL and patch size $p$). Figures \ref{fig:chapter20_dit_scaling_sota}–\ref{fig:chapter20_dit_visual_scaling} demonstrate monotonic quality gains along both axes.
+			
+			\newpage
+			
+			\item \textbf{Variance head.} DiT’s head predicts noise and a diagonal covariance per spatial location, enabling variance-aware denoising in latent space.
+		\end{itemize}
+		\emph{Outcome.} At similar or lower compute, DiT matches or surpasses U-Net diffusion on ImageNet, and scales predictably (quantitatively in \autoref{fig:chapter20_dit_gflops_fid}, \autoref{fig:chapter20_dit_compute_fid}; qualitatively in \autoref{fig:chapter20_dit_visual_scaling}).
+		
+		\paragraph{Relation to prior and follow-ups}
+		AdaIN-based control in StyleGAN1 (\autoref{enr:chapter20_stylegan1}) motivated normalization-as-conditioning; DiT shows a transformer-native realization (adaLN-Zero). Subsequent work such as L-DiT~\cite{yu2023_ldit} scales DiT further in latent space, reporting even stronger ImageNet results. DiT complements latent U-Nets~\cite{rombach2022_ldm}: both benefit from classifier-free guidance and VAE latents, but DiT offers LLM-like scaling and a simpler global-context story.
+		
+		\subsubsection{Limitations and future work}
+		\begin{itemize}
+			\item \textbf{Memory/latency at small $p$.} Reducing $p$ increases tokens $T$ and attention memory quadratically in $I$; efficient attention, sparse routing, or hierarchical tokenization are promising.
+			\item \textbf{Inductive bias.} Removing convolutions removes explicit translation equivariance and pyramids; hybrid conv–transformer blocks or relative position biases may improve data efficiency.
+			\item \textbf{Long-sequence conditioning.} Cross-attention for long text is flexible but adds compute; extending adaLN-style modulation to long sequences or hybridizing with lightweight cross-attention is an open avenue.
+		\end{itemize}
+		
+		\paragraph{Practical recipe}
+		Train in latent space with a strong VAE. Pick DiT-B/L/XL by budget. Start at $p{=}4$, drop to $p{=}2$ if memory allows. Expect monotonic FID gains by increasing backbone size and tokens (\autoref{fig:chapter20_dit_scaling_curves}, \autoref{fig:chapter20_dit_gflops_fid}). Prefer a larger DiT with fewer steps over a smaller DiT with many steps for a fixed sampling budget (\autoref{fig:chapter20_dit_sampling_vs_modelcompute}).
 	\end{enrichment}
 	
 \end{enrichment}

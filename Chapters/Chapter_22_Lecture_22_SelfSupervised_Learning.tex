@@ -229,7 +229,7 @@ These methods bridge the gap between contrastive and generative modeling, captur
 
 \newpage
 \section{Contrastive Methods}
-\label{sec:chapter22_ssl_contrastive}
+\label{sec:chapter22_ssl_contrastive_methods}
 
 \subsection{Motivation for Contrastive Learning}
 \label{subsec:chapter22_contrastive_motivation}
@@ -4724,23 +4724,56 @@ Beyond classification, DINOv2 exhibits strong generalization across a range of d
 
 \medskip
 \noindent
-\textbf{Summary.} Together, these results highlight DINOv2’s versatility: its features are linearly decodable across diverse visual domains, from global semantics to local spatial cues. Crucially, these capabilities emerge from a single frozen model trained on unlabeled natural images, underscoring the effectiveness of large-scale, patchwise self-distillation.
+\textbf{Summary.} These results underscore DINOv2’s versatility: a single frozen backbone trained on unlabeled images yields linearly decodable features spanning global semantics and local spatial cues. Yet, as models and datasets continue to scale, new challenges emerge—most notably the degradation of dense patch-level features and the need for resolution robustness. These limitations motivate \emph{DINOv3}, which extends DINOv2 with stability-oriented innovations such as Gram anchoring, high-resolution adaptation, and efficient multi-student distillation, while preserving strong global transferability.
 
-\paragraph{From Self-Distillation to Clustering-Based Objectives}
+\newpage
+
+\subsection{DINOv3: Quick Overview}
+\label{subsec:chapter22_dinov3}
+
+\paragraph{Motivation}  
+DINOv2 \ref{subsec:chapter22_dinov2_intro} introduced a strong self-distillation recipe: ViTs trained on unlabeled images can be used as \emph{frozen} backbones whose features are linearly decodable for both global and local tasks. When researchers attempted to scale this recipe—training new models from scratch with larger ViTs, broader curated corpora, and longer teacher–student schedules—three limits consistently surfaced and constrained dense transfer in practice:
+
+\begin{itemize}
+	\item \textbf{Dense feature degradation.} In extended self-distillation runs, the global (CLS) embedding continues to improve for image-level classification, but patch-level tokens gradually lose semantic organization. Inter-patch similarities and attention align less reliably with real object boundaries or parts. As a result, a backbone that excels at classification provides weaker frozen features for segmentation, detection, or correspondence. This drift originates in the training dynamics and directly reduces the backbone’s utility for dense tasks.
+	\item \textbf{Resolution sensitivity.} Models trained predominantly at a fixed resolution (e.g., $224$) with standard resize–crop internalize a positional geometry and token layout tuned to that scale. When the same backbone is applied to larger images ($384$–$768$ px) or unusual aspect ratios, spatial calibration slips and local consistency degrades. Global probes remain strong, but dense predictions suffer.
+	\item \textbf{Training efficiency.} Producing a full family of deployable backbones by training each student independently is compute-heavy. Long schedules further intensify feature drift and resolution brittleness. A recipe that can produce multiple high-quality backbones \emph{in one pass}, while preserving dense semantics and improving resolution transfer, is critical for making frozen towers broadly reusable.
+\end{itemize}
+
+DINOv3 is motivated by addressing these shortcomings: stabilizing patch-level semantics during long training, ensuring that frozen encoders generalize across resolutions and aspect ratios, and amortizing pretraining costs while delivering a versatile suite of vision backbones.
+
+\paragraph{What DINOv3 changes}  
+DINOv3 updates the DINOv2 recipe with targeted mechanisms that tackle these limits while retaining the simplicity of teacher–student self-distillation.
+\begin{itemize}
+	\item \textbf{Relational stabilization.} A Gram anchoring loss matches student and teacher \emph{pairwise} relations among patch embeddings by aligning their Gram matrices. This preserves neighborhood structure and inter-patch similarities, counteracting late-stage drift and keeping object- and part-level cues coherent in the frozen dense features.
+	\item \textbf{Resolution robustness.} A short high-resolution adaptation phase with positional-encoding jitter re-calibrates token geometry for larger inputs and varied aspect ratios. The same frozen backbone then maintains spatial alignment at higher resolutions common in detection and segmentation without sacrificing global recognition.
+	\item \textbf{Efficient multi-student distillation.} One strong teacher supervises multiple students of different capacities in parallel, sharing the expensive teacher forward pass. This amortizes compute and produces a family of backbones—from lightweight to very large—with consistent feature quality for different latency and memory budgets.
+	\item \textbf{Expanded, curated data regime.} Beyond raw scale, stronger curation and balance broaden concept coverage and stabilize patch-level statistics. This improves both global transfer and the spatial consistency demanded by dense tasks across diverse domains.
+\end{itemize}
+
+\paragraph{Position in the SSL landscape}  
+Building on MoCo, BYOL, and DINOv2 \cite{he2020_moco,grill2020_byol,caron2021_selfsupervised,oquab2023_dinov2}, DINOv3 pushes three fronts.  
+\emph{Dense patch-level learning.} Unlike purely global embedding approaches, it supervises and stabilizes per-token structure, enabling strong dense prediction with lightweight heads.  
+\emph{Scalability.} Larger ViTs trained on vastly larger, better-curated corpora remain stable, yielding robust features across domains.  
+\emph{Universality.} Frozen representations are competitive with supervised baselines on classification, segmentation, detection, depth, and retrieval, reducing reliance on labeled data.
+
+DINOv3 is a scaled, universal vision backbone that stabilizes what matters for dense transfer. By preserving inter-patch structure, re-aligning for higher resolutions, distilling many students efficiently, and training on a broader curated corpus, it retains DINOv2’s global strengths while delivering substantially more reliable local features. The next part quantifies these effects relative to \ref{subsec:chapter22_dinov2_intro} and ablates the contribution of each component.
+
+\paragraph{Practical gains}  
+For practitioners, DINOv3 provides a stronger and more universal foundation than earlier self-supervised backbones. It is trained at unprecedented scale—up to 7B-parameter ViTs on 1.7B carefully curated images—where the curation pipeline filters out duplicates and low-quality samples while balancing semantic coverage. This results in frozen encoders with both robust global features and stable dense representations. Compared to \ref{subsec:chapter22_dinov2_intro}, DINOv3 improves linear probing on ImageNet by several points, narrows the gap with fully supervised baselines, and yields consistent gains on dense tasks, e.g., +2.4 mIoU on ADE20K semantic segmentation and +1.8 mAP on COCO detection. These improvements transfer smoothly across resolutions and domains, making the features more reliable for real-world inputs. In addition, a family of distilled variants is released, offering models from lightweight to billion-scale with aligned feature geometry. In practice, DINOv3 is not just bigger—it is more curated, more stable, and more versatile, giving practitioners a dependable starting point for classification, detection, segmentation, retrieval, or depth estimation pipelines.  
+
+\subsubsection{From Self-Distillation to Clustering-Based Objectives}
 \label{par:chapter22_transition_swav}
 
 \noindent
-The self-supervised methods explored thus far—including BYOL, SimSiam, iBOT, and DINOv2, all belong to the family of \emph{self-distillation} approaches. These frameworks rely on predictive objectives: the model learns to align the representations of differently augmented views of the same image, often using momentum encoders, stop-gradient mechanisms, depending mostly on asymmetries to progress learning. Whether operating at the level of global features (e.g., CLS tokens) or local patch embeddings, these methods implicitly structure the representation space by enforcing consistency across views.
+The self-supervised methods explored thus far—including BYOL, SimSiam, DINO, iBOT, DINOv2 and DINOv3, all belong to the family of \emph{self-distillation} approaches. These frameworks rely on predictive objectives: the model learns to align the representations of differently augmented views of the same image, often using momentum encoders, stop-gradient mechanisms, depending mostly on asymmetries to progress learning. Whether operating at the level of global features (e.g., CLS tokens) or local patch embeddings, these methods implicitly structure the representation space by enforcing consistency across views.
 
 \medskip
 \noindent
-However, prediction is not the only route to self-supervision. An alternative and conceptually distinct line of research replaces pairwise alignment with \emph{clustering-based objectives}. These methods seek to directly partition the feature space into discrete prototype assignments, encouraging similar images to group together. Crucially, they impose additional constraints—such as entropy regularization or balanced assignments—to prevent degenerate solutions in which all images collapse onto a few prototypes.
-
-\medskip
-\noindent
-Among these clustering-based methods, \textbf{SwAV} (Swapped Assignments between Views) plays a central role. Rather than predicting embeddings or token alignments, SwAV performs online prototype assignment for each view and encourages cross-view consistency by swapping assignments. To ensure balanced and informative usage of prototypes, SwAV incorporates \emph{Sinkhorn–Knopp centering}—a key connection to DINOv2’s later refinements. As a result, SwAV bridges contrastive learning and unsupervised clustering, offering an alternative path toward semantically structured representations.
+Prediction is not the only route to self-supervision. A distinct line of research instead uses \emph{clustering-based objectives}, which partition the feature space into discrete prototype assignments so that similar images group together. To avoid collapse onto a few prototypes, these methods enforce constraints such as entropy regularization or balanced assignments. A central example is \textbf{SwAV} (Swapped Assignments between Views), which performs online prototype assignment for each view and enforces cross-view consistency by swapping assignments. Balanced prototype usage is ensured through \emph{Sinkhorn–Knopp centering}, a mechanism later echoed in DINOv2. SwAV thus bridges contrastive learning and unsupervised clustering, providing an alternative path toward semantically structured representations.
 
 \newpage
+
 \section{Clustering Methods}
 \label{sec:chapter22_clustering_ssl_methods}
 

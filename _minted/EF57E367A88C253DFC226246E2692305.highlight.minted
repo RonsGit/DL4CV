@@ -1,0 +1,27 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+			\PYG{k+kn}{import} \PYG{n+nn}{torch}\PYG{n+nn}{.}\PYG{n+nn}{nn} \PYG{k}{as} \PYG{n+nn}{nn}
+			\PYG{k+kn}{from} \PYG{n+nn}{timm}\PYG{n+nn}{.}\PYG{n+nn}{models}\PYG{n+nn}{.}\PYG{n+nn}{regnet} \PYG{k+kn}{import} \PYG{n}{RegStage}
+			
+			\PYG{k}{class} \PYG{n+nc}{STCConnector}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{)}\PYG{p}{:}
+				\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{config}\PYG{p}{,} \PYG{n}{depth}\PYG{p}{,} \PYG{n}{mlp\PYGZus{}depth}\PYG{p}{)}\PYG{p}{:}
+					\PYG{c+c1}{\PYGZsh{} Temporal and spatial downsampling factor}
+					\PYG{n}{td}\PYG{p}{,} \PYG{n}{sd} \PYG{o}{=} \PYG{n}{config}\PYG{o}{.}\PYG{n}{td}\PYG{p}{,} \PYG{n}{config}\PYG{o}{.}\PYG{n}{sd}
+					\PYG{c+c1}{\PYGZsh{} Input and output hidden dimension}
+					\PYG{n}{in\PYGZus{}size}\PYG{p}{,} \PYG{n}{out\PYGZus{}size} \PYG{o}{=} \PYG{n}{config}\PYG{o}{.}\PYG{n}{in\PYGZus{}size}\PYG{p}{,} \PYG{n}{config}\PYG{o}{.}\PYG{n}{out\PYGZus{}size}
+					\PYG{c+c1}{\PYGZsh{} The first RegStage block}
+					\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{s1} \PYG{o}{=} \PYG{n}{RegStage}\PYG{p}{(}\PYG{n}{depth}\PYG{o}{=}\PYG{n}{depth}\PYG{p}{,} \PYG{n}{in\PYGZus{}chs}\PYG{o}{=}\PYG{n}{in\PYGZus{}size}\PYG{p}{,} \PYG{n}{out\PYGZus{}chs}\PYG{o}{=}\PYG{n}{out\PYGZus{}size}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} Conv3D downsampler}
+					\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{downsampler} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv3d}\PYG{p}{(}\PYG{n}{in\PYGZus{}channels}\PYG{o}{=}\PYG{n}{out\PYGZus{}size}\PYG{p}{,}
+					\PYG{n}{out\PYGZus{}channels}\PYG{o}{=}\PYG{n}{out\PYGZus{}size}\PYG{p}{,}
+					\PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{p}{(}\PYG{n}{td}\PYG{p}{,} \PYG{n}{sd}\PYG{p}{,} \PYG{n}{sd}\PYG{p}{)}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} The second RegStage block}
+					\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{s2} \PYG{o}{=} \PYG{n}{RegStage}\PYG{p}{(}\PYG{n}{depth}\PYG{o}{=}\PYG{n}{depth}\PYG{p}{,} \PYG{n}{in\PYGZus{}chs}\PYG{o}{=}\PYG{n}{out\PYGZus{}size}\PYG{p}{,} \PYG{n}{out\PYGZus{}chs}\PYG{o}{=}\PYG{n}{out\PYGZus{}size}\PYG{p}{)}
+					\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{proj} \PYG{o}{=} \PYG{n}{build\PYGZus{}mlp}\PYG{p}{(}\PYG{n}{mlp\PYGZus{}depth}\PYG{p}{,} \PYG{n}{out\PYGZus{}size}\PYG{p}{,} \PYG{n}{out\PYGZus{}size}\PYG{p}{)}
+					
+				\PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
+					\PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{s1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+					\PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{downsampler}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+					\PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{s2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+					\PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{proj}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+					\PYG{k}{return} \PYG{n}{x}
+\end{MintedVerbatim}

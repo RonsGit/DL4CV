@@ -1,0 +1,28 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+			\PYG{c+c1}{\PYGZsh{} Pseudocode (faithful to the paper\PYGZsq{}s Sec. 3.2 definitions; not source code).}
+			\PYG{c+c1}{\PYGZsh{} Inputs: segment s with K frames, frame tokens \PYGZob{}P\PYGZca{}t in R\PYGZca{}\PYGZob{}u x d\PYGZcb{}\PYGZcb{}\PYGZus{}\PYGZob{}t=1..K\PYGZcb{}}
+			\PYG{c+c1}{\PYGZsh{} Output: Z\PYGZca{}s in R\PYGZca{}\PYGZob{}M x d\PYGZcb{} (M \PYGZlt{}\PYGZlt{} K*u)}
+			
+			\PYG{k}{def} \PYG{n+nf}{hierarchical\PYGZus{}token\PYGZus{}merging}\PYG{p}{(}\PYG{n}{P\PYGZus{}list}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{C}\PYG{p}{)}\PYG{p}{:}
+				\PYG{c+c1}{\PYGZsh{} Flatten K x u tokens in the segment to a list T (length R0 = K*u)}
+				\PYG{n}{T} \PYG{o}{=} \PYG{n}{concat}\PYG{p}{(}\PYG{p}{[}\PYG{n}{P} \PYG{k}{for} \PYG{n}{P} \PYG{o+ow}{in} \PYG{n}{P\PYGZus{}list}\PYG{p}{]}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} T: [R0, d]}
+				\PYG{n}{R} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{T}\PYG{p}{)}
+				\PYG{k}{while} \PYG{n}{R} \PYG{o}{\PYGZgt{}} \PYG{n}{M}\PYG{p}{:}
+					\PYG{c+c1}{\PYGZsh{} Random disjoint partition (|P\PYGZus{}i| = r\PYGZus{}i, |Q\PYGZus{}i| = R \PYGZhy{} r\PYGZus{}i)}
+					\PYG{n}{P\PYGZus{}i}\PYG{p}{,} \PYG{n}{Q\PYGZus{}i} \PYG{o}{=} \PYG{n}{random\PYGZus{}partition}\PYG{p}{(}\PYG{n}{T}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} Head\PYGZhy{}averaged cosine similarity between every p in P\PYGZus{}i and q in Q\PYGZus{}i}
+					\PYG{n}{S} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
+					\PYG{k}{for} \PYG{n}{p} \PYG{o+ow}{in} \PYG{n}{P\PYGZus{}i}\PYG{p}{:}
+						\PYG{k}{for} \PYG{n}{q} \PYG{o+ow}{in} \PYG{n}{Q\PYGZus{}i}\PYG{p}{:}
+							\PYG{n}{S}\PYG{p}{[}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,}\PYG{n}{q}\PYG{p}{)}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{C}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{p}{,} \PYG{n}{q}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{p}{)} \PYG{k}{for} \PYG{n}{c} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{C}\PYG{p}{)}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} Select top\PYGZhy{}|P\PYGZus{}i| pairs by similarity (greedy, disjoint matching)}
+					\PYG{n}{matches} \PYG{o}{=} \PYG{n}{top\PYGZus{}pairs}\PYG{p}{(}\PYG{n}{S}\PYG{p}{,} \PYG{n}{k}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{P\PYGZus{}i}\PYG{p}{)}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} Merge each matched pair by average pooling}
+					\PYG{n}{merged} \PYG{o}{=} \PYG{p}{[}\PYG{n}{avg}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{)} \PYG{k}{for} \PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{matches}\PYG{p}{]}
+					\PYG{c+c1}{\PYGZsh{} Unpaired tokens are carried over; update T and R}
+					\PYG{n}{unpaired} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{P\PYGZus{}i} \PYG{o}{+} \PYG{n}{Q\PYGZus{}i}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n+nb}{set}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x} \PYG{k}{for} \PYG{n}{pair} \PYG{o+ow}{in} \PYG{n}{matches} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{pair}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+					\PYG{n}{T} \PYG{o}{=} \PYG{n}{merged} \PYG{o}{+} \PYG{n}{unpaired}
+					\PYG{n}{R} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{T}\PYG{p}{)}
+					\PYG{c+c1}{\PYGZsh{} Return first M tokens in temporal order within the segment (implementation detail)}
+				\PYG{k}{return} \PYG{n}{select\PYGZus{}order\PYGZus{}preserving}\PYG{p}{(}\PYG{n}{T}\PYG{p}{,} \PYG{n}{M}\PYG{p}{)}     \PYG{c+c1}{\PYGZsh{} Z\PYGZca{}s: [M, d]}
+\end{MintedVerbatim}

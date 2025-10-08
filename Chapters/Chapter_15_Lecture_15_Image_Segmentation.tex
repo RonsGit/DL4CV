@@ -646,6 +646,7 @@ A fundamental property of transposed convolution is that its forward pass is mat
 \noindent The development of instance segmentation models continues to evolve, driven by the increasing demand for high-precision vision systems across various domains.
 
 \subsection{Mask R-CNN: A Two-Stage Framework for Instance Segmentation}
+\label{subsec:chapter15_mask_rcnn}
 
 \noindent \textbf{Mask R-CNN} extends \textbf{Faster R-CNN}, a widely used two-stage object detection framework, by incorporating a dedicated branch for per-instance segmentation masks. While Faster R-CNN predicts bounding boxes and class labels, Mask R-CNN further refines this process by generating high-resolution segmentation masks for each detected object.
 
@@ -911,7 +912,790 @@ where:
 	\end{enrichment}
 \end{enrichment}
 
+\newpage
 
+\begin{enrichment}[Striding Towards SOTA Image Segmentation][section]
+	\label{enr:sec_chapter15_towards_sota_segmentation}
+	\noindent\textbf{Foundational segmentation systems.} Modern segmentation research has converged on two complementary paradigms: \emph{promptable foundation models}, which can segment “anything” given sparse cues, and \emph{universal task-trained transformers}, which learn to output semantic, instance, or panoptic masks in a closed set. Our focus here is on the first category. \emph{Segment Anything (SAM)} (2023) reframed interactive segmentation as promptable inference (points, boxes, text) at scale and bootstrapped quality via the SA-1B data engine \cite{kirillov2023_sam}. Extending this to videos, \emph{SAM~2} (2024) introduced a lightweight \emph{streaming memory} to propagate masks in real time across frames, with its data engine expanding from static images to large-scale video corpora \cite{ravi2024_sam2}. While we highlight SAM and SAM~2 as the core of promptable segmentation, other directions have evolved in parallel. \emph{Universal transformers} such as Mask2Former \cite{cheng2022_mask2former} and Mask~DINO \cite{li2022_maskdino} target closed-set scenarios, unifying semantic, instance, and panoptic segmentation within a fixed label space. Meanwhile, text-grounded pipelines like Grounding~DINO \cite{liu2023_groundingdino} coupled with Grounded~SAM \cite{ren2024_groundedsam} extend segmentation into the open-vocabulary setting, mapping category names or referring expressions directly to masks and tracks. These approaches address complementary goals—closed-world evaluation or language-to-mask grounding—whereas SAM~2 focuses on general, prompt-driven segmentation and efficient mask propagation in video.
+	
+	\medskip
+	\noindent\textit{Notes on scope and “what’s best now” (October, 2025).} For many \emph{closed-world} applications (e.g., cityscapes-style semantics, COCO panoptic, product taxonomies), Mask2Former/Mask~DINO families remain the default strong baselines; promptable SAM/SAM~2 often serve as powerful \emph{annotation accelerators} or interactive fallbacks. For \emph{open-vocabulary} or rapidly evolving label spaces, Grounding~DINO\,$\to$\,(SAM/SAM~2) pipelines dominate in practice, trading a slight accuracy gap (vs.\ task-trained models on fixed taxonomies) for unparalleled flexibility. Among helpful complements, \emph{OneFormer} (multi-task train-once universal segmentation) and \emph{X-Decoder/SEEM}-style decoders broaden the “universal” trend, while \emph{HQ-SAM} improves SAM’s boundary fidelity when fine detail is mission-critical \cite{jain2023_oneformer,zou2022_xdecoder,ke2023_hqsam}. 
+	
+	\medskip
+	\noindent\textit{When to prefer specific-task training.} If your deployment has:
+	\begin{itemize}
+		\item \textbf{A stable, audited label space} (a fixed taxonomy owned by QA/compliance).
+		\item \textbf{Strict quantitative targets} (mIoU/PQ/AP) under a benchmark protocol.
+		\item \textbf{Domain shift or sensing quirks} (medical, remote sensing, night/rain, fisheye).
+		\item \textbf{High-stakes boundary quality} (manufacturing/defect, surgical margins).
+	\end{itemize}
+	then task-specific supervised training with Mask2Former/Mask~DINO (and domain-curated data/augs) typically wins. Use SAM/SAM~2 to \emph{create} labels quickly (and for interactive edge cases), then distill/finetune a universal model for reliable, closed-world throughput; add open-vocabulary grounding only where text-driven discovery matters.
+	
+	\medskip
+	\noindent\emph{Example (defect inspection).} In a factory AOI pipeline with a fixed set of surface-defect classes (scratch, dent, burr, contamination), engineers click a few points per defect on key frames; \textit{SAM~2} propagates masks across short video bursts, and annotators correct only hard cases. The resulting dataset fine-tunes \textit{Mask2Former} to the plant’s optics and materials, yielding higher PQ and tighter edge tolerances than a generic promptable model at inference time.
 
+	\newpage
+	
+	\begin{enrichment}[SAM: Segment Anything Model][subsection]
+		
+		\label{enr:subsec_chapter15_sam}
+		
+		\paragraph{Background}
+		Classical segmentation approaches such as U-Net~\cite{ronneberger2015_unet} and Mask R-CNN~\cite{he2017_maskrcnn} are trained for fixed tasks and datasets, require costly pixel-accurate labels, and do not expose an interface for specifying \emph{what} to segment at inference. Segment Anything (SAM)~\cite{kirillov2023_sam} reconceptualizes segmentation as a \emph{promptable} task: a user supplies lightweight prompts (points, boxes, or masks), and the model returns high-quality object masks in real time. SAM further serves as an engine to \emph{collect} masks at scale, producing the SA-1B dataset (1.1B masks over 11M images). Note that SAM uses components (Vision Transformers and MAE pretraining) introduced later in this document (Chapters 17, 18 for ViTs and chapter 21 for Self Supervised pretraining); essentials needed here are summarized inline for completeness, but it is recommended to revisit this summary after understanding these concepts. 
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_idea.jpg}
+			\caption{\textbf{Task, model, and data engine}. A promptable segmentation task, a model (SAM) supporting interactive and zero-shot use, and a data engine that scales mask collection to SA-1B; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_idea}
+		\end{figure}
+		
+		\paragraph{Contribution and innovation}
+		\noindent\emph{Segment Anything (SAM)} is a \emph{promptable} segmentation foundation model: it encodes an image once, then answers many prompt queries in real time~\cite{kirillov2023_sam}. It targets three long-standing pain points—expensive pixel labeling, brittle task-specific models, and non-semantic interactive tools—via three coupled pieces:
+		
+		\begin{itemize}
+			\item \textbf{Task: promptable segmentation.} SAM casts segmentation as
+			\[
+			f_\theta:\ \langle I,\,P\rangle \longmapsto \big(\{m^{(k)}\}_{k=1}^{K},\,\{\hat{s}_k\}_{k=1}^{K}\big),
+			\]
+			where \(I\) is an image, \(P\) is a point/box/coarse-mask prompt, \(\{m^{(k)}\}\) are candidate masks, and \(\{\hat{s}_k\}\) are predicted IoUs. This separates \emph{intent} (what to segment) from \emph{delineation} (how to trace it), enabling zero-shot use across domains.
+			
+			\item \textbf{Model: encode once, decode fast.} A large ViT computes a cached image embedding; a small decoder, conditioned on encoded prompts, returns masks in tens of milliseconds. Multi-mask output plus an IoU head handles ambiguity (e.g., part vs.\ whole) and lets systems auto-select the best hypothesis or expose alternatives.
+			
+			\item \textbf{Data: SA-1B via a three-stage engine.} An iterative pipeline—assisted manual \(\rightarrow\) semi-automatic \(\rightarrow\) automatic—produces \(\sim\)1.1B masks over 11M licensed images, supplying the diversity needed to learn a class-agnostic notion of “segmentable things”.
+		\end{itemize}
+		
+		\noindent\emph{Summary.} A unified \(\langle I,P\rangle\!\to\!\)masks interface, a decoupled encoder/decoder for low-latency interaction, and a web-scale mask corpus together yield a model that generalizes without fine-tuning, serves as a fast interactive tool, and accelerates downstream task-specific training.
+		
+		\paragraph{Zero-shot segmentation by prompting (and ambiguity-aware decoding)}
+		Because the prompt specifies \emph{what} to segment, SAM generalizes to new domains without fine-tuning~\cite{kirillov2023_sam}. Pretraining on diverse masks induces a class-agnostic sense of \emph{objectness} (closed boundaries, part--whole relations, texture/contrast cues). A sparse cue—point, box, or coarse mask—then \emph{grounds} this knowledge to a concrete region. Concretely, points are encoded as $(x,y)$ with a foreground/background flag, boxes as axis-aligned coordinates, and masks as a compact raster; these prompt tokens condition a lightweight decoder that queries the cached image embedding and returns one or more candidate masks with predicted IoU scores in tens of milliseconds.
+		
+		\medskip
+		\noindent\textit{Ambiguity and multi-mask output.} A single prompt can legitimately refer to different extents. Rather than average incompatible solutions, SAM predicts multiple hypotheses and scores them; training uses a \emph{min-over-masks} objective that matches the best of the set to the ground truth~\cite{kirillov2023_sam}. Typical interpretations include:
+		\begin{itemize}
+			\item \textbf{Whole.} The complete object (e.g., the entire person).
+			\item \textbf{Part.} A coherent subregion (e.g., the shirt).
+			\item \textbf{Subpart.} A finer component (e.g., a logo on the shirt).
+		\end{itemize}
+		Users (or downstream code) select the top-scoring mask, or refine interactively with \emph{positive} clicks to add missing regions and \emph{negative} clicks to remove extraneous parts relative to the previously accepted mask.
+		
+		\medskip
+		\noindent\textit{Examples and practice.} SAM is designed for fast, iterative interaction: prompt $\rightarrow$ inspect $\rightarrow$ correct $\rightarrow$ accept. A practical loop is:
+		\begin{enumerate}
+			\item \textbf{Initial prompt.} Begin with a single positive click near the object's interior or draw a loose bounding box around it.
+			\item \textbf{Inspect and choose.} SAM returns up to three plausible masks and an IoU confidence for each; select the top candidate or the one that best matches intent.
+			\item \textbf{Iteratively refine.} If the mask \emph{misses} a region, add a positive point inside the missing area; if it \emph{leaks} into background, add a negative point in the unwanted region; when near-perfect, re-run with the selected mask as a dense prompt to tighten boundaries.
+			\item \textbf{Accept or reuse.} Accept the mask as final, or reuse it as a dense prompt to drive the next edit; because the image embedding is cached, each refinement runs in milliseconds.
+		\end{enumerate}
+		
+		\noindent\textit{Applications across diverse domains.}
+		\begin{itemize}
+			\item \textbf{Biomedical pathology.} On a whole-slide tile (e.g., $2048{\times}2048$ at $20{\times}$), a single positive click inside a lesion typically yields whole/part/subpart hypotheses (e.g., lesion core vs.\ lesion+halo). Choose the tightest contour, add a negative point on stain halos to stop spillover, then feed the accepted mask back as a dense prompt to close small voids and smooth edges; most cases converge in $2$--$4$ clicks despite scanner or stain shifts.
+			\item \textbf{Remote sensing.} Draw a coarse box over a city block; select the hypothesis that follows roof footprints rather than roads. Add a negative click on tree shadows or cars to remove false inclusions, and a positive click on a different roof material (metal vs.\ tile) to ensure coverage. For proposal mode, place a uniform point grid, keep masks with high IoU scores from the decoder’s quality head, and apply non-maximum suppression on mask IoU to deduplicate before polygonization.
+			
+			\newpage
+			
+			\item \textbf{Creative photo/video editing.} A positive click on hair produces alternatives at different granularity (whole person, hair-only, fringe). Pick the hair-only mask, add a negative click on background wisps crossing the boundary, then re-run with the chosen mask as a dense prompt to capture flyaways; optionally dilate by $2$--$3$ px and feather the alpha matte prior to compositing for halo-free blends.
+			\item \textbf{Robotics grasping.} Convert a detector ROI into a precise instance mask by prompting with the bounding box; if specular glare creates holes or spill, place a positive or negative point on the highlight to correct it. Keep the largest connected component, compute the principal-axis grasp pose on the 2D silhouette, and back-project via depth for $6$D grasp estimation; caching the image embedding keeps closed-loop latency low during re-prompts.
+			\item \textbf{Document layout and UI parsing.} Use a positive click on a paragraph or widget to obtain a tight component mask; add a negative click to exclude neighboring elements with similar texture (e.g., table borders). Export masks to vector paths to drive downstream OCR zones or interaction targets without hand-tuned heuristics.
+		\end{itemize}
+		
+		\medskip
+		\noindent\textit{Engineering notes: latency, quality, and scale.}
+		\begin{itemize}
+			\item \textbf{Caching and batching.} Keep the image encoder’s embedding in GPU memory across prompts; batch multiple prompts (points/boxes) to saturate the decoder and amortize kernel launches across users or frames.
+			\item \textbf{Ambiguity handling.} Use the predicted IoU head to auto-select masks; if $\max_k \hat{s}_k$ is low, solicit one corrective click instead of committing; expose alternative hypotheses in the UI for one-click disambiguation.
+			\item \textbf{Small or thin structures.} Increase input resolution or use multi-scale prompting; place clicks along elongated parts; apply light boundary refinement (e.g., morphological thinning/closing) if edges are soft.
+			\item \textbf{High resolution and memory.} Tile the image with overlap, encode tiles once, and decode with shared prompts projected into tile coordinates; stitch masks using overlap-aware blending and IoU-based conflict resolution.
+			\item \textbf{Proposal mode (“segment everything”).} Lay down a coarse point grid at multiple scales; run the decoder per prompt; rank by IoU head; deduplicate with IoU-NMS or clustering; optionally fill small holes and smooth edges with simple morphology or a CRF.
+			\item \textbf{System integration.} \emph{Detection $\rightarrow$ mask:} upgrade any box detector by feeding boxes as prompts. \emph{Text $\rightarrow$ mask:} pair a text localizer (e.g., open-vocabulary detector) with SAM for language-driven masks.\footnote{For example, Grounding~DINO for text localization, then SAM for mask extraction.} \emph{Video:} cache embeddings on keyframes and propagate with a tracker, or adopt the SAM~2 successor for streaming memory and low-latency propagation.
+		\end{itemize}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.65\textwidth]{Figures/Chapter_15/SAM_point_mask_examples.jpg}
+			\caption{\textbf{Ambiguity-aware outputs.} Each \emph{column} shows three valid masks produced by SAM from a \emph{single point prompt} (green dot). \emph{Rows:} top = \textit{whole} object, middle = \textit{part}, bottom = \textit{subpart}. The examples illustrate hierarchical ambiguity under the same cue (e.g., person$\rightarrow$backpack$\rightarrow$pocket; bird$\rightarrow$torso$\rightarrow$head). SAM proposes multiple hypotheses ranked by a predicted IoU, enabling the user or downstream code to select or refine the intended extent. Credit: Kirillov \emph{et\,al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_point_ambiguity}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_point_removal.jpg}
+			\caption{\textbf{Add/remove refinement.} Starting from a full bear mask, a negative click removes the torso to retain only the head, illustrating part-focused refinement. Example created by interacting with the official demo at \href{https://segment-anything.com/}{segment-anything.com}.}
+			\label{fig:chapter15_sam_point_removal}
+		\end{figure}
+		
+		\noindent This interactive perspective sets up the detailed method next: SAM’s image encoder (a ViT pretrained via MAE~\cite{he2022_mae}), prompt encoder (including point/box encodings and dense mask prompts), two-way mask decoder with cross-attention, and training losses (focal + dice with min-over-masks). 
+		
+		\newpage
+		
+		\subsubsection{Method}
+		\label{enr:subsubsec_chapter15_sam_method}
+		
+		\paragraph{Model overview and data flow}
+		SAM follows an \emph{encode once, prompt many} design~\cite{kirillov2023_sam}. An input image (typically resized to $1024{\times}1024$) is passed once through a heavy \textbf{image encoder} to produce a cached dense embedding. At interaction time, a \textbf{prompt encoder} turns user intent (points, boxes, or a coarse mask) into compact tokens. A \textbf{lightweight mask decoder} then fuses prompt tokens with the cached image embedding via two-way attention and produces up to three candidate masks \emph{plus} a predicted IoU score to rank them. In interactive use, the newly accepted mask is fed back as a dense prompt for the next refinement step, forming a fast loop: encode image $\rightarrow$ decode mask(s) $\rightarrow$ add corrective prompt(s) $\rightarrow$ decode again, until satisfactory alignment.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_overview.jpg}
+			\caption{\textbf{SAM overview}. A heavyweight image encoder outputs a cached image embedding; a prompt encoder converts points/boxes/masks to tokens; a two-way transformer mask decoder fuses them to predict multiple candidate masks with IoU scores at interactive speed; credit: Kirillov \emph{et\,al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_overview}
+		\end{figure}
+		
+		\paragraph{Image encoder}
+		The image encoder is a large Vision Transformer (ViT, e.g., ViT-H) initialized from MAE pretraining~\cite{he2022_mae}. MAE masks a high fraction of image patches and learns to reconstruct them from the visible ones, yielding strong, general-purpose visual features. Given a $1024{\times}1024$ input, the encoder produces a dense embedding on a lower-resolution grid (e.g., $64{\times}64$ tokens) that SAM projects to a channel dimension $C{=}256$ for efficient decoding~\cite{kirillov2023_sam}. This pass is amortized: it runs once per image and is reused for all subsequent prompts.
+		
+		\paragraph{Prompt encoder}
+		SAM supports \emph{sparse} and \emph{dense} prompts.
+		
+		\begin{itemize}
+			\item \textbf{Sparse prompts.} Points are represented by their $(x,y)$ coordinates plus a learned \emph{type} embedding indicating foreground, background, or padding; boxes are represented by their two corners (top-left, bottom-right), each with positional encodings summed with a corner-type embedding~\cite{kirillov2023_sam}. These yield $d{=}256$-dimensional tokens compatible with the image embedding.
+			\item \textbf{Dense prompts.} A coarse mask (e.g., a previous prediction) is downsampled and linearly projected to $d{=}256$, then \emph{added} to the image embedding so that subsequent decoding is conditioned on the prior mask~\cite{kirillov2023_sam}.
+			\item \textbf{Optional text.} Free-form text can be embedded with CLIP and projected into the prompt space when a text pathway is desired~\cite{radford2021_clip}; the base SAM paper focuses on spatial prompts.
+		\end{itemize}
+		
+		\newpage
+		
+		\paragraph{Positional encodings for 2D prompts}
+		\label{enr:par_chapter15_sam_posenc}
+		
+		\noindent\textbf{Goal and constraint.} A prompt (point or box corner) is a \emph{continuous} image coordinate \((x,y)\). Its embedding should satisfy two geometric desiderata: (i) \emph{locality}: vectors for nearby points are similar and similarity decays with the Euclidean distance \(\|p-q\|_2\); (ii) \emph{isotropy}: the decay is direction-agnostic (no axis bias), and the mapping extrapolates to arbitrary resolutions and subpixel locations.
+		
+		\noindent\textbf{Why standard PEs fall short.} Absolute learned PEs in ViTs tie positions to a fixed grid index, hurting extrapolation to new resolutions. Separable 1D sinusoidal PEs~\cite{vaswani2017_attention} are continuous but \emph{anisotropic} in 2D: concatenating \(\mathrm{PE}_x(x)\) and \(\mathrm{PE}_y(y)\) yields similarities that drop faster along axes than along diagonals at the same \(\|p-q\|_2\), biasing attention and making mask boundaries “slip’’ along \(x\)/\(y\).
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_regular_PE_vs_Fourier.jpg}
+			\caption{\textbf{Positional similarity: separable 1D PE vs.\ 2D random Fourier features.}
+				Each heatmap shows the dot-product between the embedding at the center (origin) and all other grid locations.
+				With \emph{separable 1D sinusoidal} PE (concatenating $x$-only and $y$-only sin/cos terms), iso-similarity
+				contours are axis-aligned, producing anisotropy. We mark two points, $P_1$ (axis-aligned) and $P_2$
+				(diagonal), chosen so that $\|P_1\|\!\approx\!\|P_2\|$; nevertheless
+				$\langle \mathrm{PE}_{\text{1D-sep}}(0),\,\mathrm{PE}_{\text{1D-sep}}(P_1)\rangle
+				\gg
+				\langle \mathrm{PE}_{\text{1D-sep}}(0),\,\mathrm{PE}_{\text{1D-sep}}(P_2)\rangle$,
+				i.e., $d(0,P_1)\!\approx\!d(0,P_2)$ but the embedding similarity differs markedly—an undesirable bias.
+				In contrast, \emph{2D random Fourier features} (RFF) draw frequencies over the joint $(x,y)$ space,
+				yielding near-isotropic similarity that decays primarily with Euclidean distance, so the center’s
+				similarity to $P_1$ and $P_2$ is comparable. Inspired by~\cite{li2021_learnable_fourier}.}
+			\label{fig:chapter15_sam_regular_vs_fourier}
+		\end{figure}
+		
+		\medskip
+		\noindent\textbf{SAM’s choice: random Fourier features (RFF).} SAM treats prompt coordinates as continuous and uses a joint 2D Fourier mapping~\cite{tancik2020_fourier}:
+		\[
+		\gamma(x,y) \;=\;
+		\begin{bmatrix}
+			\cos\!\big(2\pi\,B\,[\hat{x},\hat{y}]^{\!\top}\big)\\[2pt]
+			\sin\!\big(2\pi\,B\,[\hat{x},\hat{y}]^{\!\top}\big)
+		\end{bmatrix} \in \mathbb{R}^{2D},\qquad
+		(\hat{x},\hat{y}) \in [-1,1]^2,
+		\]
+		where \(B\in\mathbb{R}^{D\times 2}\) has i.i.d.\ entries \(B_{ij}\sim\mathcal{N}(0,\sigma^2)\) and \((\hat{x},\hat{y})\) are the normalized coordinates (e.g., \(\hat{x}=2(x/W)-1\), \(\hat{y}=2(y/H)-1\)). Each row of \(B\) defines a sinusoid over a \emph{tilted} direction (a linear combination of \(x\) and \(y\)), so stacking rows yields a bank of multi-frequency, multi-orientation waves that respect 2D geometry. The final prompt token adds a small learned \emph{type} embedding (e.g., foreground/background for points, corner identity for boxes): \(t=\gamma(x,y)+e_{\text{type}}\).
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_2D_fourier_feature_examples.png}
+			\caption{\textbf{Fourier feature basis on a plane.} Rows of \(B\) induce oriented sinusoids at different spatial frequencies; their stack forms a rich 2D positional code. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_2d_ff_examples}
+		\end{figure}
+		
+		\medskip
+		\noindent\textbf{Why RFF helps—two lenses.}
+		\begin{itemize}
+			\item \emph{Spectral-bias lens (representation).} Coordinate-fed networks learn low frequencies first (“blurry” fits). Prepending \(\gamma(\cdot)\) injects high-frequency basis functions, letting shallow decoders express sharp edges with few updates~\cite{tancik2020_fourier}. Empirically, replacing raw \((x,y)\) or separable 1D PE with RFF improves fine boundary fidelity with fewer corrective clicks.
+			\item \emph{Kernel/NTK lens (geometry).} Wide networks trained by gradient descent behave like kernel machines with the Neural Tangent Kernel (NTK)~\cite{jacot2018_ntk}. With \(B\sim\mathcal{N}(0,\sigma^2 I)\), the expected inner product of two encodings depends only on the offset \(\Delta=p-q\):
+			\[
+			\mathbb{E}_{B}\!\left[\gamma(p)\!\cdot\!\gamma(q)\right]
+			\;=\; \exp\!\big(\!-\;2\pi^2\sigma^2\,\|\Delta\|_2^2\big),
+			\]
+			i.e., a Gaussian RBF (up to constants). Thus, \(\sigma\) controls an \emph{isotropic} notion of locality: small \(\sigma\) \(\Rightarrow\) wide kernel (smooth, risk of underfitting); large \(\sigma\) \(\Rightarrow\) narrow kernel (sharp, risk of aliasing). This aligns vector similarity with Euclidean distance—exactly what prompt geometry needs.
+		\end{itemize}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.60\textwidth]{Figures/Chapter_15/SAM_kernel_regression.png}
+			\caption{\textbf{Kernel regression analogy.} A fit is a sum of local bumps; kernel width trades smoothness for detail. The NTK plays the same role for wide networks. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_kernel_regression}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_width_of_kernel_is_critical.png}
+			\caption{\textbf{Kernel width is critical.} Too wide \(\Rightarrow\) blurred structure (underfit). Too narrow \(\Rightarrow\) noisy/aliased (overfit). RFF exposes a single knob—\(\sigma\)—to dial the effective width via the scale of \(B\). Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_kernel_width}
+		\end{figure}
+		
+		\medskip
+		\noindent\textbf{From derivation to practice.} The RFF mapping arises from Bochner’s theorem: any shift-invariant positive-definite kernel has a nonnegative Fourier transform \(\hat{k}(\omega)\) with
+		\(k(\Delta)=\mathbb{E}_{\omega\sim\hat{k}}[\cos(2\pi\,\omega^\top\Delta)]\).
+		Sampling \(\omega\) from a Gaussian \(\mathcal{N}(0,\sigma^2 I)\) gives a Gaussian RBF kernel; Monte Carlo features \(\gamma(\cdot)\) approximate it~\cite{tancik2020_fourier}. Normalizing coordinates to \([-1,1]^2\) avoids phase wrapping and makes the code resolution-agnostic.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_neural_tangent_kernel.png}
+			\caption{\textbf{NTK perspective.} RFF turns the network’s effective kernel into a stationary, radial form whose bandwidth is governed by \(\sigma\). Tuning \(\sigma\) navigates the bias–variance trade-off. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_ntk}
+		\end{figure}
+		
+		\medskip
+		\noindent\textbf{How to tune \(\sigma\) (and what SAM does).} Choose \(\sigma\) by a small grid/linear search on validation data: fix a random \(B\) per \(\sigma\), evaluate a proxy (e.g., mIoU of point-to-mask or reconstruction PSNR in a coordinate MLP), and pick the best trade-off (sharp boundaries without aliasing). In SAM, \(B\) is sampled \emph{once} and then frozen; \(\sigma\) is treated as a hyperparameter, keeping the prompt path parameter-free and fast at inference.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{Figures/Chapter_15/SAM_linear_search_optimal_sigma_blurred.png}
+			\caption{\textbf{Too small \(\sigma\) (wide kernel).} High-frequency details are missed and outputs look over-smoothed/blurred. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_sigma_small}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{Figures/Chapter_15/SAM_linear_search_optimal_sigma_less_blurred.png}
+			\caption{\textbf{Near-optimal \(\sigma\).} Fine detail is preserved without a lot of aliasing; quality peaks near this region. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}.}
+			\label{fig:chapter15_sam_sigma_opt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Figures/Chapter_15/SAM_fourier_features.jpg}
+			\caption{\textbf{Fourier features mitigate spectral bias.} A coordinate MLP remains blurry at equal iterations, whereas the same MLP with RFF recovers high-frequency detail much earlier. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}; see also~\cite{tancik2020_fourier}.}
+			\label{fig:chapter15_sam_ff_blur_vs_sharp}
+		\end{figure}
+	
+		\noindent\textbf{RFF Effect on SAM.} Compared with separable 1D PE, RFF delivers:
+		\begin{itemize}
+			\item \emph{Isotropic locality.} Similarity decays with \(\|p-q\|_2\), so point and box-corner tokens condition the decoder uniformly in all directions, reducing axis bias at boundaries.
+			\item \emph{High-frequency readiness.} The decoder’s small MLPs receive multi-frequency inputs, enabling crisp, click-efficient refinements around thin parts and textured edges.
+		\end{itemize}
+		
+		\paragraph{Mask decoder (two-way attention and dynamic heads)}
+		\noindent\textit{High-level overview.} After the heavy encoder builds a rich feature \emph{map} of the image, the user’s prompts (points/boxes and, if available, a prior mask) act as sparse \emph{pins} indicating intent. The mask decoder—a small, two-layer transformer—runs a short, bidirectional “conversation” between pins and map: prompts pull the evidence they need from the image; the image, in turn, adapts its features around those prompts. The decoder then produces a few candidate masks \emph{and} a quality score for each, enabling fast, interactive refinement.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Figures/Chapter_15/SAM_mask_decoder_details.jpg} 
+			\caption{\textbf{SAM's lightweight mask decoder.} \textbf{(a)} Inputs: prompt tokens plus four learned outputs (three mask tokens, one IoU token); if available, the previously accepted mask is injected as a \emph{dense prompt} by adding its embedding to the image features. \textbf{(b)} Two stacked two-way attention blocks: token self-attention fuses cues; token$\rightarrow$image retrieves spatial evidence; image$\rightarrow$token makes features prompt-aware (PE added on image attention; original prompt re-added to token queries/keys for stability). \textbf{(c)} Upscaled features feed dynamic heads: mask tokens via MLP+dot yield multiple hypotheses; the IoU token scores them for ranking/selection. Adapted from ~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_decoder_details}
+		\end{figure}
+		
+		\noindent\textit{Why this structure?} 
+		Two-way attention avoids one-sided errors (prompt-only misses global shape; image-only ignores intent). “Dynamic heads” (learned \emph{mask tokens}) let the model specialize into different plausible extents (whole/part/subpart) without heavy per-pixel heads, and a learned IoU score turns those candidates into a usable, ranked set—all in tens of milliseconds for real-time interaction~\cite{kirillov2023_sam}.
+		
+		\noindent\textit{Step-by-step (one decode).}
+		\begin{enumerate}
+			\item \textbf{Assemble inputs.} Encode prompts into tokens (points/boxes; optional coarse-mask token). \emph{If a previous mask was accepted}, downsample/project it to a \emph{dense prompt} and \emph{add it to the image embedding}; this “warms up” features near the known boundary for the next pass.
+			\item \textbf{Add output tokens.} Append four learned tokens: three \emph{mask tokens} (to generate multiple hypotheses) and one \emph{IoU token} (to score them).
+			
+			\newpage
+			
+			\item \textbf{Two-way block \#1 (gather evidence).}
+			\begin{enumerate}
+				\item \emph{Token self-attention:} prompt/output tokens attend to each other to fuse cues (e.g., multiple positive clicks reinforce one instance; a negative click suppresses a distractor).
+				\item \emph{Token$\rightarrow$image:} tokens query the cached image embedding to retrieve spatial evidence (edges, texture, part/whole context) relevant to the prompt.
+				\item \emph{Image$\rightarrow$token:} image features attend back to tokens, becoming \emph{prompt-aware} (e.g., disambiguating object vs.\ shadow). At every attention over image features, positional encodings are added; the original prompt token (with its position encoding) is re-added to token queries/keys for stability~\cite{kirillov2023_sam}.
+			\end{enumerate}
+			\item \textbf{Two-way block \#2 (synthesize).} Repeat the three steps to consolidate evidence and resolve remaining ambiguities (first block: gather; second block: synthesize).
+			\item \textbf{Predict masks and scores.} Upscale the updated image features with light transposed convolutions. Each \emph{mask token} passes through a tiny MLP to a mask embedding that “paints” a logit mask via a dot product with the upscaled features (yielding whole/part/subpart hypotheses). In parallel, the \emph{IoU token} through an MLP predicts a scalar quality to rank/select masks. Masks are produced at decoder resolution (e.g., $256{\times}256$) and resized for display/export.
+		\end{enumerate}
+		
+		\paragraph{Training objective and loss}
+		\label{enr:par_chapter15_sam_training}
+		
+		\noindent\textbf{High-level goal (how to supervise a \emph{promptable} model).}
+		Classical segmentation trains a network to label \emph{all} pixels at once. SAM instead learns a \emph{conditional} mapping
+		\(\langle I,\text{prompt}\rangle \!\mapsto\! \text{mask(s)}\),
+		so supervision must (i) treat points/boxes as \emph{inputs}, not targets; (ii) compare only \emph{predicted masks} to ground-truth; and (iii) support \emph{multiple hypotheses} because a single prompt can mean whole/part/subpart. The losses below implement this recipe efficiently at SA-1B scale~\cite{kirillov2023_sam}.
+		
+		\medskip
+		\noindent\textbf{Targets and supervision signal.}
+		Each training example consists of an image \(I\) and a \emph{binary, pixel-accurate instance mask}
+		\(M \in \{0,1\}^{H\times W}\) for a single segment (foreground \(=1\), background \(=0\)).
+		SAM is trained to predict a mask \(\hat{M}\) \emph{conditioned on a prompt} \(P\); it does \emph{not} predict boxes or points themselves.
+		During training, prompts are \emph{simulated from \(M\)} (see below).
+		Supervision always compares \(\hat{M}\) against \(M\) (mask–vs–mask); there is no box loss.
+		
+		\noindent\textbf{Prompt simulation (teaching interactivity without human clicks).}
+		To expose the decoder to realistic inputs, we synthesize prompts \(P\) from \(M\):
+		\begin{itemize}
+			\item \textbf{Positive / negative points.} Sample positives uniformly inside \(M\); sample negatives outside \(M\)
+			(optionally biased near the boundary to mimic corrective clicks).
+			\item \textbf{Boxes.} Use the tight bounding rectangle of \(M\), then apply random scale/aspect jitter;
+			optionally draw from cropped regions to vary context.
+			\item \textbf{Dense prior (previous mask).} Downsample \(M\) (or a perturbed version via erode/dilate) to form a
+			coarse “dense prompt’’ used for refinement training.
+			\item \textbf{Multi-round chains.} In a subset of batches, decode once, place corrective points on disagreement regions,
+			and decode again—simulating click–refine loops.
+		\end{itemize}
+		Prompts are \emph{inputs}; supervision remains purely mask–vs–mask.
+		
+		\newpage
+		
+		\noindent\textbf{Multi-hypothesis supervision (min-over-masks).}
+		Given one prompt, the decoder emits up to three plausible masks
+		\(\{\hat{M}_j\}_{j=1}^3\subset[0,1]^{H\times W}\)
+		to capture whole/part/subpart ambiguity. With only one ground truth \(M\), we compute a segmentation loss for each \(\hat{M}_j\) and backpropagate through the \emph{best} one:
+		\[
+		\mathcal{L}_{\text{seg}}
+		=\min_{j\in\{1,2,3\}}
+		\Big[\,
+		\lambda_{\text{focal}}\,\mathcal{L}_{\text{focal}}(\hat{M}_j,M)
+		+\lambda_{\text{dice}}\,\mathcal{L}_{\text{dice}}(\hat{M}_j,M)
+		\,\Big].
+		\]
+		Intuition: under an ambiguous prompt, we want \emph{at least one} candidate to match the user’s intent. The “min’’ lets the three heads specialize (e.g., one tends to whole, one to part) instead of collapsing all to the same mask. A strong focal{:}dice ratio (reported \(20{:}1\)) emphasizes boundary decisions under severe fg/bg imbalance~\cite{kirillov2023_sam}.
+		
+		\medskip
+		\noindent\textbf{Loss components (what they measure and why).}
+		\begin{itemize}
+			\item \emph{Focal loss} combats extreme class imbalance by down-weighting easy pixels and amplifying hard ones near edges. With logits \(z\) and post-sigmoid probability \(p=\sigma(z)\), for a target \(y\!\in\!\{0,1\}\) the binary focal loss is
+			\[
+			\mathcal{L}_{\text{focal}}(p,y)
+			=-\alpha_t(1-p_t)^{\gamma}\log(p_t),
+			\quad
+			p_t=\begin{cases}
+				p,&y=1\\
+				1-p,&y=0
+			\end{cases}
+			\]
+			with typical \(\gamma\!>\!0\) and \(\alpha_t\) rebalancing fg/bg. In SAM, this term dominates to focus learning where it matters most (thin structures, uncertain boundaries).
+			\item \emph{Dice loss} directly optimizes region overlap (shape agreement). For probabilities \(\hat{M}\in[0,1]^{H\times W}\),
+			\[
+			\mathcal{L}_{\text{dice}}(\hat{M},M)
+			=1-\frac{2\,\langle \hat{M},M\rangle + \varepsilon}{\|\hat{M}\|_1+\|M\|_1+\varepsilon},
+			\]
+			where \(\langle\cdot,\cdot\rangle\) sums pixelwise products and \(\varepsilon\) stabilizes small masks. Dice penalizes false positives/negatives at the \emph{shape} level, complementing focal’s pixel focus.
+		\end{itemize}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_dice_loss.jpg}
+			\caption{\textbf{Dice loss intuition.} Dice complements focal by measuring region-level overlap: it decreases as symmetric set difference shrinks, and rises when FP/FN inflate the union. A high focal{:}dice weight in SAM targets boundary imbalance while preserving shape fidelity.}
+			\label{fig:chapter15_sam_dice}
+		\end{figure}
+		
+		\medskip
+		\noindent\textbf{Quality calibration (IoU head).}
+		Beyond masks, SAM predicts for each hypothesis a scalar \(\hat{s}_j\) that should approximate the true IoU,
+		\[
+		\mathrm{IoU}(\hat{M}_j,M)=\frac{|\hat{M}_j\cap M|}{|\hat{M}_j\cup M|}.
+		\]
+		A simple MSE trains this calibration:
+		\[
+		\mathcal{L}_{\text{iou}}=\frac{1}{3}\sum_{j=1}^{3}\big(\hat{s}_j-\mathrm{IoU}(\hat{M}_j,M)\big)^2.
+		\]
+		At inference, \(\hat{s}_j\) ranks candidates and flags low-confidence cases (“add a click?”), matching SAM’s interactive use.
+		
+		\medskip
+		\noindent\textbf{Total objective and gradients.}
+		The overall loss is
+		\[
+		\mathcal{L}
+		= \mathcal{L}_{\text{seg}} + \lambda_{\text{iou}}\mathcal{L}_{\text{iou}},
+		\quad \text{with }\lambda_{\text{iou}}=1 \text{ in~\cite{kirillov2023_sam}}.
+		\]
+		Let \(\ell_j=\lambda_{\text{focal}}\mathcal{L}_{\text{focal}}(\hat{M}_j,M)+\lambda_{\text{dice}}\mathcal{L}_{\text{dice}}(\hat{M}_j,M)\).
+		If \(j^\star=\arg\min_j \ell_j\), then
+		\(\nabla \mathcal{L}_{\text{seg}}=\nabla \ell_{j^\star}\) (other branches receive no seg-gradients),
+		encouraging diversity across heads while the IoU head learns to score \emph{all} candidates.
+		
+		\medskip
+		\noindent\textbf{Why this works (design intuition).}
+		\begin{itemize}
+			\item \emph{Prompt-conditioned supervision} teaches the decoder to “follow the cue’’ rather than memorize taxonomies—key for zero-shot transfer.
+			\item \emph{Min-over-masks} aligns training with usage: present alternatives, let one match intent, keep others diverse for ambiguity.
+			\item \emph{Focal\,+\,Dice} balances boundary hardness and global overlap—crucial when fg pixels are scarce and shapes vary widely.
+			\item \emph{IoU calibration} closes the loop for interactivity: the model not only proposes masks but also knows which is best and when to ask for help.
+		\end{itemize}
+		
+		\paragraph{Pseudo-code for interactive inference}
+		
+		\noindent\textbf{Single image, multi-round interaction.}
+		\begin{enumerate}
+			\item \textbf{Encode once:} \(E \leftarrow \textsc{ImageEncoder}(I)\) \hfill (cache the heavy image embedding).
+			\item \textbf{Repeat until accepted:}
+			\begin{enumerate}
+				\item[(a)] \textbf{Encode prompt:} \(P \leftarrow \textsc{PromptEncoder}(\text{points},\,\text{boxes},\,M_{\text{prev}})\),
+				where \(M_{\text{prev}}\) is the previously accepted mask used as a dense prompt (optional).
+				\item[(b)] \textbf{Decode:} \((\hat{M}_1,\hat{M}_2,\hat{M}_3,\hat{s}_1,\hat{s}_2,\hat{s}_3) \leftarrow \textsc{MaskDecoder}(E,P)\).
+				\item[(c)] \textbf{Select \& display:} \(j^\star = \arg\max_{j\in\{1,2,3\}} \hat{s}_j\); render \(\hat{M}_{j^\star}\) at image resolution.
+				\item[(d)] \textbf{Refine or stop:} If boundaries deviate, add a positive point to include a missed region or a negative point to exclude leakage; set \(M_{\text{prev}} \leftarrow \hat{M}_{j^\star}\) and repeat. Otherwise, accept the mask.
+			\end{enumerate}
+		\end{enumerate}
+		
+		\newpage
+		
+		\subsubsection{Data engine and SA-1B}
+		\label{enr:subsubsec_chapter15_sam_data}
+		The authors construct SA-1B via a three-stage engine~\cite{kirillov2023_sam}: assisted manual collection (browser-based tool powered by early SAM), semi-automatic (detector-seeded prompts with human verification), and fully automatic generation using grid prompts and multi-scale crops followed by ranking, stability checks, de-duplication, hole-filling, and small-component pruning.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_dataset_examples.jpg}
+			\caption{\textbf{SA-1B examples}. 11M licensed and privacy-protecting images and \(\sim\)1.1B masks; images grouped by masks-per-image to illustrate density and diversity; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sa1b_examples}
+		\end{figure}
+		
+		\paragraph{Dataset properties and diversity}
+		SA-1B is geographically and visually diverse, with broader coverage of object locations and shapes than prior datasets.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM_normalized_mask_centers.jpg}
+			\caption{\textbf{Normalized mask centers}. Heatmaps of mask centers across datasets indicate that SA-1B reduces strong center bias and covers corners/edges more uniformly; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_centers}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_dataset_mask_properties.jpg}
+			\caption{\textbf{Mask properties}. SA-1B contains many images with high mask density, a broad distribution of mask sizes, and comparable or greater concavity diversity than prior datasets; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_mask_props}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_dataset_image_distribution.jpg}
+			\caption{\textbf{Geographic distribution}. Estimated distribution by country shows global coverage; the top three countries come from different regions; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_geo}
+		\end{figure}
+		
+		\subsubsection{Experiments and ablations}
+		\label{enr:subsubsec_chapter15_sam_experiments}
+		
+		\paragraph{Zero-shot samples across domains}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_zero_shot.jpg}
+			\caption{\textbf{Zero-shot qualitative results}. Samples from 23 diverse datasets (autonomous driving, medical, aerial, egocentric, etc.) segmented by SAM without fine-tuning; credit: Kirillov \emph{et~al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_zeroshot}
+		\end{figure}
+		
+		\paragraph{Interactive point-to-mask evaluation}
+		SAM is evaluated \emph{zero-shot} on 23 unseen datasets with a simulated interactive protocol (place a point on the largest error, iterate) and both one-click and multi-click metrics~\cite{kirillov2023_sam}. On the one-click setting, SAM exceeds prior interactive baselines on \textbf{16/23} datasets and the gap reaches \textbf{+47 mIoU} on some sets; when an oracle picks the best of its three hypotheses (\emph{SAM–oracle}), it outperforms all baselines on all 23 datasets~\cite{kirillov2023_sam}. Human quality ratings fall in the 7--9 range (Likert-style) and SAM’s oracle masks are rated close to ground truth, indicating high fidelity~\cite{kirillov2023_sam}. Multi-click curves show steady gains with diminishing returns after about \textasciitilde8 clicks; the training curriculum mirrors this with sequences up to 11 interactions to teach refinement~\cite{kirillov2023_sam}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM_evaluation.jpg}
+			\caption{\textbf{Zero-shot point-to-mask across 23 datasets.}
+				\emph{(a) One-click mIoU.} SAM (automatic selection via its IoU head) surpasses RITM on most datasets; the \emph{SAM–oracle} bar (best-of-3 selection) is an upper bound, illustrating the benefit of ambiguity-aware decoding. \emph{(b) Human study.} Mean mask-quality ratings place \emph{SAM–oracle} near ground-truth and above prior interactive systems. \emph{(c,d) Multi-click curves.} mIoU improves with additional corrective clicks (simulation places the next click at the largest error); gains taper after \textasciitilde8 clicks, matching the training curriculum (up to 11 prompts). Panels adapted from Kirillov \emph{et\,al.}~\cite{kirillov2023_sam}.}
+			\label{fig:chapter15_sam_eval}
+		\end{figure}
+		
+		\paragraph{Ablations (highlights)}
+		\begin{itemize}
+			\item \textbf{Multi-mask hypotheses + min-over training.} Predicting multiple masks per prompt and supervising with a \emph{min-over-masks} loss lets the model represent whole/part/subpart alternatives without averaging incompatible solutions; it is a core ingredient in SAM’s ambiguity handling and one-click strength~\cite{kirillov2023_sam}.
+			\item \textbf{Two-way attention in the decoder.} Letting tokens \emph{query} image features and image features \emph{query back} the tokens (prompt-aware feature refinement) improves mask quality versus token$\rightarrow$image only; the authors report this bidirectional variant as particularly helpful for ambiguous, sparse prompts~\cite{kirillov2023_sam}.
+			\item \textbf{Prompt encodings with Fourier features.} Using random Fourier feature (RFF) positional encodings for sparse prompts yields near-isotropic geometry and better alignment than separable 1D encodings or raw coordinates, reducing axis-bias in point/box conditioning~\cite{kirillov2023_sam,tancik2020_fourier}.  
+			\item \textbf{IoU prediction head for ranking.} A small head trained to predict the mask IoU enables reliable automatic selection among the three hypotheses; in aggregate plots, SAM’s auto-selected mask tracks the oracle closely, validating the calibration~\cite{kirillov2023_sam}.
+			\item \textbf{Interactive curriculum.} The evaluation and training are aligned: simulated clicks are placed on the largest current error, improvement slows after \textasciitilde8 clicks, and SAM is trained with sequences up to 11 interactions to learn the refine–correct loop~\cite{kirillov2023_sam}. 
+		\end{itemize}
+		
+		\subsubsection{Limitations and future directions}
+		\label{enr:subsubsec_chapter15_sam_limits}
+		\begin{itemize}
+			\item \textbf{Heavy encoder cost.} The ViT-H encoder is computationally expensive; although amortized for interactivity, deployment on resource-limited devices is challenging. Subsequent works (e.g., SAM~2) explore efficiency and streaming settings.
+			\item \textbf{Open-vocabulary text-to-mask.} Fully integrated text grounding is limited in SAM; later systems combine grounding detectors (e.g., Grounding DINO) with SAM for text-to-region prompts, leading to Grounded-SAM variants.
+			\item \textbf{Fine structures and thin parts.} Performance can degrade for extremely thin or low-contrast structures; higher-resolution backbones and tailored decoders are active directions.
+			\item \textbf{Temporal/video.} SAM operates on single images; extensions to video streaming and memory-aware decoding are developed in SAM~2, covered next.
+		\end{itemize}
+		
+	\end{enrichment}
+	
+	\newpage
+	
+	\begin{enrichment}[SAM 2: Segment Anything in Images and Videos][subsection]
+	\label{enr:subsec_chapter15_sam2}
+	
+		\noindent\textit{Context.} We proceed to cover SAM~2~\cite{ravi2024_sam2}, the video-capable successor to SAM~\cite{kirillov2023_sam}. This summary assumes familiarity with encoder–decoder transformers and MAE-style pretraining; full treatments of Vision Transformers and self-supervised pretraining appear later in the book (as mentioned for SAM as well). 
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM2_overview.jpg}
+			\caption{\textbf{SAM~2 overview.} The model extends promptable segmentation to images \emph{and} videos by introducing a streaming memory that stores prompts and predictions from prior frames. The SA-V data engine scales training through human-in-the-loop collection and automatic propagation. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{fig:chapter15_sam2_overview}
+		\end{figure}
+		
+		\subsubsection{Motivation}
+		\label{enr:subsubsec_chapter15_sam2_motivation}
+		
+		\noindent SAM established that ``embed once, decode many'' with promptable, ambiguity-aware decoding enables strong zero-shot segmentation on \emph{images}~\cite{kirillov2023_sam}. Extending this to \emph{videos} raises new demands: identities must persist through motion, deformation, occlusion, and disappearance; users should correct drifts sparsely rather than re-annotate from scratch; runtime must remain interactive per frame. A naïve SAM\,$+$\,tracker pipeline forces repeated re-prompting after failures and cannot immediately leverage new clicks to repair future frames. SAM~2 addresses this by adding a \emph{streaming memory} that accumulates the substance of previous prompts and predictions, so a single corrective interaction in a later frame can restore the object and continue propagation with identity consistency.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM2_interactive_segmentation.jpg}
+			\caption{\textbf{Interactive video segmentation with SAM~2.} An initial prompt on frame~1 yields a masklet that propagates forward. If tracking drifts, a single corrective click in a later frame recovers the object due to the streaming memory, avoiding re-annotation from scratch. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{fig:chapter15_sam2_interactive}
+		\end{figure}
+		
+		\subsubsection{Method}
+		\label{enr:subsubsec_chapter15_sam2_method}
+		
+		\paragraph{Problem setup}
+		Given a video $\{I_t\}_{t=1}^{T}$ and prompts $\mathcal{P}$ provided on one or more frames (points, boxes, or masks), produce a temporally consistent mask $\hat{M}_t$ per frame for the same instance specified by the prompts. A temporally contiguous run of predictions is a \emph{masklet}~\cite{ravi2024_sam2}. The system should support image-only use ($T{=}1$), one-shot video prompting (first frame only), and sparse interactive corrections on arbitrary later frames.
+		
+		\paragraph{What is new compared to SAM}
+		SAM~2 keeps SAM's core decomposition but augments it to reason over time.
+		\begin{itemize}
+			\item \textbf{Streaming memory.} A dedicated memory pathway stores compact tokens distilled from past \emph{predictions and prompts}. This allows single-click recovery and identity continuity across frames with constant-time per-frame cost.
+			\item \textbf{Memory-conditioned decoding.} The lightweight decoder conditions not only on the current-frame image features and optional prompts (as in SAM) but also on retrieved memory tokens, injecting temporal context without heavy per-frame re-encoding.
+			\item \textbf{Masklet supervision and data engine at video scale.} Training uses SA-V (a large dataset by Meta for the task of video segmentation, introduced along with the paper) with masklets, disappearance events, and model-in-the-loop propagation; supervision is applied so that memory is active during learning, unlike SAM's image-only setting.
+		\end{itemize}
+		
+		\paragraph{Why streaming memory}
+		Design goals specific to video motivated SAM~2's memory.
+		\begin{itemize}
+			\item \textbf{Interactive recovery.} Users should not repeat full initial prompting after a drift. Writing a single corrective click and the corrected mask into memory allows the next frames to immediately benefit.
+			\item \textbf{Throughput at scale.} Video must run near real time. Storing compact tokens and reading a bounded subset per frame keeps per-frame latency roughly constant, enabling reported $\sim$130\,FPS in SAM~2's optimized predictor (Table~\ref{tab:chapter15_sam2_sa37}).
+			\item \textbf{Identity stability.} Memory is instance-specific; writing only the selected hypothesis for the target keeps identity consistent even during occlusions or appearance changes.
+		\end{itemize}
+		
+		\paragraph{High-level data flow}
+		At each time step $t$:
+		\begin{enumerate}
+			\item \textbf{Image encoding} $\rightarrow$ Dense backbone features $F_t$ computed once for $I_t$ and cached within the frame.
+			\item \textbf{Memory read} $\rightarrow$ Select a bounded set of memory tokens $R_t$ from prior frames (e.g., recent window or top-$k$ by similarity) tied to the target instance.
+			\item \textbf{Prompt encoding (optional)} $\rightarrow$ Encode new clicks/boxes/masks at $t$ as prompt tokens $P_t$.
+			\item \textbf{Decoding} $\rightarrow$ Lightweight transformer fuses $(F_t, R_t, P_t)$ and predicts up to three masks $\{\hat{M}_{t,j}\}_{j=1}^3$ with predicted IoU scores.
+			\item \textbf{Memory write} $\rightarrow$ The chosen prediction and any prompts at $t$ are transformed by a memory encoder into new tokens appended to the stream.
+		\end{enumerate}
+		
+		\newpage
+		
+		\paragraph{Streaming memory mechanics}
+		We treat a video as a stream of frames $\{I_t\}_{t=1}^{T}$. Each frame is passed once through the image encoder to yield a multi-scale feature pyramid; let $F_t \in \mathbb{R}^{C\times H\times W}$ denote the main stride-$s$ map used by memory (with $C$ channels, spatial size $H\times W$). SAM~2 maintains, per tracked object, a bounded memory bank
+		\[
+		\mathcal{B}=\Big\{\underbrace{(K^{(j)},V^{(j)},\pi^{(j)})}_{\text{frame }j}\Big\}_{j\in\mathcal{J}},\quad |\mathcal{J}|\le N_{\text{recent}}+N_{\text{prompt}},
+		\]
+		where $(K^{(j)},V^{(j)})\in\mathbb{R}^{H W\times d_k}\times\mathbb{R}^{H W\times d_v}$ are spatial key/value tokens distilled from frame $j$ and $\pi^{(j)}\in\mathbb{R}^{d_o}$ is an \emph{object pointer} (a compact token carried by the decoder’s mask token and used for identity). Temporal recency is enforced with a FIFO policy on unprompted frames; prompted frames occupy a separate, smaller queue so user corrections persist longer.
+		
+		\begin{itemize}
+			\item \textbf{What is stored.} Let $\hat{M}_t\in\{0,1\}^{H\times W}$ be the chosen mask hypothesis on $t$ (Section \emph{Mask decoder}). A memory encoder $g_{\text{mem}}$ produces spatial keys/values by (i) gating and compressing features and (ii) appending a visibility code:
+			\[
+			\tilde{F}_t = F_t \odot \text{Down}(\hat{M}_t)\in\mathbb{R}^{C\times H\times W},\qquad
+			(K^{(t)},V^{(t)}) = g_{\text{mem}}(\tilde{F}_t)\!,
+			\]
+			where $\odot$ is channel-wise broadcasted multiplication and $\text{Down}$ matches the stride $s$. In practice $g_{\text{mem}}$ is a lightweight conv/MLP stack that projects $C\!\to\! d_k,d_v$ and flattens to $HW$ tokens. The object pointer $\pi^{(t)}\in\mathbb{R}^{d_o}$ is taken from the decoder’s \emph{mask token} (or a small split of it) after predicting on frame $t$. If the occlusion head predicts invisibility ($y^{\text{occ}}_t{=}1$), a learned “occluded” embedding is added to $\pi^{(t)}$ to disambiguate reappearance states.
+			
+			\item \textbf{How it is read.} Before decoding frame $t$, we form memory keys/values by concatenating all entries in $\mathcal{B}$:
+			\[
+			K_{\mathcal{B}}\!=\![K^{(j)}]_{j\in\mathcal{J}}\in\mathbb{R}^{(HW|\mathcal{J}|)\times d_k},\quad
+			V_{\mathcal{B}}\!=\![V^{(j)}]_{j\in\mathcal{J}}\in\mathbb{R}^{(HW|\mathcal{J}|)\times d_v}.
+			\]
+			A \emph{memory attention} stack (few transformer blocks) conditions $F_t$ on $\mathcal{B}$. With queries $Q_t = \phi(F_t)\in\mathbb{R}^{HW\times d_k}$ (linear on flattened $F_t$), a head computes
+			\[
+			\text{MemAttn}(F_t,\mathcal{B})=\text{softmax}\!\Big(\tfrac{Q_t\,K_{\mathcal{B}}^\top}{\sqrt{d_k}} + \Psi_{\text{pos}}\Big)\,V_{\mathcal{B}},
+			\]
+			where $\Psi_{\text{pos}}$ injects 2D spatial (and short-range temporal) position encodings for recent frames; pointers $\pi^{(j)}$ are broadcast and concatenated to $K^{(j)}/V^{(j)}$ to bias retrieval toward the tracked identity. The module yields memory-conditioned features $F'_t$ (same shape as $F_t$) that flow to the decoder. A simple cap on $|\mathcal{J}|$ (e.g., $N_{\text{recent}}\!\approx\!4$–$8$, $N_{\text{prompt}}\!\approx\!2$–$4$) gives predictable $\mathcal{O}(HW\cdot|\mathcal{J}|)$ runtime and stabilizes attention distributions.
+			
+			\item \textbf{How it is written.} After hypothesis selection on $t$ (via the IoU head), we \emph{write} by pushing $(K^{(t)},V^{(t)},\pi^{(t)})$ into the appropriate queue(s), evicting the oldest if full. Because $(K^{(t)},V^{(t)})$ are computed from the same $F_t$ that the decoder used, every correction (new prompt $\Rightarrow$ new $\hat{M}_t$) becomes immediately useful for frame $t{+}1$. For multi-object tracking, each object has an independent $\mathcal{B}$; the image encoder is shared.
+		\end{itemize}
+		
+		\paragraph{Prompt encoder}
+		We preserve SAM’s prompt vocabulary but make shapes explicit. For sparse prompts, a 2D point $p\!=\!(x,y)$ in pixel coordinates is normalized to $[-1,1]^2$, then mapped by random Fourier features $\gamma(p)\!=\![\sin(2\pi Bp),\cos(2\pi Bp)]\in\mathbb{R}^{2m}$ with $B\in\mathbb{R}^{m\times 2}$ sampled once~\cite{tancik2020_fourier}. The final point token is
+		\[
+		e_{\text{pt}}(p,\tau)=W_{\text{pt}}\,[\gamma(p)\,\|\,e_{\text{type}}(\tau)]\in\mathbb{R}^{d_p},
+		\]
+		where $\tau\in\{\text{fg},\text{bg},\text{pad}\}$ and $e_{\text{type}}$ is a learned embedding. Boxes are encoded by four corner points with distinct corner-type embeddings and optionally by $(x_c,y_c,w,h)$ as a second token. Dense prompts (masks) use a small conv projector $h$ to produce $D\!=\!C$-channel features at stride $s$, then \emph{add} to $F_t$:
+		\[
+		F_t^{\text{prompt}} = F_t + h(\text{Down}(M^{\text{in}})),
+		\]
+		so the mask acts as a soft spatial prior aligned to the backbone’s feature space~\cite{kirillov2023_sam}.
+		
+		\paragraph{Mask decoder with memory conditioning}
+		Let $F'_t$ be the memory-conditioned map and $P_t$ the (optional) prompt tokens. The decoder is a compact transformer with \emph{two-way} token$\leftrightarrow$image attention as in SAM, extended with memory conditioning through $F'_t$:
+		\begin{itemize}
+			\item \emph{Token SA:} output tokens (three mask tokens $m_k$ and one IoU token $u$) and prompt tokens self-attend.
+			\item \emph{Token$\rightarrow$image CA:} token queries attend to $F'_t$ (flattened) to gather spatial evidence (token-to-image).
+			\item \emph{Image$\rightarrow$token CA:} image queries (from $F'_t$) attend to token keys to inject prompt/object context (image-to-token).
+		\end{itemize}
+		High-resolution skips from early encoder stages are fused late to restore detail. As in SAM, we emit up to $K\!=\!3$ mask logits $\{\hat{Y}_{t}^{(k)}\}\in\mathbb{R}^{H_\text{img}\times W_\text{img}}$ (after upsampling by light deconvs) and per-mask IoU scores $\{\hat{s}^{(k)}_t\}$. The \emph{mask token} state serves as the object pointer $\pi^{(t)}$ for memory writing. An auxiliary occlusion head (MLP on a dedicated token or pooled decoder state) predicts visibility $\hat{y}^{\text{occ}}_t\in[0,1]$ so invisible frames do not incur mask loss.
+		
+		\paragraph{Training objective and supervision}
+		Following SAM, we supervise only the best hypothesis per frame (\emph{min-over-masks}). Let $k^\star=\arg\min_k \mathcal{L}_{\text{seg}}(\hat{Y}_{t}^{(k)},Y_t)$ with $\mathcal{L}_{\text{seg}}=\lambda_{\text{foc}}\mathcal{L}_{\text{focal}}+\mathcal{L}_{\text{Dice}}$. The total loss is
+		\[
+		\mathcal{L} = \underbrace{\mathcal{L}_{\text{seg}}(\hat{Y}_t^{(k^\star)},Y_t)}_{\text{only }k^\star}
+		+ \lambda_{\text{IoU}}\!\sum_{k=1}^{K}\!\bigl\lVert \hat{s}^{(k)}_t - \text{IoU}(\hat{Y}_t^{(k)},Y_t)\bigr\rVert_1
+		+ \lambda_{\text{occ}}\;\text{CE}\!\left(\hat{y}^{\text{occ}}_t,\,y^{\text{occ}}_t\right),
+		\]
+		skipping $\mathcal{L}_{\text{seg}}$ if $y^{\text{occ}}_t{=}1$. Prompts are simulated as in SAM: positive/negative clicks sampled inside/outside $Y_t$, jittered boxes from mask bounds, and dense prompts from prior predictions~\cite{kirillov2023_sam}. Crucially, training uses short clips $(t_1{<}\cdots{<}t_L)$ where early frames \emph{write} memory $(\hat{M}_{t_\ell}\!\to\!\mathcal{B})$ and later frames \emph{read} it ($F'_{t_{\ell+1}}\!\leftarrow\!\mathcal{B}$), mirroring deployment. Random temporal reversal (with probability $0.5$) regularizes for bi-directional propagation. We also apply \emph{teacher forcing} by occasionally writing ground-truth masks to memory to stabilize early training, and \emph{memory drop} (randomly masking entries in $\mathcal{B}$) to reduce over-reliance on any single view. SA-V clips with disappearance/reappearance provide explicit supervision for gap-robust propagation~\cite{ravi2024_sam2}.
+		
+		\paragraph{Pseudo-code for streaming interactive inference}
+		\label{enr:par_chapter15_sam2_pseudocode}
+		\begin{enumerate}
+			\item \textbf{Initialize} $\mathsf{Mem} \leftarrow \emptyset$.
+			\item \textbf{For} $t{=}1,\dots,T$:
+			\begin{enumerate}
+				\item[(a)] $F_t \leftarrow \texttt{ImageEncoder}(I_t)$.
+				\item[(b)] $P_t \leftarrow \texttt{PromptEncoder}(\texttt{points/boxes/mask at }t)$ (optional).
+				\item[(c)] $R_t \leftarrow \texttt{Select}(\mathsf{Mem})$.
+				\item[(d)] $(\{\hat{M}_{t,j}\}, \{\hat{s}_{t,j}\}) \leftarrow \texttt{MaskDecoder}(F_t, R_t, P_t)$.
+				\item[(e)] $j^\star \leftarrow \arg\max_j \hat{s}_{t,j}$, output $\hat{M}_t \leftarrow \hat{M}_{t,j^\star}$.
+				\item[(f)] $\mathsf{Mem} \leftarrow \texttt{Update}\!\big(\mathsf{Mem}, \texttt{MemoryEncoder}(F_t, \hat{M}_t, P_t)\big)$.
+			\end{enumerate}
+		\end{enumerate}
+		
+		\subsubsection{Architecture \& Implementation Details}
+		\label{enr:subsubsec_chapter15_sam2_arch}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.85\textwidth]{Figures/Chapter_15/SAM2_architecture.jpg}
+			\caption{\textbf{Architecture.} Each frame is encoded once; memory tokens from prior frames are retrieved and fused with current features (and optional prompts) via a lightweight decoder to predict the mask. Predictions are transformed by a memory encoder for use in future frames. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{fig:chapter15_sam2_arch}
+		\end{figure}
+		
+		\noindent \textbf{Backbone} Large ViT-style encoders (e.g., Hiera variants) with MAE initialization produce a dense feature map per frame, reused within the frame.\footnote{Architectural variants and checkpoints are cataloged in the official repository~\cite{sam2_repo}.}
+		
+		\noindent \textbf{Prompt pathway} Identical to SAM for sparse and dense prompts, with random Fourier features for 2D coordinate encoding (Section~\ref{enr:par_chapter15_sam_posenc}).
+		
+		\noindent \textbf{Decoder} A compact transformer augments SAM's two-way attention with a memory cross-attention branch, outputting up to three masks and their IoU scores per frame.
+		
+		\noindent \textbf{Streaming memory} Memory tokens are kept in a rolling buffer with constant-time selection (e.g., windowed or top-$k$ retrieval) to preserve predictable per-frame cost. A memory encoder transforms the chosen prediction and frame features into new tokens.
+		
+		\subsubsection{Experiments and Ablations}
+		\label{enr:subsubsec_chapter15_sam2_experiments}
+		
+		\paragraph{SA-V dataset and data engine}
+		SAM~2 uses a model-in-the-loop engine extended to videos, producing SA-V with tens of millions of masks and hundreds of thousands of masklets. Qualitative examples appear in Figure~\ref{fig:chapter15_sam2_examples} and dataset statistics in Table~\ref{tab:chapter15_sam2_dataset_compare}. The data engine phases demonstrate decreasing clicks and time per frame as SAM~2 is folded into the loop (see the below data-engine table).
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.70\textwidth]{Figures/Chapter_15/SAM2_example_videos.jpg}
+			\caption{\textbf{SA-V qualitative examples.} Masklets overlaid on sample videos; each color denotes a distinct masklet. Frames are sampled at 1-second intervals. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{fig:chapter15_sam2_examples}
+		\end{figure}
+		
+		\begin{table}[H]
+			\centering
+			\scriptsize
+			\caption{\textbf{Data engine phases.} Average annotation time per frame, percent of edited frames per masklet, clicks per clicked frame, and mask alignment to Phase~1 by size. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{tab:chapter15_sam2_dataengine} 
+			\begin{tabular}{lccccccc}
+				\toprule
+				\textbf{Model in loop} & \textbf{Time/frame} & \textbf{Edited frames} & \textbf{Clicks/} & \multicolumn{4}{c}{\textbf{Phase 1 Mask Alignment (IoU>0.75)}} \\
+				\cmidrule(lr){5-8}
+				& \textbf{(s)} & \textbf{(\%)} & \textbf{clicked frame} & \textbf{All} & \textbf{Small} & \textbf{Medium} & \textbf{Large} \\
+				\midrule
+				Phase 1 SAM only         & 37.8 & 100.00 & 4.80 & --   & --   & --   & --   \\
+				Phase 2 SAM + SAM~2 Mask & 7.4  & 23.25  & 3.61 & 86.4 & 71.3 & 80.4 & 97.9 \\
+				Phase 3 SAM~2            & \textbf{4.5} & \textbf{19.04} & \textbf{2.68} & \textbf{89.1} & \textbf{72.8} & \textbf{81.8} & \textbf{100.0} \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\begin{table}[H]
+			\centering
+			\scriptsize
+			\caption{\textbf{Dataset comparison.} SA-V versus common VOS datasets. Disappearance rate indicates the fraction of frames where the object is absent. Credit: SAM~2~\cite{ravi2024_sam2}; benchmarks include DAVIS~\cite{ponttuset2017_davis}, YouTube-VOS~\cite{xu2018_youtubevos}, UVO~\cite{wang2021_uvo}, VOST~\cite{tokmakov2022_vost}, BURST~\cite{athar2023_burst}, and MOSE~\cite{ding2023_mose}.}
+			\label{tab:chapter15_sam2_dataset_compare}
+			\begin{tabular}{lrrrrrr}
+				\toprule
+				\textbf{Dataset} & \textbf{\#Videos} & \textbf{Duration (hr)} & \textbf{\#Masklets} & \textbf{\#Masks} & \textbf{\#Frames} & \textbf{Disapp.\ (\%)} \\
+				\midrule
+				DAVIS~2017 & 0.2K & 0.1 & 0.4K & 27.1K & 10.7K & 16.1 \\
+				YouTube-VOS & 4.5K & 5.6 & 8.6K & 197.3K & 123.3K & 13.0 \\
+				UVO-dense & 1.0K & 0.9 & 10.2K & 667.1K & 68.3K & 9.2 \\
+				VOST & 0.7K & 4.2 & 1.5K & 175.0K & 75.5K & 41.7 \\
+				BURST & 2.9K & 28.9 & 16.1K & 600.2K & 195.7K & 37.7 \\
+				MOSE & 2.1K & 7.4 & 5.2K & 431.7K & 638.8K & 41.5 \\
+				Internal & 62.9K & 281.8 & 69.6K & 5.4M & 6.0M & 36.4 \\
+				SA-V Manual & 50.9K & 196.0 & 190.9K & 10.0M & 4.2M & 42.5 \\
+				SA-V Manual+Auto & 50.9K & 196.0 & 642.6K & 35.5M & 4.2M & 27.7 \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\paragraph{Zero-shot semi-supervised VOS}
+		SAM~2 outperforms decoupled SAM\,$+$\,tracker baselines across $17$ video datasets under various prompt types (see the below table). The gain is largest for low-click regimes, reflecting the value of memory for propagation.
+		
+		\begin{table}[H]
+			\centering
+			\scriptsize
+			\caption{\textbf{Semi-supervised VOS: zero-shot accuracy across 17 video datasets.} Average accuracy for different first-frame prompts. In the ``ground-truth mask'' case, masks are passed directly to XMem++/Cutie without SAM. Credit: SAM~2~\cite{ravi2024_sam2}; baselines from XMem++~\cite{bekuzarov2023_xmempp} and Cutie~\cite{cheng2024_cutie}.}
+			\label{tab:chapter15_sam2_vos}
+			\begin{tabular}{lccccc}
+				\toprule
+				\textbf{Method} & \textbf{1-click} & \textbf{3-click} & \textbf{5-click} & \textbf{Box} & \textbf{GT mask} \\
+				\midrule
+				SAM + XMem++ & 56.9 & 68.4 & 70.6 & 67.6 & 72.7 \\
+				SAM + Cutie  & 56.7 & 70.1 & 72.2 & 69.4 & 74.1 \\
+				\textbf{SAM~2} & \textbf{64.7} & \textbf{75.3} & \textbf{77.6} & \textbf{74.4} & \textbf{79.3} \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\paragraph{Segment Anything across 37 datasets}
+		Table~\ref{tab:chapter15_sam2_sa37} summarizes average 1- and 5-click mIoU on SA-23 (image) and $14$ additional zero-shot video datasets, along with throughput.
+		
+		\begin{table}[H]
+			\centering
+			\scriptsize
+			\caption{\textbf{Segment Anything task across 37 datasets.} Average 1- and 5-click mIoU for SAM and SAM~2 on SA-23 and additional video datasets; FPS from the optimized video predictor. Credit: SAM~2~\cite{ravi2024_sam2}.}
+			\label{tab:chapter15_sam2_sa37}
+			\begin{tabular}{lccccc}
+				\toprule
+				\textbf{Model} & \textbf{Data} & \textbf{SA-23 All} & \textbf{SA-23 Image} & \textbf{SA-23 Video} & \textbf{14 New Video / FPS} \\
+				\midrule
+				SAM & SA-1B & 58.1 (81.3) & 60.8 (82.1) & 54.5 (80.3) & 59.1 (83.4) / 21.7 \\
+				SAM~2 & SA-1B & 58.9 (81.7) & 60.8 (82.1) & 56.4 (81.2) & 56.6 (83.7) / \textbf{130.1} \\
+				\textbf{SAM~2} & \textbf{Our mix} & \textbf{61.9 (83.5)} & \textbf{63.3 (83.8)} & \textbf{60.1 (83.2)} & \textbf{69.6 (85.8)} / \textbf{130.1} \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\newpage
+		
+		\paragraph{Ablations}
+		We summarize the most decision-shaping empirical findings the authors report across the main paper and appendices, focusing on the pieces that guided design choices (metrics follow VOS convention: region/boundary mean $\text{J\&F}$; for images we use mIoU on the SA benchmarks).
+		
+		\textbf{Data mixture vs.\ architecture.} Training only on images (SA-1B) already yields higher \emph{image} mIoU for SAM~2 than SAM at substantially higher speed (e.g., with the Hiera-B+ image encoder: 58.9/81.7 1-/5-click mIoU vs.\ SAM ViT-H 58.1/81.3, while running $\sim6\times$ faster) and improves further when mixing videos (SA-V + internal + open VOS) to 61.4/83.7 and large gains on frames from video datasets (e.g., “14 new Video” average rises from 56.6/83.7 to 69.6/86.0). These tables isolate the \emph{data} contribution versus pure architecture, establishing that joint image+video training is key for transfer to video frames while retaining strong image performance.
+		
+		\textbf{Speed/accuracy operating points.} For semi-supervised VOS, the authors report real-time throughput with two encoder scales: Hiera-B+ at 43.8 FPS and Hiera-L at 30.2 FPS on a single A100 (batch size 1). The larger encoder improves accuracy across DAVIS/YTVOS/LVOS/SA-V, quantifying the classic capacity–speed trade-off and showing the decoder/memory remain light enough for interactive use.
+		
+		\textbf{Streaming memory design choices.}
+		Appendix~C details the memory pathway used during ablations:
+		\begin{itemize}
+			\item \emph{Compact projections.} Memory features are projected to 64-D, and the 256-D mask token (object pointer) is split into four 64-D tokens for cross-attention.
+			\item \emph{Position encoding.} Memory attention employs 2D RoPE for spatial (and short-range temporal) structure but excludes the pointer (no fixed spatial locus).
+			\item \emph{Encoder reuse.} The memory encoder \emph{reuses} the image encoder’s embeddings instead of a second backbone.
+		\end{itemize}
+		These choices keep retrieval cheap and stable while improving long-horizon consistency. Although per-choice deltas are not tabulated as separate lines, these are the components retained in the final model after iterative experimentation.
+		
+		\textbf{Interactive robustness after failure cases.}
+		In the online/interactive protocol, SAM~2’s ability to \emph{prompt at any frame} plus its streaming memory lets a single corrective click re-acquire objects after occlusion, unlike decoupled “SAM + tracker” pipelines that require re-annotation of full objects when drift occurs. Figure-level analyses (e.g., Fig.~2) explicitly compare the number and placement of clicks needed to recover, supporting the claim that memory is the dominant factor for robustness under occlusions/long motions in the interactive setting.
+		
+		\textbf{Dataset scale and coverage.}
+		The SA-V data engine (50.9K videos, $\sim$642.6K masklets) is shown to be much larger and more diverse (disappearance rates, geography, parts vs.\ wholes) than prior VOS datasets—motivating why memory-based propagation is learnable at scale and why performance saturates for prior methods on SA-V while SAM~2 keeps improving.
+		
+		\smallskip\noindent\emph{Takeaway.}
+		The evidence pattern is consistent:
+		\begin{itemize}
+			\item Joint image+video training establishes the base.
+			\item The streaming memory pathway (with compact 64-D memories + object pointers + RoPE) translates that base into temporal robustness for occlusions/long motions.
+			\item The decoder remains compact enough to preserve real-time throughput even at 1024-px inputs.
+		\end{itemize}
+		
+		\newpage
+		
+		\subsubsection{Limitations and Future Directions}
+		\label{enr:subsubsec_chapter15_sam2_limits}
+		
+		We restate the authors’ limitations in spirit and connect each to concrete directions the community has begun to pursue. For deeper treatments, see SAMuRAI~\cite{yang2024_samurai} (motion + memory selection for tracking), Grounded-SAM~\cite{ren2024_groundedsam} and its video-centric follow-up Grounded-SAM~2~\cite{groundedsam2_repo} (language-grounded detection/segmentation/tracking), and long-horizon memory variants such as SAM2Long~\cite{ding2024_sam2long}.
+		
+		\begin{itemize}
+			\item \textbf{Memory selection at long horizons.} The model ``may fail to segment objects across shot changes and can lose track of or confuse objects in crowded scenes, after long occlusions or in extended videos''. This reflects a bounded, recency-biased FIFO memory that can evict rare but diagnostic past views. \emph{Next steps:} learned retention/retrieval policies and compact identity-aware state (e.g., evolving object vectors); explicit shot-change handling. See also \emph{SAM2Long}~\cite{ding2024_sam2long}, which explores training-free tree memories to keep multiple hypotheses over long videos.
+			
+			\item \textbf{Extreme appearance changes and fast motion.} Severe deformations, lighting shifts, or thin/fast structures can induce drift before correction. \emph{Next steps:} stronger temporal priors (optical flow cues; longer-range video transformers) and motion-aware selection. \emph{SAMuRAI}~\cite{yang2024_samurai} adds motion modeling and a motion-aware memory selection mechanism on top of SAM~2 for zero-shot tracking, improving robustness without fine-tuning.
+			
+			\item \textbf{Dense multi-object interactions.} Although SAM~2 can track multiple objects, independent per-object decoding can suffer identity swaps under heavy overlap or look-alike instances. \emph{Next steps:} joint, conflict-aware reasoning (e.g., shared object-level context/graph layers) and stronger identity cues. Language-grounded pipelines such as \emph{Grounded-SAM} and \emph{Grounded-SAM~2}~\cite{ren2024_groundedsam,groundedsam2_repo} help disambiguate identities with text-conditioned detection before segmentation/tracking.
+			
+			\item \textbf{Prompt dependence and ambiguity.} Ambiguous clicks can bias hypotheses; predicted IoU is a useful uncertainty signal but not a remedy. \emph{Next steps:} UI policies that surface low-IoU regions and actively \emph{guide} users to high-value clicks; integration with open-vocabulary grounding to replace ambiguous geometric prompts with unambiguous text prompts (cf.\ \emph{Grounded-SAM}~\cite{ren2024_groundedsam}).
+			
+			\item \textbf{Domain coverage.} Despite SA-V’s scale, niche modalities (thermal, medical, satellite) remain underrepresented. \emph{Next steps:} continued data-engine iteration with targeted mining/verification and domain-specific adapters; language-grounded retrieval (as in \emph{Grounded-SAM} families) can further lower annotation cost when scaling to new domains.
+		\end{itemize}
+		
+		\bigskip
+		\noindent\textit{Implementation note.} The official repository provides image/video predictors, checkpoints, notebooks, and an optimized video predictor with compiled kernels suitable for high-throughput VOS. The docs and Colab demonstrate interactive prompting, memory behavior, and speed/accuracy trade-offs out-of-the-box.
+	
+	\end{enrichment}
 
+\end{enrichment}
 
