@@ -43,7 +43,7 @@ As we can see in the figure \ref{fig:chapter10_lr_selection}:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_10/slide_36.jpg}
-	\caption{Step Learning Rate Decay: The learning rate is reduced by a factor of $0.1$ at epochs 30, 60, and 90, indicated by the dashed vertical lines. The red curve represents the noisy per-iteration loss, highlighting the inherent variance in training. The light blue curve shows the Exponential Moving Average (EMA) of the loss, providing a smoother trajectory of the loss progression. The EMA helps visualize the overall trend despite the noise, demonstrating the impact of learning rate drops on loss reduction over time.}
+	\caption{Step Learning Rate Decay: The learning rate is reduced by a factor of $0.1$ at epochs 30, 60, and 90, indicated by the dashed vertical lines. The blue curve represents the noisy per-iteration loss, highlighting the inherent variance in training. The light blue curve shows the Exponential Moving Average (EMA) of the loss, providing a smoother trajectory of the loss progression. The EMA helps visualize the overall trend despite the noise, demonstrating the impact of learning rate drops on loss reduction over time.}
 	\label{fig:chapter10_step_lr}
 \end{figure}
 
@@ -456,73 +456,104 @@ When we begin training, it is difficult to determine which hyperparameters fall 
 \noindent In contrast, \textbf{random search} selects hyperparameters independently, meaning more trials sample different values of the important parameter. This increases the likelihood of hitting the peak region of the green curve at least once, thereby selecting a better-performing model configuration.
 
 \subsection{Steps for Hyperparameter Tuning}
-\label{subsec:steps_hyperparam_tuning}
+\label{subsec:chapter10_hyperparam_tuning}
 
-When computational resources are limited, an efficient stepwise approach is essential for optimizing hyperparameters without excessive trial and error. The following steps help establish a structured tuning process.
+\noindent Hyperparameter tuning is one of the most computationally expensive yet crucial stages in model optimization.  
+When resources are limited, adopting a structured, iterative strategy prevents wasted effort on uninformative configurations.  
+The following process combines diagnostic sanity checks with a principled exploration of the hyperparameter space.  
+
+\newpage
+
+Importantly, while \textbf{grid search} systematically evaluates all parameter combinations, research has shown that \textbf{random search} is typically far more effective in high-dimensional settings \cite{bergstra2012_random}.  
+Grid search wastes trials exploring unimportant dimensions uniformly, whereas random sampling explores a wider variety of promising configurations, often finding strong solutions several times faster.
 
 \begin{enumerate}
-	\item \textbf{Check Initial Loss}: Before running any extensive training, check whether the model's loss behaves as expected at initialization. This can catch fundamental issues early on.
+	\item \textbf{Check the Initial Loss: Sanity Verification}\\
+	Before extensive training, verify that the model behaves sensibly at initialization.  
+	This early diagnostic catches systemic bugs or poor scaling before any tuning begins.
 	\begin{itemize}
-		\item Turn off weight decay (L2 regularization) to ensure it does not artificially alter the loss.
-		\item Compute the expected initial loss. For instance, in a classification task with $C$ classes using softmax cross-entropy, the expected initial loss with random weights should be approximately $\log(C)$. 
-		\item If the loss is significantly higher, this may indicate:
+		\item Disable weight decay, dropout, and data augmentation to isolate core dynamics.
+		\item For a softmax classifier with \( C \) classes, the expected initial cross-entropy loss is roughly \( \log C \).
+		\item Significant deviations usually signal issues such as:
 		\begin{itemize}
-			\item Incorrect data preprocessing (e.g., improper normalization).
-			\item A bug in the loss function computation.
-			\item Problems in weight initialization (e.g., weights too large or too small).
-			\item An issue with label encoding or one-hot encoding.
+			\item Mis-scaled input data (e.g., missing normalization).
+			\item Mis-specified loss function or bug in label encoding.
+			\item Improper initialization (e.g., exploding or vanishing activations).
 		\end{itemize}
 	\end{itemize}
 	
-	\item \textbf{Overfit a Small Dataset}: Before launching full-scale training, verify that the model can memorize a tiny dataset (5-10 minibatches). This serves as a sanity check to ensure the model has the capacity to learn.
+	\item \textbf{Overfit a Tiny Dataset: Model Capacity Check}\\
+	Test whether the model can memorize a very small dataset (5–10 minibatches).  
+	This step confirms that the model and optimizer can learn under ideal conditions.
 	\begin{itemize}
-		\item Train without regularization (e.g., dropout, weight decay) and see if the model can reach 100\% accuracy on this subset.
-		\item If the model fails to overfit:
+		\item Train with all regularization disabled.
+		\item The model should reach near-100\% training accuracy quickly.
+		\item Failure to overfit indicates deeper issues:
 		\begin{itemize}
-			\item The learning rate might be too low, preventing effective optimization.
-			\item Initialization might be poor, leading to vanishing or exploding gradients.
-			\item The architecture might be too simple, lacking sufficient capacity to fit even small data samples.
+			\item Learning rate too low or initialization too weak.
+			\item Architecture too shallow or underparameterized.
+			\item Data pipeline or loss computation errors.
 		\end{itemize}
 	\end{itemize}
 	
-	\item \textbf{Find a Good Learning Rate}: Train on the full dataset but with minimal regularization. We want to take the architecture of the previous step, use all the training data, turn on a small weight decay (L2 reg), and find a learning rate that makes	the loss drop significantly within $\approx 100$ iterations.
+	\item \textbf{Find a Viable Learning Rate: Sensitivity Test}\\
+	Use the full dataset with minimal regularization to determine a good learning rate (LR) range.
 	\begin{itemize}
-		\item Experiment with different learning rates (e.g., $10^{-1}$, $10^{-2}$, $10^{-3}$, $10^{-4}$).
-		\item Monitor how the loss decreases within the first 100 iterations.
-		\item A learning rate that is too high might cause instability (e.g., NaNs or loss oscillations).
-		\item A learning rate that is too low may result in extremely slow convergence.
-		\item A good learning rate should cause the loss to decrease exponentially in the early iterations.
+		\item Start with a small L2 penalty (e.g., \( 10^{-4} \)).
+		\item Try a logarithmic sweep: \( 10^{-1}, 10^{-2}, 10^{-3}, 10^{-4} \).
+		\item The ideal LR produces a steady, exponential loss decrease in the first 100–200 iterations.
+		\item Too high → divergence or NaNs; too low → stagnant loss.
 	\end{itemize}
+	A good learning rate is the foundation of every successful tuning cycle.
 	
-	\item \textbf{Run a Coarse Grid Search}: Select a small set of hyperparameter values (e.g., 2-3 values per parameter) and run short training sessions (1-5 epochs).
+	\item \textbf{Run a Coarse \emph{Random Search}: Global Exploration}\\
+	Instead of testing every grid combination, sample hyperparameters randomly from broad distributions for short runs (e.g., 3–5 epochs each).
 	\begin{itemize}
-		\item This step is useful to identify promising regions in the hyperparameter space without wasting too many resources.
-		\item Good initial choices:
+		\item Random search covers more unique configurations and avoids wasting trials on irrelevant parameter combinations.
+		\item Example sampling ranges:
 		\begin{itemize}
-			\item Weight decay: $\{10^{-4}, 10^{-5}, 0\}$.
-			\item Learning rate: Best value from Step 3.
-			\item Batch size: $\{32, 64, 128\}$ (depending on GPU memory constraints).
+			\item Learning rate: log-uniform in [\(10^{-4}\), \(10^{-1}\)].
+			\item Weight decay: log-uniform in [\(10^{-6}\), \(10^{-3}\)].
+			\item Dropout: uniform in [0, 0.6].
+			\item Batch size: categorical in \{32, 64, 128\} (depending on hardware).
 		\end{itemize}
+		\item Run 10–20 trials and rank by validation performance.
 	\end{itemize}
+	This step identifies promising regions of the search space without expensive exhaustive evaluation.
 	
-	\item \textbf{Refine the Hyperparameter Grid}: Take the best-performing configurations from the coarse grid search and train longer (10-20 epochs).
-	\begin{itemize}
-		\item Start incorporating more regularization techniques (dropout, weight decay) only if overfitting occurs. Start without these at first.
-		\item Consider adding data augmentation techniques if applicable.
-	\end{itemize}
+	\newpage
 	
-	\item \textbf{Analyze Learning Curves}: Look at training loss, training accuracy, and validation accuracy trends.
+	\item \textbf{Refine the Search: Local Exploitation}\\
+	Focus the next round of random search within narrower ranges around the best-performing configurations.
 	\begin{itemize}
-		\item Identify when the loss stops decreasing and whether accuracy plateaus or continues improving.
-		\item Determine if early stopping should be applied.
+		\item For example, if good learning rates cluster near \(2 \times 10^{-3}\), search between \(10^{-3}\) and \(5 \times 10^{-3}\).
+		\item Gradually add regularization (dropout, weight decay) or data augmentation if overfitting appears.
+		\item Train longer (10–30 epochs) to evaluate generalization more accurately.
 	\end{itemize}
+	This step transitions from exploration to fine-tuning, exploiting the discovered “sweet spot.”
 	
-	\item \textbf{Iterate and Fine-Tune}: Based on the learning curves, refine hyperparameters and repeat from Step 5.
+	\item \textbf{Analyze Learning Curves: Interpret Behavior}\\
+	Plot and inspect training/validation loss and accuracy to understand optimization dynamics.
 	\begin{itemize}
-		\item Introduce learning rate decay strategies to improve late-stage training.
-		\item Continue this cycle until the model reaches satisfactory performance or resources run out.
+		\item Validation loss decreasing → under-training; train longer.
+		\item Large train–val gap → overfitting; increase regularization.
+		\item Both high and flat → underfitting; try a larger model or higher LR.
 	\end{itemize}
+	Quantitative metrics are essential, but qualitative curve inspection often reveals misconfigurations faster than automated heuristics.
+	
+	\item \textbf{Iterate and Converge: Continuous Refinement}\\
+	Hyperparameter tuning is inherently iterative.  
+	Use results from Step 6 to guide further random sampling or to introduce advanced techniques:
+	\begin{itemize}
+		\item Apply learning rate schedules (e.g., cosine decay, OneCycle).
+		\item Use early stopping to save compute on poor configurations.
+		\item Combine the top 3–5 tuned models in an ensemble for improved robustness.
+	\end{itemize}
+	Continue refining until performance saturates or computational limits are reached.
 \end{enumerate}
+
+\noindent This structured pipeline—diagnose, sanity-check, explore broadly via random sampling, then refine and interpret—turns hyperparameter tuning from blind trial-and-error into an informed, iterative optimization process.  
+In practice, random search achieves competitive results with an order of magnitude fewer trials than grid search, especially when parameters interact nonlinearly.
 
 \subsection{Interpreting Learning Curves}
 \label{subsec:learning_curves}

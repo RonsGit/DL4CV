@@ -101,9 +101,11 @@ To find \(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\p
 	\label{fig:chapter6_local_upstream}
 \end{figure}
 
-As we've seen in the above examples, within the computational graph, each node performs \textbf{only \emph{local}} gradient calculations. This is the core principal behind backpropagation, making it scalable and practical. Therefore, in order to make sure we clearly understand why, we'll zoom out and provide a high-level overview looking only at an abstract node in a computational graph independently. Suppose a node \(f\) outputs \(z\) from inputs \(x\) and \(y\). 
+As we've seen in the above examples, within the computational graph, each node performs \textbf{only \emph{local}} gradient calculations. This is the core principal behind backpropagation, making it scalable and practical. Therefore, in order to make sure we clearly understand why, we'll zoom out and provide a high-level overview looking only at an abstract node in a computational graph independently.
 
-\newpage 
+\newpage
+
+Suppose a node \(f\) outputs \(z\) from inputs \(x\) and \(y\).  
 Given an \emph{upstream gradient} \(\frac{\partial L}{\partial z}\) (the partial derivative of the loss \(L\) w.r.t.\ \(z\)), the node only needs:
 \begin{itemize}
 	\item \(\displaystyle \frac{\partial z}{\partial x}\), 
@@ -294,7 +296,7 @@ This modular approach enables modern deep learning frameworks to handle complex 
 \section{Implementing Backpropagation with PyTorch Autograd}
 \label{sec:pytorch-autograd}
 
-A practical example of a modular approach to implementing backpropagation is PyTorch's \textbf{Autograd} engine. In PyTorch, functions that support automatic differentiation inherit from \texttt{torch.autograd.Function}. These functions must implement two key static methods:
+A practical example of a modular approach to implementing backpropagation is PyTorch's \textbf{Autograd} engine. In PyTorch, functions that support automatic differentiation inherit from \\ \texttt{torch.autograd.Function}. These functions must implement two key static methods:
 \begin{itemize}
 	\item \textbf{Forward:} Computes the node’s output and stashes values required for the backward pass.
 	\item \textbf{Backward:} Receives the upstream gradient and propagates it back using local derivatives.
@@ -664,6 +666,8 @@ where \( f_4 \) outputs the scalar loss \( L \). This chain perspective is espec
 	\label{fig:chapter6_reverse_mode}
 \end{figure}
 
+\newpage
+
 When a scalar loss \(L\) appears at the end of the computational graph, \emph{reverse-mode} automatic differentiation efficiently calculates gradients with respect to a large number of parameters. By traversing the chain from \(L\) backward, matrix-vector products replace matrix-matrix products, which is much more efficient for high-dimensional problems.
 
 \subsubsection{Forward-Mode Automatic Differentiation}
@@ -742,12 +746,26 @@ R(W) = \|\nabla_W L\|_2^2.
 Computing \( \tfrac{d}{d W}R(W) \) involves second derivatives of \( L \). With backpropagation for higher-order terms, we can approximate or compute this regularization effectively, potentially improving model training by smoothing out rugged loss landscapes.
 
 \subsection{Automatic Differentiation: Summary of Key Insights}
+Automatic differentiation (AD) provides a unified framework for efficiently computing derivatives of complex functions expressed as computational graphs.  
+Backpropagation, as used in deep learning, is a specific instance of this framework—corresponding to \textbf{reverse-mode automatic differentiation}.
+
 \begin{itemize}
-	\item Reverse-mode automatic differentiation is preferred for scalar outputs and many parameters, as in deep learning.
-	\item Forward-mode automatic differentiation is better when a single (or few) scalar inputs affect many outputs.
-	\item Backpropagation can extend to compute higher-order derivatives (e.g., Hessians or Hessian-vector products).
-	\item Hessian-based methods enable second-order optimization techniques and advanced regularization schemes.
+	\item \textbf{Reverse-mode automatic differentiation (backpropagation).}  
+	In deep learning, we typically minimize a scalar loss with respect to millions of parameters.  
+	Reverse-mode AD propagates sensitivities backward through the computational graph, allowing all partial derivatives of a scalar output to be computed in a single backward pass. This makes it the method of choice for large-scale neural network training.
+	
+	\item \textbf{Forward-mode automatic differentiation.}  
+	Forward-mode AD pushes derivatives forward from the inputs instead of backward from the output.  
+	It is most efficient when there are few input variables but many outputs—such as in scientific computing, sensitivity analysis, and physical simulations—where the goal is to measure how a single parameter affects multiple outcomes.
+	
+	\item \textbf{Higher-order derivatives.}  
+	The same computational principles that underlie backpropagation can be extended to compute higher-order derivatives, including Hessians and Hessian–vector products.  
+	These quantities capture curvature information, enabling more refined optimization strategies.
+	
+	\item \textbf{Second-order methods and regularization.}  
+	Hessian-based quantities support advanced techniques such as second-order optimization (e.g., Newton’s method) and curvature-aware regularization, which can improve convergence speed and stability in challenging loss landscapes.
 \end{itemize}
 
-These techniques, taken together, demonstrate how backpropagation’s fundamental ideas apply to a wide range of differentiation tasks, from standard neural network training to advanced scientific computations.
+\noindent Taken together, these insights highlight that backpropagation is not merely a training algorithm, but a powerful instance of the broader concept of automatic differentiation.  
+The same underlying ideas—propagating derivatives through computational graphs—form the mathematical foundation for a wide spectrum of applications, from deep learning optimization to scientific modeling and engineering simulations.
 

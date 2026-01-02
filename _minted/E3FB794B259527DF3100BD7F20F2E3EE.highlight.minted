@@ -1,3 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Computes gradients for w1 and w2}
-\end{MintedVerbatim}

@@ -1,5 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-Standard Convolution Output Shape: torch.Size([1, 128, 224, 224])
-Grouped Convolution Output Shape: torch.Size([1, 128, 224, 224])
-Depthwise Convolution Output Shape: torch.Size([1, 64, 224, 224])
-\end{MintedVerbatim}

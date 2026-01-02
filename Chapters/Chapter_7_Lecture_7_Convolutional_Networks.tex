@@ -104,8 +104,8 @@ y_{i,j} = \sum_{c=1}^{C_{\text{in}}} \sum_{m=1}^{K_h} \sum_{n=1}^{K_w} W_{c,m,n}
 \]
 where:
 \begin{itemize}
-	\item \( W_{c,m,n} \) represents the filter weights,
-	\item \( X_{c, i+m, j+n} \) represents the corresponding region of the input image,
+	\item \( W_{c,m,n} \) represents the filter weights.
+	\item \( X_{c, i+m, j+n} \) represents the corresponding region of the input image.
 	\item \( b \) is the bias term.
 \end{itemize}
 
@@ -211,7 +211,11 @@ Each filter produces a single activation map, and stacking multiple filters resu
 	\begin{enrichment}[Computing the Gradient Magnitude][subsubsection]
 		At each spatial location in the image, the kernel is positioned over a \(3 \times 3\) region of pixel intensities. The convolution operation computes the dot product between the kernel and the underlying pixel values, yielding a new intensity that reflects the local gradient in the selected direction.
 		
-		Applying \(\text{Sobel}_x\) results in an \emph{edge map} \(G_x=I * \text{Sobel}_x\), where larger absolute values indicate strong vertical edges (intensity changes along the horizontal direction). Similarly, applying \(\text{Sobel}_y\) results in an edge map \(G_y=I * \text{Sobel}_y\), where larger absolute values indicate strong horizontal edges (intensity changes along the vertical direction). To combine both, we compute the \emph{gradient magnitude}:
+		Applying \(\text{Sobel}_x\) results in an \emph{edge map} \(G_x=I * \text{Sobel}_x\), where larger absolute values indicate strong vertical edges (intensity changes along the horizontal direction). Similarly, applying \(\text{Sobel}_y\) results in an edge map \(G_y=I * \text{Sobel}_y\), where larger absolute values indicate strong horizontal edges (intensity changes along the vertical direction). 
+		
+		\newpage
+		
+		To combine both directions, we compute the \emph{gradient magnitude}:
 		
 		\[
 		G = \sqrt{G_x ^2 + G_y ^2}.
@@ -229,7 +233,7 @@ Each filter produces a single activation map, and stacking multiple filters resu
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\textwidth]{figures/Chapter_7/2d_conv/convolve_gx_1.jpg}
+		\includegraphics[width=0.75\textwidth]{figures/Chapter_7/2d_conv/convolve_gx_1.jpg}
 		\caption{Computation of the first two cells of the image patch convolved with \(\text{Sobel}_x\).}
 		\label{fig:chapter7_convolve_x_1}
 	\end{figure}
@@ -399,26 +403,26 @@ N \times C_{\text{out}} \times H' \times W'.
 	\label{fig:chapter7_general_conv}
 \end{figure}
 
-\section{Building Convolutional Neural Networks}
-\label{sec:conv_nets}
-
-\subsection{Stacking Convolutional Layers}
-\label{subsec:stacking_convs}
-
-With convolutional layers, we can construct a new type of neural network by stacking multiple convolutions sequentially. Unlike fully connected layers, where each neuron connects to every input feature, convolutional layers operate locally, extracting spatial features at each step.
-
-The filters in convolutional layers are \textbf{learned} throughout the training process. They adjust dynamically to capture features useful for minimizing the network’s loss, just like the weights in fully connected layers. The output feature map after each convolution has:
-\begin{itemize}
-	\item \( C_{\text{out}} \) channels (determined by the number of filters in that layer),
-	\item A height \( H' \) and width \( W' \), which may differ from the input dimensions \( H \) and \( W \), depending on the use of padding and strides.
-\end{itemize}
-
-A common architectural pattern in convolutional networks is to \textbf{reduce spatial dimensions} while \textbf{increasing the number of channels}. The rationale for this is:
-\begin{itemize}
-	\item Each channel can be seen as a learned feature representation, abstracting spatial patterns across layers.
-	\item Reducing spatial dimensions while increasing channels allows the network to capture \textbf{high-level patterns}, moving from local details (e.g., edges) to global structures (e.g., entire objects).
-	\item It aligns with increasing the \textbf{receptive field}, allowing neurons in deeper layers to capture large-scale spatial dependencies (e.g., recognizing an entire cat’s face rather than just whiskers).
-\end{itemize}
+	\section{Building Convolutional Neural Networks}
+	\label{sec:conv_nets}
+	
+	\subsection{Stacking Convolutional Layers}
+	\label{subsec:stacking_convs}
+	
+	With convolutional layers, we can construct a new type of neural network by stacking multiple convolutions sequentially. Unlike fully connected layers, where each neuron connects to every input feature, convolutional layers operate locally, extracting spatial features at each step.
+	
+	The filters in convolutional layers are \textbf{learned} throughout the training process. They adjust dynamically to capture features useful for minimizing the network’s loss, just like the weights in fully connected layers. The output feature map after each convolution has:
+	\begin{itemize}
+		\item \( C_{\text{out}} \) channels (determined by the number of filters in that layer),
+		\item A height \( H' \) and width \( W' \), which may differ from the input dimensions \( H \) and \( W \), depending on the use of padding and strides.
+	\end{itemize}
+	
+	A common architectural pattern in convolutional networks is to \textbf{reduce spatial dimensions} while \textbf{increasing the number of channels}. The rationale for this is:
+	\begin{itemize}
+		\item Each channel can be seen as a learned feature representation, abstracting spatial patterns across layers.
+		\item Reducing spatial dimensions while increasing channels allows the network to capture \textbf{high-level patterns}, moving from local details (e.g., edges) to global structures (e.g., entire objects).
+		\item It allows neurons in deeper layers to \textbf{gather information from a progressively larger region of the input}, effectively expanding their \emph{receptive field}. As we stack more convolutional and pooling layers, each neuron becomes responsive to a wider portion of the original image, enabling the network to capture increasingly large-scale structures (e.g., recognizing an entire cat’s face rather than just its whiskers)—a concept we will formalize later when discussing receptive fields.
+	\end{itemize}
 
 \begin{figure}[H]
 	\centering
@@ -800,6 +804,8 @@ Even though convolutional networks use fewer parameters than fully connected net
 		\end{itemize}
 	\end{enrichment}
 	
+	\newpage
+	
 	\begin{enrichment}[When Does Parameter Sharing Not Make Complete Sense?][subsection]
 		\noindent While parameter sharing is a powerful technique, there are scenarios where it may not be fully appropriate:
 		\begin{itemize}
@@ -813,7 +819,6 @@ Even though convolutional networks use fewer parameters than fully connected net
 	\begin{enrichment}[Alternative Approaches When Parameter Sharing Fails][subsection]
 		\noindent In cases where parameter sharing is not ideal, alternative architectures can be used:
 		
-
 \begin{enrichment}[Locally-Connected Layers][subsubsection]
 	\noindent Unlike standard convolutional layers, \textbf{locally-connected layers} do not share weights across spatial positions. Instead, each neuron in the layer learns a unique set of weights, allowing the network to specialize different feature detectors for different spatial regions. This is particularly useful when spatial position conveys meaning, such as in medical imaging, facial recognition, and structured object recognition.
 	
@@ -834,7 +839,11 @@ Even though convolutional networks use fewer parameters than fully connected net
 		\end{itemize}
 	\end{enrichment}
 	
-	\noindent While locally-connected layers can be powerful for structured image processing tasks, they are often used selectively in deep learning architectures. In practice, hybrid models that combine convolutional and locally-connected layers provide a balance between generalization and spatial specificity, and are sometimes used in practice for the particular situations in which full parameter-sharing approach doesn't make total sense.
+	\noindent While locally-connected layers can be powerful for structured image processing tasks, they are often used selectively in deep learning architectures. 
+	
+	\newpage
+	
+	In practice, hybrid models that combine convolutional and locally-connected layers provide a balance between generalization and spatial specificity, and are sometimes used in practice for the particular situations in which full parameter-sharing approach doesn't make total sense.
 \end{enrichment}
 		
 		\begin{enrichment}[Hybrid Approaches][subsubsection]
@@ -1016,31 +1025,36 @@ with shape \( 1 \times 2 \).
 \emph{3D convolutions} extend 2D convolutions to volumetric data, where input dimensions are \( C_{\text{in}} \times H \times W \times D \). Filters have shape \( C_{\text{out}} \times C_{\text{in}} \times K \times K \times K \).
 
 \paragraph{Numerical Example: 3D Convolution on Volumetric Data}
-Consider a volumetric input (e.g., a video clip, a medical scan) represented as a \( 1 \times 4 \times 4 \times 4 \) tensor. We apply a \emph{3D convolution} with:
+Consider a volumetric input (e.g., a single-channel medical scan or short video clip) represented as a 5D tensor:
+\[
+X \in \mathbb{R}^{(N,\, C_{\text{in}},\, D_{\text{in}},\, H_{\text{in}},\, W_{\text{in}})} = (1,\, 1,\, 4,\, 4,\, 4),
+\]
+where \(N=1\) is the batch size, \(C_{\text{in}}=1\) is the number of input channels, and \(D_{\text{in}}, H_{\text{in}}, W_{\text{in}}\) are the spatial depth, height, and width.
+
+We apply a 3D convolution with the following parameters:
 \begin{itemize}
-	\item Kernel \( K = 3 \times 3 \times 3 \).
-	\item Zero padding \( P = 0 \).
-	\item Stride \( S = 1 \).
+	\item Kernel size \(K = (3,3,3)\).
+	\item Zero padding \(P = 0\).
+	\item Stride \(S = 1\).
+	\item Output channels \(C_{\text{out}} = 1\).
 \end{itemize}
 
-The output size for each dimension is computed using the following formula:
+\paragraph{Output Size Calculation}
+The output spatial dimensions are given by:
 \[
-D_{\text{out}} = \left\lfloor \frac{D_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+O = \left\lfloor \frac{I - K + 2P}{S} \right\rfloor + 1.
 \]
+Substituting our values:
 \[
-H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+D_{\text{out}} = H_{\text{out}} = W_{\text{out}} = 
+\left\lfloor \frac{4 - 3 + 0}{1} \right\rfloor + 1 = 2.
 \]
+Hence the output tensor has shape:
 \[
-W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} + 2P - (K - 1) - 1}{S} + 1 \right\rfloor
+Y \in \mathbb{R}^{(N,\, C_{\text{out}},\, D_{\text{out}},\, H_{\text{out}},\, W_{\text{out}})} = (1,\, 1,\, 2,\, 2,\, 2).
 \]
 
-Substituting \( D_{\text{in}} = H_{\text{in}} = W_{\text{in}} = 4 \), \( K = 3 \), \( P = 0 \), \( S = 1 \), we get:
-\[
-D_{\text{out}} = H_{\text{out}} = W_{\text{out}} = 2.
-\]
-
-\textbf{Input Tensor}:
-
+\paragraph{Input Tensor (Depth Slices)}
 \[
 X =
 \begin{bmatrix}
@@ -1068,104 +1082,90 @@ X =
 		-5 & -2 & -4 & 2 \\ 
 		-2 & -4 & 0 & 0 
 	\end{bmatrix} 
-\end{bmatrix}
+\end{bmatrix}.
 \]
 
-\textbf{Filter Tensor}:
+\paragraph{Filter Tensor (Kernel)}
+For \(C_{\text{out}} = 1\) and \(C_{\text{in}} = 1\), the kernel has full shape
+\[
+K \in \mathbb{R}^{(1,\,1,\,3,\,3,\,3)}.
+\]
+We can visualize the 3D kernel (depth slices) as:
 \[
 K =
 \begin{bmatrix}
 	\begin{bmatrix} -2 & 0 & 2 \\ 1 & 3 & -2 \\ -2 & 0 & -2 \end{bmatrix}, 
 	\begin{bmatrix} -2 & 2 & 0 \\ 2 & 3 & 3 \\ 2 & 3 & 0 \end{bmatrix}, 
 	\begin{bmatrix} -3 & 2 & 1 \\ 1 & -2 & 3 \\ 1 & -2 & -3 \end{bmatrix}
-\end{bmatrix}
+\end{bmatrix}.
 \]
 
-\paragraph{3D Convolution Formula}
-Each output element in a 3D convolution is computed using the formula:
-
+\paragraph{Role of the Input Channel Dimension \(C_{\text{in}}\)}
+In this example, \(C_{\text{in}}=1\), meaning the convolution integrates purely over spatial dimensions (depth, height, width).  
+In general, for multi-channel inputs such as an RGB video (\(C_{\text{in}}=3\)) or multi-modal medical volume (\(C_{\text{in}}>1\)), the kernel expands accordingly:
 \[
-Y(d, h, w) = \sum_{i=0}^{K-1} \sum_{j=0}^{K-1} \sum_{k=0}^{K-1} X(d+i, h+j, w+k) \cdot K(i, j, k)
+K \in \mathbb{R}^{(C_{\text{out}},\, C_{\text{in}},\, K_D,\, K_H,\, K_W)}.
+\]
+At each output position, the convolution sums over all input channels:
+\[
+Y_{c_{\text{out}}, d, h, w} =
+\sum_{c_{\text{in}}=0}^{C_{\text{in}}-1} \sum_{i=0}^{K_D-1} \sum_{j=0}^{K_H-1} \sum_{k=0}^{K_W-1}
+X_{c_{\text{in}},\, d+i,\, h+j,\, w+k} \, K_{c_{\text{out}},\, c_{\text{in}},\, i,\, j,\, k}.
+\]
+This mechanism fuses cross-channel information—critical, for example, in learning color-motion correlations in video or multi-spectral cues in MRI.
+
+\paragraph{Single-Channel Case (\(C_{\text{in}}=C_{\text{out}}=1\))}
+For our numerical example, the channel sum reduces to a single term:
+\[
+Y(d, h, w) =
+\sum_{i=0}^{2} \sum_{j=0}^{2} \sum_{k=0}^{2}
+X(d+i, h+j, w+k) \cdot K(i,j,k).
 \]
 
-where:
-\begin{itemize}
-	\item \( Y(d, h, w) \) is the output at depth \( d \), height \( h \), and width \( w \).
-	\item \( X(d+i, h+j, w+k) \) is the corresponding element from the input tensor.
-	\item \( K(i, j, k) \) is the filter/kernel value at at depth \( i \), height \( j \), and width \( k \).
-\end{itemize}
-
-\paragraph{Computing the Output}
-Each output value is computed by performing an element-wise multiplication of a \( 3 \times 3 \times 3 \) region from the input tensor \( X \) with the filter \( K \), followed by summation. The filter slides over the input with a stride of 1, covering all possible subvolumes of size \( 3 \times 3 \times 3 \). The resulting output tensor has dimensions \( 2 \times 2 \times 2 \).
-
-To illustrate, we compute the first two elements:
+\paragraph{Step-by-Step Computation}
+Each output element is the dot product of a \(3\times3\times3\) subvolume of \(X\) with the kernel \(K\).
 
 \begin{itemize}
-	\item \textbf{First element} \( Y_{0,0,0} \):
+	\item \textbf{First output value} \(Y(0,0,0)\):
+	\begin{align*}
+		Y(0,0,0) &= \sum_{i=0}^{2}\sum_{j=0}^{2}\sum_{k=0}^{2} X(i,j,k)\,K(i,j,k) \\
+		&= (-10) + (0) + (-11) = \mathbf{-21}.
+	\end{align*}
+	\item \textbf{Second value} \(Y(0,0,1)\): (shifted one step in width)
 	\[
-	Y_{0,0,0} = \sum_{i=0}^{2} \sum_{j=0}^{2} \sum_{k=0}^{2} X[i,j,k] \cdot K[i,j,k]
-	\]
-	\[
-	= (1 \cdot -2) + (-2 \cdot 0) + (5 \cdot 2) + (-1 \cdot 1) + (1 \cdot 3) + (4 \cdot -2) + (1 \cdot -2) + (5 \cdot 0) + (5 \cdot -2)
-	\]
-	\[
-	+ (-3 \cdot -2) + (0 \cdot 2) + (-1 \cdot 0) + (2 \cdot 2) + (0 \cdot 3) + (-4 \cdot 3) + (-5 \cdot 2) + (4 \cdot 3) + (0 \cdot 0)
-	\]
-	\[
-	+ (-3 \cdot -3) + (1 \cdot 2) + (-2 \cdot 1) + (-3 \cdot 1) + (-1 \cdot -2) + (-3 \cdot 3) + (-1 \cdot 1) + (3 \cdot -2) + (1 \cdot -3)
-	\]
-	\[
-	= 11
-	\]
-	
-	\item \textbf{Second element} \( Y_{0,0,1} \):
-	\[
-	Y_{0,0,1} = \sum_{i=0}^{2} \sum_{j=0}^{2} \sum_{k=0}^{2} X[i,j,k+1] \cdot K[i,j,k]
-	\]
-	\[
-	= (-2 \cdot -2) + (5 \cdot 0) + (2 \cdot 2) + (1 \cdot 1) + (4 \cdot 3) + (-3 \cdot -2) + (5 \cdot -2) + (5 \cdot 0) + (2 \cdot -2)
-	\]
-	\[
-	+ (0 \cdot -2) + (-1 \cdot 2) + (-4 \cdot 0) + (0 \cdot 2) + (-4 \cdot 3) + (-1 \cdot 3) + (4 \cdot 2) + (0 \cdot 3) + (3 \cdot 0)
-	\]
-	\[
-	+ (1 \cdot -3) + (-2 \cdot 2) + (3 \cdot 1) + (-1 \cdot 1) + (-3 \cdot -2) + (1 \cdot 3) + (3 \cdot 1) + (1 \cdot -2) + (-4 \cdot -3)
-	\]
-	\[
-	= -32
+	Y(0,0,1) = \sum_{i,j,k} X(i,j,k+1)\,K(i,j,k) = \mathbf{21}.
 	\]
 \end{itemize}
 
 \paragraph{Final Output Tensor}
-Applying the same computation process to all output elements, we obtain:
-
+Repeating this process for all valid spatial positions yields:
 \[
 Y =
 \begin{bmatrix}
-	\begin{bmatrix} 11 & -32 \\ 9 & -14 \end{bmatrix}, 
-	\begin{bmatrix} 1 & -7 \\ -34 & -4 \end{bmatrix}
-\end{bmatrix}
+	\begin{bmatrix} -21 & 21 \\ 13 & 28 \end{bmatrix},
+	\begin{bmatrix} 32 & -61 \\ 17 & -29 \end{bmatrix}
+\end{bmatrix}.
 \]
-
-Thus, the final output tensor has dimensions \( 2 \times 2 \times 2 \).
+Thus the final output tensor has dimensions \(2 \times 2 \times 2\)
+(or equivalently \(1 \times 1 \times 2 \times 2 \times 2\) including batch and channel).
 
 \paragraph{Applications of 3D Convolutions}
 \begin{itemize}
-	\item \emph{Video Processing:} Learns spatial-temporal dependencies across multiple frames.
-	\item \emph{Medical Imaging:} Used in CT scans and MRI processing to analyze 3D volumes.
-	\item \emph{3D Object Recognition:} Applied to point cloud data and volumetric representations.
+	\item \emph{Video Processing:} Learns spatio-temporal patterns across consecutive frames.
+	\item \emph{Medical Imaging:} Processes volumetric data such as CT or MRI scans.
+	\item \emph{3D Object Understanding:} Operates directly on voxelized or point-cloud representations.
 \end{itemize}
 
 \paragraph{Advantages of 3D Convolutions}
 \begin{itemize}
-	\item Preserve spatial and temporal dependencies in video or volumetric data.
-	\item Capture motion-related features more effectively than stacking 2D convolutions.
+	\item Preserve and jointly model spatial and temporal dependencies.
+	\item Enable direct learning of motion-aware or volumetric features, without requiring stacked 2D convolutions.
 \end{itemize}
 
 \paragraph{Challenges of 3D Convolutions}
 \begin{itemize}
-	\item \emph{Computationally Expensive:} Requires significantly more memory and computation than 2D CNNs.
-	\item \emph{Limited Long-Term Dependencies:} Captures short-term temporal relationships but struggles with longer-range dependencies.
+	\item \emph{High Computational Cost:} Complexity grows with \(C_{\text{in}}\times C_{\text{out}}\) and 3D kernel volume.
+	\item \emph{Limited Long-Range Modeling:} Capture short-term temporal or local spatial context but often require hierarchical architectures for long-range dependencies.
 \end{itemize}
 
 \subsection{Efficient Convolutions for Mobile and Embedded Systems}
@@ -1184,6 +1184,8 @@ For example, consider a standard \( 3 \times 3 \) convolution kernel applied to 
 \[
 (H - K + 1) \times (W - K + 1).
 \]
+
+\newpage
 
 Using spatial separable convolutions, we first apply a \( K \times 1 \) convolution, reducing only the height dimension:
 
@@ -1224,113 +1226,179 @@ A common example of a \emph{spatially separable kernel} used in traditional comp
 \label{subsec:depthwise_separable_convs}
 
 \paragraph{Concept and Motivation}
-\emph{Depthwise separable convolutions} decompose a standard convolution into two successive steps, dramatically reducing compute and parameter counts while preserving representational power. They are sometimes called \emph{channel-wise spatial} or \emph{depthwise + pointwise} convolutions, reflecting their two-phase design:
+\emph{Depthwise separable convolutions} factorize a standard convolution into two simpler steps, greatly reducing parameters and computation while often preserving most of the representational power. A standard \(K \times K\) convolution kernel of shape
+\[
+C_{\mathrm{out}} \times C_{\mathrm{in}} \times K \times K
+\]
+tries to do two jobs at once:
+\begin{enumerate}
+	\item Learn \emph{spatial} patterns inside each channel.
+	\item Learn \emph{cross-channel} interactions between different input channels.
+\end{enumerate}
+Depthwise separable convolutions separate these roles:
 
 \begin{enumerate}
-	\item \textbf{Depthwise (Spatial) Convolution:} 
-	A \(K \times K\) convolution filter is applied \emph{independently} to each input channel, capturing local spatial patterns for every channel. No cross-channel mixing occurs at this stage.
-	\item \textbf{Pointwise (1x1) Convolution:} 
-	A \(1 \times 1\) filter then combines (or “mixes”) information across the channels resulting from the depthwise step. This also adjusts the final number of output channels.
+	\item \textbf{Depthwise (Spatial) Convolution:}
+	A \(K \times K\) filter is applied \emph{independently} to each input channel. For an input feature map of shape \((H \times W \times C_{\mathrm{in}})\), this produces an intermediate feature map of shape \((H \times W \times C_{\mathrm{in}})\). At this stage, each channel learns its own spatial features (e.g., per-channel edge or texture detectors); there is \emph{no} mixing between channels.
+	
+	\item \textbf{Pointwise (\(1 \times 1\)) Convolution:}
+	A bank of \(1 \times 1\) filters then performs a learned linear combination across the \(C_{\mathrm{in}}\) channels at each spatial location. This step mixes information across channels and adjusts the channel dimension from \(C_{\mathrm{in}}\) to \(C_{\mathrm{out}}\), producing an output of shape \((H \times W \times C_{\mathrm{out}})\).
 \end{enumerate}
 
 \noindent
-Compared to a spatially factorized kernel, depthwise separable convolutions do \emph{not} require any rank constraints on the kernel, making them easier to integrate into many CNN architectures \cite{chollet2017_xception, howard2017_mobilenets}.
+This two-stage “depthwise + pointwise” design is also called \emph{channel-wise spatial} convolution. Unlike spatially factorized kernels (such as \(3 \times 3\) decomposed into \(1 \times 3\) and \(3 \times 1\)), depthwise separable convolutions do not impose a low-rank constraint on the full kernel, making them easy to insert into existing architectures such as Inception, VGG, or ResNet \cite{chollet2017_xception, howard2017_mobilenets}.
 
-\paragraph{Computational Efficiency}
-
-Depthwise separable convolutions \emph{reorganize} a standard \((K \times K)\) convolution into two steps (\emph{depthwise} then \emph{pointwise}), substantially reducing multiply-add operations (MACs). Below, we clarify both the cost formulas when using “same” padding for simplicity.
+\paragraph{Computational and Parameter Efficiency}
+We now compare the computational cost (MACs) and parameter count of a standard \(K \times K\) convolution with its depthwise separable counterpart. For clarity, we consider a single feature map (no batch dimension) of shape
+\[
+(H \times W \times C_{\mathrm{in}}) \quad \longrightarrow \quad (H \times W \times C_{\mathrm{out}})
+\]
+with stride \(1\) and “same” padding, so that the spatial resolution \(H \times W\) stays the same.
 
 \paragraph{Standard \((K \times K)\) Convolution}
-Suppose we have an input volume shaped \((H \times W \times C_{\mathrm{in}})\). Under “same” padding and a stride of 1, the output shape remains \((H \times W \times C_{\mathrm{out}})\). Denoting:
+A standard convolution uses \(C_{\mathrm{out}}\) kernels, each of shape \((K \times K \times C_{\mathrm{in}})\). Thus:
 \begin{itemize}
-	\item \(\text{output\_elements} = H \times W \times C_{\mathrm{out}}\),
-	\item \(\text{MACs\_per\_element} = C_{\mathrm{in}} \times K \times K\)
-	(each output element is formed by a dot product over $\bigl(C_{\mathrm{in}} \times K^2\bigr)$ weights),
+	\item \textbf{Parameters:}
+	\[
+	\text{Params}_{\text{std}} = K^2 \, C_{\mathrm{in}} \, C_{\mathrm{out}}.
+	\]
+	\item \textbf{Multiply-Adds (MACs):}
+	There are \(H W C_{\mathrm{out}}\) output elements, each computed as a dot product over \(K^2 C_{\mathrm{in}}\) weights. Therefore:
+	\[
+	\text{MACs}_{\text{std}}
+	= (H W C_{\mathrm{out}}) \times (K^2 C_{\mathrm{in}})
+	= H W K^2 C_{\mathrm{in}} C_{\mathrm{out}}.
+	\]
 \end{itemize}
-the total MAC cost of a standard convolution is:
-\[
-\text{MACs}_{\text{std}} 
-= \underbrace{(H \times W \times C_{\mathrm{out}})}_{\text{number of output elements}}
-\;\times\;
-\underbrace{(C_{\mathrm{in}} \times K^2)}_{\text{MACs per element}}
-= H\,W\,C_{\mathrm{out}}\,C_{\mathrm{in}}\,K^2.
-\]
-\emph{Note:} As we've seen earlier, “same” padding ensures \(H \times W\) stays unchanged by compensating around the borders.
 
 \paragraph{Depthwise Separable Convolution}
-We decompose the same operation into two parts:
+Depthwise separable convolution decomposes this into:
 
 \begin{itemize}
 	\item \textbf{Depthwise Convolution (Spatial Only):}
-	\[
-	\text{output\_elements} = H \times W \times C_{\mathrm{in}},
-	\]
-	because we compute a \((K \times K)\) spatial filter \emph{independently} per channel. For each output element in this stage, there are \((K \times K)\) multiplications. Thus,
-	\[
-	\text{MACs}_{\text{depthwise}} 
-	= \Bigl(H \times W \times C_{\mathrm{in}}\Bigr) 
-	\times (K \times K).
-	\]
+	We apply one \(K \times K\) filter per input channel, so there are \(C_{\mathrm{in}}\) filters in total. Each filter has shape \((K \times K)\), and each channel is processed independently:
+	\begin{align*}
+		\text{Params}_{\text{depthwise}} &= K^2 \, C_{\mathrm{in}}, \\
+		\text{MACs}_{\text{depthwise}} &= (H W C_{\mathrm{in}}) \times K^2 = H W K^2 C_{\mathrm{in}}.
+	\end{align*}
+	The output has shape \((H \times W \times C_{\mathrm{in}})\).
 	
-	\item \textbf{Pointwise Convolution (1x1):}
-	The depthwise step outputs \(\,(H \times W \times C_{\mathrm{in}})\). To reach \(\,(H \times W \times C_{\mathrm{out}})\), we apply a \(1\times1\) convolution that mixes channels:
-	\[
-	\text{output\_elements} = H \times W \times C_{\mathrm{out}},
-	\]
-	and each output element requires \(\,C_{\mathrm{in}}\) multiplications. Hence:
-	\[
-	\text{MACs}_{\text{pointwise}}
-	= \Bigl(H \times W \times C_{\mathrm{out}}\Bigr)
-	\;\times\; C_{\mathrm{in}}.
-	\]
+	\item \textbf{Pointwise (\(1 \times 1\)) Convolution (Channel Mixing):}
+	Next, we apply \(1 \times 1\) filters to mix channels and reach \(C_{\mathrm{out}}\) output channels. Each \(1 \times 1\) kernel has shape \((C_{\mathrm{in}})\), and there are \(C_{\mathrm{out}}\) such kernels:
+	\begin{align*}
+		\text{Params}_{\text{pointwise}} &= C_{\mathrm{in}} \, C_{\mathrm{out}}, \\
+		\text{MACs}_{\text{pointwise}} &= (H W C_{\mathrm{out}}) \times C_{\mathrm{in}} = H W C_{\mathrm{in}} C_{\mathrm{out}}.
+	\end{align*}
 \end{itemize}
 
-Summing these yields the overall MACs for a depthwise separable convolution:
+\noindent
+Summing both stages:
+\begin{align*}
+	\text{Params}_{\text{DSConv}}
+	&= K^2 C_{\mathrm{in}} + C_{\mathrm{in}} C_{\mathrm{out}}
+	= C_{\mathrm{in}} \bigl(K^2 + C_{\mathrm{out}}\bigr), \\
+	\text{MACs}_{\text{DSConv}}
+	&= H W K^2 C_{\mathrm{in}} + H W C_{\mathrm{in}} C_{\mathrm{out}}
+	= H W C_{\mathrm{in}} \bigl(K^2 + C_{\mathrm{out}}\bigr).
+\end{align*}
+
+\paragraph{Cost Reduction Ratio}
+The reduction in cost when switching from a standard convolution to a depthwise separable convolution is:
 \[
-\text{MACs}_{\text{DSConv}}
-\;=\;
-\Bigl(H\,W\,C_{\mathrm{in}} \times K^2\Bigr)
-\;+\;
-\Bigl(H\,W\,C_{\mathrm{out}} \times C_{\mathrm{in}}\Bigr).
+\frac{\text{MACs}_{\text{std}}}{\text{MACs}_{\text{DSConv}}}
+= \frac{H W K^2 C_{\mathrm{in}} C_{\mathrm{out}}}{H W C_{\mathrm{in}} (K^2 + C_{\mathrm{out}})}
+= \frac{K^2 C_{\mathrm{out}}}{K^2 + C_{\mathrm{out}}}.
+\]
+The same ratio holds for parameter counts. In typical CNNs, \(C_{\mathrm{out}} \gg K^2\) (for example, \(C_{\mathrm{out}} = 256\) and \(K^2 = 9\) for a \(3\times3\) kernel). In that regime,
+\[
+\frac{K^2 C_{\mathrm{out}}}{K^2 + C_{\mathrm{out}}} \approx K^2,
+\]
+so a \(3 \times 3\) depthwise separable convolution is roughly \(9\times\) more efficient than a standard \(3 \times 3\) convolution in both parameters and MACs.
+
+\paragraph{Summary of Costs}
+For convenience, we summarize parameter and MAC counts:
+
+\[
+\begin{array}{l|c|c}
+	\textbf{Layer Type} & \textbf{Parameters} & \textbf{MACs} \\ \hline
+	\text{Standard } (K \times K) & K^2 C_{\mathrm{in}} C_{\mathrm{out}} & H W K^2 C_{\mathrm{in}} C_{\mathrm{out}} \\[3pt]
+	\text{Depthwise} & K^2 C_{\mathrm{in}} & H W K^2 C_{\mathrm{in}} \\[3pt]
+	\text{Pointwise } (1 \times 1) & C_{\mathrm{in}} C_{\mathrm{out}} & H W C_{\mathrm{in}} C_{\mathrm{out}} \\[3pt]
+	\text{Depthwise Separable (total)} & C_{\mathrm{in}}(K^2 + C_{\mathrm{out}}) & H W C_{\mathrm{in}}(K^2 + C_{\mathrm{out}})
+\end{array}
 \]
 
 \subsubsection{Example: \((K=3,\;C_{\mathrm{in}}=128,\;C_{\mathrm{out}}=256,\;H=W=32)\)}
 \label{subsubsec:depthwise_separable_example}
 
-Assume an input shape of \(\,(32 \times 32 \times 128)\) and we want an output \(\,(32 \times 32 \times 256)\) under stride=1, “same” padding. Compare the MACs:
+Consider an input feature map of shape \((32 \times 32 \times 128)\) and a desired output of shape \((32 \times 32 \times 256)\), using a \(3 \times 3\) kernel, stride \(1\), and “same” padding.
 
 \begin{itemize}
-	\item \emph{Standard Convolution:}
-	\[
-	\text{MACs}_{\text{standard}}
-	= (32 \times 32 \times 256)
-	\;\times\;
-	(128 \times 3^2).
-	\]
-	This is 
-	\[
-	32 \times 32 \times 256 \times 128 \times 9
-	\;=\; 1024 \times 128 \times 9 \times 256 
-	\;\;(=\text{very large}).
-	\]
+	\item \textbf{Standard Convolution:}
+	\begin{align*}
+		\text{Params}_{\text{std}}
+		&= K^2 C_{\mathrm{in}} C_{\mathrm{out}}
+		= 3^2 \cdot 128 \cdot 256
+		= 294{,}912, \\
+		\text{MACs}_{\text{std}}
+		&= H W K^2 C_{\mathrm{in}} C_{\mathrm{out}}
+		= 32 \cdot 32 \cdot 9 \cdot 128 \cdot 256 \\
+		&= 301{,}989{,}888 \approx 3.02 \times 10^8 \text{ MACs}.
+	\end{align*}
 	
-	\item \emph{Depthwise Separable:}
-	\[
-	\text{MACs}_{\text{depthwise}}
-	= (32 \times 32 \times 128) \times (3 \times 3),
-	\]
-	\[
-	\text{MACs}_{\text{pointwise}}
-	= (32 \times 32 \times 256) \times 128.
-	\]
-	Summed, this is
-	\[
-	(1024 \times 128 \times 9)
-	\;+\;
-	(1024 \times 256 \times 128),
-	\]
-	which is significantly lower than doing the entire channel+spatial mixing in one go.
+	\newpage
+	
+	\item \textbf{Depthwise Separable Convolution:}
+	\begin{itemize}
+		\item \emph{Depthwise step:}
+		\begin{align*}
+			\text{Params}_{\text{depthwise}}
+			&= K^2 C_{\mathrm{in}}
+			= 3^2 \cdot 128
+			= 1{,}152, \\
+			\text{MACs}_{\text{depthwise}}
+			&= H W K^2 C_{\mathrm{in}}
+			= 32 \cdot 32 \cdot 9 \cdot 128 \\
+			&= 1{,}179{,}648 \approx 1.18 \times 10^6.
+		\end{align*}
+		
+		\item \emph{Pointwise step:}
+		\begin{align*}
+			\text{Params}_{\text{pointwise}}
+			&= C_{\mathrm{in}} C_{\mathrm{out}}
+			= 128 \cdot 256
+			= 32{,}768, \\
+			\text{MACs}_{\text{pointwise}}
+			&= H W C_{\mathrm{in}} C_{\mathrm{out}}
+			= 32 \cdot 32 \cdot 128 \cdot 256 \\
+			&= 33{,}554{,}432 \approx 3.36 \times 10^7.
+		\end{align*}
+	\end{itemize}
+	
+	\noindent
+	\textbf{Total depthwise separable cost:}
+	\begin{align*}
+		\text{Params}_{\text{DSConv}}
+		&= 1{,}152 + 32{,}768
+		= 33{,}920, \\
+		\text{MACs}_{\text{DSConv}}
+		&= 1{,}179{,}648 + 33{,}554{,}432
+		= 34{,}734{,}080 \approx 3.47 \times 10^7.
+	\end{align*}
 \end{itemize}
+
+\noindent
+Comparing the two:
+\[
+\frac{\text{Params}_{\text{std}}}{\text{Params}_{\text{DSConv}}}
+= \frac{294{,}912}{33{,}920}
+\approx 8.69,
+\qquad
+\frac{\text{MACs}_{\text{std}}}{\text{MACs}_{\text{DSConv}}}
+= \frac{301{,}989{,}888}{34{,}734{,}080}
+\approx 8.69.
+\]
+Thus, in this realistic setting, replacing a standard \(3 \times 3\) convolution with a depthwise separable convolution reduces both parameters and computation by almost an order of magnitude, while still allowing the network to first learn rich spatial filters per channel and then flexibly mix them across channels in the pointwise step.
 
 \begin{figure}[H]
 	\centering
@@ -1373,13 +1441,14 @@ As an example, for \(K=3\) and \(C_{\text{out}}=256\), the ratio is
 
 \paragraph{Trade-Offs}
 \begin{itemize}
-	\item \textbf{Reduced Cross-Channel Expressiveness:} 
-	Because depthwise filters process each channel independently, networks may lose some ability to model channel-wise correlations. Additional architectural elements (e.g., \texttt{Squeeze-and-Excitation} blocks, which we'll cover later) are sometimes added to mitigate this effect \cite{chollet2017_xception}.
-	\item \textbf{Significantly Lower Compute Cost:} 
-	Depthwise separable convolutions can reduce MACs significantly, enabling real-time inference even on low-power hardware.
+	\item \textbf{Reduced Cross-Channel Expressiveness:}  
+	A standard convolution captures both spatial patterns and cross-channel correlations in a \emph{single} operation: each \(K \times K\) filter integrates information from all \(C_{\mathrm{in}}\) channels over its receptive field before the nonlinearity, enabling rich, intertwined feature interactions. Depthwise separable convolutions factorize this process. The depthwise stage applies spatial filters independently to each channel (no inter-channel mixing), and the subsequent pointwise \(1 \times 1\) stage performs only \emph{linear} combinations across channels at fixed spatial positions. Although stacking several depthwise separable blocks still allows complex dependencies to emerge (pointwise mixing in one block feeds into depthwise spatial filtering in the next), this sequential mechanism is less expressive \emph{per layer} than a monolithic standard convolution. Interactions that one standard layer can model directly may require multiple depthwise separable layers to approximate, potentially making optimization harder and slightly reducing representational power. To compensate, modern architectures often incorporate explicit cross-channel modeling modules such as \emph{Squeeze-and-Excitation (SE) blocks} or attention mechanisms, which adaptively reweight channels and restore some of the lost flexibility \cite{hu2018_senet, chollet2017_xception}.
+	
+	\item \textbf{Substantial Compute Savings:}  
+	By decoupling spatial filtering \(\bigl(O(K^2 C_{\mathrm{in}})\bigr)\) from channel mixing \(\bigl(O(C_{\mathrm{in}} C_{\mathrm{out}})\bigr)\), depthwise separable convolutions reduce MACs and parameters by factors of roughly \(K^2\) for typical settings (e.g., \(\sim 8\text{--}9\times\) for \(K=3\), large \(C_{\mathrm{out}}\)), as shown in the previous cost analysis. This dramatic efficiency gain is crucial for real-time inference on resource-constrained devices such as smartphones, embedded boards, or edge accelerators, often with only a modest drop in accuracy.
 \end{itemize}
 
-Overall, depthwise separable convolutions have become an essential technique for designing efficient neural networks, especially those aimed at embedded or mobile environments. They strike a favorable balance between speed and accuracy in a wide range of tasks.
+Overall, depthwise separable convolutions have become a cornerstone of efficient CNN design, trading a small amount of per-layer expressiveness for large reductions in computation and parameter count, and thereby enabling high-performing models in mobile and embedded environments.
 
 \subsection{Summary of Specialized Convolutions}
 \label{subsec:conv_summary}
@@ -1409,37 +1478,48 @@ These specialized convolutions enhance the flexibility and efficiency of neural 
 \end{figure}
 
 \newpage
+
 \section{Pooling Layers}
 \label{subsec:pooling_layers}
 
-Pooling layers play a crucial role in convolutional neural networks (CNNs) by reducing the spatial dimensions of feature maps. Unlike convolutional layers, pooling layers do not involve learnable parameters; instead, they rely on hyperparameters such as kernel size, stride, and pooling function to downsample the input. This dimensionality reduction helps in decreasing computational costs, limiting overfitting, and increasing the receptive field of each output feature.
+Pooling layers are a key component of convolutional neural networks (CNNs), serving to \textbf{condense spatial information} and highlight the most salient features of an input. Unlike convolutional layers, which learn filters, pooling layers have no learnable parameters; they instead apply a fixed aggregation function (such as \emph{maximum} or \emph{average}) over local neighborhoods. Hyperparameters such as the kernel size, stride, and pooling type control the degree of downsampling. This simple yet powerful mechanism reduces feature map resolution, lowers computational cost, increases robustness to spatial variations, and expands the effective receptive field in deeper layers.
 
 \subsection{Types of Pooling}
-The most common types of pooling operations are:
+Pooling operates much like a convolution: a window slides across the feature map according to the stride, and a function is applied within each region to produce one representative value. When the stride equals the kernel size, the pooling regions are non-overlapping.
 
 \paragraph{Pooling Methods}
 \begin{itemize}
-	\item \textbf{Max Pooling:} Selects the maximum value within each window, preserving the most prominent feature in the region.
-	\item \textbf{Average Pooling:} Computes the average of values within each window, providing a \textbf{smoothed representation} of the feature map. However, this can be problematic in certain cases, such as when tiny details in the image might be lost due to excessive smoothing.
+	\item \textbf{Max Pooling:} Selects the maximum activation within each window, retaining the strongest response and emphasizing dominant local features.
+	\item \textbf{Average Pooling:} Computes the average value within each window, creating a smoother, more generalized representation of the feature map. However, excessive averaging can blur fine details or weaken distinctive local patterns.
 \end{itemize}
-
-Pooling operates similarly to convolutions: a window of predefined size scans the input tensor, moving according to the stride. If the stride equals the kernel size, the pooling regions do not overlap. Within each region, the pooling function is applied, producing a single output value per region.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_7/slide_67.jpg}
-	\caption{Example of \emph{max pooling} with a \( 2 \times 2 \) kernel and stride of 2. The operation introduces slight spatial invariance, helping retain dominant features.}
+	\caption{Example of \emph{max pooling} with a \(2 \times 2\) kernel and stride 2. The operation reduces spatial dimensions while introducing local invariance by retaining the most active features.}
 	\label{fig:chapter7_max_pooling}
 \end{figure}
 
-\subsection{Effect of Pooling}
-Pooling helps retain the most important features while reducing dimensionality, summarizing feature maps efficiently. Some key benefits include:
+\newpage
+
+\subsection{Effect and Benefits of Pooling}
+Pooling summarizes local activations to form a more compact and abstract feature representation. By keeping only the strongest or average responses in each region, the network becomes more efficient and more robust. The main benefits include:
 
 \begin{itemize}
-	\item \textbf{Reduced Computation:} Fewer spatial elements result in fewer operations in subsequent layers.
-	\item \textbf{Invariance to Small Translations:} Slight shifts in input data have less impact on the network’s output, making models more robust.
-	\item \textbf{Improved Generalization:} Pooling reduces sensitivity to local changes in input, mitigating overfitting.
+	\item \textbf{Reduced Computation and Memory:}  
+	Pooling decreases the spatial resolution of feature maps, lowering the number of activations passed to deeper layers. This directly reduces both computational load and memory requirements.
+	
+	\item \textbf{Translation Invariance:}  
+	Pooling introduces robustness to small translations or distortions in the input. A feature that shifts slightly within its receptive field is still captured after pooling, making the network less sensitive to exact spatial alignment.
+	
+	\item \textbf{Improved Generalization:}  
+	By discarding minor local variations, pooling acts as a form of regularization, reducing the risk of overfitting to fine-grained details or noise present in the training data.
+	
+	\item \textbf{Expanded Receptive Field:}  
+	Since pooling reduces the resolution of intermediate representations, subsequent convolutional layers operate over proportionally larger portions of the original input. This allows deeper layers to integrate global spatial context and capture more abstract patterns.
 \end{itemize}
+
+In summary, pooling layers help CNNs focus on the most informative spatial cues while controlling computational complexity and promoting invariance—key ingredients for robust hierarchical feature learning.
 
 \begin{figure}[H]
 	\centering
@@ -1450,119 +1530,140 @@ Pooling helps retain the most important features while reducing dimensionality, 
 
 \begin{enrichment}[Pooling Layers in Backpropagation][subsection]
 	
-Pooling layers are commonly used in Convolutional Neural Networks (CNNs) to reduce spatial dimensions while retaining important features. The two most common types are \emph{Max Pooling} and \emph{Average Pooling}. Understanding how backpropagation works for these layers is crucial for training CNNs.
-
-\subsubsection{Forward Pass of Pooling Layers}
-Pooling operates on small regions (e.g., \(2 \times 2\) window) and reduces them to a single value:
-
-\begin{itemize}
-	\item \textbf{Max Pooling:} Selects the maximum value from the window.
-	\item \textbf{Average Pooling:} Computes the average of all values in the window.
-\end{itemize}
-
-\paragraph{Example of Forward Pass}
-Consider a \(4 \times 4\) input matrix:
-
-\[
-X = \begin{bmatrix} 
-	1 & 3 & 2 & 1 \\ 
-	4 & 2 & 1 & 5 \\ 
-	2 & 0 & 3 & 1 \\ 
-	1 & 5 & 2 & 4 
-\end{bmatrix}
-\]
-
-Applying a \(2 \times 2\) filter with stride 2:
-
-\textbf{Max Pooling:}
-\[
-\begin{bmatrix} 
-	\max(1,3,4,2) & \max(2,1,1,5) \\ 
-	\max(2,0,1,5) & \max(3,1,2,4) 
-\end{bmatrix} 
-= \begin{bmatrix} 4 & 5 \\ 5 & 4 \end{bmatrix}
-\]
-
-\textbf{Average Pooling:}
-\[
-\begin{bmatrix} 
-	\frac{1+3+4+2}{4} & \frac{2+1+1+5}{4} \\ 
-	\frac{2+0+1+5}{4} & \frac{3+1+2+4}{4} 
-\end{bmatrix} 
-= \begin{bmatrix} 2.5 & 2.25 \\ 2 & 2.5 \end{bmatrix}
-\]
-
-\subsubsection{Backpropagation Through Pooling Layers}
-Backpropagation propagates gradients from the output back to the input. The process differs for max pooling and average pooling.
-
-
-\paragraph{Max Pooling Backpropagation}
-For max pooling, the gradient is passed only to the maximum value in each window, while all other values receive a gradient of zero. This selective propagation introduces a key limitation: many neurons do not contribute to the gradient flow, which can slow learning and contribute to the \textbf{vanishing gradient problem} in deep networks.
-
-\noindent \textbf{Example:}
-Let the upstream gradient be:
-\[
-\begin{bmatrix} 
-	0.2 & -0.3 \\ 
-	0.4 & 0.1 
-\end{bmatrix}
-\]
-
-\noindent The original \(4 \times 4\) input matrix receives the following gradients:
-\[
-\begin{bmatrix} 
-	0 & 0 & 0 & 0 \\ 
-	0.2 & 0 & 0 & -0.3 \\ 
-	0 & 0 & 0 & 0.4 \\ 
-	0 & 0.1 & 0 & 0 
-\end{bmatrix}
-\]
-
-\paragraph{Impact on Gradient Flow}
-\begin{itemize}
-	\item \textbf{Sparse Gradient Updates}: Because gradients are assigned only to the maximum values in each pooling window, many neurons receive zero gradients. This can significantly slow down learning in deeper networks.
-	\item \textbf{Vanishing Gradient Problem}: Since pooling layers discard non-maximum activations, error signals may fail to propagate effectively. This is particularly problematic in very deep architectures where repeated pooling leads to fewer contributing gradients at earlier layers.
-	\item \textbf{Loss of Fine-Grained Spatial Information}: Pooling reduces resolution by downsampling feature maps, making it harder for deeper layers to reconstruct precise spatial details, potentially weakening feature representation.
-\end{itemize}
-
-\paragraph{Mitigation Strategies}
-\begin{itemize}
-	\item \textbf{Overlapping Pooling}: Using overlapping pooling windows ensures more neurons contribute to the gradient flow, reducing the sparsity of updates.
-	\item \textbf{Trainable Pooling Layers}: Techniques such as \textit{learnable pooling} adaptively weight the contributions of different neurons, allowing for more effective gradient distribution.
-	\item \textbf{Replacing Pooling with Strided Convolutions}: Using strided convolutions instead of max pooling allows gradients to flow through all neurons rather than just the maximum activations.
-\end{itemize}
-
-\noindent While max pooling remains a widely used technique due to its ability to enforce translational invariance and reduce computation, understanding its effect on gradient propagation is crucial for designing deep architectures that avoid excessive gradient loss.
-
-\paragraph{Average Pooling Backpropagation}
-For average pooling, the gradient is distributed equally among all elements in the window.
-
-Each \(2 \times 2\) window has 4 elements, so each element gets \(\text{gradient} / 4\).
-
-\textbf{Example:}
-
-\[
-\begin{bmatrix} 
-	0.05 & 0.05 & -0.075 & -0.075 \\ 
-	0.05 & 0.05 & -0.075 & -0.075 \\ 
-	0.1 & 0.1 & 0.025 & 0.025 \\ 
-	0.1 & 0.1 & 0.025 & 0.025 
-\end{bmatrix}
-\]
-
-\subsubsection{Generalization of Backpropagation for Pooling}
-Consider a computational node with output \(O\) that returns the pooling result:
-
-\begin{itemize}
-	\item For \textbf{Max Pooling}, the gradient \(\frac{\partial L}{\partial O}\) is passed only to the input value that was selected as the maximum in the forward pass. Let \(x_{max}\) be the selected max value in the pooling window, then:
+	Pooling layers are commonly used in convolutional neural networks (CNNs) to reduce spatial dimensions while retaining important features. The two most common types are \emph{max pooling} and \emph{average pooling}. Understanding how backpropagation works for these layers is important, since it determines how error signals are routed back to earlier feature maps.
+	
+	\newpage
+	
+	\subsubsection{Forward Pass of Pooling Layers}
+	Pooling operates on small regions (e.g., a \(2 \times 2\) window) and reduces each region to a single value, downsampling the feature map without introducing learnable parameters:
+	
+	\begin{itemize}
+		\item \textbf{Max pooling:} Selects the maximum value from the window, emphasizing dominant activations.
+		\item \textbf{Average pooling:} Computes the average of all values in the window, yielding a smoothed summary.
+	\end{itemize}
+	
+	\paragraph{Example of Forward Pass}
+	Consider a single \(4 \times 4\) input matrix \(X\); we will use the same \(X\) for both the forward and backward pass examples:
+	
 	\[
-	\frac{\partial L}{\partial x_{max}} = \frac{\partial L}{\partial O}, \quad \text{and all other } x_i \text{ receive } 0.
+	X = \begin{bmatrix} 
+		1 & 3 & 2 & 1 \\ 
+		\mathbf{4} & 2 & 1 & \mathbf{5} \\ 
+		2 & 0 & \mathbf{3} & 1 \\ 
+		1 & \mathbf{5} & 2 & 2 
+	\end{bmatrix}
 	\]
-	\item For \textbf{Average Pooling}, the gradient is distributed equally among all input values in the pooling window. If there are \(n\) elements in the window, then each input \(x_i\) receives:
+	
+	We apply a \(2 \times 2\) pooling window with stride 2, giving four non-overlapping regions (quadrants).
+	
+	\textbf{Max pooling} computes:
 	\[
-	\frac{\partial L}{\partial x_i} = \frac{\partial L}{\partial O} \times \frac{1}{n}.
+	Y_{\text{max}} =
+	\begin{bmatrix} 
+		\max(1,3,\mathbf{4},2) & \max(2,1,1,\mathbf{5}) \\[4pt]
+		\max(2,0,1,\mathbf{5}) & \max(\mathbf{3},1,2,2) 
+	\end{bmatrix} 
+	= \begin{bmatrix} 4 & 5 \\ 5 & 3 \end{bmatrix}.
 	\]
-\end{itemize}
+	The max positions in \(X\) are:
+	\[
+	(1,0),\ (1,3),\ (3,1),\ (2,2).
+	\]
+	
+	\textbf{Average pooling} computes:
+	\[
+	Y_{\text{avg}} =
+	\begin{bmatrix} 
+		\frac{1+3+4+2}{4} & \frac{2+1+1+5}{4} \\[4pt]
+		\frac{2+0+1+5}{4} & \frac{3+1+2+2}{4} 
+	\end{bmatrix} 
+	= \begin{bmatrix} 2.5 & 2.25 \\ 2 & 2 \end{bmatrix}.
+	\]
+	
+	\subsubsection{Backpropagation Through Pooling Layers}
+	During backpropagation, we propagate gradients from the pooled outputs back to the inputs. Let the upstream gradient with respect to the pooled output be
+	\[
+	\frac{\partial L}{\partial Y} =
+	\begin{bmatrix} 
+		0.2 & -0.3 \\ 
+		0.4 & 0.1 
+	\end{bmatrix},
+	\]
+	where \(L\) is the loss. We now see how this gradient is mapped back to \(\frac{\partial L}{\partial X}\).
+	
+	\paragraph{Max Pooling Backpropagation}
+	For max pooling, the gradient from each pooled value is passed back \emph{only} to the input element that was the maximum in that window; all other elements in the window receive zero gradient. This makes max pooling behave like a ``routing'' operation for gradients.
+	
+	Using the max locations from the forward pass:
+	\begin{itemize}
+		\item The gradient \(0.2\) (from the top-left pooled output) is assigned to \(X_{1,0}\).
+		\item The gradient \(-0.3\) (top-right) is assigned to \(X_{1,3}\).
+		\item The gradient \(0.4\) (bottom-left) is assigned to \(X_{3,1}\).
+		\item The gradient \(0.1\) (bottom-right) is assigned to \(X_{2,2}\).
+	\end{itemize}
+	
+	Thus the downstream gradient with respect to \(X\) is:
+	\[
+	\frac{\partial L}{\partial X} =
+	\begin{bmatrix} 
+		0 & 0 & 0 & 0 \\ 
+		\mathbf{0.2} & 0 & 0 & \mathbf{-0.3} \\ 
+		0 & 0 & \mathbf{0.1} & 0 \\ 
+		0 & \mathbf{0.4} & 0 & 0 
+	\end{bmatrix}.
+	\]
+	
+	\paragraph{Impact on Gradient Flow}
+	\begin{itemize}
+		\item \textbf{Sparse gradients:} Only the max positions in each window receive nonzero gradients, while all other activations are ignored in backpropagation. This sparsity can slow learning, since fewer units contribute to the parameter updates.
+		\item \textbf{Reduced feedback to fine details:} Because non-max activations receive no gradient, small but potentially informative responses may not be reinforced, which can matter in tasks that require precise spatial detail.
+	\end{itemize}
+	
+	To alleviate excessive sparsity, modern architectures sometimes use overlapping pooling (stride smaller than window size) or replace pooling entirely with strided convolutions, which maintain dense gradient flow through learnable filters.
+	
+	\paragraph{Average Pooling Backpropagation}
+	For average pooling, the gradient from each pooled output is \emph{distributed evenly} among all elements in its window. If a window contains \(n\) elements, each input in that window receives \(\frac{1}{n}\) of the upstream gradient.
+	
+	In our example, each \(2 \times 2\) window has \(n=4\) elements, so we divide each entry of \(\frac{\partial L}{\partial Y}\) by 4:
+	\begin{itemize}
+		\item Top-left window: \(0.2 / 4 = 0.05\).
+		\item Top-right window: \(-0.3 / 4 = -0.075\).
+		\item Bottom-left window: \(0.4 / 4 = 0.1\).
+		\item Bottom-right window: \(0.1 / 4 = 0.025\).
+	\end{itemize}
+	
+	The resulting gradient with respect to \(X\) is dense:
+	\[
+	\frac{\partial L}{\partial X} =
+	\begin{bmatrix} 
+		0.05 & 0.05 & -0.075 & -0.075 \\ 
+		0.05 & 0.05 & -0.075 & -0.075 \\ 
+		0.1 & 0.1 & 0.025 & 0.025 \\ 
+		0.1 & 0.1 & 0.025 & 0.025 
+	\end{bmatrix}.
+	\]
+	
+	\subsubsection{General Backpropagation Rules for Pooling}
+	For a pooling window with inputs \(\{x_i\}_{i=1}^n\), pooled output \(O\), and upstream gradient \(\frac{\partial L}{\partial O}\), the local gradients are:
+	
+	\begin{itemize}
+		\item \textbf{Max pooling:} Let \(x_{\max}\) be the input that attained the maximum in the forward pass. Then
+		\[
+		\frac{\partial L}{\partial x_i} =
+		\begin{cases}
+			\frac{\partial L}{\partial O} & \text{if } x_i = x_{\max}, \\
+			0 & \text{otherwise}.
+		\end{cases}
+		\]
+		\item \textbf{Average pooling:} All inputs share the gradient equally:
+		\[
+		\frac{\partial L}{\partial x_i}
+		= \frac{1}{n}\,\frac{\partial L}{\partial O}
+		\quad \text{for all } i = 1,\dots,n.
+		\]
+	\end{itemize}
+	
+	These rules emphasize the conceptual difference between max and average pooling in backpropagation: max pooling routes gradients through a few dominant activations, whereas average pooling spreads gradients more uniformly across all inputs in each region.
 \end{enrichment}
 
 \subsection{Global Pooling Layers}
@@ -1651,7 +1752,6 @@ Only the maximum entry obtains a nonzero derivative:
 	\end{tabular}
 \end{center}
 
-\newpage
 \subsubsection{Contrasting with Regular Pooling}
 \paragraph{Window Size}
 \begin{itemize}
@@ -1672,6 +1772,7 @@ Only the maximum entry obtains a nonzero derivative:
 \end{itemize}
 
 \newpage
+
 \section{Classical CNN Architectures}
 \label{subsec:lenet5}
 
@@ -1840,7 +1941,7 @@ Designing a modern CNN involves balancing multiple factors:
 				\frac{\partial z^{(i+1)}}{\partial a^{(i)}} 
 				\frac{\partial a^{(i)}}{\partial z^{(i)}} 
 				\frac{\partial z^{(i)}}{\partial w^{(i)}} \\
-				&= \frac{\partial \mathcal{L}}{\partial a^{(L)}} 
+				&\underbrace{=}_{\text{Multiplication Commutativity}} \frac{\partial \mathcal{L}}{\partial a^{(L)}} 
 				\underbrace{\prod_{j=i+1}^{L} \frac{\partial z^{(j)}}{\partial a^{(j-1)}}}_{\text{Accumulated Weight Multiplication}}
 				\cdot
 				\frac{\partial z^{(i)}}{\partial w^{(i)}}
@@ -2394,7 +2495,7 @@ Despite its effectiveness, BatchNorm has several downsides:
 	Specifically:
 	\begin{itemize}
 		\item \textbf{Why after the linear part?} BN aims to ensure the inputs to the nonlinearity, \(\mathbf{u}\), have more stable means and variances across different mini-batches and training epochs.  By centering and scaling \(\mathbf{u}\), BN helps prevent saturating nonlinearities (e.g., sigmoids or \(\tanh\)) from entering their flat regimes, and also stabilizes the gradient flow \cite{ioffe2015_batchnorm}.
-		\item \textbf{If BN were after the activation:} Then the activation \(\phi(\mathbf{u})\) might saturate or shift significantly, and BN would see (and normalize) a distribution that is already ``warped.''  This often diminishes BN’s ability to regulate the input distribution to the next layer.  Empirically, BN-before-activation is widely used (e.g., in \cite{he2016_resnet, ioffe2015_batchnorm}).
+		\item \textbf{If BN were after the activation:} Then the activation \(\phi(\mathbf{u})\) might saturate or shift significantly, and BN would see (and normalize) a distribution that is already ``warped''.  This often diminishes BN’s ability to regulate the input distribution to the next layer.  Empirically, BN-before-activation is widely used (e.g., in \cite{he2016_resnet, ioffe2015_batchnorm}).
 	\end{itemize}
 	
 	\paragraph{Mathematical Rationale}
@@ -2571,28 +2672,36 @@ Group Normalization introduces an intermediate normalization strategy:
 \subsubsection{Why Do IN, LN, and GN Improve Optimization?}
 \label{subsubsec:why_alt_norm}
 
-While \textbf{Batch Normalization (BN)} is often described as ``smoothing the loss landscape,'' alternative normalization methods---\emph{Instance Normalization (IN)}, \emph{Layer Normalization (LN)}, and \emph{Group Normalization (GN)}---improve training stability by regulating feature statistics in different ways. Rather than relying on batch statistics, they normalize activations \emph{per sample} or \emph{within groups}, thereby stabilizing gradients and feature scales.
+While \textbf{Batch Normalization (BN)} has been shown empirically to accelerate and stabilize training—often attributed to ``smoothing the loss landscape''—its behavior depends critically on mini-batch statistics, creating instability with small or non-stationary batches. In contrast, \emph{Instance Normalization (IN)}, \emph{Layer Normalization (LN)}, and \emph{Group Normalization (GN)} normalize feature statistics \emph{within each sample} or within small groups of features. This per-sample normalization reparameterizes the network such that activations maintain consistent scale and variance, improving gradient behavior and optimization predictability.
 
 \paragraph{Common Benefits Across IN, LN, and GN}
 \begin{itemize}
-	\item \textbf{Stabilized Gradient Magnitudes:}
-	Normalizing activations (and thus gradients) prevents exploding or vanishing updates, facilitating more robust backpropagation.
-	\item \textbf{Predictable Parameter Updates:}
-	By standardizing features, these methods keep updates in a more uniform range, reducing erratic steps during optimization.
-	\item \textbf{Improved Generalization:}
-	Limiting extreme activation shifts makes models less sensitive to input variations, mitigating overfitting.
-	\item \textbf{Independence from Large Batches:}
-	Unlike BN (which needs reliable batch statistics), these methods (especially LN and IN) work effectively with small or fluctuating batch sizes.
+	\item \textbf{Stabilized Gradient Magnitudes:}  
+	By normalizing activations to zero mean and unit variance within each sample, these methods constrain the dynamic range of forward activations and backward gradients. This reduces the risk of exploding or vanishing signals, maintaining stable gradient flow throughout training.
+	
+	\item \textbf{More Predictable Parameter Updates:}  
+	Because feature distributions remain standardized, weight rescaling or initialization choices have a smaller effect on the magnitude of parameter updates. This produces more uniform effective learning rates across layers and training steps.
+
+	\item \textbf{Independence from Batch Size:}  
+	Unlike BN, which estimates statistics over the mini-batch, IN, LN, and GN compute normalization terms per sample (or per group), making them robust to small, variable, or even unit batch sizes. This ensures identical behavior during training and inference.
 \end{itemize}
 
 \paragraph{Summary: How These Methods Enhance Training}
-Instead of “smoothing the loss surface” in the manner often attributed to BN, these alternatives primarily \emph{manage activation scales and gradients} at levels more localized than a full batch:
+Rather than relying on cross-sample averaging to stabilize optimization, IN, LN, and GN regulate feature magnitudes at the sample level, enforcing consistent numerical scales throughout the network:
 \begin{itemize}
-	\item \textbf{IN}: Per-channel, per-sample normalization removes contrast shifts and stabilizes updates in image-focused tasks.
-	\item \textbf{LN}: Normalizes across all features for each example, crucial in RNN and Transformer contexts where batch-level statistics are unwieldy.
-	\item \textbf{GN}: Group-wise normalization balances local feature scaling, beneficial for vision tasks under small or dynamic batch sizes.
+	\item \textbf{Instance Normalization (IN):}  
+	Normalizes per-sample and per-channel over spatial dimensions (\(H \times W\)), eliminating contrast and illumination variations across instances—especially beneficial in style transfer and low-level vision tasks.
+	
+	\item \textbf{Layer Normalization (LN):}  
+	Normalizes across all features within each example. In CNNs, this corresponds to all channels at a single spatial location; in Transformers and RNNs, to all hidden units per token or time step. LN provides stable optimization where batch statistics are unreliable or sequences vary in length.
+	
+	\item \textbf{Group Normalization (GN):}  
+	Divides channels into \(G\) groups and normalizes within each group for each sample, balancing IN’s channel locality and LN’s full normalization. GN is particularly effective for CNNs with small or irregular batch sizes.
 \end{itemize}
-All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts, and maintain consistent training dynamics---ultimately improving optimization stability and performance.
+
+Together, these normalization schemes stabilize feature distributions, maintain consistent gradient magnitudes, and decouple optimization performance from batch-dependent effects—yielding smoother, more reliable convergence across diverse architectures.
+
+\newpage
 
 \begin{enrichment}[Backpropagation for Batch Normalization][subsection]
 	\label{enrichment:bn_backprop_node}
@@ -2764,6 +2873,7 @@ All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts,
 \end{enrichment}
 
 \newpage
+
 \begin{enrichment}[Batch Normalization \& \(\ell_2\) Regularization][subsection]
 	\label{enrichment:bn_l2_regularization}
 	
@@ -2868,7 +2978,7 @@ All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts,
 	\paragraph{4. Coexisting With Learning Rate Schedules}
 	
 	\noindent
-	A natural question is whether weight decay might conflict with LR schedules like cosine decay or step-wise reduction. In fact, they are complementary:
+	A natural question is whether weight decay might conflict with LR schedules like cosine decay or step-wise reduction (we'll cover them and others later). In fact, they are complementary:
 	
 	\begin{itemize}
 		\item \textbf{Schedulers} (e.g., cosine or step decay) reduce the base learning rate \(\alpha\) explicitly.
@@ -2913,8 +3023,8 @@ All serve to keep gradient magnitudes controlled, avoid abrupt parameter shifts,
 	
 	Even though BN neutralizes the forward-pass effect of \(\|w\|\), weight decay:
 	\begin{itemize}
-		\item Prevents gradients from vanishing due to large \(\|w\|\),
-		\item Maintains effective learning rate throughout training,
+		\item Prevents gradients from vanishing due to large \(\|w\|\).
+		\item Maintains effective learning rate throughout training.
 		\item Improves convergence and often generalization.
 	\end{itemize}
 	

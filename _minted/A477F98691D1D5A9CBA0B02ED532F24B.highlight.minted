@@ -1,3 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{autograd}\PYG{o}{.}\PYG{n}{grad}
-\end{MintedVerbatim}

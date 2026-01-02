@@ -1,5 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{c+c1}{\PYGZsh{} Shared intermediate 3x3 conv}
-\PYG{n}{rpn\PYGZus{}conv} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2d}\PYG{p}{(}\PYG{n}{C\PYGZus{}prime}\PYG{p}{,} \PYG{l+m+mi}{512}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{padding}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
-\PYG{n}{inter\PYGZus{}features} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{rpn\PYGZus{}conv}\PYG{p}{(}\PYG{n}{featmap}\PYG{p}{)}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} (B, 512, H\PYGZsq{}, W\PYGZsq{})}
-\end{MintedVerbatim}

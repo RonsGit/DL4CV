@@ -22,6 +22,8 @@ Hence, we need to find a solution for these challenges we face in real-world com
 \subsection{Feature Transforms as a Solution}
 Feature transforms attempt to overcome the limitations of linear classifiers by mapping input data into a new feature space that simplifies classification, allowing to linearly separate the feature space and provide a linear-classifier based solution. We'll now provide a high-level overview of some common feature transforms in the field of computer vision. 
 
+\newpage
+
 \subsubsection{Feature Transforms in Action}
 Feature transforms aim to re-represent the data in a space where it becomes easier to classify using simple models. For instance:
 \begin{itemize}
@@ -69,7 +71,7 @@ Feature transforms aim to re-represent the data in a space where it becomes easi
 	
 	The approach works as follows:
 	\begin{itemize}
-		\item Random patches are extracted from training images and clustered to form a codebook of "visual words."
+		\item Random patches are extracted from training images and clustered to form a codebook of "visual words".
 		\item For each input image, a histogram is created to count how often each visual word appears.
 		\item This method captures common structures and patterns in the dataset without requiring manual feature specification.
 	\end{itemize}
@@ -143,6 +145,8 @@ A \textbf{fully connected} neural network, also known as a \textbf{multi-layer p
 	\caption{A visual representation of a fully connected neural network with a single hidden layer, an input layer, and an output layer.}
 	\label{fig:chapter5_fc_network}
 \end{figure}
+
+\newpage
 	
 \subsection{Interpreting Neural Networks}
 Neural networks can be analyzed in a way similar to linear classifiers. For instance, the weight matrix \(\mathbf{W}_1\) in the first layer can be reshaped and visualized as \emph{templates}, each indicating how strongly it responds to particular spatial patterns in the input image. While many of these templates are not immediately interpretable, some do reveal recognizable structures.
@@ -159,14 +163,16 @@ In the second layer of the network, these template responses are recombined (via
 \end{figure}
 	
 \paragraph{Network Pruning: Pruning Redundant Representations}
-One challenge in neural networks is redundancy, where multiple filters or features learn the same thing. A technique called \textbf{network pruning} addresses this issue. In this approach, a large neural network is trained, and as a post-processing step, redundant representations are pruned to simplify the network without significantly affecting its performance. This concept will be revisited in more detail later in the course.
+One challenge in neural networks is redundancy, where multiple filters or features learn the same thing. A technique called \textbf{network pruning} addresses this issue. In this approach, a large neural network is trained, and as a post-processing step, redundant representations are pruned to simplify the network without significantly affecting its performance. 
+
+\newpage
 
 \section{Building Neural Networks}
 Neural networks are formed by stacking multiple layers. The \emph{depth} of a network refers to the number of these layers, while the \emph{width} describes the number of neurons (hidden units) per layer.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_32.jpg}
+	\includegraphics[width=0.75\textwidth]{figures/Chapter_5/slide_32.jpg}
 	\caption{A visual representation of a deep neural network.}
 	\label{fig:chapter5_deep_nn}
 \end{figure}
@@ -182,12 +188,12 @@ Without non-linearities (e.g., if you simply had \(\mathbf{W}_2 (\mathbf{W}_1 \m
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_35.jpg}
+	\includegraphics[width=0.75\textwidth]{figures/Chapter_5/slide_35.jpg}
 	\caption{Collapsing multiple linear layers reduces the network to a linear classifier.}
 	\label{fig:chapter5_linear_collapse}
 \end{figure}
 
-\paragraph{Why Non-Linearity Matters.}
+\paragraph{Why Non-Linearity Matters}
 Non-linear activation functions grant neural networks the \emph{universal approximation} property, enabling them to represent virtually any function given sufficient capacity (enough parameters and layers). Common activation functions include:
 \begin{itemize}
 	\item \textbf{ReLU} (\(\max(0, x)\)): A popular choice due to its simplicity and ability to mitigate vanishing gradients. Works effectively in most modern architectures.
@@ -207,8 +213,8 @@ The figure below highlights these activation functions. Historically, \textbf{Si
 \subsection{A Simple Neural Network in 20 Lines}
 Despite their conceptual depth, neural networks can be implemented succinctly. Below is an example of a minimal NumPy implementation of a neural network with:
 \begin{itemize}
-	\item An input layer,
-	\item One hidden layer with an activation function (e.g., ReLU),
+	\item An input layer.
+	\item One hidden layer with an activation function (e.g., ReLU).
 	\item An output layer for classification or regression.
 \end{itemize}
 
@@ -341,22 +347,53 @@ The \textbf{Universal Approximation Theorem} states that a neural network with j
 \end{itemize}
 While this result is mathematically profound, we will not delve into all these mathematical conditions behind it, as it is beyond the scope of this course. What we'll try to do is focus on the practical side, building a method that can be used to construct any given function based on neural networks. 
 
+\newpage
+
 \subsection{Practical Context: The Bump Function}
-An illustrative example of universal approximation is constructing a “bump function” using four hidden units. This function, built as a combination of four ReLU activations, allows us to control:
-\begin{itemize}
-	\item The location of the bump,
-	\item The slopes of the lines,
-	\item The height of the bump.
-\end{itemize}
+A concrete illustration of the \emph{universal approximation theorem} is the construction of a simple \textbf{bump function} using a small two-layer ReLU network.  
+This example demonstrates how even a few ReLU units can be combined to synthesize localized, non-linear patterns—showing how neural networks can approximate arbitrary continuous functions through composition.
+
+\paragraph{Constructing a Bump with ReLU Units}
+Consider a one-dimensional input \( x \) passed through four hidden ReLU activations:
+\[
+h_i(x) = \max(0, w_i x + b_i), \quad i = 1, 2, 3, 4,
+\]
+whose outputs are linearly combined to form:
+\[
+y = \sum_{i=1}^{4} u_i h_i(x) + p.
+\]
+Each ReLU creates a \emph{hinge-shaped} piecewise-linear segment that becomes active (nonzero) only when \( x > -b_i / w_i \).  
+By carefully setting the weights \( w_i, b_i, u_i \), we can align the breakpoints of these hinges at four positions \( s_1, s_2, s_3, s_4 \) along the \(x\)-axis, and choose slopes \(m_1, m_2\) such that:
+\[
+m_1 = \frac{t}{s_2 - s_1}, \qquad m_2 = \frac{t}{s_4 - s_3}.
+\]
+These parameters generate a flat baseline, a linear rise to height \(t\), a plateau, and then a symmetric linear fall—together forming a smooth “bump” localized between \(s_1\) and \(s_4\).
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/Chapter_5/slide_79.jpg}
-	\caption{A bump function constructed using four hidden units, demonstrating the capacity of neural networks to approximate complex functions.}
+	\caption{A bump function constructed using four ReLU units. Each activation defines a hinge; together, they form a localized, piecewise-linear “bump” that demonstrates the expressiveness of shallow networks.}
 	\label{fig:chapter5_bump_function}
 \end{figure}
 
-Using \( 4K \) units, we can construct a sum of \( K \) bumps, enabling the approximation of arbitrary functions with increasing accuracy as the number of bumps grows. This interpretation highlights that \textbf{the more hidden units, the greater the expressive power of the model}.
+\newpage
+
+\paragraph{Why the Bump Matters}
+This bump construction is fundamental because it serves as a local building block for more complex approximations.  
+By summing multiple such bumps, each positioned and scaled differently, we can approximate any continuous function on a bounded domain:
+\[
+f(x) \approx \sum_{k=1}^{K} a_k \, \text{bump}_k(x),
+\]
+where each \(\text{bump}_k(x)\) is formed using four ReLU units.  
+With \(4K\) hidden units, the network can represent \(K\) independent bumps—each capturing a local feature of the target function. As \(K\) increases, the approximation becomes increasingly accurate.
+
+\paragraph{Intuitive Understanding}
+Each bump acts like a localized basis function, similar to how sine waves in Fourier analysis or Gaussians in radial basis networks capture local structure.  
+ReLU networks, therefore, build complex functions by \emph{stitching together} many such simple, overlapping pieces.  
+This demonstrates a key insight of universal approximation: even shallow networks, given enough hidden units, can approximate arbitrarily complex continuous mappings through a sum of locally linear “bump” functions.
+
+\textbf{In essence:}  
+Each ReLU adds a hinge to the function; combining several hinges creates a bump; and combining many bumps creates an arbitrary continuous curve—the essence of deep learning’s expressive power.
 
 \subsection{Questions for Further Exploration}
 This proof of capacity raises several interesting questions:

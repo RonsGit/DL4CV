@@ -27,7 +27,11 @@ AlexNet consisted of:
 	\item \textbf{Multi-GPU training}, splitting the model across two NVIDIA GTX 580 GPUs, each with only 3GB of memory.
 \end{itemize}
 
-Despite its relatively simple design, AlexNet was hugely influential, accumulating over 100,000 citations since its publication. This makes it one of the most cited works in modern science, surpassing even landmark research in information theory and fundamental physics. 
+Despite its relatively simple design, AlexNet was hugely influential, accumulating over 100,000 citations since its publication. 
+
+\newpage
+
+This makes it one of the most cited works in modern science, surpassing even landmark research in information theory and fundamental physics. 
 
 \subsection{Architecture Details}
 
@@ -289,6 +293,8 @@ In the 2014 ImageNet challenge, \textbf{GoogLeNet} by Szegedy et al.\ \cite{szeg
 	\label{fig:chpater8_googlenet_vgg_comparison}
 \end{figure}
 
+\newpage
+
 Unlike VGG, which relied on deep stacks of \(3 \times 3\) convolutions, GoogLeNet employed \emph{parallelized computation} within \textbf{Inception modules}, along with aggressive downsampling at the early stages of the network, and replaced the large MLP at the end of the CNN with Global Average Pooling (GAP) and a single FC layer. These innovations made it more suitable for real-world deployment, aligning with Google’s need for efficient, large-scale model inference. We'll now review each important aspect regarding the architecture and how it helped shaped future architectures.
 
 \subsection{Stem Network: Efficient Early Downsampling}
@@ -314,7 +320,9 @@ A key challenge in convolutional networks is the high computational cost at earl
 \end{figure}
 
 \subsection{The Inception Module: Parallel Feature Extraction}
-One of the key innovations of GoogLeNet is the \textbf{Inception module}, a computational unit designed to process feature maps at multiple scales in parallel. By introducing parallel branches with different receptive fields, this module enables efficient feature extraction while allowing the network to scale in depth without excessive computational overhead.
+One of the key innovations of GoogLeNet is the \textbf{Inception module}, a computational unit designed to process feature maps at multiple scales in parallel.
+
+By introducing parallel branches with different receptive fields, this module enables efficient feature extraction while allowing the network to scale in depth without excessive computational overhead.
 
 \textbf{Key Advantages of the Inception Module:}
 \begin{itemize}

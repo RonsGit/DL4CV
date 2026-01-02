@@ -1,5 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{k}{def} \PYG{n+nf}{custom\PYGZus{}relu}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{:}
-\PYG{k}{return} \PYG{n}{x}\PYG{o}{.}\PYG{n}{clamp}\PYG{p}{(}\PYG{n+nb}{min}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Element\PYGZhy{}wise ReLU}
-\PYG{n}{h\PYGZus{}relu} \PYG{o}{=} \PYG{n}{custom\PYGZus{}relu}\PYG{p}{(}\PYG{n}{h}\PYG{p}{)}
-\end{MintedVerbatim}

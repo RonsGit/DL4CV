@@ -308,13 +308,13 @@ Here’s an example using an SVM classifier (a type of linear classifier) to vis
 	classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 	
 	for i in range(10):
-		plt.subplot(2, 5, i + 1)
-		# Rescale weights to 0-255 range for visualization
-		wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
-		plt.imshow(wimg.astype('uint8'))
-		plt.axis('off')
-		plt.title(classes[i])
-		plt.show()
+	    plt.subplot(2, 5, i + 1)
+	    # Rescale weights to 0-255 range for visualization
+	    wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
+	    plt.imshow(wimg.astype('uint8'))
+	    plt.axis('off')
+	    plt.title(classes[i])
+	    plt.show()
 \end{mintedbox}
 
 \begin{figure}[H]
@@ -454,10 +454,10 @@ L = \frac{1}{N} \sum_{i=1}^{N} L_i(f(x_i, W), y_i),
 \]
 where:
 \begin{itemize}
-	\item \(x_i\) is an input example,
-	\item \(y_i\) is the corresponding true label,
-	\item \(f(x_i, W)\) is the model's prediction given parameters \(W\),
-	\item and \(L_i\) is the loss incurred on a single example.
+	\item \(x_i\) is an input example.
+	\item \(y_i\) is the corresponding true label.
+	\item \(f(x_i, W)\) is the model's prediction given parameters \(W\).
+	\item \(L_i\) is the loss incurred on a single example.
 \end{itemize}
 
 \subsection{Core Requirements for Loss Functions}
@@ -560,13 +560,52 @@ Consider a CIFAR-10 image (e.g., a cat) with three possible classes: cat (\(s_\t
 	This insight is useful for debugging model implementations.
 \end{itemize}
 
-\subsubsection{Why "Cross-Entropy"?}
+\subsubsection{Why These Names: Cross-Entropy and Softmax}
+\label{subsubsec:chapter03_ce_softmax_names}
 
-The name arises from information theory, where cross-entropy measures the difference between two probability distributions: the true distribution (one-hot vector of ground truth labels) and the predicted distribution (softmax probabilities).
+\noindent The terms \emph{cross-entropy} and \emph{softmax} both arise from their mathematical origins in information theory and optimization. Understanding their names clarifies how they work together to form the standard probabilistic loss for classification.
 
-The softmax function is named for its differentiable approximation to the max function, making it suitable for gradient-based optimization.
+\paragraph{Cross-Entropy: Encoding One Distribution Using Another}
+The word \textbf{cross-entropy} comes from information theory, where it measures how ``inefficient'' it is to encode data from one probability distribution using another. Formally, for a true distribution \(p\) and a model prediction \(q\),
+\[
+H(p,q) = -\sum_k p(k)\,\log q(k).
+\]
+The prefix ``cross'' reflects that the measure \emph{crosses} the true data distribution \(p\) with the model’s predicted probabilities \(q\): the expectations are taken under \(p\), but the code lengths come from \(q\).
+
+In classification, the true label is represented by a one-hot vector, so only the correct class \(y\) contributes:
+\[
+H(p,q) = -\log q(y).
+\]
+This simplifies the cross-entropy loss to the negative log-likelihood (NLL) of the true class: minimizing it is equivalent to maximizing the probability assigned to the correct label. It penalizes confident wrong predictions heavily, guiding the model to output calibrated probabilities.
+
+\paragraph{Softmax: Temperature and the Degree of “Softness”}
+The \textbf{softmax} function transforms raw logits into probabilities through a temperature-controlled exponential normalization:
+\[
+\sigma(z)_k = \frac{e^{z_k / \tau}}{\sum_j e^{z_j / \tau}},
+\]
+where \(\tau > 0\) is the \emph{temperature} parameter. This parameter directly determines how “soft” or “peaked” the resulting probability distribution is.
+
+\paragraph{Role of the Temperature Parameter}
+The temperature \(\tau\) modulates the confidence level of the model’s output:
+\begin{itemize}
+	\item When \(\tau \to 0\), the exponentiation strongly amplifies logit differences, making one class dominate—producing an almost one-hot vector (a “hard” \(\arg\max\)).
+	\item When \(\tau \to \infty\), the exponentials flatten out, assigning nearly equal probability to all classes—a uniform distribution.
+	\item When \(\tau = 1\), the scale of logits is preserved, and this is the \emph{standard setting} used in most classification networks.
+\end{itemize}
+
+\paragraph{Why \(\tau = 1\) by Default}
+In most training settings, logits are unconstrained and naturally learn an appropriate scale through gradient descent. Setting \(\tau = 1\) keeps the mapping numerically stable while maintaining an interpretable balance between confidence and uncertainty. If \(\tau\) were much smaller, gradients could vanish due to overconfident probabilities; if much larger, predictions would be too smooth to separate classes effectively. Thus, \(\tau = 1\) provides a well-behaved trade-off between expressiveness and stability.
+
+\paragraph{When and Why Temperature Is Changed}
+Although \(\tau = 1\) is used during training, modifying it can serve specific purposes:
+\begin{itemize}
+	\item \textbf{Knowledge distillation.} A higher temperature (\(\tau > 1\)) is used to \emph{soften} the teacher’s output distribution, exposing relative confidence between classes and providing richer learning signals for the student network~\cite{hinton2015_distillation}.
+	\item \textbf{Calibration and uncertainty estimation.} At inference, temperature scaling can be applied to better align predicted probabilities with observed accuracies~\cite{guo2017_calibration}. The optimal \(\tau\) is usually determined by minimizing negative log-likelihood on a validation set.
+	\item \textbf{Contrastive and self-supervised learning.} In losses such as InfoNCE or CLIP’s contrastive loss, \(\tau\) controls embedding sharpness: smaller values increase separation between positives and negatives, while larger ones encourage smoother similarities.
+\end{itemize}
 
 \newpage
+
 \begin{enrichment}[Why Cross-Entropy Uses Logarithms, Not Squared Errors][subsubsection]
 	
 	\noindent
@@ -931,98 +970,139 @@ Both losses have unique advantages, and the choice depends on the application an
 	\subsubsection{Motivation}
 	\label{subsec:chapter3_amsoftmax_motivation}
 	
-	\paragraph{Why angles on a hypersphere}
-	Consider the simplest setting: a \emph{binary} linear classifier whose last layer compares a feature $x\!\in\!\mathbb{R}^D$ to two class prototypes (weight vectors) $w_1,w_2\!\in\!\mathbb{R}^D$. To prevent raw magnitude from dominating decisions, it is standard to $\ell_2$-normalize both features and weights onto the unit hypersphere, yielding $\tilde{x}=x/\|x\|_2$ and $\tilde{w}_j=w_j/\|w_j\|_2$. The class score then becomes the \emph{cosine} of the angle $\theta_j$ between $\tilde{x}$ and $\tilde{w}_j$, rescaled by $s>0$:
-	\begin{equation}
-		z_j \;=\; s\,\tilde{w}_j^\top \tilde{x} \;=\; s\,\cos\theta_j, 
-		\qquad 
-		\theta_j \in [0^\circ,180^\circ],\quad 
-		\cos\theta_j=\tilde{w}_j^\top \tilde{x}.
-		\label{eq:chapter3_amsoftmax_angles}
-	\end{equation}
-	Angles are the natural geometry on the hypersphere: $\theta_j{=}0^\circ$ means perfect alignment with class $j$; $\theta_j{=}90^\circ$ means orthogonality; larger $\theta_j$ indicates increasing misalignment. With conventional softmax on \eqref{eq:chapter3_amsoftmax_angles}, the binary decision boundary satisfies $\cos\theta_1=\cos\theta_2$—the \emph{angular bisector}. A sample that is only infinitesimally closer (in angle) to $w_1$ than to $w_2$ is already considered correct for class 1. This promotes separability but provides no explicit \emph{safety buffer} between classes; small perturbations can flip decisions near the bisector.
+	\paragraph{From Separability to True Discriminability}
+	In many high-dimensional recognition tasks—such as face verification, speaker recognition, and product retrieval—standard softmax cross-entropy loss ensures only that the correct class logit exceeds the others. While this suffices for separability, it does not guarantee \emph{discriminability}: features of the same class may be loosely scattered, and different classes may overlap in feature space. To achieve robust, generalizable embeddings, one seeks \emph{compact intra-class clusters} and \emph{large inter-class margins}.
 	
-	\paragraph{A-Softmax (SphereFace): multiplicative angular margin and its pitfalls}
-	A-Softmax (SphereFace) \cite{liu2017_sphereface} tries to make correct predictions “win by more” by tightening the angular region around the true class. It does so by \emph{multiplying} the target angle before turning it into a logit, while leaving non-target logits unchanged:
+	\paragraph{Angular Formulation on the Hypersphere}
+	A practical approach to achieve this geometric interpretability is to reformulate the decision boundary in angular terms. Let the feature vector \(x \in \mathbb{R}^D\) and class prototype \(w_j \in \mathbb{R}^D\) represent, respectively, the sample and the \(j\)-th class weight. Both are $\ell_2$-normalized onto the unit hypersphere:
 	\[
-	z_y^{\text{A-Softmax}} = s\,\psi(\theta_y),\qquad z_j = s\,\cos\theta_j\ \ (j\neq y).
+	\tilde{x} = \frac{x}{\|x\|_2}, \qquad \tilde{w}_j = \frac{w_j}{\|w_j\|_2}.
 	\]
-	Ideally one would set $\psi(\theta)=\cos(m\theta)$ with an integer $m\!\ge\!1$, but $\cos(m\theta)$ oscillates and is not monotone on $[0,\pi]$. To keep the target logit decreasing with angle (so “more aligned” always means “higher score”), SphereFace uses a \emph{piecewise monotone} surrogate:
+	The cosine similarity between them defines the logit:
 	\begin{equation}
-		\psi(\theta) \;=\; (-1)^k \cos(m\theta)\;-\;2k,\qquad \theta\in\Big[\tfrac{k\pi}{m},\tfrac{(k+1)\pi}{m}\Big],\ k=0,\dots,m\!-\!1,
-		\label{eq:chapter3_amsoftmax_asf_piecewise_recap}
+		z_j = s\,\tilde{w}_j^{\top}\tilde{x} = s\,\cos\theta_j, \qquad \theta_j \in [0^\circ,180^\circ],
+		\label{eq:chapter3_amsoftmax_cosine}
 	\end{equation}
-	and smooths the start of training with a simple blend
-	\begin{equation}
-		\psi_\lambda(\theta) \;=\; \frac{\lambda\,\cos\theta + \psi(\theta)}{\lambda+1},\qquad \text{with }\lambda\text{ large at first and annealed to }0.
-		\label{eq:chapter3_amsoftmax_asf_lambda_recap}
-	\end{equation}
+	where \(s > 0\) rescales logits for numerical stability and gradient control. Under this normalized form, decisions depend solely on the angular distance between feature and prototype—making \(\theta_j\) a natural measure of class alignment.
 	
-	\textbf{Why blending with $\boldsymbol{\lambda}$ helps early on.} At random initialization, feature–prototype angles wander widely and often cross the sector boundaries where the piecewise rule in \eqref{eq:chapter3_amsoftmax_asf_piecewise_recap} changes formula. The raw multiplicative target has steep, regime-dependent slopes (its derivative scales with $m$ and flips across sectors), which can produce abrupt gradients. Taking $\lambda$ large makes $\psi_\lambda(\theta)\!\approx\!\cos\theta$: training begins with the smooth, well-behaved softmax target, and the angular margin is introduced \emph{gradually} as $\lambda\to 0$. This avoids sudden shape changes in the target curve and keeps the optimization stable while features start to align.
+	With conventional softmax applied to Eq.~\eqref{eq:chapter3_amsoftmax_cosine}, the binary decision boundary is the angular bisector $\cos\theta_1 = \cos\theta_2$. A sample infinitesimally closer to its true prototype is already deemed correct—offering no safety buffer. Thus arose the idea of introducing explicit \emph{angular margins}.
 	
-	\textbf{What the multiplicative margin does—and why it is angle dependent.} The decision condition $s\,\psi(\theta_y) > s\,\cos\theta_j$ implies (ignoring piecewise sign corrections) $\cos(m\theta_y) > \cos\theta_j$. In the range where both sides decrease with angle, this is roughly $m\theta_y < \theta_j$. Compared with softmax’s $\theta_y < \theta_j$, the \emph{allowable} angle to the correct prototype is reduced: for a fixed impostor angle $\theta_j$, the largest permitted $\theta_y$ shrinks to about $\theta_j/m$.
+	\paragraph{Historical Progress: Multiplicative Margins and Their Limitations}
+	Early works like L-Softmax~\cite{liu2016_lsoftmax} and A-Softmax (SphereFace)~\cite{liu2017_sphereface} pioneered margin-based formulations in angular space. SphereFace enforced a multiplicative constraint by replacing $\cos\theta_y$ with $\cos(m\theta_y)$ for integer $m \ge 1$. This effectively narrowed the acceptance cone of the correct class, requiring samples to align more closely with their class prototype to be correctly classified.
 	
-	\newpage
-	
-	In other words, the acceptance cone around the true class is \emph{narrowed}. Crucially, this narrowing is \emph{non-uniform}: when $\theta_y$ is already small (easy examples), the extra requirement barely changes anything; when $\theta_y$ is large (hard, near-boundary examples), the requirement becomes much stricter. That uneven pressure—combined with the piecewise definition—can lead to unbalanced gradients (easy points get little additional pull, hard points get a lot), making clusters less uniformly compact and adding tuning burden for $m$ and the blending schedule.
-	
-	\paragraph{A-Softmax in detail: multiplicative transform $m$ and blending $\lambda$}
-	SphereFace specifies the correct-class target with a piecewise monotone mapping $\psi(\theta)$ that behaves like $\cos(m\theta)$, using the recap forms
-	\begin{equation}
-		\psi(\theta)\;=\;(-1)^k\cos(m\theta)-2k,\quad \theta\in\Big[\tfrac{k\pi}{m},\tfrac{(k+1)\pi}{m}\Big],\ k\in\{0,\dots,m-1\}
-		\label{eq:chapter3_amsoftmax_asf_piecewise_recap_formula}
-	\end{equation}
-	and an optional stabilized blend
-	\begin{equation}
-		\psi_\lambda(\theta)\;=\;\frac{\lambda\,\cos\theta+\psi(\theta)}{\lambda+1},\qquad \lambda\ \text{large at start, annealed}\ \lambda\!\to\!0.
-		\label{eq:chapter3_amsoftmax_asf_lambda_recap_formula}
-	\end{equation}
-	\textbf{Effect of $\boldsymbol{m}$.} Increasing $m$ narrows the acceptance cone around the correct prototype: for a fixed impostor angle $\theta_j$, the largest admissible target angle contracts from $\theta_y<\theta_j$ (softmax) to approximately $\theta_y<\theta_j/m$ (SphereFace). Geometrically, this is a “win by a percentage’’ rule whose strictness scales with $m$. Analytically, the target slope steepens because $\tfrac{d}{d\theta}\cos(m\theta)=-m\sin(m\theta)$, so around typical training angles the logit landscape is $m$ times sharper. The benefit is stronger separation; the cost is higher curvature and greater sensitivity to small angular changes.
-	
-	\textbf{Role of $\boldsymbol{\lambda}$.} The blend
+	However, $\cos(m\theta)$ is non-monotonic on $[0, \pi]$, oscillating across sectors and causing ambiguous gradients. SphereFace resolved this via a piecewise surrogate
 	\[
-	\psi_\lambda(\theta)=\frac{\lambda\cos\theta+\psi(\theta)}{\lambda+1}
+	\psi(\theta) = (-1)^k\cos(m\theta) - 2k, \quad \theta\in\big[\tfrac{k\pi}{m}, \tfrac{(k+1)\pi}{m}\big],
 	\]
-	(see \eqref{eq:chapter3_amsoftmax_asf_lambda_recap}) starts training close to plain softmax ($\lambda$ large) and \emph{gradually} reveals the multiplicative margin as $\lambda\!\to\!0$. This staging smooths the target curve early on, reduces abrupt slope changes near sector boundaries, and prevents large, regime-dependent gradient spikes while features and weights are still unstructured.
+	and an annealing blend
+	\[
+	\psi_\lambda(\theta) = \frac{\lambda\,\cos\theta + \psi(\theta)}{\lambda + 1},
+	\]
+	which starts near $\cos\theta$ (large $\lambda$) and transitions to $\psi(\theta)$ (small $\lambda$).  
+	While conceptually elegant, this multiplicative margin had several drawbacks:
+	\begin{itemize}
+		\item \textbf{Angle-dependent margin.} The effective margin shrinks non-uniformly with $\theta$, applying excessive pressure to hard samples but little to easy ones.
+		\item \textbf{Gradient instability.} The piecewise function introduces kinks and steep, regime-dependent slopes, making optimization sensitive to initialization and learning rate.
+		\item \textbf{Hyperparameter burden.} The integer $m$, annealing schedule, and blending $\lambda$ require manual tuning.
+	\end{itemize}
 	
-	\textbf{Why the angle dependence is challenging.} The effective buffer is not fixed; it depends on the absolute angles. In practice this causes three issues. First, \emph{non-uniform pressure}: easy examples (small $\theta_y$) satisfy $m\theta_y<\theta_j$ almost automatically and receive little extra pull, whereas hard examples (large $\theta_y$) are pushed very strongly, yielding unbalanced updates within a batch. Second, \emph{gradient concentration}: the target slope magnitude scales with $m$ and varies with $\theta_y$, so a few near-boundary samples dominate the step, which can slow or destabilize convergence. Third, \emph{inconsistent geometric gaps}: two examples with the same cosine lead $\cos\theta_y-\cos\theta_j$ can face different acceptance conditions depending on their absolute angles, making cluster compactness less uniform. Together with the piecewise construction (sector switches introduce kinks where formulas change), this angle dependence adds tuning burden for the integer $m$ and the annealing schedule $\lambda$.
+	\paragraph{AM-Softmax (CosFace): The Additive Cosine Margin Solution}
+	\label{par:chapter3_amsoftmax_main}
+	AM-Softmax (CosFace)~\cite{wang2018_amsoftmax, wang2018_cosface} resolves two core issues of earlier margin losses. First, L-Softmax~\cite{liu2016_lsoftmax} and A-Softmax (SphereFace)~\cite{liu2017_sphereface} enforce margins by \emph{warping angles} (e.g., $\cos(m\theta_y)$), which requires a piecewise surrogate to remain monotone and a careful annealing schedule for stability. Second, their \emph{angle-dependent} pressure pushes hard samples far more than easy ones, yielding unbalanced gradients and inconsistent intra-class compactness.  
+	AM-Softmax instead applies a fixed \emph{additive margin in cosine space}, keeping the target strictly monotone and the optimization simple.
+	
+	\medskip
+	\noindent\textbf{Formulation (single change to the target logit).}
+	After $\ell_2$-normalizing features and weights, logits are $z_j = s\,\cos\theta_j$. AM-Softmax modifies only the correct-class logit:
+	\begin{equation}
+		z_y^{\text{AM-Softmax}} = s\,(\cos\theta_y - m), \qquad
+		z_j = s\,\cos\theta_j \ \ (j \neq y),
+		\label{eq:chapter3_amsoftmax_main}
+	\end{equation}
+	with scale $s>0$ and margin $m>0$. In the binary normalized case, the decision boundary shifts from $\cos\theta_1=\cos\theta_2$ to
+	\begin{equation}
+		\cos\theta_1 - m = \cos\theta_2
+		\quad \Longleftrightarrow \quad
+		\cos\theta_1 - \cos\theta_2 = m,
+		\label{eq:chapter3_amsoftmax_boundary_refined}
+	\end{equation}
+	so the target class must \emph{win by a fixed cosine gap} $m$—independent of absolute angles.
+	
+	\medskip
+	\noindent\textbf{Why AM-Softmax beats multiplicative/angle-space margins.}
+	\begin{itemize}
+		\item \textbf{Smooth, bounded, and stable target.}  
+		AM-Softmax defines its target logit as
+		\[
+		z_y = s(\cos\theta_y - m), \qquad 
+		\frac{\partial z_y}{\partial \theta_y} = -s\sin\theta_y.
+		\]
+		This function is $C^\infty$-smooth, strictly decreasing, and globally bounded by \(|\partial z_y/\partial\theta_y| \le s\).  
+		Under cross-entropy, where \(\partial L/\partial z_y = p_y - 1\), we obtain
+		\[
+		\Bigl|\frac{\partial L}{\partial \theta_y}\Bigr| = s|p_y - 1|\sin\theta_y \le s.
+		\]
+		This upper bound means that no matter how misaligned the feature is, the gradient magnitude never exceeds \(s\), giving a uniformly Lipschitz-continuous landscape—changes in angle produce proportionally limited changes in loss.  
+		In optimization terms, this limits gradient variance across the batch, keeping learning updates stable and predictable. At random initialization, when feature directions are nearly uniform on the hypersphere, \(\mathbb{E}[\sin^2\theta_y] = \tfrac{1}{2}\), yielding a consistent average gradient scale of order \(\mathcal{O}(s)\). This steady “signal power” ensures smooth convergence without oscillations or exploding updates.  
+		
+		By contrast, multiplicative (angle-space) margins, such as SphereFace, approximate \(z_y \!\approx\! s\cos(m\theta_y)\). Their gradient,
+		\[
+		\frac{\partial z_y}{\partial \theta_y} \!\approx\! -sm\sin(m\theta_y),
+		\]
+		is \(m\)-times steeper, oscillatory, and periodically reverses direction—creating “kinks” between angular sectors. Each kink acts as a sharp ridge in the loss surface, causing large, erratic gradient swings (\(\text{Var}[\partial z_y/\partial\theta_y]\!\propto\! m^2\)) and forcing the use of annealing schedules to gradually “turn on” the margin. AM-Softmax’s smoothness removes these discontinuities entirely, yielding a single well-behaved basin of descent.  
+		
+		\textit{Intuitively}, AM-Softmax feels like descending a gentle, continuous slope—easy to control—whereas multiplicative margins resemble stepping down a jagged staircase with uneven steps. The smoother surface means more stable optimization, faster convergence, and far fewer tuning complications.
+		
+		\item \textbf{Uniform margin and geometric clarity.}  
+		AM-Softmax applies a fixed additive margin in cosine space:
+		\[
+		\cos\theta_y > \cos\theta_j + m \quad (\forall j \neq y),
+		\]
+		meaning the feature’s similarity to its true prototype must exceed that to every distractor by at least \(m\). This margin is \emph{absolute} and identical for all samples, defining a uniform “safety gap” in cosine similarity.  
+		
+		To understand its effect, note that a “hard” distractor corresponds to a small angle \(\theta_j\) (the feature is near a wrong prototype), while an “easy” distractor has a large \(\theta_j\) (the feature is far from any confusion). The largest allowable deviation for the correct class before misclassification is
+		\[
+		\theta_y^{\max} = \arccos(\cos\theta_j + m),
+		\]
+		so the decision boundary shifts inward by a fixed cosine offset \(m\). A small linearization gives
+		\[
+		\Delta \theta_y \approx \frac{m}{\sin \theta_j},
+		\]
+		which scales smoothly: when \(\theta_j\) is large (easy case), \(\sin\theta_j\!\approx\!1\), giving a mild tightening; when \(\theta_j\) is smaller (hard case), the pull is slightly stronger but never extreme.  
+		
+		\textit{In effect,} AM-Softmax balances the forces applied to all samples—gently encouraging easy ones to refine alignment, while giving hard ones enough extra pull to escape confusion without destabilizing gradients.
+		
+		\item \textbf{Numerical illustration (AM \(m{=}0.35\) vs.\ A-Softmax \(m{=}4\)).}  
+		Consider two distractors at different angular distances from the true prototype:
+		\begin{itemize}
+			\item \textbf{Hard distractor:} \(\theta_j = 60^\circ\) (\(\cos\theta_j = 0.5\)).  
+			AM-Softmax requires \(\cos\theta_y > 0.85 \Rightarrow \theta_y^{\max} \approx 31.8^\circ\), halving the decision cone—firm but reasonable separation.  
+			A-Softmax enforces \(\theta_y^{\max} = 60^\circ / 4 = 15^\circ\), a fourfold contraction that yields excessive gradient magnitude and slower convergence.  
+			\item \textbf{Easy distractor:} \(\theta_j = 90^\circ\) (\(\cos\theta_j = 0\)).  
+			AM-Softmax gives \(\theta_y^{\max} \approx 69.5^\circ\), applying only mild pressure to refine alignment.  
+			A-Softmax insists on \(22.5^\circ\), over-tightening already safe samples.
+		\end{itemize}
+		In both cases AM-Softmax uses the same additive gap (\(\Delta\cos = m = 0.35\)), yet its angular effect self-adjusts via the sphere’s curvature (\(\sin\theta_j\)): the pull is adaptive but bounded, preventing gradient imbalance across the batch.  
+		
+		\newpage
+		
+		\textit{Geometric intuition.}  
+		On the hypersphere, AM-Softmax transforms the softmax bisector \(\cos\theta_1 = \cos\theta_2\) into a parallel offset \(\cos\theta_1 - \cos\theta_2 = m\). Each class thus gains a uniform spherical cap—a “moat” of cosine width \(m\)—that separates prototypes evenly. All classes retain equally sized, isotropic decision regions, while multiplicative margins distort these shapes, over-squeezing poles and stretching equators. The additive cosine rule therefore ensures fair, stable, and geometrically clean separation across the sphere.
+	\end{itemize}
+	
+	\noindent\textbf{Hyperparameters and practice.}
+	\begin{itemize}
+		\item \textbf{Scale $s$.} Acts as an inverse temperature that sharpens posteriors and scales gradients; typical settings range from $s{=}30$ to $s{=}64$ depending on batch size and dataset.
+		\item \textbf{Margin $m$.} Sets the required cosine lead; values in $m\in[0.2, 0.5]$ are common. Larger $m$ strengthens separation but can slow early convergence.
+	\end{itemize}
+	In large-scale face recognition, $(s,m)=(64,0.35)$ is a widely used, robust choice~\cite{wang2018_cosface}. Compared to L-Softmax and SphereFace, AM-Softmax achieves stronger, more uniform discrimination with a simpler, more stable training recipe.
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.70\textwidth]{Figures/Chapter_3/AMSoftmax_angular_comparison.jpg}
-		\caption{Target-logit $\psi(\theta)$ for conventional softmax, A-Softmax with several $(m,\lambda)$, and AM-Softmax with $m=0.35$. AM-Softmax produces a smooth, strictly monotone target on $[0^\circ,90^\circ]$, which covers most practical feature–prototype angles. Figure courtesy of the AM-Softmax authors \cite{wang2018_amsoftmax}.}
+		\caption{\textbf{Target-logit $\psi(\theta)$ comparison.} AM-Softmax produces a smooth, strictly monotone target on $[0^\circ,90^\circ]$, in contrast to A-Softmax’s oscillatory piecewise formulation. Adapted from \cite{wang2018_amsoftmax}.}
 		\label{fig:chapter3_amsoftmax_psi}
 	\end{figure}
-	
-	\subsubsection{Method}
-	\label{subsec:chapter3_amsoftmax_method_refined}
-	
-	\paragraph{Normalization and rescaling}
-	We operate on the unit hypersphere and control confidence with a scalar $s$:
-	\begin{equation}
-		\tilde{x}=\frac{x}{\|x\|_2},\quad
-		\tilde{w}_j=\frac{w_j}{\|w_j\|_2},\quad
-		\cos\theta_j=\tilde{w}_j^\top\tilde{x},\quad
-		z_j^{\text{softmax}} = s\,\cos\theta_j
-		\label{eq:chapter3_amsoftmax_norm_scale_refined}
-	\end{equation}
-	Normalization makes decisions depend on \emph{direction} rather than magnitude; $s$ sharpens posteriors and scales gradients but does not alter the AM-Softmax boundary for a fixed $m$.
-	
-	\paragraph{AM-Softmax in detail: subtracting a fixed cosine margin $\boldsymbol{m}$}
-	AM-Softmax changes only the correct-class logit by a constant cosine penalty,
-	\begin{equation}
-		z_y^{\text{AM-Softmax}} = s\,(\cos\theta_y - m),\qquad
-		z_j = s\,\cos\theta_j\ \ (j\neq y),
-		\label{eq:chapter3_amsoftmax_additive}
-	\end{equation}
-	with $m>0$ and a global scale $s>0$. In the binary normalized case, the softmax bisector $\cos\theta_1=\cos\theta_2$ shifts to
-	\begin{equation}
-		\cos\theta_1 - m = \cos\theta_2
-		\quad\Longleftrightarrow\quad
-		\cos\theta_1 - \cos\theta_2 = m,
-		\label{eq:chapter3_amsoftmax_boundary}
-	\end{equation}
-	meaning class 1 must win by a \emph{fixed} cosine lead $m$ independent of $\theta_y$. The target $s(\cos\theta_y - m)$ is smooth and strictly monotone over $[0^\circ,90^\circ]$ and introduces no kinks or schedules; only $(s,m)$ need to be tuned. This uniform buffer tightens class cones consistently and enlarges inter-class gaps.
 	
 	\newpage
 	
@@ -1077,7 +1157,11 @@ Both losses have unique advantages, and the choice depends on the application an
 	\label{subsec:chapter3_amsoftmax_experiments}
 	
 	\paragraph{Benchmarks and observations}
-	Across LFW, BLUFR, and MegaFace, AM-Softmax (with moderate $m$) consistently improves over plain softmax and is competitive with—often simpler to tune than—A-Softmax. Margins in the range $m\!\in\![0.30,0.45]$ balance compactness and stability; excessively large $m$ can over-tighten decision regions and slow convergence. Results reported by \cite{wang2018_amsoftmax} are summarized in Table~\ref{tab:chapter3_amsoftmax_main}. Identification and verification curves on MegaFace are shown in the below CMC figure. When considering absolute numbers, note backbone depth differences called out by the authors.
+	Across standard face recognition benchmarks—LFW, BLUFR, and MegaFace—AM-Softmax delivers consistent gains over plain softmax and comparable or better accuracy than A-Softmax, while being substantially easier to train. Moderate margins in the range \(m \in [0.30, 0.45]\) strike a practical balance: they create compact, well-separated embeddings without destabilizing optimization. Beyond this range, overly large margins can over-constrain the angular decision regions, leading to slower convergence or gradient saturation.
+	
+	Results reported by \cite{wang2018_amsoftmax} are summarized in the table below. Identification and verification results on MegaFace are additionally visualized using the \emph{Cumulative Match Characteristic (CMC)} curve—a standard metric for large-scale identification. The CMC curve plots the probability that the correct identity appears within the top-$k$ retrieved matches; a higher curve (especially at small ranks such as rank-1 or rank-5) indicates stronger discriminative power and better generalization under open-set conditions.
+	
+	When comparing absolute performance numbers, note that differences in backbone architectures (e.g., ResNet-18 vs.\ ResNet-64) can affect reported accuracy. Nonetheless, AM-Softmax’s key advantage is practical: it achieves state-of-the-art discriminative embedding quality without requiring the delicate annealing schedules or piecewise margin surrogates needed by multiplicative-margin methods such as SphereFace.
 	
 	\begin{table}[H]
 		\centering
@@ -1152,6 +1236,7 @@ Both losses have unique advantages, and the choice depends on the application an
 		\item \textbf{Closed-set-only classification}. If evaluation is pure argmax over the training label set and embeddings are never reused, a well-regularized cross-entropy baseline may match accuracy; AM-Softmax’s advantage primarily appears in cosine retrieval and verification.
 		\item \textbf{Hyperparameter sensitivity of $(s,m)$}. An over-large margin $m$ makes the target unattainable early and stalls learning, while an over-large scale $s$ over-sharpens posteriors, amplifies gradients, and can destabilize optimization; prefer small, conservative adjustments around a solid default.
 		\item \textbf{Noisy labels or overlapping classes}. A hard angular buffer over-penalizes ambiguous or mislabeled samples; prefer a smaller $m$, sample reweighting, label smoothing, or data cleaning when noise is present.
+		
 		\item \textbf{Class imbalance and small batches}. Aggressively tightened cones can underfit minority classes when they are under-sampled; use class-balanced sampling, slightly smaller $m$, or class-aware/adaptive margins.
 		\item \textbf{Domain shift and calibration}. The cosine-margin objective optimizes discrimination on the source domain; probability calibration can degrade under shift, so apply post-hoc calibration (e.g., temperature scaling) on a target-domain validation set if downstream components consume probabilities.
 		\item \textbf{Beyond classification heads}. AM-Softmax is designed for classifier embeddings and is not a drop-in objective for regression, dense prediction, or detection heads without additional architectural design.

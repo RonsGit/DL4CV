@@ -1,9 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{k}{def} \PYG{n+nf}{step}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
-\PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{model}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
-\PYG{n}{loss} \PYG{o}{=} \PYG{n}{loss\PYGZus{}fn}\PYG{p}{(}\PYG{n}{y\PYGZus{}pred}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
-\PYG{k}{return} \PYG{n}{loss}
-
-\PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1000}\PYG{p}{)}\PYG{p}{:}
-\PYG{n}{opt}\PYG{o}{.}\PYG{n}{minimize}\PYG{p}{(}\PYG{n}{step}\PYG{p}{,} \PYG{n}{model}\PYG{o}{.}\PYG{n}{trainable\PYGZus{}variables}\PYG{p}{)}
-\end{MintedVerbatim}

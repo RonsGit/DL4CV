@@ -1,6 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{x} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}in}\PYG{p}{)}
-\PYG{n}{y} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{)}
-\PYG{n}{w1} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{D\PYGZus{}in}\PYG{p}{,} \PYG{n}{H}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\PYG{n}{w2} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{n}{D\PYGZus{}out}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\end{MintedVerbatim}

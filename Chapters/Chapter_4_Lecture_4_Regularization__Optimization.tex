@@ -16,7 +16,11 @@ In the previous chapter, we explored loss functions as tools to evaluate the per
 	\label{fig:chapter4_overfitting_underfitting}
 \end{figure}
 
-As shown in Figure \ref{fig:chapter4_overfitting_underfitting}, overfitting occurs when a model fits the training data too perfectly, capturing even noise and idiosyncrasies that do not generalize to unseen data. While this may result in excellent performance on the training set, it undermines the model’s ability to perform well on test data or real-world scenarios. Conversely, underfitting happens when the model is too simplistic to capture the underlying structure of the data, resulting in poor performance on both the training and test sets. Good regularization techniques aim to achieve a balance, ensuring the model fits the data "just right."
+As shown in Figure \ref{fig:chapter4_overfitting_underfitting}, overfitting occurs when a model fits the training data too perfectly, capturing even noise and idiosyncrasies that do not generalize to unseen data. While this may result in excellent performance on the training set, it undermines the model’s ability to perform well on test data or real-world scenarios. 
+
+\newpage
+
+Conversely, underfitting happens when the model is too simplistic to capture the underlying structure of the data, resulting in poor performance on both the training and test sets. Good regularization techniques aim to achieve a balance, ensuring the model fits the data "just right".
 
 \textbf{Why Regularization?}  
 The primary purpose of regularization is to improve the model’s \textbf{generalization}—its ability to perform well on unseen data—by discouraging it from overfitting to the training set. However, regularization serves other key roles:
@@ -41,12 +45,22 @@ where:
 	\item \( R(W) \) is the regularization term, typically a function of the model weights \( W \), independent of the training data.
 \end{itemize}
 
-\subsection{Regularization: Simpler Models Are Preferred}
+\subsection{Regularization: Encouraging Simpler Models}
 
-Regularization promotes simpler models by penalizing large weights, irrespective of their sign. Both L1 and L2 regularization measure the magnitude of weights (\(|W|\) or \(W^2\)), ensuring non-negative penalties. But why do weights increase when a model adjusts to changes in the data?
+Without regularization, a network may inflate certain weights to perfectly fit the training data, including noise or outliers. This leads to overfitting and unstable predictions. By adding a penalty term \( R(W) \) to the loss, we encourage the model to prefer simpler parameter configurations, trading off raw accuracy for better generalization:
+\[
+L(W) = L_{\text{loss}}(W) + \lambda R(W),
+\]
+where \( \lambda \) controls how strongly simplicity is favored.
 
-When the input data contains small perturbations or noise, a model without regularization adjusts its parameters to minimize the training loss \(L_\text{loss}(W)\). Addressing these changes typically involves increasing specific weights to emphasize features that explain the perturbation. This increase amplifies the model's sensitivity to noise, leading to larger weights. Regularization imposes a penalty for large weights, forcing the model to balance reducing \(L_\text{loss}(W)\) against increasing the regularization term \(R(W)\). This trade-off discourages addressing changes that only marginally benefit the loss, resulting in smaller weights and simpler models.
+Here, the \textbf{optimizer}—the algorithm that updates the model’s parameters based on the gradients of \( L(W) \)—must now balance two objectives: minimizing the training error \( L_{\text{loss}} \) while keeping the model weights small enough to avoid overfitting. In practice, the optimizer (e.g., SGD or Adam) determines \emph{how} parameters move through the loss landscape, whereas the regularization term shapes \emph{where} they tend to settle—toward flatter, simpler solutions that generalize better.
+
 \newpage
+
+Two widely used choices for \( R(W) \) are \textbf{L1} and \textbf{L2} regularization, which differ in how they measure the magnitude of the weights. L1 uses the absolute value (\(|W|\)), encouraging sparsity by driving some weights exactly to zero, while L2 uses the squared value (\(W^2\)), smoothly shrinking all weights toward smaller magnitudes. Both discourage excessive complexity but influence optimization dynamics in distinct ways.
+
+In the following parts, we will see how these forms of regularization shape the optimization process and affect sparsity and generalization.
+
 \section{Types of Regularization: L1 and L2}
 
 \subsection{L1 Regularization (Lasso)}
@@ -92,6 +106,7 @@ When the input data contains small perturbations or noise, a model without regul
 	\[
 	R(W) = \sum_{i} w_i^2.
 	\]
+	
 	\item \textbf{Effects:}
 	\begin{itemize}
 		\item Reduces all weights uniformly, discouraging large weights without enforcing sparsity.
@@ -138,6 +153,8 @@ The choice depends on the problem:
 		\item Smooth optimization is desired.
 	\end{itemize}
 \end{itemize}
+
+\newpage
 	
 	\begin{enrichment}[Can We Combine L1 and L2 Regularization?][subsection]
 		
@@ -472,14 +489,47 @@ The \textbf{analytical gradient} computes \( \nabla L(W) \) using calculus, deri
 	\label{fig:chapter4_analytical_gradient}
 \end{figure}
 
-\paragraph{Advantages:}
+\paragraph{Advantages}
 \begin{itemize}
 	\item \textbf{Exact results:} Provides precise gradient values, free from numerical approximation errors.
 	\item \textbf{Computational efficiency:} Scales well to high-dimensional weight matrices.
 \end{itemize}
 
-\paragraph{Relation to Gradient Descent:}
-Both numerical and analytical gradients are methods to compute \( \nabla L(W) \). However, these gradients are not solutions to the optimization problem—they only provide the direction and rate of change. Gradient descent leverages these computed gradients to iteratively adjust \( W \), bridging the gap between gradient computation and optimization. This necessity arises because solving for \( W^* \) in closed form is often impractical, as explained in Section~\ref{enrichment:why_analytical_impractical}.
+\paragraph{From Gradient Computation to Gradient Descent}
+
+Having established how gradients can be computed, we now connect this computation to the optimization process that enables neural networks to learn from data.
+
+\textbf{Analytical vs.\ Numerical Computation.}  
+Both numerical and analytical approaches estimate the gradient \(\nabla L(W)\)—the rate at which the loss function \(L(W)\) changes with respect to the parameters. However, their practicality diverges dramatically at scale.  
+Numerical gradients use finite differences, perturbing each parameter by a small amount (e.g., \(W_i \pm h\)) and measuring the corresponding change in the loss. This approach is intuitive but inefficient: for \(n\) parameters, it requires at least \(2n\) forward passes through the network, which is infeasible for models with millions of parameters.
+
+\newpage
+
+ Moreover, it is sensitive to floating-point precision and the choice of \(h\), making it unstable in high dimensions.  
+Analytical gradients, by contrast, apply calculus directly to compute exact derivatives in a single backward pass. This method scales linearly with the number of parameters and is numerically stable, making it the only viable option for training deep networks.
+
+\textbf{Backpropagation: Computing Analytical Gradients in Practice.}  
+In deep learning, analytical gradients are not derived manually for each network architecture. Instead, they are computed automatically through the \emph{backpropagation} algorithm. Backpropagation systematically applies the chain rule of calculus across the network’s computational graph, propagating error signals from the output layer backward through every intermediate operation to compute \(\nabla L(W)\).  
+Conceptually, forward propagation computes how the parameters influence the output (the “prediction” direction), while backpropagation computes how the loss influences each parameter (the “correction” direction). Together, they form a complete learning cycle: forward pass to evaluate the model, backward pass to measure its sensitivity to change.
+
+This combination—forward evaluation and backward differentiation—produces the exact analytical gradients required for learning, all without human derivation. We will study backpropagation and computational graphs in detail later; for now, it is enough to recognize it as the engine that turns model computations into usable gradient signals.
+
+\textbf{From Gradients to Optimization.}  
+Once gradients are available, the next step is to use them to actually minimize the loss. A gradient alone provides only local information: it tells us the steepest direction of change around the current parameters but not how far we should move or where the global minimum lies. The overarching goal is to find parameters that minimize the loss:
+\[
+W^* = \arg\min_W L(W).
+\]
+Because deep networks involve millions of parameters and highly nonlinear loss surfaces, solving this directly in closed form is impossible. Instead, we rely on \emph{iterative optimization algorithms}, most notably \textbf{gradient descent}, which updates parameters step by step according to:
+\[
+W \leftarrow W - \eta \nabla L(W),
+\]
+where \(\eta > 0\) is the learning rate controlling the update magnitude.
+
+\textit{Intuitively}, backpropagation supplies the gradients—the local “slopes” of the loss surface—while gradient descent uses those slopes to guide the search for lower loss regions. If the loss landscape were a vast mountain range, backpropagation tells us which direction is downhill, and gradient descent takes one small, deliberate step in that direction. Repeating this process iteratively allows the model to descend toward a valley—ideally reaching a local or global minimum.  
+
+Together, backpropagation and gradient descent form the backbone of deep learning: one computes how to change, the other decides how to move. This interplay between \emph{gradient computation} and \emph{parameter optimization} is what enables neural networks to learn from data, leading naturally into the next section: \textbf{Gradient Descent: The Iterative Optimization Algorithm}.
+
+\newpage
 
 \subsection{Gradient Descent: The Iterative Optimization Algorithm}
 
@@ -493,7 +543,7 @@ W \gets W - \eta \nabla L(W),
 
 where \( \eta \) is the \textbf{learning rate}, controlling the step size.
 
-\paragraph{Steps of Gradient Descent:}
+\paragraph{Steps of Gradient Descent}
 \begin{enumerate}
 	\item \textbf{Initialization:} Choose a starting point \( W_0 \), often initialized randomly.
 	\item \textbf{Gradient Computation:} Calculate \( \nabla L(W) \) analytically or numerically.
@@ -510,20 +560,20 @@ where \( \eta \) is the \textbf{learning rate}, controlling the step size.
 
 \subsubsection{Hyperparameters of Gradient Descent}
 
-\paragraph{1. Learning Rate (\( \eta \)):}
+\paragraph{1. Learning Rate (\( \eta \))}
 \begin{itemize}
 	\item Controls the step size in the direction of \( -\nabla L(W) \).
 	\item \textbf{Small \( \eta \):} Converges slowly.
 	\item \textbf{Large \( \eta \):} Risks overshooting the minimum or diverging.
 \end{itemize}
 
-\paragraph{2. Weight Initialization:}
+\paragraph{2. Weight Initialization}
 \begin{itemize}
 	\item The starting point \( W_0 \) significantly affects convergence.
 	\item Random initialization is common but must ensure weights are appropriately scaled to prevent vanishing or exploding gradients.
 \end{itemize}
 
-\paragraph{3. Stopping Criterion:}
+\paragraph{3. Stopping Criterion}
 \begin{itemize}
 	\item Define when to terminate the algorithm, e.g., maximum iterations, small gradient magnitude, or minimal change in loss.
 \end{itemize}
@@ -548,8 +598,13 @@ Gradient descent can be difficult to conceptualize due to the high-dimensional n
 \subsection{Properties of Gradient Descent}
 Visualization of gradient descent reveals several interesting properties of the algorithm:
 
-\subsubsection{Curved Paths Toward the Minimum}
-The path taken by gradient descent does not follow a straight line toward the bottom of the loss landscape. Instead, it arcs and curves around the surface. This behavior occurs because the gradient descent algorithm relies on local information to iteratively update the parameters, causing it to adjust its direction based on the curvature of the loss landscape.
+\subsubsection{Curved Trajectories Toward the Minimum}
+
+The optimization path produced by gradient descent typically follows a curved rather than straight trajectory. This behavior arises because the \emph{curvature} of the loss surface—that is, how the slope changes across different directions—varies from point to point. When the curvature is \emph{anisotropic} (different along different axes, as in elongated valleys), the steepest descent direction at one iteration can differ significantly from that at the next.
+
+\newpage
+
+Since gradient descent relies solely on local gradient information, each update reorients itself according to the local slope. As the optimizer traverses regions with varying curvature, the direction of steepest descent gradually shifts, causing the overall trajectory to bend toward the minimum. In contrast, if the loss surface were perfectly \emph{isotropic} (e.g., a spherical quadratic bowl), the curvature would be uniform in all directions, and the optimization path would proceed in a straight line directly toward the bottom.
 
 \subsubsection{Slowing Down Near the Minimum}
 Gradient descent starts with larger steps when the gradient magnitude is high and naturally slows down as the gradient magnitude decreases. This behavior is due to the relationship between the gradient and the steepness of the loss surface:
@@ -606,6 +661,8 @@ Gradient descent therefore uses the \emph{joint} update
 Every coordinate changes in the \emph{same step}; their magnitudes are scaled by
 the corresponding partial derivatives, but the direction is computed
 \emph{globally}, exploiting correlations among parameters.
+
+\newpage
 
 %--------------------------------------------------------------------%
 \paragraph{Axis-aligned moves may crawl or diverge}
@@ -873,7 +930,7 @@ Nesterov Momentum improves upon traditional momentum methods by providing a more
 	\begin{itemize}
 		\item In traditional momentum methods, the gradient is computed at the current position, and the accumulated velocity can overshoot the minimum due to excessive momentum, especially in steep directions.
 		\item Nesterov Momentum addresses this by computing the gradient at a "look-ahead" position (\( \mathbf{x}_t + \rho \mathbf{v}_t \)), effectively anticipating the overshoot and applying a correction before the step is taken.
-		\item By integrating this "look-ahead gradient," Nesterov smoothens the update trajectory, particularly in ravines (areas with steep gradients in one direction and shallow gradients in another), thereby reducing zig-zagging behavior.
+		\item By integrating this "look-ahead gradient", Nesterov smoothens the update trajectory, particularly in ravines (areas with steep gradients in one direction and shallow gradients in another), thereby reducing zig-zagging behavior.
 	\end{itemize}
 	
 	\item \textbf{Faster Convergence:}
@@ -891,18 +948,114 @@ Nesterov Momentum improves upon traditional momentum methods by providing a more
 \end{itemize}
 
 \subsubsection{Reformulation for Practical Implementation}
-Although the original Nesterov formulation depends on the gradient at a projected point, it can be rewritten for practical implementation:
-\begin{align*}
-	\mathbf{x}_{t+1} &= \mathbf{x}_t + \rho \mathbf{v}_t - \eta \nabla f(\mathbf{x}_t), \\
-	\mathbf{v}_{t+1} &= \rho \mathbf{v}_t - \eta \nabla f(\mathbf{x}_t).
-\end{align*}
+\label{subsubsec:chapter4_nesterov_practical}
 
-This reformulation ensures compatibility with modern optimization frameworks by relying only on the gradient at the current position.
+\paragraph{From the “lookahead” definition to a one–gradient update}
+The classical Nesterov accelerated gradient (NAG) formulation “looks ahead” before
+measuring the slope:
+\[
+\underbrace{\mathbf{y}_t}_{\text{lookahead}} = \mathbf{x}_t + \rho\,\mathbf{v}_t, 
+\quad
+\mathbf{v}_{t+1} = \rho\,\mathbf{v}_t - \eta\,\nabla f(\mathbf{y}_t),
+\quad
+\mathbf{x}_{t+1} = \mathbf{x}_t + \mathbf{v}_{t+1}.
+\tag{NAG}
+\label{eq:chapter4_nag_lookahead}
+\]
+This version depends on the gradient evaluated at the projected (lookahead)
+point \(\mathbf{y}_t\). While elegant in theory, it poses practical challenges in modern
+automatic differentiation frameworks: it requires either a second
+forward–backward computation at \(\mathbf{y}_t\) or reparameterizing the model to
+temporarily evaluate the gradient there.
+
+\newpage
+
+\paragraph{A practical, one–backward-pass reformulation.}
+To avoid this inefficiency, most modern deep learning libraries adopt an
+algebraically equivalent (up to first-order accuracy) form that requires only a
+single gradient evaluation at the current parameters $\mathbf{x}_t$:
+\begin{equation}
+	\boxed{
+		\begin{aligned}
+			\mathbf{v}_{t+1} &= \rho\,\mathbf{v}_t - \eta\,\nabla f(\mathbf{x}_t),\\
+			\mathbf{x}_{t+1} &= \mathbf{x}_t + \rho\,\mathbf{v}_{t+1} - \eta\,\nabla f(\mathbf{x}_t)
+	\end{aligned}}
+	\tag{NAG-prac}
+	\label{eq:chapter4_nag_practical}
+\end{equation}
+This form preserves Nesterov’s anticipatory effect while using only one
+backward pass per iteration, making it efficient and fully compatible with
+standard autodiff frameworks.
+
+\paragraph{Why this works (step by step)}
+Starting from the lookahead formulation \eqref{eq:chapter4_nag_lookahead}, expand the update for \(\mathbf{x}_{t+1}\):
+\[
+\mathbf{x}_{t+1} = \mathbf{x}_t + \rho\,\mathbf{v}_t - \eta\,\nabla f(\mathbf{x}_t + \rho\,\mathbf{v}_t).
+\]
+Using a first-order Taylor approximation of the gradient around
+\(\mathbf{x}_t\):
+\[
+\nabla f(\mathbf{x}_t + \rho\,\mathbf{v}_t)
+\approx \nabla f(\mathbf{x}_t) + \underbrace{\nabla^2 f(\mathbf{x}_t)}_{H_t}\,(\rho\,\mathbf{v}_t),
+\]
+and substituting gives:
+\[
+\begin{aligned}
+	\mathbf{v}_{t+1} &\approx \rho\,\mathbf{v}_t - \eta\,\nabla f(\mathbf{x}_t) - \eta\,\rho\,H_t\mathbf{v}_t,\\
+	\mathbf{x}_{t+1} &\approx \mathbf{x}_t + \rho\,\mathbf{v}_t - \eta\,\nabla f(\mathbf{x}_t) - \eta\,\rho\,H_t\mathbf{v}_t.
+\end{aligned}
+\]
+Neglecting the second-order curvature term
+\(-\eta\,\rho\,H_t\mathbf{v}_t\)—which is small for typical step sizes and
+vanishes for quadratic objectives—yields precisely the
+single-gradient form \eqref{eq:chapter4_nag_practical}.  
+Thus, the practical reformulation is accurate up to
+\(\mathcal{O}(\eta\rho)\) curvature effects and exact for quadratic loss
+functions.
+
+\paragraph{Equivalent “library style” formulation}
+Deep learning frameworks (e.g., PyTorch, TensorFlow) commonly express Nesterov
+momentum in the following algebraically identical update:
+\[
+\mathbf{g}_t = \nabla f(\mathbf{x}_t), \qquad
+\mathbf{v}_{t+1} = \rho\,\mathbf{v}_t + \mathbf{g}_t, \qquad
+\mathbf{d}_t = \mathbf{g}_t + \rho\,\mathbf{v}_{t+1}, \qquad
+\mathbf{x}_{t+1} = \mathbf{x}_t - \eta\,\mathbf{d}_t.
+\]
+Substituting \(\mathbf{d}_t\) recovers the same parameter displacement as in
+\eqref{eq:chapter4_nag_practical}, confirming that both forms are equivalent up
+to first order. This implementation performs one gradient computation per
+iteration and avoids explicit “lookahead” states.
+
+\paragraph{Why this reformulation is preferred in practice}
+\begin{itemize}
+	\item \textbf{Single backward pass.} Autodiff frameworks naturally provide
+	\(\nabla f(\mathbf{x}_t)\). Computing at \(\mathbf{y}_t\) would require an
+	extra graph traversal or redundant backward pass.
+	\item \textbf{Preserved acceleration effect.} Despite dropping the explicit
+	lookahead gradient, the update still “anticipates” future motion through
+	the momentum term \(\rho\,\mathbf{v}\), maintaining Nesterov’s key speedup.
+	
+	\newpage
+	
+	\item \textbf{Controlled approximation.} The deviation from the exact
+	formulation is of second order in \(\eta\) and \(\rho\), negligible for
+	practical step sizes. Empirically, both variants yield nearly identical
+	convergence curves while the practical version is faster and simpler to
+	implement.
+\end{itemize}
+
+\paragraph{Take-away}
+Nesterov’s central insight—\emph{evaluate the gradient ahead of the current
+	point to anticipate future motion}—can be implemented efficiently with a single
+gradient at the current iterate. The resulting practical update
+\eqref{eq:chapter4_nag_practical} preserves the intended acceleration behavior
+while integrating seamlessly into modern deep learning optimizers that rely on
+one forward–backward pass per iteration.
 
 \subsubsection{Comparison with SGD and SGD+Momentum}
 Momentum-based methods, including Nesterov, tend to overshoot near minima due to accumulated velocity. Nesterov's look-ahead mechanism mitigates this overshooting, producing a more efficient path to the minimum. 
 
-\newpage
 \subsubsection{Limitations of Nesterov Momentum and the Need for Adaptivity}
 
 While Nesterov Momentum addresses several shortcomings of traditional momentum methods, it still has limitations that motivate further advancements in optimization techniques:
@@ -1353,67 +1506,108 @@ Despite its advantages, AdamW is not without challenges:
 \end{itemize}
 
 \section{Second-Order Optimization}
+\label{sec:chapter4_second_order_optimization}
 
 \subsection{Overview of Second-Order Optimization}
-So far, we have covered first-order optimization methods, which rely only on the gradient (the first derivative) to iteratively minimize the loss function. Second-order optimization extends this approach by incorporating information from the Hessian matrix (the second derivative), which captures the curvature of the loss landscape. 
+First-order optimization methods rely exclusively on gradient information—the first derivative of the loss function—to iteratively minimize the objective.  
+Second-order optimization extends this idea by incorporating information from the \emph{Hessian matrix}, which captures the second derivatives of the loss function and thus describes the \emph{curvature} of the loss landscape.
 
-The key idea behind second-order optimization is to approximate the objective function \( L(W) \) using a quadratic surface at the current point and then step towards minimizing this approximation. This allows the algorithm to be more adaptive, as it can:
+\paragraph{What the Hessian Reveals}
+The Hessian matrix \( H = \nabla^2 L(W) \) expresses how the gradient changes as the parameters \( W \) vary, effectively describing the local geometry of the optimization landscape.  
+Its eigenvalues \(\lambda_i\) and eigenvectors reveal curvature along each principal direction:
 \begin{itemize}
-	\item Take larger steps in regions of low curvature.
-	\item Take smaller steps in regions of high curvature.
+	\item \textbf{Small \(\lambda_i \approx 0\):} Flat or plateau regions where the loss changes slowly; large steps can safely be taken.
+	\item \textbf{Large positive \(\lambda_i\):} Sharp curvature (“narrow bowl”) where the loss rises steeply; small steps are needed to remain stable.
+	\item \textbf{Negative \(\lambda_i\):} Directions of negative curvature—saddle points where the surface curves upward in some directions and downward in others.
 \end{itemize}
+In this way, the eigenvalues of \(H\) serve as curvature coefficients, determining how sensitive the loss is to parameter changes along each axis.
+
+\subsection{Quadratic Approximation Using the Hessian}
+Second-order methods use curvature information by locally approximating the loss function with a quadratic model around the current point \( W_t \):
+\[
+L(W) \approx L(W_t)
++ \nabla L(W_t)^\top (W - W_t)
++ \tfrac{1}{2}(W - W_t)^\top H(W_t) (W - W_t),
+\]
+where:
+\begin{itemize}
+	\item \( \nabla L(W_t) \) is the gradient at the current parameters, representing the slope.
+	\item \( H(W_t) \) is the Hessian, representing local curvature of the loss surface.
+\end{itemize}
+
+Minimizing this quadratic approximation leads to a curvature-aware update:
+\[
+W_{t+1} = W_t - H(W_t)^{-1} \nabla L(W_t),
+\]
+or equivalently,
+\[
+\Delta W = -H^{-1}\nabla L(W_t).
+\]
+This update rescales and rotates the gradient according to the curvature, automatically adapting both the \emph{direction} and the \emph{magnitude} of each step.
+
+\paragraph{Geometric Intuition}
+Each eigenvalue–eigenvector pair \((\lambda_i, v_i)\) of the Hessian defines an axis of local curvature:
+\begin{itemize}
+	\item \textbf{Flat directions (\(\lambda_i \approx 0\)):} The loss changes slowly—large steps accelerate progress.
+	\item \textbf{Steep directions (\(\lambda_i \gg 0\)):} The loss rises sharply—steps must be small to prevent oscillation or divergence.
+	\item \textbf{Saddle directions (\(\lambda_i < 0\)):} The loss decreases along one dimension but increases along another—steps must be corrected to avoid instability.
+\end{itemize}
+Thus, second-order updates scale steps inversely with curvature:
+\[
+\text{Step size in direction } v_i \propto \tfrac{1}{\lambda_i}.
+\]
+This geometric adaptivity makes second-order methods inherently more efficient and stable in complex, anisotropic landscapes.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_95.jpg}
-	\caption{Second-order optimization forms a quadratic surface to approximate the objective function and adaptively determines step size.}
+	\caption{Second-order optimization approximates the loss function locally with a quadratic surface. Curvature, captured by Hessian eigenvalues, determines adaptive step sizes across directions.}
 	\label{fig:chapter4_second_order_quadratic}
 \end{figure}
 
-When the Hessian is well-conditioned, second-order methods often converge in fewer iterations compared to first-order methods (e.g., standard gradient descent). They can also “jump” more directly toward a local minimum rather than zigzagging or making incremental adjustments.
-
-In addition, because the Hessian reflects how sensitive each parameter is to changes in the loss function, second-order methods effectively adapt step sizes across different directions or dimensions. This automatic per-parameter scaling can reduce the need for manual learning-rate tuning and can help handle strongly anisotropic or ill-conditioned problems.
-
-\subsection{Quadratic Approximation Using the Hessian}
-In second-order optimization, the objective function \( L(W) \) is approximated using a Taylor series expansion around the current point \( W_t \):
-\[
-L(W) \approx L(W_t) + \nabla L(W_t)^T (W - W_t) + \frac{1}{2} (W - W_t)^T H(W_t) (W - W_t),
-\]
-where:
+\paragraph{Why Second-Order Methods Converge Faster}
+The power of second-order optimization lies in its awareness of the loss landscape’s geometry.  
+First-order methods, like gradient descent, follow only the steepest direction, which can cause inefficient zigzagging in elongated valleys where curvature differs greatly across directions.  
+In contrast, second-order methods precondition the gradient by \(H^{-1}\), normalizing curvature:
 \begin{itemize}
-	\item \( \nabla L(W_t) \) is the gradient at \( W_t \),
-	\item \( H(W_t) \) is the Hessian matrix at \( W_t \), representing the second derivative of \( L(W) \) with respect to \( W \).
+	\item \textbf{In high-curvature regions (large \(\lambda_i\)):} Updates are dampened to prevent overshooting.
+	\item \textbf{In flat regions (small \(\lambda_i\)):} Updates are amplified for faster movement.
 \end{itemize}
+This curvature-based scaling effectively “spherizes” the loss landscape, enabling the optimizer to take near-direct routes to minima rather than oscillating between steep walls.
 
-To minimize this quadratic approximation, the weight update rule is:
-\[
-W_{t+1} = W_t - H(W_t)^{-1} \nabla L(W_t).
-\]
+When the Hessian is \textbf{well-conditioned}—that is, its eigenvalues are moderate and roughly similar—Newton-type updates can achieve convergence in far fewer iterations than gradient descent.  
+For purely quadratic functions, Newton’s method finds the minimum in a single step.  
+
+\textit{Intuitively}, gradient descent is like feeling one’s way down a mountain using only the slope underfoot, while second-order methods also sense how the slope bends—taking large strides on flat terrain and shorter, precise ones in steep ravines—to reach the valley floor far more efficiently.
 
 \subsection{Practical Challenges of Second-Order Methods}
-While the concept of second-order optimization is theoretically appealing, it is rarely used in practice due to significant computational challenges:
+Despite their theoretical appeal, second-order methods face severe computational limitations in modern deep learning:
 \begin{itemize}
-	\item \textbf{High Dimensionality:} The Hessian matrix has \( O(N^2) \) elements, where \( N \) is the number of parameters in the model. For modern deep learning models with millions or billions of parameters, storing the Hessian becomes infeasible.
-	\item \textbf{Matrix Inversion:} To compute the update step, we must invert the Hessian matrix, which requires \( O(N^3) \) operations. This computational cost is prohibitive for high-dimensional problems.
-	\item \textbf{Ill-Conditioned Hessians:} The Hessian matrix can be ill-conditioned, leading to numerical instability during inversion.
+	\item \textbf{High Dimensionality:} The Hessian contains \(O(N^2)\) elements for \(N\) parameters, making it impossible to store for networks with millions or billions of weights.
+	\item \textbf{Matrix Inversion Cost:} Computing \(H^{-1}\) scales as \(O(N^3)\), which is prohibitive even for medium-scale models.
+	\item \textbf{Ill-Conditioning:} When eigenvalues vary drastically in magnitude, inversion becomes numerically unstable and leads to poor updates.
 \end{itemize}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_4/Slide_98.jpg}
-	\caption{Challenges of second-order optimization in high-dimensional spaces, including storage and computational costs.}
+	\caption{Challenges of second-order optimization in high-dimensional spaces, including memory and computational cost of Hessian inversion.}
 	\label{fig:chapter4_second_order_limitations}
 \end{figure}
 
-Despite their challenges, second-order methods can be useful for low-dimensional problems, where the parameter space is small, and computational costs are manageable.
+While full second-order methods are impractical for deep networks, their ideas inspire efficient approximations used in practice.
 
 \subsection{First-Order Methods Approximating Second-Order Behavior}
-While second-order methods are computationally impractical for large-scale problems, some first-order methods attempt to approximate their behavior:
+Many modern optimizers mimic curvature-aware behavior using only first-order information:
 \begin{itemize}
-	\item \textbf{Adagrad:} Adjusts the learning rate for each parameter based on the magnitude of past gradients, mimicking curvature information.
-	\item \textbf{SGD+Momentum:} Incorporates a moving average of gradients, smoothing updates and approximating curvature.
-	\item \textbf{Adam:} Combines the adaptive learning rates of Adagrad with momentum, effectively capturing some second-order properties without requiring explicit computation of the Hessian.
+	\item \textbf{Adagrad:} Adapts per-parameter learning rates based on the historical magnitude of gradients, approximating diagonal curvature.
+	\item \textbf{SGD with Momentum:} Smooths gradients over time, implicitly incorporating curvature along dominant directions.
+	\item \textbf{Adam:} Combines adaptive learning rates and momentum to emulate some second-order dynamics while remaining computationally lightweight.
 \end{itemize}
+
+In essence, these methods capture part of the benefit of second-order optimization—adaptive scaling and stability—without explicitly computing or inverting the Hessian, making them the default choice for training large-scale deep networks.
+
+\newpage
 
 \subsection{Improving Second-Order Optimization: BFGS and L-BFGS}
 Methods like \textbf{Broyden–Fletcher–Goldfarb–Shanno (BFGS)} and its limited-memory variant \textbf{L-BFGS} have been developed to address the challenge of expensive computations and high memory consumption. These methods approximate the Hessian matrix to reduce memory and computation costs, making second-order techniques more feasible in certain scenarios.
@@ -1441,6 +1635,9 @@ While BFGS reduces the computational burden compared to exact second-order metho
 To address the memory limitations of BFGS, the \textbf{Limited-Memory BFGS (L-BFGS)} algorithm was introduced. Instead of storing the entire approximate Hessian, L-BFGS:
 \begin{itemize}
 	\item Maintains only a few vectors from the most recent iterations, significantly reducing memory requirements.
+	
+	\newpage
+	
 	\item Requires \( O(kN) \) storage, where \( k \) is the number of vectors retained and is much smaller than \( N \) (typically \( k \approx 10 \)).
 	\item Iteratively updates the approximation using gradient differences and weight updates from recent steps.
 \end{itemize}

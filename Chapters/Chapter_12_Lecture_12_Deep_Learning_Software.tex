@@ -4,7 +4,7 @@
 \chapter{Lecture 12: Deep Learning Software}
 
 %----------------------------------------------------------------------------------------
-%	CHAPTER 12 - Lecture 12: Deep Learning Software
+%    CHAPTER 12 - Lecture 12: Deep Learning Software
 %----------------------------------------------------------------------------------------
 
 \section{Deep Learning Frameworks: Evolution and Landscape}
@@ -13,21 +13,21 @@
 Deep learning software frameworks enable researchers and engineers to efficiently prototype, train, and deploy neural networks. This chapter explores key frameworks, their underlying computational structures, and comparisons between static and dynamic computation graphs. Each framework is providing different trade-offs between usability, performance, and scalability. 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_4.jpg}
-	\caption{Overview of major deep learning frameworks and their affiliations.}
-	\label{fig:chapter12_frameworks}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_4.jpg}
+    \caption{Overview of major deep learning frameworks and their affiliations.}
+    \label{fig:chapter12_frameworks}
 \end{figure}
 
 Some notable frameworks include:
 
 \begin{itemize}
-	\item \textbf{Caffe} (UC Berkeley) – One of the earliest frameworks, optimized for speed but limited in flexibility.
-	\item \textbf{Theano} (U. Montreal) – A pioneer in automatic differentiation, but now discontinued.
-	\item \textbf{TensorFlow} (Google) – Popular for production deployments; originally focused on static computation graphs.
-	\item \textbf{PyTorch} (Facebook) – An imperative, Pythonic framework with dynamic computation graphs, widely used in research.
-	\item \textbf{MXNet} (Amazon) – Developed by multiple institutions, designed for distributed deep learning.
-	\item \textbf{JAX} (Google) – A newer framework optimized for high-performance computing and auto-differentiation.
+    \item \textbf{Caffe} (UC Berkeley) – One of the earliest frameworks, optimized for speed but limited in flexibility.
+    \item \textbf{Theano} (U. Montreal) – A pioneer in automatic differentiation, but now discontinued.
+    \item \textbf{TensorFlow} (Google) – Popular for production deployments; originally focused on static computation graphs.
+    \item \textbf{PyTorch} (Facebook) – An imperative, Pythonic framework with dynamic computation graphs, widely used in research.
+    \item \textbf{MXNet} (Amazon) – Developed by multiple institutions, designed for distributed deep learning.
+    \item \textbf{JAX} (Google) – A newer framework optimized for high-performance computing and auto-differentiation.
 \end{itemize}
 
 While many frameworks exist, \textcolor{red}{\textbf{PyTorch and TensorFlow}} dominate deep learning research and deployment. The following sections explore these frameworks in detail, starting with computational graphs and automatic differentiation.
@@ -38,33 +38,33 @@ While many frameworks exist, \textcolor{red}{\textbf{PyTorch and TensorFlow}} do
 Deep learning frameworks provide essential tools that simplify the implementation, training, and deployment of neural networks. They abstract away low-level operations, enabling users to focus on model design and experimentation rather than manual gradient computations or hardware-specific optimizations. The three primary goals of deep learning frameworks are:  
 
 \begin{itemize}  
-	\item \textbf{Rapid Prototyping:} Frameworks allow researchers to quickly experiment with new architectures, optimization techniques, and data pipelines. High-level APIs simplify model definition, while flexible debugging tools enable faster iteration.  
-	\item \textbf{Automatic Differentiation:} Modern frameworks automatically compute gradients via backpropagation, eliminating the need for manual derivative calculations. This accelerates research and reduces implementation errors.  
-	\item \textbf{Efficient Execution on Hardware:} Frameworks optimize computations for GPUs \& TPUs, leveraging parallel processing and efficient memory management to accelerate training and inference.  
+    \item \textbf{Rapid Prototyping:} Frameworks allow researchers to quickly experiment with new architectures, optimization techniques, and data pipelines. High-level APIs simplify model definition, while flexible debugging tools enable faster iteration.  
+    \item \textbf{Automatic Differentiation:} Modern frameworks automatically compute gradients via backpropagation, eliminating the need for manual derivative calculations. This accelerates research and reduces implementation errors.  
+    \item \textbf{Efficient Execution on Hardware:} Frameworks optimize computations for GPUs \& TPUs, leveraging parallel processing and efficient memory management to accelerate training and inference.  
 \end{itemize}  
 
 \subsection{Recall: Computational Graphs}  
 \label{subsubsec:chapter12_computational_graphs}  
 
 \begin{figure}[H]  
-	\centering  
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_5.jpg}  
-	\caption{\textbf{Computational graphs in deep learning.} These graphs define the sequence of operations for training and inference, enabling automatic differentiation and optimization.}  
-	\label{fig:chapter12_computational_graphs}  
+    \centering  
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_5.jpg}  
+    \caption{\textbf{Computational graphs in deep learning.} These graphs define the sequence of operations for training and inference, enabling automatic differentiation and optimization.}  
+    \label{fig:chapter12_computational_graphs}  
 \end{figure}  
 Neural networks are represented as \textbf{computational graphs}.
 The graphs define the sequence of operations required to compute outputs and gradients during training. A graph consists of:  
 
 \begin{itemize}  
-	\item \textbf{Nodes:} Represent mathematical operations (e.g., Sigmoid).  
-	\item \textbf{Edges:} Represent data flow between operations, forming a directed acyclic graph (DAG).  
+    \item \textbf{Nodes:} Represent mathematical operations (e.g., Sigmoid).  
+    \item \textbf{Edges:} Represent data flow between operations, forming a directed acyclic graph (DAG).  
 \end{itemize}  
 
 \noindent During training, frameworks use computational graphs to:
 \begin{enumerate}
-	\item \textbf{Forward Pass:} Compute the output by passing data through the graph.
-	\item \textbf{Backward Pass:} Compute gradients via backpropagation, traversing the graph in reverse.
-	\item \textbf{Optimization Step:} Update parameters using computed gradients.
+    \item \textbf{Forward Pass:} Compute the output by passing data through the graph.
+    \item \textbf{Backward Pass:} Compute gradients via backpropagation, traversing the graph in reverse.
+    \item \textbf{Optimization Step:} Update parameters using computed gradients.
 \end{enumerate}
 
 \noindent Understanding computational graphs is crucial, as different frameworks implement them in distinct ways. The next sections explore how PyTorch and TensorFlow utilize these graphs, comparing \textbf{dynamic} vs. \textbf{static} computation strategies.  
@@ -75,9 +75,9 @@ The graphs define the sequence of operations required to compute outputs and gra
 PyTorch is a deep learning framework that provides flexibility, dynamic computation graphs, and efficient execution on both CPUs and GPUs. It introduces key abstractions:
 
 \begin{itemize}
-	\item \textbf{Tensors:} Multi-dimensional arrays similar to NumPy arrays but capable of running on GPUs.
-	\item \textbf{Modules:} Objects representing layers of a neural network, potentially storing learnable parameters.
-	\item \textbf{Autograd:} A system that automatically computes gradients by building computational graphs dynamically.
+    \item \textbf{Tensors:} Multi-dimensional arrays similar to NumPy arrays but capable of running on GPUs.
+    \item \textbf{Modules:} Objects representing layers of a neural network, potentially storing learnable parameters.
+    \item \textbf{Autograd:} A system that automatically computes gradients by building computational graphs dynamically.
 \end{itemize}
 
 \subsection{Tensors and Basic Computation}
@@ -86,35 +86,35 @@ PyTorch is a deep learning framework that provides flexibility, dynamic computat
 To illustrate PyTorch’s fundamentals, consider a simple two-layer ReLU network trained using gradient descent on random data.
 
 \begin{mintedbox}{python}
-	import torch
-	device = torch.device('cpu')  # Change to 'cuda:0' to run on GPU
-	N, D_in, H, D_out = 64, 1000, 100, 10  # Batch size, input, hidden, output dimensions
-	
-	#Create random tensors for data and weights
-	x = torch.randn(N, D_in, device=device)
-	y = torch.randn(N, D_out, device=device)
-	w1 = torch.randn(D_in, H, device=device)
-	w2 = torch.randn(H, D_out, device=device)
-	learning_rate = 1e-6
-	
-	for t in range(500):
-		# Forward pass: compute predictions and loss
-		h = x.mm(w1)  # Matrix multiply (fully connected layer)
-		h_relu = h.clamp(min=0)  # Apply ReLU non-linearity
-		y_pred = h_relu.mm(w2)  # Output prediction
-		loss = (y_pred - y).pow(2).sum()  # Compute L2 loss
-	
-	# Backward pass: manually compute gradients
-	grad_y_pred = 2.0 * (y_pred - y)
-	grad_w2 = h_relu.t().mm(grad_y_pred)
-	grad_h_relu = grad_y_pred.mm(w2.t())
-	grad_h = grad_h_relu.clone()
-	grad_h[h < 0] = 0  # Backpropagate ReLU
-	grad_w1 = x.t().mm(grad_h)
-	
-	#Gradient descent step on weights
-	w1 -= learning_rate * grad_w1  # Gradient update
-	w2 -= learning_rate * grad_w2
+    import torch
+    device = torch.device('cpu')  # Change to 'cuda:0' to run on GPU
+    N, D_in, H, D_out = 64, 1000, 100, 10  # Batch size, input, hidden, output dimensions
+    
+    #Create random tensors for data and weights
+    x = torch.randn(N, D_in, device=device)
+    y = torch.randn(N, D_out, device=device)
+    w1 = torch.randn(D_in, H, device=device)
+    w2 = torch.randn(H, D_out, device=device)
+    learning_rate = 1e-6
+    
+    for t in range(500):
+        # Forward pass: compute predictions and loss
+        h = x.mm(w1)  # Matrix multiply (fully connected layer)
+        h_relu = h.clamp(min=0)  # Apply ReLU non-linearity
+        y_pred = h_relu.mm(w2)  # Output prediction
+        loss = (y_pred - y).pow(2).sum()  # Compute L2 loss
+    
+    # Backward pass: manually compute gradients
+    grad_y_pred = 2.0 * (y_pred - y)
+    grad_w2 = h_relu.t().mm(grad_y_pred)
+    grad_h_relu = grad_y_pred.mm(w2.t())
+    grad_h = grad_h_relu.clone()
+    grad_h[h < 0] = 0  # Backpropagate ReLU
+    grad_w1 = x.t().mm(grad_h)
+    
+    #Gradient descent step on weights
+    w1 -= learning_rate * grad_w1  # Gradient update
+    w2 -= learning_rate * grad_w2
 \end{mintedbox}
 
 \noindent PyTorch tensors operate efficiently on GPUs by simply setting:\\
@@ -126,36 +126,36 @@ To illustrate PyTorch’s fundamentals, consider a simple two-layer ReLU network
 PyTorch’s \textbf{autograd} system automatically builds computational graphs when performing operations on tensors with \texttt{requires\_grad=True}. These graphs allow automatic computation of gradients via backpropagation.
 
 \begin{mintedbox}{python}
-	x = torch.randn(N, D_in)
-	y = torch.randn(N, D_out)
-	w1 = torch.randn(D_in, H, requires_grad=True)
-	w2 = torch.randn(H, D_out, requires_grad=True)
+    x = torch.randn(N, D_in)
+    y = torch.randn(N, D_out)
+    w1 = torch.randn(D_in, H, requires_grad=True)
+    w2 = torch.randn(H, D_out, requires_grad=True)
 \end{mintedbox}
 
 The forward pass remains unchanged:
 
 \begin{mintedbox}{python}
-	h = x.mm(w1)
-	h_relu = h.clamp(min=0)
-	y_pred = h_relu.mm(w2)
-	loss = (y_pred - y).pow(2).sum()  # Compute loss
+    h = x.mm(w1)
+    h_relu = h.clamp(min=0)
+    y_pred = h_relu.mm(w2)
+    loss = (y_pred - y).pow(2).sum()  # Compute loss
 \end{mintedbox}
 
 PyTorch automatically tracks operations and maintains intermediate values, eliminating the need for manual gradient computation. We backpropagate as follows:
 
 \begin{mintedbox}{python}
-	loss.backward()  # Computes gradients for w1 and w2
+    loss.backward()  # Computes gradients for w1 and w2
 \end{mintedbox}
 
 Gradients are accumulated in \texttt{w1.grad} and \texttt{w2.grad}, so we must clear them manually before the next update:
 
 \begin{mintedbox}{python}
-	with torch.no_grad():  # Prevents unnecessary graph construction
-		w1 -= learning_rate * w1.grad
-		w2 -= learning_rate * w2.grad
-	
-		w1.grad.zero_()
-		w2.grad.zero_()
+    with torch.no_grad():  # Prevents unnecessary graph construction
+        w1 -= learning_rate * w1.grad
+        w2 -= learning_rate * w2.grad
+    
+        w1.grad.zero_()
+        w2.grad.zero_()
 \end{mintedbox}
 
 Forgetting to reset gradients is a common PyTorch bug, as gradients accumulate by default.
@@ -171,45 +171,45 @@ PyTorch dynamically constructs \textbf{computational graphs} during forward pass
 The computation graph begins when we perform operations on tensors with \texttt{requires\_grad=True}. Consider the following forward pass:
 
 \begin{mintedbox}{python}
-	h = x.mm(w1)  # Matrix multiply (fully connected layer)
-	h_relu = h.clamp(min=0)  # Apply ReLU non-linearity
-	y_pred = h_relu.mm(w2)  # Output prediction
-	loss = (y_pred - y).pow(2).sum()  # Compute L2 loss
+    h = x.mm(w1)  # Matrix multiply (fully connected layer)
+    h_relu = h.clamp(min=0)  # Apply ReLU non-linearity
+    y_pred = h_relu.mm(w2)  # Output prediction
+    loss = (y_pred - y).pow(2).sum()  # Compute L2 loss
 \end{mintedbox}
 
 This sequence of operations results in the following computational graph:
 
 \begin{itemize}
-	\item \texttt{x.mm(w1)} creates a matrix multiplication node with inputs \texttt{x} and \texttt{w1}, producing an output tensor with \texttt{requires\_grad=True}.
+    \item \texttt{x.mm(w1)} creates a matrix multiplication node with inputs \texttt{x} and \texttt{w1}, producing an output tensor with \texttt{requires\_grad=True}.
 \end{itemize}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_21.jpg}
-	\caption{\textbf{First computational node in the graph.} The matrix multiplication \texttt{x.mm(w1)} creates the first node in the computational graph.}
-	\label{fig:chapter12_pytorch_mm_graph}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_21.jpg}
+    \caption{\textbf{First computational node in the graph.} The matrix multiplication \texttt{x.mm(w1)} creates the first node in the computational graph.}
+    \label{fig:chapter12_pytorch_mm_graph}
 \end{figure}
 
 \begin{itemize}
-	\item \texttt{.clamp(min=0)} applies a ReLU activation, forming another node.
+    \item \texttt{.clamp(min=0)} applies a ReLU activation, forming another node.
 \end{itemize}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_22.jpg}
-	\caption{\textbf{ReLU activation node.} The ReLU function introduces a non-linearity while maintaining the computational graph structure.}
-	\label{fig:chapter12_pytorch_relu_graph}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_22.jpg}
+    \caption{\textbf{ReLU activation node.} The ReLU function introduces a non-linearity while maintaining the computational graph structure.}
+    \label{fig:chapter12_pytorch_relu_graph}
 \end{figure}
 
 \begin{itemize}
-	\item \texttt{.mm(w2)} applies another matrix multiplication, producing the final prediction.
+    \item \texttt{.mm(w2)} applies another matrix multiplication, producing the final prediction.
 \end{itemize}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_23.jpg}
-	\caption{\textbf{Final matrix multiplication node.} The output prediction \texttt{y\_pred} is produced by matrix multiplication with \texttt{w2}.}
-	\label{fig:chapter12_pytorch_mm2_graph}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_23.jpg}
+    \caption{\textbf{Final matrix multiplication node.} The output prediction \texttt{y\_pred} is produced by matrix multiplication with \texttt{w2}.}
+    \label{fig:chapter12_pytorch_mm2_graph}
 \end{figure}
 
 \subsubsection{Loss Computation and Backpropagation}
@@ -218,31 +218,31 @@ This sequence of operations results in the following computational graph:
 After computing the loss, we backpropagate through the graph to compute gradients:
 
 \begin{mintedbox}{python}
-	loss.backward()  # Computes gradients for w1 and w2
+    loss.backward()  # Computes gradients for w1 and w2
 \end{mintedbox}
 
 During this process:
 \begin{itemize}
-	\item \texttt{(y\_pred - y)} creates a subtraction node with inputs \texttt{y\_pred} and \texttt{y}.
-	\item \texttt{.pow(2)} squares the result, creating a new node.
-	\item \texttt{.sum()} sums the squared differences, outputting a scalar loss.
+    \item \texttt{(y\_pred - y)} creates a subtraction node with inputs \texttt{y\_pred} and \texttt{y}.
+    \item \texttt{.pow(2)} squares the result, creating a new node.
+    \item \texttt{.sum()} sums the squared differences, outputting a scalar loss.
 \end{itemize}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_27.jpg}
-	\caption{\textbf{Loss computation node.} The final loss is computed as a scalar output in the computational graph, allowing backpropagation to all inputs requiring gradients.}
-	\label{fig:chapter12_pytorch_loss_graph}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_27.jpg}
+    \caption{\textbf{Loss computation node.} The final loss is computed as a scalar output in the computational graph, allowing backpropagation to all inputs requiring gradients.}
+    \label{fig:chapter12_pytorch_loss_graph}
 \end{figure}
 
 Once gradients are computed, they are stored in \texttt{w1.grad} and \texttt{w2.grad}. However, PyTorch accumulates gradients by default, so they must be cleared before the next update (\texttt{grad.zero\_()}):
 
 \begin{mintedbox}{python}
-	with torch.no_grad():  # Prevents unnecessary graph construction
-		w1 -= learning_rate * w1.grad
-		w2 -= learning_rate * w2.grad
-		w1.grad.zero_()
-		w2.grad.zero_()
+    with torch.no_grad():  # Prevents unnecessary graph construction
+        w1 -= learning_rate * w1.grad
+        w2 -= learning_rate * w2.grad
+        w1.grad.zero_()
+        w2.grad.zero_()
 \end{mintedbox}
 
 \noindent Forgetting to reset gradients is a common mistake in PyTorch. Although probably a design flaw in PyTorch, as we usually don't want to accumulate gradients, we need to be aware of that when we create models. 
@@ -253,80 +253,118 @@ Once gradients are computed, they are stored in \texttt{w1.grad} and \texttt{w2.
 PyTorch's autograd system allows users to construct computational graphs dynamically using Python functions. When a function is called inside a forward pass, PyTorch records all tensor operations occurring within it.
 
 \begin{mintedbox}{python}
-	def custom_relu(x):
-		return x.clamp(min=0)  # Element-wise ReLU
+    def custom_relu(x):
+        return x.clamp(min=0)  # Element-wise ReLU
 	h_relu = custom_relu(h)
 \end{mintedbox}
 
 Although this function improves code readability, PyTorch still constructs the same computational graph as if we had used \texttt{.clamp(min=0)} directly.
 
 \newpage
+
 \subsubsection{Custom Autograd Functions}
 \label{subsubsec:chapter12_pytorch_custom_autograd}
 
-To optimize graph representation, PyTorch allows users to define custom autograd functions using \texttt{torch.autograd.Function}.
-This can reduce the number of graph nodes and improve numerical stability.
+PyTorch's automatic differentiation works by building a computational graph out of primitive operations (e.g., \texttt{add}, \texttt{mul}, \texttt{exp}) and then applying the chain rule.  
+In most cases this is sufficient, but sometimes we want:
 
-For example, the standard PyTorch implementation of the sigmoid function is:
+\begin{itemize}
+	\item To \textbf{treat a whole computation as a single semantic unit} in the graph (cleaner, fewer nodes, less bookkeeping).
+	\item To \textbf{override the automatically derived backward} with a numerically more stable or more efficient formula.
+\end{itemize}
+
+For this, PyTorch lets us define custom operations by subclassing \texttt{torch.autograd.Function} and explicitly specifying \texttt{forward} and \texttt{backward}.
+
+\paragraph{Motivating Example: Sigmoid}
+
+A naive Python implementation of the sigmoid is:
 
 \begin{mintedbox}{python}
-	def sigmoid(x):
-		return 1 / (1 + torch.exp(-x))
+    def sigmoid(x):
+        return 1.0 / (1.0 + torch.exp(-x))
 \end{mintedbox}
 
-\noindent However, defining the forward and backward computations explicitly as a single unit in the graph improves stability:
+This looks harmless, but it can introduce numerical issues in deep networks:
+
+\begin{itemize}
+	\item For very \textbf{large negative} inputs $x \ll 0$, we compute \texttt{torch.exp(-x)} = \texttt{exp(large positive)}, which overflows to \texttt{inf} in \texttt{float32}.  
+	The forward result is still $1/(1+\infty) \approx 0$, so we might not notice.
+	\item However, during \textbf{backward}, autograd differentiates through these primitives and uses the same intermediate \texttt{inf} values.  
+	Expressions such as $\frac{\infty}{(1+\infty)^2}$ or $\infty \cdot 0$ can appear, which numerically become \texttt{nan}, even though the true derivative is $0$.
+\end{itemize}
+
+Mathematically, the derivative of the sigmoid is
+\[
+\sigma'(x) = \sigma(x)\,(1 - \sigma(x)),
+\]
+and this is perfectly stable: once we know $y = \sigma(x) \in (0,1)$, the product $y(1-y)$ is always bounded in $[0, 0.25]$ and never overflows.  
+So a more stable strategy is:
+
+\begin{enumerate}
+	\item Compute $y = \sigma(x)$ in the forward pass.
+	\item \emph{Save} $y$.
+	\item Compute the gradient in backward using $y(1-y)$ instead of recomputing exponentials.
+\end{enumerate}
+
+This is exactly what a custom autograd function allows us to do.
 
 \begin{mintedbox}{python}
-	class Sigmoid(torch.autograd.Function):
-		@staticmethod
-		def forward(ctx, x):
-			y = 1.0 / (1.0 + torch.exp(-x))
-			ctx.save_for_backward(y)
-			return y
+    class Sigmoid(torch.autograd.Function):
+        @staticmethod
+        def forward(ctx, x):
+            # Forward as usual (PyTorch's built-in sigmoid is already stable;
+            # here we reimplement it for illustration).
+            y = 1.0 / (1.0 + torch.exp(-x))
+            # Save only the stable output y for backward.
+            ctx.save_for_backward(y)
+            return y
+\end{mintedbox}
+
+\begin{mintedbox}{python}
+    @staticmethod
+        def backward(ctx, grad_y):
+        # Retrieve saved output
+        (y,) = ctx.saved_tensors
+        # Use the stable formula seen earlier
+        grad_x = grad_y * y * (1.0 - y)
+        return grad_x
 	
-		@staticmethod
-		def backward(ctx, grad_y):
-			y, = ctx.saved_tensors
-			grad_x = grad_y * y * (1.0 - y)
-			return grad_x
-		
-	def sigmoid(x):
-		return Sigmoid.apply(x)
+    def sigmoid(x):
+        return Sigmoid.apply(x)
 \end{mintedbox}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_35.jpg}
-	\caption{\textbf{Custom autograd function for sigmoid.} This method creates a single node in the computational graph (on the right) instead of multiple primitive operations (on the left).}
+	\caption{\textbf{Custom autograd function for sigmoid.} Left: the naive implementation expands into several primitive nodes (\texttt{exp}, \texttt{add}, \texttt{div}), each with its own backward. Right: the custom \texttt{Sigmoid} is a single node with a hand-crafted, numerically stable backward.}
 	\label{fig:chapter12_pytorch_custom_autograd}
 \end{figure}
 
-\newpage \noindent
-Now we can use this new Autograd function with ease:
+\noindent Once defined, we can use the new sigmoid as any other PyTorch operation:
+
 \begin{mintedbox}{python}
 	x = torch.randn(10, requires_grad=True)
 	sigmoid_out = sigmoid(x)
+	sigmoid_out.sum().backward()
 \end{mintedbox}
 
-\noindent Using this approach, we ensure:
-\begin{itemize}
-	\item The function appears as a single node in the computational graph.
-	\item We define a stable and optimized backward pass instead of relying on automatic differentiation, that can go wrong in the case of Sigmoid (we'll probably experience NaNs if we use the simple Python function, as it is not numerically stable).
-\end{itemize}
+In practice, this level of control is rarely needed for basic operations: PyTorch’s built-in functions (\texttt{torch.sigmoid}, \texttt{torch.softmax}, etc.) are already implemented internally using optimized and stable autograd functions.  
 
-\noindent Nevertheless, in practice this is pretty rare, and in most cases Python functions are good enough. We'll try to stick to them when we can to avoid further complexions. 
+Custom \texttt{Function}s become most useful when implementing new layers, composite operations, or specialized losses where we know a better backward formula than the one autograd would derive automatically.
+
+\newpage
 
 \subsubsection{Summary: Backpropagation and Graph Optimization}
 \label{subsubsec:chapter12_pytorch_graph_summary}
 
 \begin{itemize}
-	\item \textbf{Every operation on a tensor with \texttt{requires\_grad=True} extends the computational graph.}
-	\item \textbf{PyTorch dynamically tracks all operations} and stores intermediate results to compute gradients efficiently.
-	\item \textbf{Forgetting to zero gradients} is a common bug that leads to incorrect weight updates.
-	\item \textbf{Graph size can be optimized} using custom autograd functions, improving numerical stability and efficiency, and increase the graph semantics (it will be easier to understand what's going on when we examine it if we use some building blocks providing further abstraction upon the basic torch primitives). 
+	\item \textbf{Any operation on a tensor with \texttt{requires\_grad=True} extends the computational graph.}
+	\item \textbf{PyTorch dynamically records these operations} and stores just enough context (saved tensors) to evaluate gradients efficiently via the chain rule.
+	\item \textbf{Forgetting to reset gradients} (e.g., omitting \texttt{optimizer.zero\_grad()}) causes gradients to accumulate across iterations, leading to incorrect updates.
+	\item \textbf{Graph structure can be optimized} using custom autograd functions: they fuse multiple primitive ops into a single node, can implement numerically stable backward formulas, and provide more meaningful graph semantics than low-level primitives alone.
 \end{itemize}
 
-Understanding computational graphs is essential for debugging and optimizing deep learning models in PyTorch. 
+A solid understanding of PyTorch’s computational graphs—and how to customize them when necessary—is essential for debugging, improving numerical robustness, and optimizing the performance of deep learning models.
 
 \subsection{High-Level Abstractions in PyTorch: \texttt{torch.nn} and Optimizers}
 \label{subsec:chapter12_pytorch_nn}
@@ -339,38 +377,38 @@ PyTorch provides a high-level wrapper, \texttt{torch.nn}, which simplifies neura
 The \texttt{torch.nn.Sequential} container allows defining models as a sequence of layers. Below, we define a simple two-layer network with ReLU activation:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	N, D_in, H, D_out = 64, 1000, 100, 10
-	x = torch.randn(N, D_in)
-	y = torch.randn(N, D_out)
-	
-	model = torch.nn.Sequential(
-	torch.nn.Linear(D_in, H),
-	torch.nn.ReLU(),
-	torch.nn.Linear(H, D_out)
-	)
-	
-	learning_rate = 1e-2
-	for t in range(500):
-		y_pred = model(x)
-		loss = torch.nn.functional.mse_loss(y_pred, y)
-		loss.backward()
-	
-		with torch.no_grad():
-			for param in model.parameters():
-				param -= learning_rate * param.grad
-	
-	model.zero_grad()
+    import torch
+    
+    N, D_in, H, D_out = 64, 1000, 100, 10
+    x = torch.randn(N, D_in)
+    y = torch.randn(N, D_out)
+    
+    model = torch.nn.Sequential(
+    torch.nn.Linear(D_in, H),
+    torch.nn.ReLU(),
+    torch.nn.Linear(H, D_out)
+    )
+    
+    learning_rate = 1e-2
+    for t in range(500):
+        y_pred = model(x)
+        loss = torch.nn.functional.mse_loss(y_pred, y)
+        loss.backward()
+    
+        with torch.no_grad():
+            for param in model.parameters():
+                param -= learning_rate * param.grad
+    
+    model.zero_grad()
 \end{mintedbox}
 
 \begin{itemize}
-	\item The \texttt{model} object is a container holding layers. Each layer manages its own parameters.
-	\item Calling \texttt{model(x)} performs the forward pass.
-	\item The loss is computed using \texttt{torch.nn.functional.mse\_loss()}.
-	\item Calling \texttt{loss.backward()} computes gradients for all model parameters.
-	\item Parameter updates are performed manually in a loop over \texttt{model.parameters()}.
-	\item Calling \texttt{model.zero\_grad()} resets gradients for all parameters.
+    \item The \texttt{model} object is a container holding layers. Each layer manages its own parameters.
+    \item Calling \texttt{model(x)} performs the forward pass.
+    \item The loss is computed using \texttt{torch.nn.functional.mse\_loss()}.
+    \item Calling \texttt{loss.backward()} computes gradients for all model parameters.
+    \item Parameter updates are performed manually in a loop over \texttt{model.parameters()}.
+    \item Calling \texttt{model.zero\_grad()} resets gradients for all parameters.
 \end{itemize}
 
 \subsubsection{Using Optimizers: Automating Gradient Descent}
@@ -379,37 +417,39 @@ The \texttt{torch.nn.Sequential} container allows defining models as a sequence 
 Instead of manually implementing gradient descent, PyTorch provides optimizer classes that handle parameter updates. Below, we use the Adam optimizer:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	N, D_in, H, D_out = 64, 1000, 100, 10
-	x = torch.randn(N, D_in)
-	y = torch.randn(N, D_out)
-	
-	model = torch.nn.Sequential(
-	torch.nn.Linear(D_in, H),
-	torch.nn.ReLU(),
-	torch.nn.Linear(H, D_out)
-	)
-	
-	learning_rate = 1e-4
-	optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-	
-	for t in range(500):
-		y_pred = model(x)
-		loss = torch.nn.functional.mse_loss(y_pred, y)
-		loss.backward()
-		
-		optimizer.step()
-		optimizer.zero_grad()
+    import torch
+    
+    N, D_in, H, D_out = 64, 1000, 100, 10
+    x = torch.randn(N, D_in)
+    y = torch.randn(N, D_out)
+    
+    model = torch.nn.Sequential(
+    torch.nn.Linear(D_in, H),
+    torch.nn.ReLU(),
+    torch.nn.Linear(H, D_out)
+    )
+    
+    learning_rate = 1e-4
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    
+    for t in range(500):
+        y_pred = model(x)
+        loss = torch.nn.functional.mse_loss(y_pred, y)
+        loss.backward()
+        
+        optimizer.step()
+        optimizer.zero_grad()
 \end{mintedbox}
 
 \begin{itemize}
-	\item The optimizer is instantiated with \texttt{torch.optim.Adam()} and receives model parameters.
-	\item Calling \texttt{optimizer.step()} updates all parameters automatically.
-	\item Calling \texttt{optimizer.zero\_grad()} resets gradients before the next step.
+    \item The optimizer is instantiated with \texttt{torch.optim.Adam()} and receives model parameters.
+    \item Calling \texttt{optimizer.step()} updates all parameters automatically.
+    \item Calling \texttt{optimizer.zero\_grad()} resets gradients before the next step.
 \end{itemize}
 
 This approach is both cleaner and less error-prone than manual updates.
+
+\newpage
 
 \subsubsection{Defining Custom \texttt{nn.Module} Subclasses}
 \label{subsubsec:chapter12_pytorch_nn_module}
@@ -417,48 +457,48 @@ This approach is both cleaner and less error-prone than manual updates.
 For more complex architectures, we can define custom \texttt{nn.Module} subclasses:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	class TwoLayerNet(torch.nn.Module):
-		def __init__(self, D_in, H, D_out):
-			super(TwoLayerNet, self).__init__()
-			self.linear1 = torch.nn.Linear(D_in, H)
-			self.linear2 = torch.nn.Linear(H, D_out)
-		
-		def forward(self, x):
-			h_relu = self.linear1(x).clamp(min=0)
-			y_pred = self.linear2(h_relu)
-			return y_pred
-		
-	N, D_in, H, D_out = 64, 1000, 100, 10
-	x = torch.randn(N, D_in)
-	y = torch.randn(N, D_out)
-		
-	model = TwoLayerNet(D_in, H, D_out)
-	optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
-	
-	for t in range(500):
-		y_pred = model(x)
-		loss = torch.nn.functional.mse_loss(y_pred, y)
-		loss.backward()
-		
-		optimizer.step()
-		optimizer.zero_grad()
+    import torch
+    
+    class TwoLayerNet(torch.nn.Module):
+        def __init__(self, D_in, H, D_out):
+            super(TwoLayerNet, self).__init__()
+            self.linear1 = torch.nn.Linear(D_in, H)
+            self.linear2 = torch.nn.Linear(H, D_out)
+        
+        def forward(self, x):
+            h_relu = self.linear1(x).clamp(min=0)
+            y_pred = self.linear2(h_relu)
+            return y_pred
+        
+    N, D_in, H, D_out = 64, 1000, 100, 10
+    x = torch.randn(N, D_in)
+    y = torch.randn(N, D_out)
+        
+    model = TwoLayerNet(D_in, H, D_out)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
+    
+    for t in range(500):
+        y_pred = model(x)
+        loss = torch.nn.functional.mse_loss(y_pred, y)
+        loss.backward()
+        
+        optimizer.step()
+        optimizer.zero_grad()
 \end{mintedbox}
 
 \begin{itemize}
-	\item \textbf{Model Initialization:} The \texttt{\_\_init\_\_} method defines layers as class attributes.
-	\item \textbf{Forward Pass:} The \texttt{forward()} method specifies how inputs are transformed.
-	\item \textbf{Autograd Integration:} PyTorch automatically tracks gradients for model parameters.
-	\item \textbf{Training Loop:} The optimizer updates weights based on computed gradients.
+    \item \textbf{Model Initialization:} The \texttt{\_\_init\_\_} method defines layers as class attributes.
+    \item \textbf{Forward Pass:} The \texttt{forward()} method specifies how inputs are transformed.
+    \item \textbf{Autograd Integration:} PyTorch automatically tracks gradients for model parameters.
+    \item \textbf{Training Loop:} The optimizer updates weights based on computed gradients.
 \end{itemize}
 
 \subsubsection{Key Takeaways}
 \begin{itemize}
-	\item \textbf{\texttt{torch.nn.Sequential}} simplifies defining networks as a stack of layers.
-	\item \textbf{Optimizers automate gradient descent}, making training loops cleaner.
-	\item \textbf{Custom \texttt{nn.Module} subclasses} provide flexibility for complex architectures.
-	\item \textbf{Autograd handles differentiation automatically}, eliminating the need for manual backward computations.
+    \item \textbf{\texttt{torch.nn.Sequential}} simplifies defining networks as a stack of layers.
+    \item \textbf{Optimizers automate gradient descent}, making training loops cleaner.
+    \item \textbf{Custom \texttt{nn.Module} subclasses} provide flexibility for complex architectures.
+    \item \textbf{Autograd handles differentiation automatically}, eliminating the need for manual backward computations.
 \end{itemize}
 
 Using \texttt{torch.nn} and optimizers streamlines model development, making PyTorch a powerful and expressive framework for deep learning.
@@ -474,101 +514,197 @@ A common practice in PyTorch is to combine custom \texttt{nn.Module} subclasses 
 The following example defines a \texttt{ParallelBlock} module that applies two linear transformations to the input independently and then multiplies the results element-wise:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	class ParallelBlock(torch.nn.Module):
-		def __init__(self, D_in, D_out):
-			super(ParallelBlock, self).__init__()
-			self.linear1 = torch.nn.Linear(D_in, D_out)
-			self.linear2 = torch.nn.Linear(D_in, D_out)
-		
-		def forward(self, x):
-			h1 = self.linear1(x)
-			h2 = self.linear2(x)
-			return (h1 * h2).clamp(min=0)  # Element-wise multiplication followed by ReLU
-	
-	N, D_in, H, D_out = 64, 1000, 100, 10
-	x = torch.randn(N, D_in)
-	y = torch.randn(N, D_out)
-	
-	model = torch.nn.Sequential(
-	ParallelBlock(D_in, H),
-	ParallelBlock(H, H),
-	torch.nn.Linear(H, D_out)
-	)
-	
-	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
-	
-	for t in range(500):
-		y_pred = model(x)
-		loss = torch.nn.functional.mse_loss(y_pred, y)
-		loss.backward()
-		optimizer.step()
-		optimizer.zero_grad()
+    import torch
+    
+    class ParallelBlock(torch.nn.Module):
+        def __init__(self, D_in, D_out):
+            super(ParallelBlock, self).__init__()
+            self.linear1 = torch.nn.Linear(D_in, D_out)
+            self.linear2 = torch.nn.Linear(D_in, D_out)
+        
+        def forward(self, x):
+            h1 = self.linear1(x)
+            h2 = self.linear2(x)
+            return (h1 * h2).clamp(min=0)  # Element-wise multiplication followed by ReLU
+    
+    N, D_in, H, D_out = 64, 1000, 100, 10
+    x = torch.randn(N, D_in)
+    y = torch.randn(N, D_out)
+    
+    model = torch.nn.Sequential(
+    ParallelBlock(D_in, H),
+    ParallelBlock(H, H),
+    torch.nn.Linear(H, D_out)
+    )
+    
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    
+    for t in range(500):
+        y_pred = model(x)
+        loss = torch.nn.functional.mse_loss(y_pred, y)
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
 \end{mintedbox}
 
 \begin{itemize}
-	\item The \texttt{ParallelBlock} applies two separate linear layers to the input.
-	\item The outputs are multiplied element-wise before applying ReLU.
-	\item The \texttt{Sequential} container stacks multiple \texttt{ParallelBlock} instances, followed by a final linear layer.
-	\item Using this approach allows rapid experimentation with modular neural network components.
+    \item The \texttt{ParallelBlock} applies two separate linear layers to the input.
+    \item The outputs are multiplied element-wise before applying ReLU.
+    \item The \texttt{Sequential} container stacks multiple \texttt{ParallelBlock} instances, followed by a final linear layer.
+    \item Using this approach allows rapid experimentation with modular neural network components.
 \end{itemize}
 
 \noindent Although this example is not very smart and not thing we should in practice, it demonstrates well the ability to create building blocks using torch and thus create using this abstraction some complex neural networks with ease. 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_50.jpg}
-	\caption{\textbf{ParallelBlock module design:} The implementation of the \texttt{ParallelBlock} and its corresponding computational graph visualization.}
-	\label{fig:chapter12_parallel_block}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_50.jpg}
+    \caption{\textbf{ParallelBlock module design:} The implementation of the \texttt{ParallelBlock} and its corresponding computational graph visualization.}
+    \label{fig:chapter12_parallel_block}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_51.jpg}
-	\caption{\textbf{Stacking multiple \texttt{ParallelBlock} instances in a Sequential model.} The left side of the figure shows the computational graph produced.}
-	\label{fig:chapter12_parallel_block_graph}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_12/slide_51.jpg}
+    \caption{\textbf{Stacking multiple \texttt{ParallelBlock} instances in a Sequential model.} The left side of the figure shows the computational graph produced.}
+    \label{fig:chapter12_parallel_block_graph}
 \end{figure}
 
 \subsection{Efficient Data Loading with \texttt{torch.utils.data}}
 \label{subsec:chapter12_pytorch_dataloader}
 
-PyTorch provides the \texttt{torch.utils.data} module, which offers utilities for efficient data loading, shuffling, and parallel processing. The \texttt{DataLoader} wraps a dataset and provides mini-batching functionality.
+Training deep neural networks efficiently requires a robust data pipeline. PyTorch provides the \texttt{torch.utils.data} module, which abstracts away data loading, shuffling, batching, and parallelization—ensuring that model computation and data preparation can run concurrently.  
+The two key components are:
+
+\begin{itemize}
+	\item \textbf{\texttt{Dataset}:} Represents a collection of samples. You can use built-in classes like \texttt{TensorDataset} for in-memory tensors or implement a custom \texttt{Dataset} that reads from files or databases.
+	\item \textbf{\texttt{DataLoader}:} Wraps a \texttt{Dataset} to provide mini-batching, shuffling, and multi-process data loading. It also supports pinned memory for faster GPU transfer.
+\end{itemize}
 
 \subsubsection{Example: Using \texttt{DataLoader} for Mini-batching}
 \label{subsubsec:chapter12_pytorch_dataloader_example}
 
-The following example demonstrates how to create a \texttt{DataLoader} for iterating over a dataset in mini-batches:
+The example below demonstrates how to use \texttt{DataLoader} with synthetic data for mini-batch training.
 
 \begin{mintedbox}{python}
 	import torch
 	from torch.utils.data import TensorDataset, DataLoader
 	
+	# 1. Create a simple in-memory dataset
 	N, D_in, H, D_out = 64, 1000, 100, 10
 	x = torch.randn(N, D_in)
 	y = torch.randn(N, D_out)
 	
-	loader = DataLoader(TensorDataset(x, y), batch_size=8)
+	dataset = TensorDataset(x, y)
+	
+	# 2. Create a DataLoader with batching and parallel loading
+	loader = DataLoader(
+	dataset,
+	batch_size=8,
+	shuffle=True,      # Shuffle each epoch for stable training
+	num_workers=2,     # Parallel CPU workers for background loading
+	pin_memory=True    # Speeds up host→GPU transfers
+	)
 	
 	model = TwoLayerNet(D_in, H, D_out)
 	optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
 	
-	for epoch in range(20):
-		for x_batch, y_batch in loader:
-			y_pred = model(x_batch)
-			loss = torch.nn.functional.mse_loss(y_pred, y_batch)
-			loss.backward()
-			optimizer.step()
-			optimizer.zero_grad()
+	# 3. Training loop using the DataLoader
+    for epoch in range(20):
+        for x_batch, y_batch in loader:
+            y_pred = model(x_batch)
+            loss = torch.nn.functional.mse_loss(y_pred, y_batch)
+	
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
 \end{mintedbox}
 
+\noindent
+This setup automatically handles mini-batch creation, shuffling, and memory prefetching.  
+With \texttt{num\_workers > 0}, the CPU preloads data while the GPU trains on the previous batch, preventing GPU idle time—a crucial optimization for large datasets.
+
+\paragraph{Best Practices}
 \begin{itemize}
-	\item The \texttt{DataLoader} automatically handles mini-batch creation and shuffling.
-	\item Iterating over \texttt{loader} yields mini-batches of data.
-	\item This approach improves efficiency and ensures model training is more stable.
+	\item Use \texttt{shuffle=True} to avoid order bias and improve gradient diversity.
+	\item Adjust \texttt{num\_workers} to match your CPU cores (typical range: 2–8) for best throughput.
+	\item Set \texttt{pin\_memory=True} when training on GPU to accelerate host–device transfers.
 \end{itemize}
 
-Dataloaders are an essential building block in PyTorch, ensuring efficient model training, particularly when working with large datasets.
+\subsubsection{Handling Multiple Datasets}
+\label{subsubsec:chapter12_pytorch_dataloader_multi}
+
+In practice, data often comes from multiple sources—different domains, modalities, or tasks.  
+PyTorch offers flexible tools to combine and balance these datasets efficiently.
+
+\paragraph{Concatenating Datasets}
+When datasets share the same structure (e.g., same feature dimensions), use \texttt{ConcatDataset} to merge them into a single unified dataset.
+
+\begin{mintedbox}{python}
+	from torch.utils.data import ConcatDataset, DataLoader
+	
+	dataset_a = TensorDataset(torch.randn(100, 20), torch.randn(100, 1))
+	dataset_b = TensorDataset(torch.randn(200, 20), torch.randn(200, 1))
+	
+	combined = ConcatDataset([dataset_a, dataset_b])
+	
+	loader = DataLoader(
+	combined,
+	batch_size=16,
+	shuffle=True,
+	num_workers=4
+	)
+\end{mintedbox}
+
+\noindent
+This approach interleaves samples from all datasets proportionally to their sizes. It is ideal for combining related sources (e.g., merging multiple corpora or image datasets).
+
+\paragraph{Weighted Sampling Across Datasets}
+If some datasets are much smaller or more important, you can balance sampling probabilities using \texttt{WeightedRandomSampler}. This ensures underrepresented data appears more frequently in training batches.
+
+\begin{mintedbox}{python}
+	from torch.utils.data import WeightedRandomSampler
+	
+	# Example: emphasize smaller dataset (dataset_a)
+	weights = [1.0 / len(dataset_a)] * len(dataset_a) + \
+	[1.0 / len(dataset_b)] * len(dataset_b)
+	
+	sampler = WeightedRandomSampler(weights, num_samples=len(weights), replacement=True)
+	
+	balanced_loader = DataLoader(
+	combined,
+	batch_size=16,
+	sampler=sampler,
+	num_workers=4
+	)
+\end{mintedbox}
+
+\noindent
+Weighted sampling is especially useful for:
+\begin{itemize}
+	\item \textbf{Imbalanced datasets.} For example, when rare classes need more representation during training.
+	\item \textbf{Multi-source training.} Combining labeled and unlabeled data or datasets from distinct domains.
+	\item \textbf{Curriculum learning.} Gradually increasing sample difficulty or diversity over time.
+\end{itemize}
+
+\paragraph{Streaming or Multi-modal Data}
+For more dynamic or heterogeneous sources (e.g., loading text and image pairs), subclass \texttt{IterableDataset} to yield samples from multiple streams in real time, or define a custom \texttt{Sampler} to coordinate multi-modal alignment.
+
+\begin{mintedbox}{python}
+	from torch.utils.data import IterableDataset
+	
+    class MultiSourceStream(IterableDataset):
+        def __iter__(self):
+            for x_img, x_txt in zip(image_stream(), text_stream()):
+                yield preprocess(x_img, x_txt)
+\end{mintedbox}
+
+\noindent
+This design is common in large-scale vision–language or multi-task training pipelines, where data arrives asynchronously or from external APIs.
+
+\paragraph{Summary}
+\texttt{DataLoader} and its related utilities form the backbone of efficient training in PyTorch.  
+They decouple data I/O from model computation, provide clean abstractions for multi-source or imbalanced data, and make large-scale experiments reproducible and scalable across CPUs and GPUs.
 
 \subsection{Using Pretrained Models with TorchVision}
 \label{subsec:chapter12_pytorch_torchvision}
@@ -578,24 +714,24 @@ PyTorch provides access to many pretrained models through the \texttt{torchvisio
 Using pretrained models is as simple as:
 
 \begin{mintedbox}{python}
-	import torchvision.models as models
-	
-	alexnet = models.alexnet(pretrained=True)
-	vgg16 = models.vgg16(pretrained=True)
-	resnet101 = models.resnet101(pretrained=True)
+    import torchvision.models as models
+    
+    alexnet = models.alexnet(pretrained=True)
+    vgg16 = models.vgg16(pretrained=True)
+    resnet101 = models.resnet101(pretrained=True)
 \end{mintedbox}
 
 \begin{itemize}
-	\item These models come with pretrained weights on ImageNet, making them suitable for transfer learning.
-	\item Fine-tuning pretrained models often leads to faster convergence and better performance on new tasks.
-	\item \texttt{torchvision.models} provides a wide variety of architectures beyond AlexNet, VGG, and ResNet.
+    \item These models come with pretrained weights on ImageNet, making them suitable for transfer learning.
+    \item Fine-tuning pretrained models often leads to faster convergence and better performance on new tasks.
+    \item \texttt{torchvision.models} provides a wide variety of architectures beyond AlexNet, VGG, and ResNet.
 \end{itemize}
 
 \subsubsection{Key Takeaways}
 \begin{itemize}
-	\item \textbf{Custom modules and \texttt{torch.nn.Sequential} can be combined} to quickly build complex models while maintaining modularity.
-	\item \textbf{Data loading utilities} such as \texttt{torch.utils.data.DataLoader} facilitate efficient mini-batching and dataset management.
-	\item \textbf{TorchVision provides pretrained models}, making it easy to leverage state-of-the-art architectures for various vision tasks.
+    \item \textbf{Custom modules and \texttt{torch.nn.Sequential} can be combined} to quickly build complex models while maintaining modularity.
+    \item \textbf{Data loading utilities} such as \texttt{torch.utils.data.DataLoader} facilitate efficient mini-batching and dataset management.
+    \item \textbf{TorchVision provides pretrained models}, making it easy to leverage state-of-the-art architectures for various vision tasks.
 \end{itemize}
 
 \section{Dynamic vs. Static Computational Graphs in PyTorch}
@@ -611,10 +747,10 @@ While dynamically building graphs in every iteration may seem inefficient, this 
 Consider a model where the choice of weight matrix for backpropagation depends on the previous loss value. This scenario, though impractical, demonstrates PyTorch’s ability to create different computational graphs in each iteration.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_67.jpg}
-	\caption{\textbf{Example of a dynamically constructed graph:} The model structure changes at each iteration based on previous loss values.}
-	\label{fig:chapter12_dynamic_graph}
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_67.jpg}
+    \caption{\textbf{Example of a dynamically constructed graph:} The model structure changes at each iteration based on previous loss values.}
+    \label{fig:chapter12_dynamic_graph}
 \end{figure}
 
 In dynamic graphs, every forward pass constructs a unique computation graph, allowing for models with \textbf{varying execution paths} across different iterations.
@@ -624,8 +760,8 @@ In dynamic graphs, every forward pass constructs a unique computation graph, all
 
 In contrast, \textbf{static computational graphs} follow a two-step process:
 \begin{enumerate}
-	\item \textbf{Graph Construction:} Define the computational graph once, allowing the framework to optimize it before execution.
-	\item \textbf{Graph Execution:} The same pre-optimized graph is reused for all forward passes.
+    \item \textbf{Graph Construction:} Define the computational graph once, allowing the framework to optimize it before execution.
+    \item \textbf{Graph Execution:} The same pre-optimized graph is reused for all forward passes.
 \end{enumerate}
 
 \noindent While PyTorch natively operates with dynamic graphs, it also supports static graphs through \textbf{TorchScript} using \textbf{Just-in-Time (JIT) compilation}. This allows PyTorch to analyze the model’s source code, compile it into an optimized static graph, and reuse it for improved efficiency.
@@ -636,29 +772,29 @@ In contrast, \textbf{static computational graphs} follow a two-step process:
 To convert a function into a static computational graph, PyTorch provides \texttt{torch.jit.script()}:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	def model(x):
-		return x * torch.sin(x)
-	
-	scripted_model = torch.jit.script(model)  # Convert to static graph
+    import torch
+    
+    def model(x):
+        return x * torch.sin(x)
+    
+    scripted_model = torch.jit.script(model)  # Convert to static graph
 \end{mintedbox}
 
 Alternatively, PyTorch allows automatic graph compilation using the \textbf{@torch.jit.script} annotation:
 
 \begin{mintedbox}{python}
-	import torch
-	
-	@torch.jit.script
-	def model(x):
-		return x * torch.sin(x)
+    import torch
+    
+    @torch.jit.script
+    def model(x):
+        return x * torch.sin(x)
 \end{mintedbox}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_73.jpg}
-	\caption{\textbf{TorchScript:} Using JIT compilation to convert PyTorch models into static graphs for optimization.}
-	\label{fig:chapter12_pytorch_jit}
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_73.jpg}
+    \caption{\textbf{TorchScript:} Using JIT compilation to convert PyTorch models into static graphs for optimization.}
+    \label{fig:chapter12_pytorch_jit}
 \end{figure}
 
 \subsection{Handling Conditionals in Static Graphs}
@@ -667,10 +803,10 @@ Alternatively, PyTorch allows automatic graph compilation using the \textbf{@tor
 Static graphs struggle with conditionals because they are typically \textbf{fixed at compile time}. However, PyTorch’s JIT can represent conditionals as graph nodes, enabling runtime flexibility.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_71.jpg}
-	\caption{\textbf{Conditionals in static graphs:} JIT inserts a conditional node to handle different execution paths.}
-	\label{fig:chapter12_pytorch_jit_conditionals}
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_71.jpg}
+    \caption{\textbf{Conditionals in static graphs:} JIT inserts a conditional node to handle different execution paths.}
+    \label{fig:chapter12_pytorch_jit_conditionals}
 \end{figure}
 
 This allows some degree of flexibility while retaining the benefits of graph optimization.
@@ -681,10 +817,10 @@ This allows some degree of flexibility while retaining the benefits of graph opt
 One advantage of static graphs is that they enable \textbf{graph-level optimizations}. PyTorch JIT can automatically \textbf{fuse operations} such as convolution and activation layers into a single efficient operation.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_74.jpg}
-	\caption{\textbf{Operation fusion in static graphs:} Layers such as Conv + ReLU are combined into a single operation to improve efficiency.}
-	\label{fig:chapter12_pytorch_fusion}
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_74.jpg}
+    \caption{\textbf{Operation fusion in static graphs:} Layers such as Conv + ReLU are combined into a single operation to improve efficiency.}
+    \label{fig:chapter12_pytorch_fusion}
 \end{figure}
 
 This optimization is performed once, eliminating the need to optimize in every iteration.
@@ -694,16 +830,16 @@ This optimization is performed once, eliminating the need to optimize in every i
 
 \textbf{Advantages of Static Graphs:}
 \begin{itemize}
-	\item \textbf{Graph Optimization:} The framework optimizes computation before execution, improving speed.
-	\item \textbf{Operation Fusion:} Frequently used layers (e.g., Conv + ReLU) are merged into a single operation.
-	\item \textbf{Serialization:} Models can be saved to disk and loaded in non-Python environments (e.g., C++).
+    \item \textbf{Graph Optimization:} The framework optimizes computation before execution, improving speed.
+    \item \textbf{Operation Fusion:} Frequently used layers (e.g., Conv + ReLU) are merged into a single operation.
+    \item \textbf{Serialization:} Models can be saved to disk and loaded in non-Python environments (e.g., C++).
 \end{itemize}
 
 \textbf{Challenges of Static Graphs:}
 \begin{itemize}
-	\item \textbf{Difficult Debugging:} Debugging static graphs can be challenging due to indirection between graph construction and execution.
-	\item \textbf{Less Flexibility:} Unlike dynamic graphs, static graphs struggle with models that modify their execution path.
-	\item \textbf{Rebuilding Required:} Any model change requires reconstructing the entire graph.
+    \item \textbf{Difficult Debugging:} Debugging static graphs can be challenging due to indirection between graph construction and execution.
+    \item \textbf{Less Flexibility:} Unlike dynamic graphs, static graphs struggle with models that modify their execution path.
+    \item \textbf{Rebuilding Required:} Any model change requires reconstructing the entire graph.
 \end{itemize}
 
 \subsection{When Are Dynamic Graphs Necessary?}
@@ -712,9 +848,9 @@ This optimization is performed once, eliminating the need to optimize in every i
 Certain architectures \emph{require} dynamic graphs due to their execution dependencies on input data:
 
 \begin{itemize}
-	\item \textbf{Recurrent Neural Networks (RNNs):} The number of computation steps depends on input sequence length.
-	\item \textbf{Recursive Networks:} Hierarchical models, such as parse trees in NLP, require dynamic execution paths.
-	\item \textbf{Modular Networks:} Some architectures dynamically select which sub-network to execute.
+    \item \textbf{Recurrent Neural Networks (RNNs):} The number of computation steps depends on input sequence length.
+    \item \textbf{Recursive Networks:} Hierarchical models, such as parse trees in NLP, require dynamic execution paths.
+    \item \textbf{Modular Networks:} Some architectures dynamically select which sub-network to execute.
 \end{itemize}
 
 A well-known example is the model in \cite{johnson2017_infering}, where part of the network predicts which module should execute next.
@@ -725,12 +861,31 @@ A well-known example is the model in \cite{johnson2017_infering}, where part of 
 TensorFlow originally adopted \textbf{static computational graphs} by default (TensorFlow 1.0), requiring users to explicitly define a computation graph before running it. However, in \textbf{TensorFlow 2.0}, the framework transitioned to \textbf{dynamic graphs} by default, making the API more similar to PyTorch. This shift caused a significant divide in the TensorFlow ecosystem, as older static-graph code intertwined with newer dynamic-graph code, creating confusion and bugs.
 
 \subsection{Defining Computational Graphs in TensorFlow 2.0}
-\label{subsubsec:chapter12_tensorflow_dynamic}
+\label{subsec:chapter12_tensorflow_dynamic}
 
-Unlike PyTorch, where all operations build computational graphs by default (unless wrapped in \texttt{torch.no\_grad()}), TensorFlow requires explicit opt-in using \texttt{tf.GradientTape()}.
+In PyTorch, the computational graph is built \textit{implicitly}: any operation performed on a tensor with \texttt{requires\_grad=True} is automatically tracked.  
+TensorFlow 2.0 (TF2), by contrast, introduced \textbf{eager execution} as the default mode—operations execute immediately like standard Python code, producing concrete values rather than symbolic graph nodes.  
+This makes TF2 intuitive and debuggable but requires an explicit mechanism for recording operations when gradients are needed. That mechanism is the \textbf{\texttt{tf.GradientTape}}.
+
+\subsubsection{Understanding \texttt{tf.GradientTape}}
+\label{subsubsec:chapter12_tensorflow_tape}
+
+The \texttt{GradientTape} is TensorFlow's dynamic autodiff engine, analogous to PyTorch’s implicit autograd.  
+It acts like a \textit{“recorder”}: while active, it logs all operations on watched tensors (typically all \texttt{tf.Variable} objects) and can later “play back” those operations to compute gradients.
+
+\begin{itemize}
+	\item Entering a \texttt{with tf.GradientTape() as tape:} block begins recording.
+	\item Any operation involving watched variables is logged on the tape.
+	\item Exiting the block stops recording.
+	\item Calling \texttt{tape.gradient(loss, [vars])} replays the tape backward to compute exact gradients via the chain rule.
+\end{itemize}
+
+This explicit opt-in design prevents unnecessary gradient tracking (e.g., during inference) and gives developers fine-grained control over which computations are differentiable.
 
 \begin{mintedbox}{python}
 	import tensorflow as tf
+	
+	# Setup data and parameters
 	N, Din, H, Dout = 16, 1000, 100, 10
 	x = tf.random.normal((N, Din))
 	y = tf.random.normal((N, Dout))
@@ -740,43 +895,79 @@ Unlike PyTorch, where all operations build computational graphs by default (unle
 	learning_rate = 1e-6
 	
 	for t in range(1000):
-		with tf.GradientTape() as tape:
-			h = tf.maximum(tf.matmul(x, w1), 0)
-			y_pred = tf.matmul(h, w2)
-			diff = y_pred - y
-			loss = tf.reduce_mean(tf.reduce_sum(diff ** 2, axis=1))
+	    # Begin recording operations on the tape
+	    with tf.GradientTape() as tape:
+	        h = tf.maximum(tf.matmul(x, w1), 0)  # ReLU
+	        y_pred = tf.matmul(h, w2)
+	        diff = y_pred - y
+	        loss = tf.reduce_mean(tf.reduce_sum(diff ** 2, axis=1))
 	
-		grad_w1, grad_w2 = tape.gradient(loss, [w1, w2])  # Compute gradients
-		w1.assign(w1 - learning_rate * grad_w1)  # Update weights
-		w2.assign(w2 - learning_rate * grad_w2)  
+	    # Compute gradients of loss w.r.t parameters
+	    grad_w1, grad_w2 = tape.gradient(loss, [w1, w2])
+	
+	    # Parameter updates (in-place, safe for tf.Variables)
+	    w1.assign_sub(learning_rate * grad_w1)
+	    w2.assign_sub(learning_rate * grad_w2)
 \end{mintedbox}
 
 \noindent
-This approach mimics PyTorch’s \texttt{requires\_grad=True}, but requires explicitly wrapping computations inside \texttt{tf.GradientTape()}.
+This process mirrors PyTorch’s autograd but with more explicit control:
+\texttt{GradientTape} defines the graph’s lifetime (inside the \texttt{with} block), rather than relying on implicit global tracking.
+The resulting computation graph is ephemeral—destroyed after gradient computation unless the tape is declared as \texttt{persistent=True} (allowing multiple gradient calls).
 
-\subsection{Static Graphs with \texttt{tf.function}}
-\label{subsubsec:chapter12_tensorflow_static}
+\paragraph{Key differences from PyTorch}
+\begin{itemize}
+	\item PyTorch automatically tracks gradients for all tensors with \texttt{requires\_grad=True}. TensorFlow records only within the \texttt{GradientTape} context.
+	\item TensorFlow’s graph is discarded after use unless marked persistent.
+	\item GradientTape offers fine-grained control: you can record subsets of operations or specific variables only.
+\end{itemize}
 
+\newpage
 
-TensorFlow 2.0 retains support for static graphs, which can be defined using the \texttt{@tf.function} decorator. This is equivalent to PyTorch’s \texttt{torch.jit.script()}.
+\subsection{Static Graphs with \texttt{@tf.function}}
+\label{subsec:chapter12_tensorflow_static}
+
+While TF2 defaults to eager (imperative) execution for flexibility, static computation graphs are still essential for deployment and optimization.  
+To combine both worlds, TensorFlow introduces the \textbf{\texttt{@tf.function}} decorator, which traces Python functions into optimized static graphs—comparable to \texttt{torch.jit.script()} in PyTorch.
+
+\paragraph{Motivation}
+Eager execution simplifies experimentation but adds Python overhead per operation.
+Static graphs, on the other hand, allow TensorFlow to perform ahead-of-time optimizations:
+operation fusion (e.g., combining \texttt{matmul + bias\_add}), kernel selection, memory reuse, and XLA compilation.
+Using \texttt{@tf.function}, developers write natural Python code while TensorFlow transparently traces and compiles it.
 
 \begin{mintedbox}{python}
-	@tf.function
-	def step(x, y, w1, w2):
-		with tf.GradientTape() as tape:
-			h = tf.maximum(tf.matmul(x, w1), 0)
-			y_pred = tf.matmul(h, w2)
-			diff = y_pred - y
-			loss = tf.reduce_mean(tf.reduce_sum(diff ** 2, axis=1))
+	@tf.function  # Compiles to a static graph on first call
+	def training_step(x, y, w1, w2, lr):
+	    with tf.GradientTape() as tape:
+	        h = tf.maximum(tf.matmul(x, w1), 0)
+	        y_pred = tf.matmul(h, w2)
+	        loss = tf.reduce_mean(tf.reduce_sum((y_pred - y) ** 2, axis=1))
 	
-		grad_w1, grad_w2 = tape.gradient(loss, [w1, w2])
-		w1.assign(w1 - learning_rate * grad_w1)
-		w2.assign(w2 - learning_rate * grad_w2)
-		return loss
+	    grad_w1, grad_w2 = tape.gradient(loss, [w1, w2])
+	    w1.assign_sub(lr * grad_w1)
+	    w2.assign_sub(lr * grad_w2)
+	    return loss
+	
+	# Regular Python loop, but graph executes under the hood
+	for t in range(1000):
+	    current_loss = training_step(x, y, w1, w2, learning_rate)
 \end{mintedbox}
 
 \noindent
-This function now executes as a static graph, allowing TensorFlow to optimize and fuse operations before execution.
+Here, \texttt{@tf.function} traces the computation during its first execution, then caches the resulting static graph for reuse—removing Python overhead and enabling runtime optimizations.  
+This achieves up to 2--10$\times$ speedups for heavy workloads while preserving eager-like syntax.
+
+\paragraph{Summary of Modes}
+\begin{itemize}
+	\item \textbf{Eager mode.} Operations run immediately, ideal for debugging and experimentation.
+	\item \textbf{GradientTape.} Dynamically records operations for automatic differentiation, similar to PyTorch’s autograd.
+	\item \textbf{@tf.function.} Converts eager code into a reusable static graph, fusing and optimizing operations for deployment.
+\end{itemize}
+
+Together, these tools give TensorFlow 2.0 both the interactivity of PyTorch and the performance advantages of static compilation—bridging the flexibility–efficiency trade-off that defined earlier deep learning frameworks.
+
+\newpage
 
 \section{Keras: High-Level API for TensorFlow}
 \label{subsec:chapter12_keras}
@@ -784,68 +975,68 @@ This function now executes as a static graph, allowing TensorFlow to optimize an
 Keras provides a high-level API for building deep learning models, simplifying working with models.
 
 \begin{mintedbox}{python}
-	import tensorflow as tf
-	from tensorflow.keras.models import Sequential
-	from tensorflow.keras.layers import InputLayer, Dense
-	
-	N, Din, H, Dout = 16, 1000, 100, 10
-	
-	model = Sequential([
-	InputLayer(input_shape=(Din,)),
-	Dense(units=H, activation='relu'),
-	Dense(units=Dout)
-	])
-	
-	loss_fn = tf.keras.losses.MeanSquaredError()
-	opt = tf.keras.optimizers.SGD(learning_rate=1e-6)
-	
-	x = tf.random.normal((N, Din))
-	y = tf.random.normal((N, Dout))
-	
-	for t in range(1000):
-		with tf.GradientTape() as tape:
-			y_pred = model(x)
-			loss = loss_fn(y_pred, y)
-		grads = tape.gradient(loss, model.trainable_variables)
-		opt.apply_gradients(zip(grads, model.trainable_variables))
+    import tensorflow as tf
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import InputLayer, Dense
+    
+    N, Din, H, Dout = 16, 1000, 100, 10
+    
+    model = Sequential([
+    InputLayer(input_shape=(Din,)),
+    Dense(units=H, activation='relu'),
+    Dense(units=Dout)
+    ])
+    
+    loss_fn = tf.keras.losses.MeanSquaredError()
+    opt = tf.keras.optimizers.SGD(learning_rate=1e-6)
+    
+    x = tf.random.normal((N, Din))
+    y = tf.random.normal((N, Dout))
+    
+    for t in range(1000):
+        with tf.GradientTape() as tape:
+            y_pred = model(x)
+            loss = loss_fn(y_pred, y)
+        grads = tape.gradient(loss, model.trainable_variables)
+        opt.apply_gradients(zip(grads, model.trainable_variables))
 \end{mintedbox}
 
 \noindent
 Keras simplifies training by providing:
 \begin{itemize}
-	\item \textbf{Predefined layers}: Easily stack layers with \texttt{Sequential()}.
-	\item \textbf{Common loss functions and optimizers}: Use built-in losses and optimizers like Adam.
-	\item \textbf{Automatic gradient handling}: \texttt{opt.apply\_gradients()}  simplifies parameter updates.
+    \item \textbf{Predefined layers}: Easily stack layers with \texttt{Sequential()}.
+    \item \textbf{Common loss functions and optimizers}: Use built-in losses and optimizers like Adam.
+    \item \textbf{Automatic gradient handling}: \texttt{opt.apply\_gradients()}  simplifies parameter updates.
 \end{itemize}
 
 \noindent
 We can further simplify the training loop using \texttt{opt.minimize()} by defining a step function:
 
 \begin{mintedbox}{python}
-	def step():
-		y_pred = model(x)
-		loss = loss_fn(y_pred, y)
-		return loss
-	
-	for t in range(1000):
-		opt.minimize(step, model.trainable_variables)
+    def step():
+        y_pred = model(x)
+        loss = loss_fn(y_pred, y)
+        return loss
+    
+    for t in range(1000):
+        opt.minimize(step, model.trainable_variables)
 \end{mintedbox}
 
 \section{TensorBoard: Visualizing Training Metrics}
 \label{subsec:chapter12_tensorboard}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_100.jpg}
-	\caption{\textbf{TensorBoard visualization:} Loss curves and weight distributions during training.}
-	\label{fig:chapter12_tensorboard}
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Chapter_12/slide_100.jpg}
+    \caption{\textbf{TensorBoard visualization:} Loss curves and weight distributions during training.}
+    \label{fig:chapter12_tensorboard}
 \end{figure}
 
 \textbf{TensorBoard} is a visualization tool that helps monitor deep learning experiments. It allows users to track:
 \begin{itemize}
-	\item Loss curves and accuracy during training.
-	\item Weight distributions and parameter updates.
-	\item Computational graphs of the model.
+    \item Loss curves and accuracy during training.
+    \item Weight distributions and parameter updates.
+    \item Computational graphs of the model.
 \end{itemize}
 
 While originally designed for TensorFlow, TensorBoard now support \textbf{PyTorch} via the \\
@@ -856,26 +1047,26 @@ However, modern alternatives such as \textbf{Weights and Biases (wandb)} and \te
 \label{subsec:chapter12_comparison}
 
 \begin{itemize}
-	\item \textbf{PyTorch:}
-	\begin{itemize}
-		\item Imperative API that is easy to debug.
-		\item Dynamic computation graphs enable flexibility.
-		\item \texttt{torch.jit.script()} allows for static graph compilation.
-		\item Harder to optimize for TPUs.
-		\item Deployment on mobile is less streamlined.
-	\end{itemize}
-	\item \textbf{TensorFlow 1.0:}
-	\begin{itemize}
-		\item Static graphs by default.
-		\item Faster execution but difficult debugging.
-		\item API inconsistencies made it less user-friendly.
-	\end{itemize}
-	\item \textbf{TensorFlow 2.0:}
-	\begin{itemize}
-		\item Defaulted to dynamic graphs, similar to PyTorch.
-		\item Standardized Keras API for ease of use.
-		\item Still retains static graph capability with \texttt{tf.function}.
-	\end{itemize}
+    \item \textbf{PyTorch:}
+    \begin{itemize}
+        \item Imperative API that is easy to debug.
+        \item Dynamic computation graphs enable flexibility.
+        \item \texttt{torch.jit.script()} allows for static graph compilation.
+        \item Harder to optimize for TPUs.
+        \item Deployment on mobile is less streamlined.
+    \end{itemize}
+    \item \textbf{TensorFlow 1.0:}
+    \begin{itemize}
+        \item Static graphs by default.
+        \item Faster execution but difficult debugging.
+        \item API inconsistencies made it less user-friendly.
+    \end{itemize}
+    \item \textbf{TensorFlow 2.0:}
+    \begin{itemize}
+        \item Defaulted to dynamic graphs, similar to PyTorch.
+        \item Standardized Keras API for ease of use.
+        \item Still retains static graph capability with \texttt{tf.function}.
+    \end{itemize}
 \end{itemize}
 
 \paragraph{Conclusion}

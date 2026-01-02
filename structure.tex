@@ -45,9 +45,9 @@
 []
 
 % Subsection text styling
-\titlecontents{subsection}[1.25cm] % Indentation
+\titlecontents{subsection}[1.6cm] % Indentation
 {\addvspace{1pt}\sffamily\small} % Spacing and font options for subsections
-{\contentslabel[\thecontentslabel]{1.25cm}} % Subsection number
+{\contentslabel[\thecontentslabel]{1.6cm}} % Subsection number
 {}
 {\sffamily\;\titlerule*[.5pc]{.}\;\thecontentspage} % Page number
 [] 
@@ -57,7 +57,7 @@
 %----------------------------------------------------------------------------------------
 
 % Section text styling
-\titlecontents{lsection}[0em] % Indendating
+\titlecontents{lsection}[.5em] % Indendating
 {\footnotesize\sffamily} % Font settings
 {%
 }%
@@ -403,45 +403,46 @@ innerbottommargin=5pt]{cBox}
 
 \NewDocumentEnvironment{enrichment}{ O{} O{subsection} }{%
 	\ifenrichment
-	% Only capture and manipulate the header if the enrichment is at 'section' level
+	\phantomsection
+	% --- SECTION LEVEL ---
 	\ifthenelse{\equal{#2}{section}}{%
-		% Save the current header marks
 		\let\savedLeftMark\leftmark
 		\let\savedRightMark\rightmark
-		% Step the section counter and record label/level
 		\refstepcounter{section}%
-		\def\theLabel{\thesection}%
-		\def\theTOClevel{section}%
-		% Print the heading in ocre
+		% Visual Heading in Text
 		\section*{\color{ocre}Enrichment \thesection: #1}%
-		% Update section-level header (so it appears in the running head)
 		\sectionmark{Enrichment \thesection: #1}%
+		% TOC Entry
+		\ifx\empty#1\empty
+		\addcontentsline{toc}{section}{\protect\numberline{\thesection}Enrichment}%
+		\else
+		\addcontentsline{toc}{section}{\protect\numberline{\thesection}Enrichment: #1}%
+		\fi
 	}{%
-		% For subsection or subsubsection levels, do NOT save/restore headers
+		% --- SUBSECTION LEVEL ---
 		\ifthenelse{\equal{#2}{subsection}}{%
 			\refstepcounter{subsection}%
-			\def\theLabel{\thesubsection}%
-			\def\theTOClevel{subsection}%
 			\subsection*{\color{ocre}Enrichment \thesubsection: #1}%
+			\ifx\empty#1\empty
+			\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}Enrichment}%
+			\else
+			\addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}Enrichment: #1}%
+			\fi
 		}{%
+			% --- SUBSUBSECTION LEVEL ---
 			\refstepcounter{subsubsection}%
-			\def\theLabel{\thesubsubsection}%
-			\def\theTOClevel{subsubsection}%
 			\subsubsection*{\color{ocre}Enrichment \thesubsubsection: #1}%
+			\ifx\empty#1\empty
+			\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection}Enrichment}%
+			\else
+			\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsubsection}Enrichment: #1}%
+			\fi
 		}%
 	}%
-	% Add enrichment to the TOC
-	\ifx\empty#1\empty
-	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel}%
-	\else
-	\addcontentsline{toc}{\theTOClevel}{Enrichment \theLabel: #1}%
-	\fi
-	% Some vertical space and discourage a page break immediately
-	\par\vspace{5pt}\nopagebreak[4]
+	\par\vspace{2pt}\nopagebreak[4] % Reduced vspace slightly to avoid huge gaps in text lists
 	\fi
 }{%
 	\ifenrichment
-	% Only restore header marks if the enrichment was at the 'section' level
 	\ifthenelse{\equal{#2}{section}}{%
 		\markboth{\savedLeftMark}{\savedRightMark}%
 	}{}%
@@ -452,6 +453,7 @@ innerbottommargin=5pt]{cBox}
 \tcbuselibrary{minted,breakable,skins}
 
 \definecolor{bg}{gray}{0.95}
+
 \DeclareTCBListing{mintedbox}{O{}m!O{}}{%
 	breakable=true,
 	listing engine=minted,
@@ -460,13 +462,12 @@ innerbottommargin=5pt]{cBox}
 	minted style=default,
 	minted options={%
 		linenos,
-		gobble=0,
+		autogobble,          % strip common left margin from ALL lines
 		breaklines=true,
 		breakafter=,,
 		fontsize=\small,
 		numbersep=8pt,
-		obeytabs=true,
-		tabsize=2,
+		% no gobble, no obeytabs here
 		#1},
 	boxsep=0pt,
 	left skip=0pt,
@@ -486,4 +487,6 @@ innerbottommargin=5pt]{cBox}
 	overlay={%
 		\begin{tcbclipinterior}
 			\fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
-\end{tcbclipinterior}}}
+		\end{tcbclipinterior}
+	}%
+}

@@ -1,7 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{k+kn}{import} \PYG{n+nn}{torchvision}\PYG{n+nn}{.}\PYG{n+nn}{models} \PYG{k}{as} \PYG{n+nn}{models}
-
-\PYG{n}{alexnet} \PYG{o}{=} \PYG{n}{models}\PYG{o}{.}\PYG{n}{alexnet}\PYG{p}{(}\PYG{n}{pretrained}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\PYG{n}{vgg16} \PYG{o}{=} \PYG{n}{models}\PYG{o}{.}\PYG{n}{vgg16}\PYG{p}{(}\PYG{n}{pretrained}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\PYG{n}{resnet101} \PYG{o}{=} \PYG{n}{models}\PYG{o}{.}\PYG{n}{resnet101}\PYG{p}{(}\PYG{n}{pretrained}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
-\end{MintedVerbatim}

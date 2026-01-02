@@ -1,4 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{bbox\PYGZus{}targets} \PYG{o}{=} \PYG{n}{compute\PYGZus{}regression\PYGZus{}targets}\PYG{p}{(}\PYG{n}{anchors}\PYG{p}{[}\PYG{n}{pos\PYGZus{}inds}\PYG{p}{]}\PYG{p}{,} \PYG{n}{matched\PYGZus{}gt\PYGZus{}boxes}\PYG{p}{[}\PYG{n}{pos\PYGZus{}inds}\PYG{p}{]}\PYG{p}{)}
-\PYG{c+c1}{\PYGZsh{} Shape: (N\PYGZus{}pos, 4)}
-\end{MintedVerbatim}

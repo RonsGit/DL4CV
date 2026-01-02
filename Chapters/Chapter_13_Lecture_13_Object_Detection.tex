@@ -4,7 +4,7 @@
 \chapter{Lecture 13: Object Detection}
 
 %-----------------------------------------------------------------------------------
-%	CHAPTER 13 - Lecture 13: Object Detection
+%    CHAPTER 13 - Lecture 13: Object Detection
 %-----------------------------------------------------------------------------------
 
 \section{Object Detection: Introduction}
@@ -20,22 +20,66 @@ In the 2022 course, object detection and segmentation are introduced earlier tha
 So far, we have primarily focused on image classification, but there exist other important tasks in computer vision:
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{Figures/Chapter_13/slide_9.jpg}
-	\caption{\textbf{Comparison of common computer vision tasks.}}
-	\label{fig:chapter13_cv_tasks}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Figures/Chapter_13/slide_9.jpg}
+    \caption{\textbf{Comparison of common computer vision tasks.}}
+    \label{fig:chapter13_cv_tasks}
 \end{figure}
 
 \noindent Figure \ref{fig:chapter13_cv_tasks} compares different object-related computer vision tasks. It starts by object classification, which we've covered extensively up to this point. Then proceeds with semantic segmentation, that classifies pixels without identifying individual object instances. Then, it shows object detection that assigns category labels to multiple objects while also localizing them with bounding boxes, and finishes with instance segmentation that refines detection by also delineating object boundaries.
 
 \subsection{What is Object Detection?}
-\label{subsubsec:chapter13_what_is_detection}
+\label{subsec:chapter13_what_is_detection}
 
-Object detection requires identifying \emph{multiple objects} in an image. Given an RGB image as input, the model predicts a \emph{set} of detected objects, where each object is associated with:
+Object detection is a fundamental problem in computer vision that unifies \emph{classification} (“what is it?”) and \emph{localization} (“where is it?”) into a single task.  
+Given an RGB image as input, the model outputs a \emph{set} of predictions, each describing one detected object through:
+
 \begin{itemize}
-	\item A \textbf{category label} (from a predefined set of classes).
-	\item A \textbf{bounding box} (four numbers: \(x, y, \text{width}, \text{height}\)), specifying the object's location. Usually $(x, y)$ refer to the top-left corner of the bounding box. Alternatively, $(x, y)$ can refer to the center of the bounding box, but this rarely occurs.  
+	\item A \textbf{bounding box}—typically four real numbers, either $(x, y, w, h)$ for the top-left corner, width, and height, or $(c_x, c_y, w, h)$ for center coordinates.
+	\item A \textbf{category label} drawn from a fixed set of known classes (e.g., the 80 categories in COCO such as “person”, “car”, “dog”).
 \end{itemize}
+
+\noindent
+Each prediction may also include a confidence score indicating how likely the detection is correct.  
+Unlike image classification, which assumes a single dominant object per image, detection must handle multiple, possibly overlapping instances—each with independent localization and classification.
+
+\paragraph{Closed-Set vs.\ Open-Set Detection}
+Traditionally, object detection has been formulated as a \textbf{closed-set} problem: the detector is trained to recognize objects only from a fixed, predefined vocabulary (for example, the 20 PASCAL VOC classes or the 80 COCO classes). Classic frameworks developed throughout the 2010s---beginning with \textbf{R-CNN}, followed by \textbf{Fast R-CNN}, and later \textbf{Faster R-CNN}---all operate in this regime. They take a region in an image and assign it to one of the known classes (plus a ``background'' class), and each new version mainly improved efficiency and training integration, not the underlying assumption about the label set.
+
+\medskip
+
+This design has an important consequence: such models can only recognize categories that were present during training. If a deployed system suddenly needs to detect a ``microwave'' or an ``electric scooter'' that was not part of the original label list, we typically must collect new annotated data and retrain or at least fine-tune the detector. In practice, this does not scale well. Real-world environments contain a very \emph{long tail} of rare or domain-specific objects (industrial tools, medical devices, new product types, new traffic signs), and it is rarely feasible to anticipate and label all of them in advance. Moreover, people naturally think and communicate in \emph{language}, not in class indices: a user might want to search for ``all red umbrellas'', ``people holding phones'', or ``damaged cars'', even if such fine-grained concepts were never defined as separate classes in the training set.
+
+\medskip
+
+These limitations motivate the move to \textbf{open-set} (or \textbf{open-vocabulary}) detection. In the open-set setting, the model is no longer restricted to predicting from a fixed list of labels. Instead, it accepts \emph{text prompts} that describe what to detect, and learns to align image regions with those textual descriptions. This enables \textbf{zero-shot} generalization: the detector can localize objects that it has never seen as explicit labels during training, such as ``a red umbrella'' or ``a brown horse with a rider'', by composing its learned notions of color, object type, and relationships.
+
+\newpage
+
+This shift from closed-set to open-set detection is a conceptual breakthrough for two main reasons:
+\begin{itemize}
+	\item \textbf{Scalability of the vocabulary.} The detectable label space is no longer hard-coded into the network; it is as rich as the language used to query it. Adding a new concept often amounts to changing the text prompt, not retraining on new bounding-box annotations.
+	\item \textbf{Natural, language-based interaction.} Users can express what they are looking for in free-form text, narrowing or broadening the query as needed. This makes object detection much easier to integrate into real applications, such as interactive search in large image or video collections, without redesigning the model each time the task changes.
+\end{itemize}
+
+\medskip
+
+Representative open-set (open-vocabulary) detectors include:
+\begin{itemize}
+	\item \textbf{Grounding DINO}~\cite{liu2023_groundingdino} links image regions to free-form text descriptions by jointly training on images and captions, using a transformer-style architecture that we will encounter later in the book. This enables text-conditioned detection and phrase grounding in natural language.
+	\item \textbf{OWL-ViT}~\cite{minderer2022_owlvit} builds on vision transformers to align image patches and text in a shared embedding space. At test time, it can localize objects described by new text prompts (zero-shot detection), without retraining on those categories.
+	\item \textbf{OWL-ViT v2}~\cite{minderer2024_owlv2} improves both efficiency and the quality of the text–region alignment, achieving stronger open-vocabulary performance on benchmarks such as COCO and LVIS.
+	\item \textbf{YOLO-World}~\cite{cheng2024_yoloworld} adapts the fast YOLO detection family to the open-vocabulary setting, combining lightweight detection heads with text-conditioned features to support real-time, prompt-driven detection on video streams.
+\end{itemize}
+
+\medskip
+
+These models blur the boundary between \emph{object detection} and \emph{visual grounding}: instead of predicting from a fixed label list, they learn a shared representation for images and text and then match them at inference time. The key ingredients behind this capability—transformers, large-scale vision–language pretraining, and joint embedding spaces—will be introduced more formally in later chapters.
+
+\paragraph{Scope of This Chapter}
+In this chapter and its consequent one, we focus on the \textbf{classic closed-set object detection framework}: starting from region proposal methods in R-CNN, moving through Fast R-CNN and Faster R-CNN, and touching on early single-stage detectors such as YOLO. These systems form the conceptual backbone of modern detection, illustrating how detectors generate candidate regions, predict bounding boxes, refine localization, and assign class confidences. After placing these foundations, in later chapters we will briefly revisit open-set and text-driven detection to show how the same principles are extended when the fixed label vocabulary is replaced by natural-language prompts and large vision–language models.
+
+\newpage
 
 \subsection{Challenges in Object Detection}
 \label{subsubsec:chapter13_detection_challenges}
@@ -43,35 +87,41 @@ Object detection requires identifying \emph{multiple objects} in an image. Given
 Compared to classification, object detection presents several unique challenges:
 
 \begin{itemize}
-	\item \textbf{Multiple objects per image:} Unlike classification, where a single label is predicted, detection requires a variable number of outputs since the number of objects in an image is unknown beforehand.
-	\item \textbf{Multiple types of outputs:} The model must predict \emph{both} category labels (classification) and bounding box coordinates (regression).
-	\item \textbf{Large images:} While classification typically works on small images (e.g., \(224 \times 224\)), object detection often requires higher resolution (\(\sim800 \times 600\)) to detect small objects effectively.
-	\item \textbf{Objects of varying scales:} A single image can contain objects of drastically different sizes, requiring multi-scale feature representations.
+    \item \textbf{Multiple objects per image:} Unlike classification, where a single label is predicted, detection requires a variable number of outputs since the number of objects in an image is unknown beforehand.
+    \item \textbf{Multiple types of outputs:} The model must predict \emph{both} category labels (classification) and bounding box coordinates (regression).
+    \item \textbf{Large images:} While classification typically works on small images (e.g., \(224 \times 224\)), object detection often requires higher resolution (\(\sim800 \times 600\)) to detect small objects effectively.
+    \item \textbf{Objects of varying scales:} A single image can contain objects of drastically different sizes, requiring multi-scale feature representations.
 \end{itemize}
 
 \subsection{Bounding Boxes and Intersection over Union (IoU)}
 \label{subsubsec:chapter13_bboxes_iou}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_34.jpg}
-	\caption{\textbf{Axis-aligned vs. Oriented bounding boxes.} Although an oriented box provides a more accurate fit, most models predict axis-aligned boxes for simplicity.}
-	\label{fig:chapter13_bbox_orientation}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_34.jpg}
+    \caption{\textbf{Axis-aligned vs. Oriented bounding boxes.} Although an oriented box provides a more accurate fit, most models predict axis-aligned boxes for simplicity.}
+    \label{fig:chapter13_bbox_orientation}
 \end{figure}
 
-Bounding boxes are typically \textbf{axis-aligned}, meaning they are not rotated. Although \textbf{oriented bounding boxes} would be more accurate, they are rarely used due to their increased complexity.
+Bounding boxes are typically \textbf{axis-aligned}, meaning they are parallel to the image axes and not rotated.  
+Although \textbf{oriented bounding boxes} (which allow rotation) can capture object shapes more precisely—especially for elongated or tilted objects—they are seldom used in general-purpose detection because they increase annotation and model complexity.
 
-Bounding boxes can be categorized into:
+Bounding boxes can also differ in how they treat occlusion:
 \begin{itemize}
-	\item \textbf{Modal boxes:} Cover only the visible portion of an object.
-	\item \textbf{Amodal boxes:} Encompass the entire object, including occluded regions.
+	\item \textbf{Modal boxes:} Enclose only the \emph{visible} part of an object.
+	\item \textbf{Amodal boxes:} Enclose the \emph{entire} object, including occluded or truncated regions.
 \end{itemize}
 
+\noindent
+A crucial practical point is that the choice between modal and amodal labeling must be \textbf{consistent} throughout the dataset and evaluation pipeline.  
+Metrics such as Intersection over Union (IoU) are highly sensitive to this definition: a detector trained to predict amodal boxes will systematically score lower on a benchmark annotated with modal boxes (and vice versa), even if its predictions are visually correct.  
+Thus, maintaining clear, dataset-wide agreement on the bounding box convention is essential for meaningful training, fair comparison, and reproducible evaluation.
+
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_37.jpg}
-	\caption{\textbf{Modal vs. Amodal bounding boxes.} The blue box (modal) covers only the visible portion of the cat, while the green box (amodal) extends to include occluded regions.}
-	\label{fig:chapter13_modal_amodal}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_37.jpg}
+    \caption{\textbf{Modal vs. Amodal bounding boxes.} The blue box (modal) covers only the visible portion of the cat, while the green box (amodal) extends to include occluded regions.}
+    \label{fig:chapter13_modal_amodal}
 \end{figure}
 
 \subsection{Evaluating Bounding Boxes: Intersection over Union (IoU)}
@@ -84,29 +134,29 @@ A key metric in object detection is \textbf{Intersection over Union (IoU)}, whic
 \]
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.45\textwidth]{Figures/Chapter_13/slide_39.jpg}
-	\includegraphics[width=0.45\textwidth]{Figures/Chapter_13/slide_40.jpg}
-	\caption{\textbf{Intersection over Union (IoU).} Left: Intersection of predicted and ground-truth bounding boxes (orange). Right: Union of predicted and ground-truth boxes (purple).}
-	\label{fig:chapter13_iou_definition}
+    \centering
+    \includegraphics[width=0.45\textwidth]{Figures/Chapter_13/slide_39.jpg}
+    \includegraphics[width=0.45\textwidth]{Figures/Chapter_13/slide_40.jpg}
+    \caption{\textbf{Intersection over Union (IoU).} Left: Intersection of predicted and ground-truth bounding boxes (orange). Right: Union of predicted and ground-truth boxes (purple).}
+    \label{fig:chapter13_iou_definition}
 \end{figure}
 
 \newpage
 Higher IoU values indicate better localization:
 
 \begin{itemize}
-	\item \textbf{IoU > 0.5}: Decent detection.
-	\item \textbf{IoU > 0.7}: Good detection.
-	\item \textbf{IoU > 0.9}: Near-perfect match.
+    \item \textbf{IoU > 0.5}: Decent detection.
+    \item \textbf{IoU > 0.7}: Good detection.
+    \item \textbf{IoU > 0.9}: Near-perfect match.
 \end{itemize}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_41.jpg}
-	\includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_42.jpg}
-	\includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_43.jpg}
-	\caption{\textbf{Intersection over Union (IoU) Examples.} Left: IoU \(\sim 0.5\) (acceptable). Middle: IoU \(\sim 0.7\) (good). Right: IoU \(\sim 0.9\) (almost perfect).}
-	\label{fig:chapter13_iou_examples}
+    \centering
+    \includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_41.jpg}
+    \includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_42.jpg}
+    \includegraphics[width=0.32\textwidth]{Figures/Chapter_13/slide_43.jpg}
+    \caption{\textbf{Intersection over Union (IoU) Examples.} Left: IoU \(\sim 0.5\) (acceptable). Middle: IoU \(\sim 0.7\) (good). Right: IoU \(\sim 0.9\) (almost perfect).}
+    \label{fig:chapter13_iou_examples}
 \end{figure}
 
 \subsection{Multitask Loss: Classification and Regression}
@@ -120,18 +170,18 @@ Object detection models must predict \emph{both} class labels and bounding box c
 
 where:
 \begin{itemize}
-	\item \(\mathcal{L}_{\text{cls}}\) is the classification loss (e.g., cross-entropy for category prediction).
-	\item \(\mathcal{L}_{\text{reg}}\) is the regression loss (e.g., L2 loss for bounding box coordinates).
-	\item \(\lambda\) is a weighting factor to balance classification and localization.
+    \item \(\mathcal{L}_{\text{cls}}\) is the classification loss (e.g., cross-entropy for category prediction).
+    \item \(\mathcal{L}_{\text{reg}}\) is the regression loss (e.g., L2 loss for bounding box coordinates).
+    \item \(\lambda\) is a weighting factor to balance classification and localization.
 \end{itemize}
 
 \section{From Single-Object to Multi-Object Detection}
 \label{subsubsec:chapter13_single_vs_multi}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_49.jpg}
-	\caption{\textbf{Single-object localization pipeline.} A CNN extracts a feature vector that is used for both classification (predicting the category) and regression (predicting bounding box coordinates). This simple approach works well for a single object but does not generalize well.}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_49.jpg}
+    \caption{\textbf{Single-object localization pipeline.} A CNN extracts a feature vector that is used for both classification (predicting the category) and regression (predicting bounding box coordinates). This simple approach works well for a single object but does not generalize well.}
 \label{fig:chapter13_single_object}
 \end{figure}
 
@@ -143,9 +193,9 @@ If an image contains a \emph{single object}, we can extract a \textbf{feature ve
 So far, we have focused on single-object detection. However, most real-world images contain multiple objects, making the problem significantly more challenging. This introduces key challenges:
 
 \begin{itemize}
-	\item \textbf{Variable number of outputs:} The number of objects per image is unknown and must be dynamically determined.
-	\item \textbf{Multiple types of outputs:} Each detected object must have both a class label and a bounding box.
-	\item \textbf{Handling overlapping predictions:} The model may output multiple overlapping boxes for the same object.
+    \item \textbf{Variable number of outputs:} The number of objects per image is unknown and must be dynamically determined.
+    \item \textbf{Multiple types of outputs:} Each detected object must have both a class label and a bounding box.
+    \item \textbf{Handling overlapping predictions:} The model may output multiple overlapping boxes for the same object.
 \end{itemize}
 
 To address these, early object detection models explored different solutions. In the next sections we'll cover the progression of these solutions, starting from a naive one like \textbf{sliding windows}, advancing to \textbf{region proposals}, integrated in \textbf{region-based CNNs (R-CNNs)}, and continue up to the more advanced solutions used in practice today.
@@ -156,24 +206,24 @@ To address these, early object detection models explored different solutions. In
 A straightforward approach is the \textbf{sliding window method}:
 
 \begin{itemize}
-	\item Apply a CNN to many different crops of the image.
-	\item Classify each crop as either an object category or background.
+    \item Apply a CNN to many different crops of the image.
+    \item Classify each crop as either an object category or background.
 \end{itemize}
 
 For example, in the below figure, we classify two different regions: one containing an object and another containing only background.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_51.jpg}
-	\caption{\textbf{Sliding window classification.} Each image crop is classified as either an object (e.g., dog, cat) or background.}
-	\label{fig:chapter13_sliding_window}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_51.jpg}
+    \caption{\textbf{Sliding window classification.} Each image crop is classified as either an object (e.g., dog, cat) or background.}
+    \label{fig:chapter13_sliding_window}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_52.jpg}
-	\caption{\textbf{Positive detection:} The classifier correctly identifies the presence of a dog in the selected region.}
-	\label{fig:chapter13_sliding_window_positive}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_52.jpg}
+    \caption{\textbf{Positive detection:} The classifier correctly identifies the presence of a dog in the selected region.}
+    \label{fig:chapter13_sliding_window_positive}
 \end{figure}
 
 However, this approach is highly inefficient. The number of possible bounding boxes in an image of size \(H \times W\) is:
@@ -190,27 +240,27 @@ For an \(800 \times 600\) image, this results in approximately 58 million possib
 To improve efficiency over sliding windows, we use \textbf{region proposals}, which offer several advantages:
 
 \begin{itemize}
-	\item \textbf{Efficiency:} Instead of evaluating millions of possible boxes in a sliding window approach, region proposals generate a much smaller set of likely object-containing regions.
-	\item \textbf{Higher Object Coverage:} These methods focus on regions that are likely to contain objects, reducing the number of unnecessary background classifications.
-	\item \textbf{Structural Awareness:} Region proposals are designed to align with object boundaries better than blindly sliding fixed windows across an image.
+    \item \textbf{Efficiency:} Instead of evaluating millions of possible boxes in a sliding window approach, region proposals generate a much smaller set of likely object-containing regions.
+    \item \textbf{Higher Object Coverage:} These methods focus on regions that are likely to contain objects, reducing the number of unnecessary background classifications.
+    \item \textbf{Structural Awareness:} Region proposals are designed to align with object boundaries better than blindly sliding fixed windows across an image.
 \end{itemize}
 
 A classical method, \textbf{Selective Search}, generates approximately 2000 region proposals in a few seconds on a CPU. This was a significant step forward but was still relatively slow. As deep learning advanced, heuristic-based approaches such as Selective Search were replaced by \textbf{Region Proposal Networks (RPNs)}, which we will cover later.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_59.jpg}
-	\caption{\textbf{Region Proposal Example.} Selective Search identifies potential object locations before classification, significantly reducing the number of regions to evaluate.}
-	\label{fig:chapter13_region_proposals}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_59.jpg}
+    \caption{\textbf{Region Proposal Example.} Selective Search identifies potential object locations before classification, significantly reducing the number of regions to evaluate.}
+    \label{fig:chapter13_region_proposals}
 \end{figure}
 
 Several historical methods were used to generate region proposals:
 
 \begin{itemize}
-	\item Alexe et al., “Measuring the objectness of image windows” (TPAMI 2012) \cite{alexe2012_objectness}
-	\item Uijlings et al., “Selective Search for Object Recognition” (IJCV 2013) \cite{uijlings2013_selective}
-	\item Cheng et al., “BING: Binarized normed gradients for objectness estimation at 300fps” (CVPR 2014) \cite{cheng2014_bing}
-	\item Zitnick and Dollar, “Edge boxes: Locating object proposals from edges” (ECCV 2014) \cite{zitnick2014_edgeboxes}
+    \item Alexe et al., “Measuring the objectness of image windows” (TPAMI 2012) \cite{alexe2012_objectness}
+    \item Uijlings et al., “Selective Search for Object Recognition” (IJCV 2013) \cite{uijlings2013_selective}
+    \item Cheng et al., “BING: Binarized normed gradients for objectness estimation at 300fps” (CVPR 2014) \cite{cheng2014_bing}
+    \item Zitnick and Dollar, “Edge boxes: Locating object proposals from edges” (ECCV 2014) \cite{zitnick2014_edgeboxes}
 \end{itemize}
 
 While these methods were widely used, they have since been largely replaced by faster and more accurate deep-learning-based approaches, such as Region Proposal Networks (RPNs), which we will discuss later.
@@ -221,19 +271,19 @@ While these methods were widely used, they have since been largely replaced by f
 The first CNN-based object detection pipeline, \textbf{R-CNN}, was introduced by \cite{girshick2014_rcnn} in CVPR 2014. The model improved upon traditional region proposal methods by leveraging deep learning for classification and regression. The process consists of three key steps:
 
 \begin{enumerate}
-	\item \textbf{Extract region proposals:} Use an external method like Selective Search to generate $\sim$2000 proposals per image.
-	\item \textbf{Wrap each proposal to a fixed size:} CNNs require fixed-size inputs, so each region is resized to a uniform shape (e.g., $224 \times 224$) to ensure consistency when passing them through the network.
-	\item \textbf{Forward pass through a CNN:} A CNN extracts features for each proposal and passes them through a classification branch to assign object labels. 
-	\item \textbf{Forward the extracted CNN features and the predicted label to a regression branch}: in R-CNN, the branch takes the form of an external bounding box regressor. Each regressor was trained for a specific object label. The regressors predict transformations that refine the corresponding region proposals into accurate bounding boxes.
+    \item \textbf{Extract region proposals:} Use an external method like Selective Search to generate $\sim$2000 proposals per image.
+    \item \textbf{Wrap each proposal to a fixed size:} CNNs require fixed-size inputs, so each region is resized to a uniform shape (e.g., $224 \times 224$) to ensure consistency when passing them through the network.
+    \item \textbf{Forward pass through a CNN:} A CNN extracts features for each proposal and passes them through a classification branch to assign object labels. 
+    \item \textbf{Forward the extracted CNN features and the predicted label to a regression branch}: in R-CNN, the branch takes the form of an external bounding box regressor. Each regressor was trained for a specific object label. The regressors predict transformations that refine the corresponding region proposals into accurate bounding boxes.
 \end{enumerate}
 
 The reason for wrapping proposals into a fixed size is that convolutional networks are usually not 'fully' convolutional, and hence require a consistent input resolution. Since region proposals can have varying aspect ratios and sizes, they must be resized before being processed by the CNN.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_64.jpg}
-	\caption{\textbf{R-CNN Pipeline.} Each proposed region is resized and classified independently. A single CNN is used to extract features for classification and regression, making it more efficient than sliding windows but still computationally expensive.}
-	\label{fig:chapter13_rcnn}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_64.jpg}
+    \caption{\textbf{R-CNN Pipeline.} Each proposed region is resized and classified independently. A single CNN is used to extract features for classification and regression, making it more efficient than sliding windows but still computationally expensive.}
+    \label{fig:chapter13_rcnn}
 \end{figure}
 
 Although R-CNN improved detection speed over sliding windows by using a shared CNN for feature extraction, it remained computationally expensive because each proposal had to be passed through the CNN separately. Later models, such as \textbf{Fast R-CNN}, introduced optimizations to address this inefficiency, as we'll see later.
@@ -244,16 +294,16 @@ Although R-CNN improved detection speed over sliding windows by using a shared C
 While R-CNN classifies each proposed region, the proposals themselves are generated using heuristic methods that may not precisely fit objects. To address this, R-CNN introduces \textbf{bounding box regression}:
 
 \begin{itemize}
-	\item Alongside classification, an external regressor also predicts \textbf{four transformation values} \( (t_x, t_y, t_w, t_h) \).
-	\item These values adjust the region proposal to better fit the object by slightly shifting and scaling the bounding box.
+    \item Alongside classification, an external regressor also predicts \textbf{four transformation values} \( (t_x, t_y, t_w, t_h) \).
+    \item These values adjust the region proposal to better fit the object by slightly shifting and scaling the bounding box.
 \end{itemize}
 
 Refining bounding boxes is crucial because region proposals are often imprecise, covering background pixels or missing parts of the object. Without adjustments, classification accuracy may suffer, and the object localization aspect of our solution would remain inaccurate.
 
 Bounding boxes can be represented in multiple ways. Among them, two of the most common ones are:
 \begin{itemize}
-	\item \textbf{Top-left notation:} \((x, y, w, h)\), where \((x, y)\) is the top-left coordinate and \((w, h)\) denote width and height.
-	\item \textbf{Center notation:} \((p_x, p_y, p_w, p_h)\), where \((p_x, p_y)\) is the center coordinate and \((p_w, p_h)\) denote width and height.
+    \item \textbf{Top-left notation:} \((x, y, w, h)\), where \((x, y)\) is the top-left coordinate and \((w, h)\) denote width and height.
+    \item \textbf{Center notation:} \((p_x, p_y, p_w, p_h)\), where \((p_x, p_y)\) is the center coordinate and \((p_w, p_h)\) denote width and height.
 \end{itemize}
 
 By tracking the center pixel movement rather than directly modifying absolute coordinates, transformations become more intuitive, as shifts are relative to the size of the proposal. This also ensures consistency across objects of different scales. Hence, the center notation is used in this case. Note that although we are using the center notation when discussing about transformations, these representations are interchangeable and can be easily converted.
@@ -271,17 +321,17 @@ b_h = p_h e^{t_h}
 \]
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_67.jpg}
-	\caption{\textbf{Bounding Box Regression.} A transformation adjusts the region proposal (blue) to improve alignment. We can see the resultant output box after the transformation as well (orange).}
-	\label{fig:chapter13_bbox_regression}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_67.jpg}
+    \caption{\textbf{Bounding Box Regression.} A transformation adjusts the region proposal (blue) to improve alignment. We can see the resultant output box after the transformation as well (orange).}
+    \label{fig:chapter13_bbox_regression}
 \end{figure}
 
 \paragraph{Why a Logarithmic Transformation?}
 \begin{itemize}
-	\item \textbf{Ensuring Positive Scales:} Using \(\exp (t_w)\) and \(\exp (t_h)\) ensures that the width and height remain strictly positive, preventing invalid bounding boxes.
-	\item \textbf{Making Scaling Differences Linear:} Object sizes vary dramatically. Predicting scale in log-space makes large differences more manageable by converting multiplicative scale factors into additive ones.
-	\item \textbf{Stabilizing Training and Gradients:} Small absolute differences in large bounding boxes correspond to much smaller relative differences than in small ones. Logarithmic scaling normalizes these variations, leading to more stable gradients and easier optimization.
+    \item \textbf{Ensuring Positive Scales:} Using \(\exp (t_w)\) and \(\exp (t_h)\) ensures that the width and height remain strictly positive, preventing invalid bounding boxes.
+    \item \textbf{Making Scaling Differences Linear:} Object sizes vary dramatically. Predicting scale in log-space makes large differences more manageable by converting multiplicative scale factors into additive ones.
+    \item \textbf{Stabilizing Training and Gradients:} Small absolute differences in large bounding boxes correspond to much smaller relative differences than in small ones. Logarithmic scaling normalizes these variations, leading to more stable gradients and easier optimization.
 \end{itemize}
 
 Given a proposal and a GT bounding box, we can solve for the transform the network should output. The model can thus be trained to minimize the difference between predicted and ground-truth boxes using regression targets:
@@ -300,125 +350,157 @@ Bounding box regression significantly improves object detection performance by e
 
 \paragraph{1) Collecting Positive and Negative Examples}
 \begin{itemize}
-	\item \textbf{Generating Region Proposals:} For each training image, we run a region proposal algorithm (e.g., Selective Search) to generate roughly 2k proposals of various sizes and aspect ratios.
-	\item \textbf{Labeling:} As illustrated in the blow figure, we compare each proposal to every ground-truth bounding box. 
-	\begin{itemize}
-		\item \textbf{Positive} if \(\text{IoU} \ge 0.5\) with some ground-truth box of a particular class.
-		\item \textbf{Negative} if \(\text{IoU} < 0.3\) with \emph{all} ground-truth boxes (i.e., sufficiently far from every GT box).
-		\item \textbf{Neutral} if \(0.3 \le \text{IoU} < 0.5\). Such proposals are neither clearly positive nor clearly negative, so we typically omit them from training.
-		\begin{figure}[H]
-			\centering
-			\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_73.jpg}
-			\caption{\textbf{Positive vs.\ Negative vs.\ Neutral Region Proposals.} An example image (green bounding boxes are ground-truth). Each region proposal is categorized as:
-				\textbf{Positive} (blue) if its IoU with a ground-truth box is above 0.5,
-				\textbf{Negative} (red) if its IoU is below 0.3,
-				\textbf{Neutral} (gray) otherwise. Neutral proposals are typically ignored when training SVMs or fine-tuning, thus avoiding ambiguous overlap ranges.}
-			\label{fig:chapter13_slide73}
-		\end{figure}
-	\end{itemize}
+    \item \textbf{Generating Region Proposals:} For each training image, we run a region proposal algorithm (e.g., Selective Search) to generate roughly 2k proposals of various sizes and aspect ratios.
+    \item \textbf{Labeling:} As illustrated in the blow figure, we compare each proposal to every ground-truth bounding box. 
+    \begin{itemize}
+        \item \textbf{Positive} if \(\text{IoU} \ge 0.5\) with some ground-truth box of a particular class.
+        \item \textbf{Negative} if \(\text{IoU} < 0.3\) with \emph{all} ground-truth boxes (i.e., sufficiently far from every GT box).
+        \item \textbf{Neutral} if \(0.3 \le \text{IoU} < 0.5\). Such proposals are neither clearly positive nor clearly negative, so we typically omit them from training.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_73.jpg}
+            \caption{\textbf{Positive vs.\ Negative vs.\ Neutral Region Proposals.} An example image (green bounding boxes are ground-truth). Each region proposal is categorized as:
+                \textbf{Positive} (blue) if its IoU with a ground-truth box is above 0.5,
+                \textbf{Negative} (red) if its IoU is below 0.3,
+                \textbf{Neutral} (gray) otherwise. Neutral proposals are typically ignored when training SVMs or fine-tuning, thus avoiding ambiguous overlap ranges.}
+            \label{fig:chapter13_slide73}
+        \end{figure}
+    \end{itemize}
 \end{itemize}
 
 \paragraph{2) Fine-Tuning the CNN on Region Proposals (Classification Only)}
 During this stage, the CNN is adjusted to classify each region proposal into one of \(C + 1\) categories: \(C\) foreground classes plus a ``background'' class.
 
 \begin{itemize}
-	\item \textbf{Training Objective:} 
-	\begin{itemize}
-		\item We replace the final fully-connected layer from the pre-trained CNN (which had been trained for ImageNet classification) with a new \((C + 1)\)-way softmax layer. 
-		\item \emph{Important}: This stage only learns a classifier. We are \textbf{not} yet learning bounding box regression parameters here. 
-	\end{itemize}
-	\newpage
-	\item \textbf{Batch Composition:}
-	\begin{itemize}
-		\item Typically, each mini-batch is a mix of \textbf{positive} and \textbf{negative} examples. 
-		\item A common rule of thumb is to use a 1:3 or 1:4 ratio of positives to negatives. Since negatives are far more numerous, this ratio prevents them from overwhelming the training.
-		\item Each mini-batch might pull examples from multiple training images to diversify the proposals within each batch.
-	\end{itemize}
-	\item \textbf{Fine-Tuning Protocol:}
-	\begin{itemize}
-		\item We usually start SGD at a small learning rate (e.g., \(\eta = 0.001\)), to avoid disrupting the pre-trained weights too drastically.
-		\item In each SGD iteration, we pick a mini-batch of (say) 128 region proposals, typically containing 32 positives and 96 negatives.
-		\item Training iterates for tens of thousands of mini-batches, often taking several hours or days depending on GPU resources and network size.
-	\end{itemize}
+    \item \textbf{Training Objective:} 
+    \begin{itemize}
+        \item We replace the final fully-connected layer from the pre-trained CNN (which had been trained for ImageNet classification) with a new \((C + 1)\)-way softmax layer. 
+        \item \emph{Important}: This stage only learns a classifier. We are \textbf{not} yet learning bounding box regression parameters here. 
+    \end{itemize}
+    \newpage
+    \item \textbf{Batch Composition:}
+    \begin{itemize}
+        \item Typically, each mini-batch is a mix of \textbf{positive} and \textbf{negative} examples. 
+        \item A common rule of thumb is to use a 1:3 or 1:4 ratio of positives to negatives. Since negatives are far more numerous, this ratio prevents them from overwhelming the training.
+        \item Each mini-batch might pull examples from multiple training images to diversify the proposals within each batch.
+    \end{itemize}
+    \item \textbf{Fine-Tuning Protocol:}
+    \begin{itemize}
+        \item We usually start SGD at a small learning rate (e.g., \(\eta = 0.001\)), to avoid disrupting the pre-trained weights too drastically.
+        \item In each SGD iteration, we pick a mini-batch of (say) 128 region proposals, typically containing 32 positives and 96 negatives.
+        \item Training iterates for tens of thousands of mini-batches, often taking several hours or days depending on GPU resources and network size.
+    \end{itemize}
 \end{itemize}
 
-\paragraph{3) Training the Bounding Box Regressors}
-\label{paragraph:training_bbox_regressors}
+\paragraph{Step 3: Training the Bounding Box Regressors}
+\label{paragraph:chapter13_training_bbox_regressors}
 
-Once the CNN is fine-tuned to classify each ROI, we learn a \textbf{bounding box regressor} for each of the \(C\) foreground classes to refine localization.  Specifically:
+After fine-tuning the CNN for classification (Step~2), the final stage addresses a critical shortcoming: region proposals from Selective Search are intentionally generous—they often capture too much background or miss object boundaries.  
+R-CNN remedies this with a lightweight yet powerful component: a \textbf{bounding box regressor} that learns to refine coarse proposals, nudging them closer to the true object extents.
 
 \begin{itemize}
-	\item \textbf{Per-Class Regressor:} For each class \(c\), we train a linear function that maps a region's CNN features (often from \(\texttt{pool5}\) or \(\texttt{fc6}\)) to a set of \(\,(t_x, t_y, t_w, t_h)\) \emph{transform parameters}.
-	\item \textbf{Transform Definition:}
+	\item \textbf{Feature Source and Architecture:}  
+	The R-CNN framework employs the \textbf{AlexNet} architecture \cite{krizhevsky2012_alexnet}, composed of five convolutional layers (\texttt{conv1}–\texttt{conv5}) followed by two fully connected layers (\texttt{fc6} and \texttt{fc7}).  
+	The convolutional stack extracts spatially organized features such as edges and parts, while the fully connected layers distill these into high-level semantic embeddings.  
+	For each region of interest (ROI), the proposal is cropped, warped to a fixed resolution (typically \(227 \times 227\)), and fed through the network.  
+	The resulting activations from either:
+	\begin{itemize}
+		\item \texttt{pool5} — the last pooling layer, preserving coarse spatial layout and shape.
+		\item \texttt{fc6} — a 4096-dimensional semantic representation capturing appearance and texture.
+	\end{itemize}
+	serve as the region’s feature descriptor.  
+	These same features were used by the per-class SVMs in Step~2, ensuring the regressor operates within the same feature space as classification—bridging semantic understanding and geometric adjustment.
+	
+	\item \textbf{Per-Class Linear Regression:}  
+	For each of the \(C\) foreground classes, a separate linear model is trained to map the region’s feature vector to four \emph{transformation parameters} \((t_x, t_y, t_w, t_h)\) that describe how to move and resize a proposal box \(P = (p_x, p_y, p_w, p_h)\) (center and size) toward its matching ground-truth box \(B = (b_x, b_y, b_w, b_h)\):
 	\[
 	t_x = \frac{b_x - p_x}{p_w}, \quad
 	t_y = \frac{b_y - p_y}{p_h}, \quad
-	t_w = \ln \bigl( \tfrac{b_w}{p_w} \bigr), \quad
-	t_h = \ln \bigl( \tfrac{b_h}{p_h} \bigr),
+	t_w = \ln\!\left(\frac{b_w}{p_w}\right), \quad
+	t_h = \ln\!\left(\frac{b_h}{p_h}\right).
 	\]
-	where \((p_x, p_y, p_w, p_h)\) denotes the proposal box (center + width/height) and \((b_x, b_y, b_w, b_h)\) the \emph{ground-truth} box that this proposal is supposed to match. 
-	\item \textbf{Loss and Optimization:}
+	This formulation is deliberately chosen for stability and generalization:
 	\begin{itemize}
-		\item Typically, each regressor is trained using an L2 (least-squares) loss on the difference between the predicted transform \(\,\hat{t}\,\) and the ground-truth transform \(\,t\). 
-		\[
-		\mathcal{L}_\text{reg} = \bigl\| \hat{t} - t \bigr\|_{2}^{2}.
-		\]
-		\item Only \emph{positive region proposals} (those with \(\text{IoU} \ge 0.5\) to a ground-truth box) are used. We collect their CNN features and the corresponding \((t_x,t_y,t_w,t_h)\) from the matched ground-truth.
-		\item Because this is a simple linear model, training is typically fast (order of minutes) and uses all positive region proposals across the dataset.
+		\item Translation offsets $(t_x, t_y)$ are normalized by the proposal’s width and height, making the regression \emph{scale-invariant}.
+		\item Width and height ratios $(t_w, t_h)$ are predicted in \emph{log-space}, turning multiplicative scaling (e.g., doubling width) into additive learning, which linear models handle more effectively.
 	\end{itemize}
-	\item \textbf{Inference Step:} During testing, once a proposal is classified as a particular class \(c\), we retrieve that class’s bounding box regressor, apply it to the proposal’s CNN features, and invert the transform:
+	In essence, the regressor learns how much to shift and stretch a box, not where to place it from scratch.
+	
+	\item \textbf{Training Objective:}  
+	Each regressor is trained only on \emph{positive} proposals—those with Intersection-over-Union (IoU) $\ge 0.5$ with a ground-truth object.  
+	For every positive ROI:
+	\begin{enumerate}
+		\item Extract its feature vector (\texttt{pool5} or \texttt{fc6}) as input.
+		\item Compute its ground-truth transform \((t_x, t_y, t_w, t_h)\) as the regression target.
+	\end{enumerate}
+	The model minimizes an L2 loss between predicted and true transforms:
 	\[
-	b_x = p_x + p_w \,\hat{t}_x,\quad b_y = p_y + p_h\,\hat{t}_y,\quad
-	b_w = p_w e^{\hat{t}_w},\quad b_h = p_h e^{\hat{t}_h}.
+	\mathcal{L}_\text{reg} = \| \hat{t} - t \|_2^2.
 	\]
+	Because the model is linear and the feature dimensionality is fixed (e.g., 4096 for \texttt{fc6}), training is efficient—often converging within minutes once features are cached.  
+	Later methods, such as Fast R-CNN, replaced this standalone regression with a smooth L1 loss integrated directly into a multi-task training objective.
+	
+	\item \textbf{Inference:}  
+	During testing, once a proposal is classified as class \(c\), the corresponding regressor outputs \(\hat{t} = (\hat{t}_x, \hat{t}_y, \hat{t}_w, \hat{t}_h)\), which are applied to the original box to compute the refined coordinates:
+	\[
+	b_x = p_x + p_w \hat{t}_x, \quad
+	b_y = p_y + p_h \hat{t}_y, \quad
+	b_w = p_w e^{\hat{t}_w}, \quad
+	b_h = p_h e^{\hat{t}_h}.
+	\]
+	The resulting bounding box \(B = (b_x, b_y, b_w, b_h)\) is a tighter, more accurate fit around the object, effectively correcting over- or under-extended proposals.
 \end{itemize}
 
-This lightweight regression step substantially improves localization quality by ``correcting'' region proposals to align better with objects, thus boosting final detection accuracy.
-
+This simple yet elegant regression module—built atop AlexNet’s semantic feature layers—plays a key role in R-CNN’s success.  
+By coupling visual appearance with geometric adjustment, it bridges classification and localization, improving mean Average Precision (mAP) by roughly 3–4 points on PASCAL VOC.  The concept of decoupling classification from regression would later inspire multi-branch designs such as Fast R-CNN and Faster R-CNN, where both tasks are trained jointly within a single network.
 
 \paragraph{4) Forming the Final Detector}
 At test time:
 \begin{enumerate}
-	\item \textbf{Generate region proposals} (e.g., Selective Search) and warp each proposal into a fixed-size CNN input.
-	\item \textbf{Forward pass} each proposal through the CNN.  
-	\item \textbf{Apply classifier SVMs or softmax} on the resulting feature vector.  
-	\item \textbf{Bounding box regression} is then applied to each proposal that is classified as a particular object class.
-	\item \textbf{Non-maximum suppression} (NMS) is performed per class to obtain the final object detections. We'll explore this part in detail later.
+    \item \textbf{Generate region proposals} (e.g., Selective Search) and warp each proposal into a fixed-size CNN input.
+    \item \textbf{Forward pass} each proposal through the CNN.  
+    \item \textbf{Apply classifier SVMs or softmax} on the resulting feature vector.  
+    \item \textbf{Bounding box regression} is then applied to each proposal that is classified as a particular object class.
+    \item \textbf{Non-maximum suppression} (NMS) is performed per class to obtain the final object detections. We'll explore this part in detail later.
 \end{enumerate}
+
+\newpage
 
 \subsubsection{Training Considerations for Object Detection}
 
 Hereby several factors that influence training efficacy:
 
 \begin{itemize}
-	\item \textbf{Batch Composition.} Mini-batches are typically drawn from multiple images to prevent overfitting to any single image’s proposals and to ensure diverse object representations in each batch. A standard practice is to maintain a ratio of approximately 1:3 or 1:4 between positive and negative samples. Since negative proposals (background) far outnumber positive ones (actual objects), controlling this ratio ensures balanced learning, preventing the classifier from being biased toward background predictions. Additionally, ensuring that each mini-batch contains a variety of object categories helps stabilize the learning process by allowing the model to generalize across different object types.
-	
-	\item \textbf{Class-Specific Bounding Box Regressors.} Rather than employing a single regressor for all classes, the method trains a separate bounding box regressor for each object class. This decision is motivated by several factors:
-	
-	\begin{itemize}
-		\item \textbf{Distinct Geometric Characteristics:} Different object classes exhibit unique aspect ratios, sizes, and shapes. For instance, the ideal bounding box adjustments for a car differ from those for a person or a bicycle. By dedicating a regressor to each class, the model can learn tailored transformation parameters that more accurately capture the variations within that class.
-		\item \textbf{Simplified Regression Task:} A single regressor would need to account for the wide variability in bounding box distributions across all classes, increasing the complexity of the learning task. Class-specific regressors, on the other hand, can focus on a more homogeneous set of targets, making the regression problem easier to optimize.
-		\item \textbf{Improved Localization Accuracy:} Specialization allows each regressor to adapt to the statistical properties of its corresponding class, typically resulting in more precise adjustments of the region proposals and, consequently, higher overall detection performance.
-	\end{itemize}
-	
-	These reasons, supported by empirical evidence in the R-CNN , demonstrate that the use of class-specific regressors leads to better object localization than a unified regression model would achieve.
-	
-	\item \textbf{Regularization and Overfitting.} Due to the high degree of overlap between region proposals, models trained without proper regularization may overfit to the specific patterns of region proposals in the training set. Strategies to mitigate this include:
-	\begin{itemize}
-		\item \textbf{Data Augmentation:} Techniques such as random cropping, rotation, and color jittering introduce variability in region proposals, making the model more robust to unseen samples.
-		\item \textbf{Dropout and Weight Decay:} Regularization techniques such as dropout prevent co-adaptation of neurons, while weight decay discourages overly complex solutions that may not generalize well.
-		\item \textbf{Careful Learning Rate Scheduling:} A gradual decrease in learning rate stabilizes training and prevents drastic parameter updates that could lead to overfitting.
-	\end{itemize}
+    \item \textbf{Batch Composition.} Mini-batches are typically drawn from multiple images to prevent overfitting to any single image’s proposals and to ensure diverse object representations in each batch. A standard practice is to maintain a ratio of approximately 1:3 or 1:4 between positive and negative samples. Since negative proposals (background) far outnumber positive ones (actual objects), controlling this ratio ensures balanced learning, preventing the classifier from being biased toward background predictions. Additionally, ensuring that each mini-batch contains a variety of object categories helps stabilize the learning process by allowing the model to generalize across different object types.
+    
+    \item \textbf{Class-Specific Bounding Box Regressors.} Rather than employing a single regressor for all classes, the method trains a separate bounding box regressor for each object class. This decision is motivated by several factors:
+    
+    \begin{itemize}
+        \item \textbf{Distinct Geometric Characteristics:} Different object classes exhibit unique aspect ratios, sizes, and shapes. For instance, the ideal bounding box adjustments for a car differ from those for a person or a bicycle. By dedicating a regressor to each class, the model can learn tailored transformation parameters that more accurately capture the variations within that class.
+        \item \textbf{Simplified Regression Task:} A single regressor would need to account for the wide variability in bounding box distributions across all classes, increasing the complexity of the learning task. Class-specific regressors, on the other hand, can focus on a more homogeneous set of targets, making the regression problem easier to optimize.
+        \item \textbf{Improved Localization Accuracy:} Specialization allows each regressor to adapt to the statistical properties of its corresponding class, typically resulting in more precise adjustments of the region proposals and, consequently, higher overall detection performance.
+    \end{itemize}
+    
+    These reasons, supported by empirical evidence in the R-CNN , demonstrate that the use of class-specific regressors leads to better object localization than a unified regression model would achieve.
+    
+    \item \textbf{Regularization and Overfitting.} Due to the high degree of overlap between region proposals, models trained without proper regularization may overfit to the specific patterns of region proposals in the training set. Strategies to mitigate this include:
+    \begin{itemize}
+        \item \textbf{Data Augmentation:} Techniques such as random cropping, rotation, and color jittering introduce variability in region proposals, making the model more robust to unseen samples.
+        \item \textbf{Dropout and Weight Decay:} Regularization techniques such as dropout prevent co-adaptation of neurons, while weight decay discourages overly complex solutions that may not generalize well.
+        \item \textbf{Careful Learning Rate Scheduling:} A gradual decrease in learning rate stabilizes training and prevents drastic parameter updates that could lead to overfitting.
+    \end{itemize}
 \end{itemize}
+
+\newpage
 
 \subsection{Selecting Final Predictions for Object Detection}
 
 Once the model has generated transformed region proposals, we must determine which subset of them to output as final detections. Several filtering strategies exist, each with trade-offs:
 
 \begin{itemize}
-	\item \textbf{Fixed Output Count:} We output a fixed number of proposals (e.g., 100), selecting those with the highest confidence scores. If fewer objects exist, many proposals may be background, but this guarantees an upper bound on computational cost.
-	\item \textbf{Per-Class Thresholding:} A predefined confidence threshold is set for each category. Detections exceeding this threshold are retained, while lower-confidence predictions are discarded. This ensures that only highly confident detections are considered.
-	\item \textbf{Top-K Selection:} The model retains only the top-K proposals across all categories based on classification scores. This guarantees a fixed number of high-confidence detections but may introduce false positives if \(K\) is too large.
+    \item \textbf{Fixed Output Count:} We output a fixed number of proposals (e.g., 100), selecting those with the highest confidence scores. If fewer objects exist, many proposals may be background, but this guarantees an upper bound on computational cost.
+    \item \textbf{Per-Class Thresholding:} A predefined confidence threshold is set for each category. Detections exceeding this threshold are retained, while lower-confidence predictions are discarded. This ensures that only highly confident detections are considered.
+    \item \textbf{Top-K Selection:} The model retains only the top-K proposals across all categories based on classification scores. This guarantees a fixed number of high-confidence detections but may introduce false positives if \(K\) is too large.
 \end{itemize}
 
 While these methods provide an initial filtering mechanism, they often produce multiple overlapping detections for the same object. To refine the final outputs, an additional step is required to eliminate redundant bounding boxes while preserving the most confident predictions.
@@ -436,45 +518,51 @@ Object detectors can generate multiple, overlapping bounding boxes for a single 
 
 \noindent To resolve this, \textbf{Non-Maximum Suppression (NMS)} is applied as a post-processing step. NMS systematically removes redundant detections by retaining only the highest-scoring box among overlapping candidates, thereby improving localization accuracy and overall detection quality.
 
-\newpage
 \subsection{NMS Algorithm}
 
 Given a set of detected bounding boxes, each with a classification score, we perform NMS as follows:
 
 \begin{enumerate}
-	\item Select the \textbf{highest-scoring} bounding box.
-	\item Compare it to all remaining boxes:
-	\begin{itemize}
-		\item Remove boxes with high \textbf{IoU} (e.g., \(\text{IoU} > 0.7\)) relative to the selected box.
-	\end{itemize}
-	\item Repeat until no boxes remain.
+    \item Select the \textbf{highest-scoring} bounding box.
+    \item Compare it to all remaining boxes:
+    \begin{itemize}
+        \item Remove boxes with high \textbf{IoU} (e.g., \(\text{IoU} > 0.7\)) relative to the selected box.
+    \end{itemize}
+    \item Repeat until no boxes remain.
 \end{enumerate}
+
+\newpage
 
 \subsection{Example: Step-by-Step Execution}
 
 Consider the following bounding boxes predicted for a detected dog:
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\textwidth]{Figures/Chapter_13/slide_79.jpg}
-	\caption{\textbf{Step 1: Selecting the highest-scoring bounding box and comparing IoUs.} The blue box (\(P(\text{dog})=0.9\)) is selected first. The orange box (\(P(\text{dog})=0.8\)) has an \(\text{IoU} = 0.78\), which exceeds the threshold (0.7), so it is removed. Other boxes with lower IoU remain.}
-	\label{fig:chapter13_nms_step1}
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/Chapter_13/slide_79.jpg}
+    \caption{\textbf{Step 1: Selecting the highest-scoring bounding box and comparing IoUs.} The blue box (\(P(\text{dog})=0.9\)) is selected first. The orange box (\(P(\text{dog})=0.8\)) has an \(\text{IoU} = 0.78\), which exceeds the threshold (0.7), so it is removed. Other boxes with lower IoU remain.}
+    \label{fig:chapter13_nms_step1}
 \end{figure}
 
 Now we proceed to the next highest-scoring bounding box:
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\textwidth]{Figures/Chapter_13/slide_80.jpg}
-	\caption{\textbf{Step 2: Processing the next highest-scoring box.} The purple box is selected next. The yellow box has \(\text{IoU} = 0.74\) with the purple box, which exceeds the threshold, so it is removed.}
-	\label{fig:chapter13_nms_step2}
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/Chapter_13/slide_80.jpg}
+    \caption{\textbf{Step 2: Processing the next highest-scoring box.} The purple box is selected next. The yellow box has \(\text{IoU} = 0.74\) with the purple box, which exceeds the threshold, so it is removed.}
+    \label{fig:chapter13_nms_step2}
 \end{figure}
 
 No other boxes remain to be checked, so the process is finished, and we remain with the set of resultant bounding boxes to output. 
 
-\subsection{Limitations of NMS}
+\newpage
 
-While NMS effectively removes redundant detections, it can also discard \textbf{correct} bounding boxes in cases of highly overlapping objects. This is a fundamental limitation of NMS and remains an open research challenge.
+\subsection{Limitations of NMS}
+\label{subsec:chapter13_nms_limitations}
+
+While Non-Maximum Suppression (NMS) is indispensable in traditional object detectors, it is ultimately a \textbf{handcrafted, greedy heuristic}.  
+Its rule is simple: keep the highest-scoring box for a given object and suppress all others that overlap too much (high IoU).  
+This approach works well when objects are well separated, but it begins to fail in crowded scenes.
 
 \begin{figure}[H]
 	\centering
@@ -482,6 +570,25 @@ While NMS effectively removes redundant detections, it can also discard \textbf{
 	\caption{\textbf{NMS Failure Case: Highly Overlapping Objects.} When objects are close together, NMS may incorrectly eliminate valid detections, reducing detection accuracy.}
 	\label{fig:chapter13_nms_failure}
 \end{figure}
+
+Because NMS cannot distinguish between a duplicate detection of the \emph{same} object and two \emph{different} objects that happen to overlap, it can wrongly remove valid boxes—for example, people standing shoulder-to-shoulder or cars in a traffic jam.  
+Moreover, since NMS operates outside the learning process, it is not optimized jointly with the rest of the model.  
+
+\noindent
+These limitations have motivated a new research direction: \textbf{NMS-free detection}.  
+The key idea is to design detectors that naturally produce \emph{non-redundant} outputs without relying on post-processing.  
+Instead of generating thousands of overlapping predictions, modern architectures such as DETR (\textit{DEtection TRansformer}, \cite{carion2020_detr}) reformulate detection as a \emph{set prediction} problem.  
+The model predicts a fixed-size set of object candidates (e.g., 100 slots), and during training, a special \textbf{matching loss} pairs each prediction to its corresponding ground-truth object.
+
+This matching process is based on the \emph{Hungarian algorithm}, a classic method for optimally assigning elements between two sets.  
+Although the mathematical details are beyond the scope of this chapter, the intuition is simple: each prediction must match exactly one ground-truth object, and unmatched predictions are treated as background.  
+By learning this one-to-one correspondence, the network inherently avoids duplicate detections—making NMS unnecessary at inference time.
+
+\noindent
+These end-to-end, NMS-free detectors mark a significant conceptual shift: instead of cleaning up redundant predictions after the fact, they learn to \emph{not produce them in the first place}.  
+While such methods still face challenges (e.g., training complexity and slower convergence), they represent an important step toward fully differentiable, self-consistent detection pipelines.
+
+\newpage
 
 \subsection{Refining NMS for Overlapping Objects}
 
@@ -492,7 +599,7 @@ Researchers have proposed several improvements to mitigate NMS failures:
 	\item \textbf{Adaptive Thresholding:} Instead of using a fixed IoU threshold, we adjust it based on object size and category.
 \end{itemize}
 
-Despite these refinements, NMS remains the dominant approach in modern object detection pipelines due to its simplicity and efficiency.
+Despite these refinements, NMS and its variants remain standard in many anchor-based and dense prediction detectors because of their simplicity and efficiency, even though newer set-based, query-driven architectures such as DETR- and Grounding DINO-style models avoid NMS entirely by formulating detection as bipartite matching.
 
 \section{Evaluating Object Detectors: Mean Average Precision (mAP)}
 \label{sec:chapter13_map}
@@ -503,66 +610,90 @@ Evaluating object detection models is more complex than evaluating standard clas
 \label{subsec:chapter13_eval_metrics}
 
 \paragraph{Precision and Recall}
-Precision and recall are two fundamental metrics in detection evaluation:
-\begin{itemize}
-	\item \textbf{Precision} measures the proportion of correct detections among all detections made:
-	\[
-	\text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
-	\]
-	\item \textbf{Recall} measures the fraction of all ground-truth objects that are detected:
-	\[
-	\text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
-	\]
-\end{itemize}
-
-\paragraph{\textbf{Trade-offs Between Precision and Recall}}
-Different applications require a balance between high recall and high precision, depending on their specific goals:
+Precision and recall form the foundation of object detection evaluation, quantifying how well a model balances false alarms against missed detections:
 
 \begin{itemize}
-	\item In \textbf{autonomous vehicles} or \textbf{medical imaging}, high recall is crucial because missing an object (false negative) can have severe consequences. Detecting pedestrians, obstacles, or tumors should prioritize finding \emph{all} relevant instances, even if some false alarms (false positives) occur.
-	\item In \textbf{retail inventory systems} or \textbf{automated surveillance}, high precision is preferred to minimize false detections. For example, an inventory system falsely detecting missing stock could lead to unnecessary restocking, or a security system generating too many false alarms might make monitoring impractical.
+	\item \textbf{Precision} measures the proportion of correct detections among all predicted boxes:
+	\[
+	\text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}.
+	\]
+	High precision means that most predicted boxes correspond to real objects—important in applications where false alarms are costly (e.g., automated surveillance).
+	
+	\item \textbf{Recall} measures the fraction of ground-truth objects that were successfully detected:
+	\[
+	\text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}.
+	\]
+	High recall indicates few missed detections—critical for safety-sensitive tasks such as pedestrian detection or medical diagnosis.
 \end{itemize}
 
-A single classification threshold—used to decide whether a predicted bounding box is accepted as a detection—tends to favor either high precision or high recall. Additionally, it does not account for the \textbf{quality of the bounding boxes} (how well they align with the ground-truth objects). Therefore, we shall derive a more holistic evaluation metric, that accounts for different classification thresholds. 
+\paragraph{Balancing Precision and Recall}
+Precision and recall often pull in opposite directions. Raising the detection confidence threshold improves precision (fewer false positives) but lowers recall (more misses).  
+Different applications value different trade-offs:
+\begin{itemize}
+	\item \textbf{Autonomous vehicles / medical imaging:} prioritize \emph{recall}—better to raise false alarms than miss a pedestrian or lesion.
+	\item \textbf{Retail analytics / automated security:} emphasize \emph{precision}—false positives waste time or cause alert fatigue.
+\end{itemize}
+A single confidence threshold can reveal only one operating point on this continuum; a more complete picture requires evaluating performance across thresholds and incorporating localization accuracy.
 
-\paragraph{\textbf{Isn't F1 Score Suffice?}}
-The \textbf{F1 score} is a widely used metric for classification tasks, capturing a balance between precision and recall:
+\newpage
+
+\paragraph{Why the F1 Score Falls Short}
+The \textbf{F1 score}, defined as the harmonic mean of precision and recall,
 \[
-\text{F1} = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\text{F1} = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}},
 \]
-However, the \textbf{F1 score has limitations when applied to object detection}:
+is a useful summary in classification—but limited for object detection:
 
 \begin{itemize}
-	\item \textbf{Fixed Threshold Dependence:} The F1 score is computed at a \textbf{single confidence threshold} (e.g., 0.5 classification score), meaning it does not capture how the model performs across different decision thresholds. Object detection models assign a \textbf{confidence score} to each prediction, and evaluating performance across a range of confidence thresholds provides a more comprehensive assessment.
-	\item \textbf{Ignores Localization Quality:} The F1 score does not incorporate bounding box accuracy. In object detection, we want to evaluate the quality of our localization along with that of the classification. 
-	\item \textbf{Limited Insight into Precision-Recall Trade-offs:} The F1 score does not show how varying the classification threshold affects the trade-off between precision and recall.
+	\item \textbf{Threshold Dependence and Limited Insight:} F1 is computed at a single confidence threshold (e.g., 0.5). This snapshot hides how precision and recall trade off as we vary the threshold. In practice, a detector may perform well at high-confidence (precise but selective) or low-confidence (broad but noisy) regimes, and F1 cannot reveal these trends.
+	\item \textbf{Ignores Localization Quality:} F1 counts a detection as “correct” once it passes an IoU threshold (e.g., IoU $\ge$ 0.5) but does not reward better alignment. A slightly overlapping box and a perfectly aligned one both count equally, masking localization differences.
 \end{itemize}
 
-Thus, while \textbf{F1} can be informative for classification, it does not fully capture an object detector’s behavior over a range of decision thresholds.
+Hence, while F1 summarizes a single point on the precision-recall curve, it cannot characterize the full behavior of a detector or compare models robustly across varying confidence thresholds and spatial accuracies.
 
-\paragraph{\textbf{Precision-Recall (PR) Curve and Average Precision (AP)}}
-A \textbf{Precision-Recall (PR) curve} provides a more comprehensive evaluation by plotting \textbf{precision vs.\ recall across multiple detections ranked by classification score}. The process follows these steps:
+\paragraph{Precision–Recall (PR) Curve and Average Precision (AP)}
+To capture this broader behavior, detection benchmarks use the \textbf{Precision–Recall (PR) curve}.  
+It plots precision versus recall as the detection confidence threshold sweeps from high to low.  
+The construction is as follows:
 
 \begin{enumerate}
-	\item \textbf{Sort all detections in descending order of classification score.}
-	\item \textbf{Evaluate each detection in sequence, checking if it correctly matches a ground-truth object (of the same category label):}
+	\item \textbf{Sort all predicted boxes} by their confidence scores in descending order.
+	\item \textbf{Iterate over the detections:}  
+	for each prediction, determine whether it correctly matches a ground-truth box of the same class using an IoU threshold (e.g., IoU $\ge$ 0.5):
 	\begin{itemize}
-		\item A detection is a \textbf{True Positive (TP)} if it matches a ground-truth bounding box with an \textbf{IoU} above a threshold (e.g., IoU \( \geq 0.5 \)).
-		\item A detection is a \textbf{False Positive (FP)} if it does not match any ground-truth box with sufficient IoU.
-		\item Each ground-truth box can be matched to only one detection.
+		\item If matched, mark as a \textbf{True Positive (TP)}.
+		\item If unmatched, mark as a \textbf{False Positive (FP)}.
+		\item Each ground-truth box may be matched to only one detection.
 	\end{itemize}
-	\item \textbf{Compute Precision and Recall at each detection.}
-	\item \textbf{Plot the PR curve by progressively updating precision and recall values.}
+	\item \textbf{Compute precision and recall} after each detection is added, producing a series of (Precision, Recall) pairs.
+	\item \textbf{Plot these pairs} to obtain the PR curve, which visualizes the trade-off between precision and recall as confidence decreases.
 \end{enumerate}
 
-\paragraph{\textbf{Why the 0.5 IoU Threshold?}}
-An IoU threshold of 0.5 is commonly used because it represents a reasonable balance: the predicted bounding box must overlap significantly with the ground-truth box to be considered a correct detection. However, this threshold can be adjusted based on application needs.
+\paragraph{Average Precision (AP) and IoU Thresholds}
+The \textbf{Average Precision (AP)} summarizes the PR curve as a single number—the area under the curve (AUC):
+\[
+\text{AP} = \int_0^1 \text{Precision}(\text{Recall}) \, d(\text{Recall}),
+\]
+often approximated numerically (e.g., using the 11-point or all-points interpolation method).  
+A higher AP means the model maintains good precision across a broad range of recall levels.
 
-The \textbf{Average Precision (AP)} in this case, depends on the IoU threshold, is denoted as AP@0.5. It is defined as the area under the Precision-Recall (PR) curve, determined on matches based on the threshold. We can use the AUC (Area Under Curve) function to calculate the area under the precision recall curve (e.g., \texttt{from sklearn.metrics import auc}). This single value, which ranges from 0 to 1, captures the overall performance of an object detector by integrating how precision and recall trade off \textbf{across all classification score thresholds.} 
+The subscript in AP@0.5 indicates the IoU threshold used to decide a correct match.  
+IoU = 0.5 is the conventional standard, balancing tolerance and rigor: detections must overlap by at least 50\% to count as correct.  
+Stricter thresholds (e.g., AP@0.75) emphasize precise localization, while looser ones favor recall.  
+Modern benchmarks like COCO report \textbf{mean Average Precision (mAP)} averaged over multiple IoUs (AP@[0.5:0.95]) to reflect both coarse and fine localization quality.
 
-\paragraph{\textbf{Why AP is Preferable to the F1 Score:}} \begin{itemize} \item \textbf{Comprehensive Evaluation Across Thresholds:} The F1 score is computed at one fixed threshold, summarizing precision and recall at that specific operating point. In contrast, AP aggregates performance over the entire range of thresholds, providing a fuller picture of the model’s behavior. \item \textbf{Dynamic Balance Between Precision and Recall:} As the threshold varies, a detector may achieve high precision with low recall at high thresholds or high recall with low precision at low thresholds. AP captures this dynamic balance by measuring the area under the PR curve, reflecting the detector’s performance over all possible trade-offs. \item \textbf{Inherent Consideration of Localization Quality:} AP evaluates detections based on an IoU threshold (e.g., 0.5), so it not only measures whether objects are detected but also whether the bounding boxes are well-aligned with the ground-truth. Although AP does not differentiate between predictions that barely exceed the IoU threshold and those with much higher overlap, it still provides a robust indicator of overall localization quality. \end{itemize}
+\newpage
 
-A detector with an AP of 1.0 would achieve perfect precision and recall at every threshold—it would correctly identify all objects without any false positives. In practice, striving for a high AP means that the model reliably detects objects across a range of confidence levels, making it a more robust and informative metric than single-threshold measures like the F1 score.
+\paragraph{Why AP is Preferable to F1}
+AP overcomes the key shortcomings of F1:
+\begin{itemize}
+	\item \textbf{Comprehensive Threshold Evaluation:} integrates performance over all confidence thresholds, not a single fixed point.
+	\item \textbf{Trade-off Awareness:} captures the model’s entire precision–recall curve, revealing how it behaves under different operating conditions.
+	\item \textbf{Localization Sensitivity:} uses IoU to determine correctness, linking classification confidence with spatial accuracy.
+\end{itemize}
+
+A perfect detector would achieve AP = 1.0—indicating flawless precision and recall at every threshold.  
+In practice, maximizing AP (and mAP across IoUs) provides a balanced, interpretable, and widely adopted measure of object detection performance, far more revealing than single-threshold scores such as F1.
 
 \subsection{Step-by-Step Example: Computing AP for a Single Class}
 \label{subsec:chapter13_ap_example}
@@ -570,77 +701,77 @@ A detector with an AP of 1.0 would achieve perfect precision and recall at every
 Consider the \textbf{dog} category with three ground-truth boxes. The process is illustrated step-by-step:
 
 \begin{enumerate}
-	\item \textbf{First detection (score: 0.99):}  
-	Matches the second ground-truth box (IoU \( > 0.5 \)).  
-	\begin{itemize}
-		\item Precision = \( 1/1 = 1.0 \)
-		\item Recall = \( 1/3 \approx 0.33 \)
-	\end{itemize}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_86.jpg}
-		\caption{\textbf{Step 1: First match.} The highest-scoring detection correctly matches a ground-truth box.}
-		\label{fig:chapter13_slide86}
-	\end{figure}
-	
-	\item \textbf{Second detection (score: 0.95):}  
-	Matches the first ground-truth box.  
-	\begin{itemize}
-		\item Precision = \( 2/2 = 1.0 \)
-		\item Recall = \( 2/3 \approx 0.67 \)
-	\end{itemize}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_87.jpg}
-		\caption{\textbf{Step 2: Second match.} The second highest detection correctly matches another ground-truth box.}
-		\label{fig:chapter13_slide87}
-	\end{figure}
-	
-	\item \textbf{Third detection (score: 0.90):}  
-	Does not match any ground-truth box (False Positive).  
-	\begin{itemize}
-		\item Precision = \( 2/3 \approx 0.67 \)
-		\item Recall remains \( 2/3 \approx 0.67 \)
-	\end{itemize}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_88.jpg}
-		\caption{\textbf{Step 3: False Positive.} A detection fails to match any ground-truth box.}
-		\label{fig:chapter13_slide88}
-	\end{figure}
-	
-	\item \textbf{Fourth detection (score: 0.85):}  
-	Another false positive.  
-	\begin{itemize}
-		\item Precision = \( 2/4 = 0.5 \)
-		\item Recall remains \( 2/3 \approx 0.67 \)
-	\end{itemize}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_89.jpg}
-		\caption{\textbf{Step 4: Another False Positive.} More false detections further lower precision.}
-		\label{fig:chapter13_slide89}
-	\end{figure}
-	
-	\item \textbf{Final detection (score: 0.80):}  
-	Matches the last ground-truth box.  
-	\begin{itemize}
-		\item Precision = \( 3/5 = 0.6 \)
-		\item Recall = \( 3/3 = 1.0 \)
-	\end{itemize}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_90.jpg}
-		\caption{\textbf{Final Step: All ground-truth boxes matched.} Recall reaches 1.0, while the precision ends up being $3/5=0.6$.}
-		\label{fig:chapter13_slide90}
-	\end{figure}
+    \item \textbf{First detection (score: 0.99):}  
+    Matches the second ground-truth box (IoU \( > 0.5 \)).  
+    \begin{itemize}
+        \item Precision = \( 1/1 = 1.0 \)
+        \item Recall = \( 1/3 \approx 0.33 \)
+    \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_86.jpg}
+        \caption{\textbf{Step 1: First match.} The highest-scoring detection correctly matches a ground-truth box.}
+        \label{fig:chapter13_slide86}
+    \end{figure}
+    
+    \item \textbf{Second detection (score: 0.95):}  
+    Matches the first ground-truth box.  
+    \begin{itemize}
+        \item Precision = \( 2/2 = 1.0 \)
+        \item Recall = \( 2/3 \approx 0.67 \)
+    \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_87.jpg}
+        \caption{\textbf{Step 2: Second match.} The second highest detection correctly matches another ground-truth box.}
+        \label{fig:chapter13_slide87}
+    \end{figure}
+    
+    \item \textbf{Third detection (score: 0.90):}  
+    Does not match any ground-truth box (False Positive).  
+    \begin{itemize}
+        \item Precision = \( 2/3 \approx 0.67 \)
+        \item Recall remains \( 2/3 \approx 0.67 \)
+    \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_88.jpg}
+        \caption{\textbf{Step 3: False Positive.} A detection fails to match any ground-truth box.}
+        \label{fig:chapter13_slide88}
+    \end{figure}
+    
+    \item \textbf{Fourth detection (score: 0.85):}  
+    Another false positive.  
+    \begin{itemize}
+        \item Precision = \( 2/4 = 0.5 \)
+        \item Recall remains \( 2/3 \approx 0.67 \)
+    \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_89.jpg}
+        \caption{\textbf{Step 4: Another False Positive.} More false detections further lower precision.}
+        \label{fig:chapter13_slide89}
+    \end{figure}
+    
+    \item \textbf{Final detection (score: 0.80):}  
+    Matches the last ground-truth box.  
+    \begin{itemize}
+        \item Precision = \( 3/5 = 0.6 \)
+        \item Recall = \( 3/3 = 1.0 \)
+    \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_90.jpg}
+        \caption{\textbf{Final Step: All ground-truth boxes matched.} Recall reaches 1.0, while the precision ends up being $3/5=0.6$.}
+        \label{fig:chapter13_slide90}
+    \end{figure}
 \end{enumerate}
 \textbf{Final Result:} The area under the PR curve, computed as AP@0.5, is 0.86.
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_91.jpg}
-	\caption{The final AP score for the dog class is the area under the precision-recall curve, summing up to 0.87 in this case, which is pretty decent but can be further improved if we'll the reduce false-positives.}
-	\label{fig:chapter13_slide91}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/Chapter_13/slide_91.jpg}
+    \caption{The final AP score for the dog class is the area under the precision-recall curve, summing up to 0.86 in this case, which is pretty decent but can be further improved if we'll the reduce false-positives.}
+    \label{fig:chapter13_slide91}
 \end{figure}
 
 \newpage
@@ -653,9 +784,9 @@ To summarize performance across all object classes, we compute the \textbf{mean 
 \]
 where \( \text{AP}_i \) is the Average Precision for the \(i\)-th class, and \(N\) is the total number of classes. In our example, where we computed AP at an IoU threshold of 0.5 (i.e., AP@0.5), we have:
 \begin{itemize}
-	\item \(\text{AP}_\text{dog} = 0.86\)
-	\item \(\text{AP}_\text{cat} = 0.80\)
-	\item \(\text{AP}_\text{car} = 0.65\)
+    \item \(\text{AP}_\text{dog} = 0.86\)
+    \item \(\text{AP}_\text{cat} = 0.80\)
+    \item \(\text{AP}_\text{car} = 0.65\)
 \end{itemize}
 Thus,
 \[
@@ -677,9 +808,9 @@ By averaging AP values across multiple IoU thresholds, COCO mAP ensures that det
 Object sizes in real-world scenarios can vary significantly, impacting detection performance. To capture this, the COCO evaluation framework computes mAP separately for different object scales:  
 
 \begin{itemize}
-	\item \( \text{COCO mAP}^\text{small} \) – Objects with an area \( < 32 \times 32 \) pixels.
-	\item \( \text{COCO mAP}^\text{medium} \) – Objects with an area between \( 32 \times 32 \) and \( 96 \times 96 \) pixels.
-	\item \( \text{COCO mAP}^\text{large} \) – Objects larger than \( 96 \times 96 \) pixels.
+    \item \( \text{COCO mAP}^\text{small} \) – Objects with an area \( < 32 \times 32 \) pixels.
+    \item \( \text{COCO mAP}^\text{medium} \) – Objects with an area between \( 32 \times 32 \) and \( 96 \times 96 \) pixels.
+    \item \( \text{COCO mAP}^\text{large} \) – Objects larger than \( 96 \times 96 \) pixels.
 \end{itemize}
 
 This breakdown is essential because different applications prioritize object sizes differently. Below is an example evaluation:
@@ -689,51 +820,51 @@ This breakdown is essential because different applications prioritize object siz
 \]
 
 \begin{table}[H]
-	\centering
-	\begin{tabular}{lccc}
-		\toprule
-		\textbf{Metric} & \textbf{Small Objects} & \textbf{Medium Objects} & \textbf{Large Objects} \\  
-		\midrule
-		COCO mAP        & 0.25                  & 0.45                   & 0.65 \\  
-		\bottomrule
-	\end{tabular}
-	\caption{COCO mAP computed for different object size categories. The choice of which category to prioritize depends on the specific use case of the detection system.}
-	\label{tab:coco_ap_object_sizes}
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Metric} & \textbf{Small Objects} & \textbf{Medium Objects} & \textbf{Large Objects} \\  
+        \midrule
+        COCO mAP        & 0.25                  & 0.45                   & 0.65 \\  
+        \bottomrule
+    \end{tabular}
+    \caption{COCO mAP computed for different object size categories. The choice of which category to prioritize depends on the specific use case of the detection system.}
+    \label{tab:coco_ap_object_sizes}
 \end{table}
 
 \paragraph{When and Why Object Size-Specific mAP Matters}  
 Depending on the application, prioritizing specific object sizes is crucial:
 
 \begin{itemize}
-	\item \textbf{Small Objects (\( \text{COCO mAP}^\text{small} \))}  
-	\begin{itemize}
-		\item Autonomous Vehicles: Detecting pedestrians at long distances is essential for safe driving.
-		\item Aerial Surveillance: Drones must accurately detect small moving objects such as cars, people, or wildlife.
-		\item Medical Imaging: Identifying small tumors in X-rays or CT scans can be life-saving.
-	\end{itemize}
-	
-	\item \textbf{Medium Objects (\( \text{COCO mAP}^\text{medium} \))}  
-	\begin{itemize}
-		\item Retail Analytics: Recognizing products on shelves in supermarkets.
-		\item Autonomous Robotics: Object detection in warehouse management to identify items of various sizes.
-		\item General-Purpose Security Systems: Detecting people and vehicles in surveillance footage.
-	\end{itemize}
-	
-	\item \textbf{Large Objects (\( \text{COCO mAP}^\text{large} \))}  
-	\begin{itemize}
-		\item Industrial Applications: Detecting machinery defects in large-scale manufacturing.
-		\item Satellite Imagery: Identifying buildings, landscapes, and large infrastructure.
-		\item Traffic Monitoring: Tracking entire vehicles or shipping containers in ports and highways.
-	\end{itemize}
+    \item \textbf{Small Objects (\( \text{COCO mAP}^\text{small} \))}  
+    \begin{itemize}
+        \item Autonomous Vehicles: Detecting pedestrians at long distances is essential for safe driving.
+        \item Aerial Surveillance: Drones must accurately detect small moving objects such as cars, people, or wildlife.
+        \item Medical Imaging: Identifying small tumors in X-rays or CT scans can be life-saving.
+    \end{itemize}
+    
+    \item \textbf{Medium Objects (\( \text{COCO mAP}^\text{medium} \))}  
+    \begin{itemize}
+        \item Retail Analytics: Recognizing products on shelves in supermarkets.
+        \item Autonomous Robotics: Object detection in warehouse management to identify items of various sizes.
+        \item General-Purpose Security Systems: Detecting people and vehicles in surveillance footage.
+    \end{itemize}
+    
+    \item \textbf{Large Objects (\( \text{COCO mAP}^\text{large} \))}  
+    \begin{itemize}
+        \item Industrial Applications: Detecting machinery defects in large-scale manufacturing.
+        \item Satellite Imagery: Identifying buildings, landscapes, and large infrastructure.
+        \item Traffic Monitoring: Tracking entire vehicles or shipping containers in ports and highways.
+    \end{itemize}
 \end{itemize}
 
 \subsubsection{Prioritizing Specific Classes in Object Detection}  
 Beyond object sizes, many applications demand prioritization of specific classes. For example:
 
 \begin{itemize}
-	\item \textbf{Self-Driving Cars:} Prioritizing pedestrians and stop signs over billboards and parked cars.
-	\item \textbf{Medical AI:} Emphasizing cancerous lesions over benign anomalies.
-	\item \textbf{Surveillance Systems:} Prioritizing human detection over objects like furniture.
+    \item \textbf{Self-Driving Cars:} Prioritizing pedestrians and stop signs over billboards and parked cars.
+    \item \textbf{Medical AI:} Emphasizing cancerous lesions over benign anomalies.
+    \item \textbf{Surveillance Systems:} Prioritizing human detection over objects like furniture.
 \end{itemize}
 
 To account for this, a weighted mAP can be used:
@@ -747,19 +878,19 @@ where \( w_i \) represents the importance weight for class \( i \). By applying 
 For instance, we might assign:
 \[
 \begin{aligned}
-	w_\text{Pedestrian} &= 0.4, \\
-	w_\text{Stop Sign}  &= 0.3, \\
-	w_\text{Cyclist}    &= 0.2, \\
-	w_\text{Billboard}  &= 0.05, \\
-	w_\text{Parked Car} &= 0.05.
+    w_\text{Pedestrian} &= 0.4, \\
+    w_\text{Stop Sign}  &= 0.3, \\
+    w_\text{Cyclist}    &= 0.2, \\
+    w_\text{Billboard}  &= 0.05, \\
+    w_\text{Parked Car} &= 0.05.
 \end{aligned}
 \]
 Using the Class AP values from the table:
 \[
 \begin{aligned}
-	\text{Weighted mAP} &= 0.4 \times 0.47 + 0.3 \times 0.72 + 0.2 \times 0.49 + 0.05 \times 0.34 + 0.05 \times 0.49 \\
-	&\approx 0.188 + 0.216 + 0.098 + 0.017 + 0.025 \\
-	&\approx 0.544.
+    \text{Weighted mAP} &= 0.4 \times 0.47 + 0.3 \times 0.72 + 0.2 \times 0.49 + 0.05 \times 0.34 + 0.05 \times 0.49 \\
+    &\approx 0.188 + 0.216 + 0.098 + 0.017 + 0.025 \\
+    &\approx 0.544.
 \end{aligned}
 \]
 Thus, the weighted mAP is approximately 0.54, aligning with the overall performance on mission-critical classes.
@@ -769,21 +900,22 @@ Thus, the weighted mAP is approximately 0.54, aligning with the overall performa
 Object detection evaluation requires balancing \textbf{classification accuracy} and \textbf{localization precision}. Different metrics capture various aspects of model performance:  
 
 \begin{itemize}
-	\item \textbf{AP} measures a model’s ability to balance precision and recall using the area under the precision-recall curve.
-	\item \textbf{mAP} extends AP by averaging it across object categories, providing a single metric for overall performance.
-	\item \textbf{COCO mAP} improves upon standard mAP by averaging AP over multiple IoU thresholds (0.5 to 0.95), ensuring precise localization.
-	\item \textbf{Size-based COCO mAP} evaluates performance on small, medium, and large objects, helping diagnose model weaknesses.
-	\item \textbf{Weighted mAP} prioritizes critical object classes by assigning different importance weights, making evaluation more application-specific.
+    \item \textbf{AP} measures a model’s ability to balance precision and recall using the area under the precision-recall curve.
+    \item \textbf{mAP} extends AP by averaging it across object categories, providing a single metric for overall performance.
+    \item \textbf{COCO mAP} improves upon standard mAP by averaging AP over multiple IoU thresholds (0.5 to 0.95), ensuring precise localization.
+    \item \textbf{Size-based COCO mAP} evaluates performance on small, medium, and large objects, helping diagnose model weaknesses.
+    \item \textbf{Weighted mAP} prioritizes critical object classes by assigning different importance weights, making evaluation more application-specific.
 \end{itemize}  
 
 This structured approach ensures object detectors are evaluated fairly and optimized for the real-world tasks at hand. In the following parts of the document, we'll discuss about improvements over the current R-CNN algorithm, improving both the computational overhead and speed of our object detection algorithms, along with enhanced algorithmic performance.
 
 \newpage
+
 \begin{enrichment}[Mosaic Augmentation for Object Detection][subsection]
 	\label{enrichment:mosaic_for_object_detection}
 	
 	\noindent
-	While data augmentation techniques such as flipping, cropping, and jittering are widely used in classification (\S\ref{subsubsec:data_augmentation}), object detection introduces unique challenges: models must predict both \emph{what} is in the image and \emph{where} it is, using bounding boxes. This requires augmentations that preserve the structure and integrity of object locations. One popular strategy addressing this need is \textbf{Mosaic augmentation}, initially introduced in YOLOv4 \cite{bochkovskiy2020_yolov4} and later explored further in \cite{chen2020_gpt_pixels}.
+	While data augmentation techniques such as flipping, cropping, and jittering are widely used in classification, object detection introduces unique challenges: models must predict both \emph{what} is in the image and \emph{where} it is, using bounding boxes. This requires augmentations that preserve the structure and integrity of object locations. One popular strategy addressing this need is \textbf{Mosaic augmentation}, initially introduced in YOLOv4 \cite{bochkovskiy2020_yolov4} and later explored further in \cite{chen2020_gpt_pixels}.
 	
 	\paragraph{Motivation and Advantages}
 	Mosaic augmentation stitches together four different training images into a single \(2 \times 2\) grid, effectively constructing a new composite scene. This has several benefits:
@@ -830,12 +962,17 @@ This structured approach ensures object detectors are evaluated fairly and optim
 	
 	\noindent
 	However, for tasks requiring precise geometric relationships (e.g., medical or industrial inspection), such artificial compositions might harm spatial reasoning and should be evaluated cautiously.
-
-\paragraph{Conclusion}
-Mosaic augmentation extends traditional image-level augmentation into the object detection domain by combining multiple images into composite layouts. This promotes generalization to diverse backgrounds, improves small-object robustness, and implicitly balances class frequency. Furthermore, it enhances the model’s ability to distinguish foreground objects from noisy or unfamiliar backgrounds, reducing the risk of overfitting to scene context. When combined with techniques like color jitter, CutMix, and random crop, Mosaic stands out as an effective augmentation for training modern object detectors—especially in scenarios with limited data or unbalanced label distributions.
-
-\noindent
-More broadly, Mosaic exemplifies a key principle in deep learning: \textit{augmentation strategies must be tailored to the structure and demands of the task}. Some tasks require additional domain-aware, label-preserving transformations. As such, effective augmentation often demands both creativity and a deep understanding of the task’s supervision signals, generalization needs, etc.
 	
+	\paragraph{Advanced Usage and Scheduling in Modern Pipelines}
+	By construction, Mosaic produces highly synthetic training images that do not resemble the single-frame inputs used at inference time. As a result, modern real-time detectors rarely keep Mosaic active for the entire training run. Instead, Mosaic is used aggressively during an early or middle phase as a strong regularizer, and then disabled (or down-weighted) so that the model can refine on realistic images before convergence.
+	
+	Concretely, DEIMv2 \cite{huang2025_deimv2,intellindust2025_deimv2_code} trains its S variant for 120 epochs but applies Mosaic only between epochs 4 and 64 with probability \(0.5\), and its ultra-lightweight variants train for 468 epochs while restricting Mosaic to epochs \(4\)–\(250\). This implements a “strong-then-mild” augmentation schedule: Mosaic drives robustness and small-object learning in the first half of training, and the last hundreds of epochs are devoted to polishing predictions on non-stitched images. 
+	
+	\newpage
+	
+	Similarly, RT-DETRv2 \cite{lv2024_rtdetrv2} adopts dynamic data augmentation, applying stronger augmentations early and then turning several of them off in the final epochs to better match the target domain. In the YOLO/Ultralytics ecosystem, Mosaic is controlled by a dedicated hyperparameter, and practical recipes often reduce this probability or set it to zero in the last stage of training so that the model sees only natural images near convergence \cite{ultralytics2025_yolo_aug}.
+	
+	\paragraph{Conclusion}
+	Mosaic augmentation extends traditional image-level augmentation into the object detection domain by combining multiple images into composite layouts. This promotes generalization to diverse backgrounds, improves small-object robustness, and implicitly balances class frequency. Furthermore, it enhances the model’s ability to distinguish foreground objects from noisy or unfamiliar backgrounds, reducing the risk of overfitting to scene context. In contemporary practice, Mosaic is typically used heavily during the first half of training and then disabled or down-weighted, allowing detectors such as DEIMv2 and RT-DETRv2 to fine-tune on realistic inputs before evaluation. More broadly, Mosaic exemplifies a key principle in deep learning: \textit{augmentation strategies must be tailored to the structure and demands of the task}. Some tasks require additional domain-aware, label-preserving transformations, and effective augmentation therefore demands both creativity and a deep understanding of the task’s supervision signals and generalization requirements.
 \end{enrichment}
 
