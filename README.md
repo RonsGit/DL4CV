@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
 
 <div align="center">
-  <a href="https://github.com/RonsGit/CVBook">
+  <a href="https://github.com/RonsGit/DL4CV">
     <img src="Pictures/cv_logo.png" alt="Logo" width="804" height="286">
   </a>
 
@@ -13,11 +13,11 @@
     <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>Explore the book! »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/RonsGit/CVBook/issues">Report Bug</a>
+    <a href="https://github.com/RonsGit/DL4CV/issues">Report Bug</a>
     ·
-    <a href="https://github.com/RonsGit/CVBook/issues">Request Feature</a>
+    <a href="https://github.com/RonsGit/DL4CV/issues">Request Feature</a>
     ·
-    <a href="https://github.com/RonsGit/CVBook/issues">Send Feedback</a>
+    <a href="https://github.com/RonsGit/DL4CV/issues">Send Feedback</a>
   </p>
 </div>
 
@@ -85,8 +85,8 @@ To get a local copy up and running for reading or development, follow these step
 
 1.  **Clone the repository**
     ```sh
-    git clone https://github.com/RonsGit/CVBook.git
-    cd CVBook
+    git clone https://github.com/RonsGit/DL4CV.git
+    cd DL4CV
     ```
 2.  **Install Python dependencies**
     (See `build.yml` for the most up-to-date requirements)
@@ -168,7 +168,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ## Releases and Versioning
 
-We use [GitHub Releases](https://github.com/RonsGit/CVBook/releases) for versioning.
+We use [GitHub Releases](https://github.com/RonsGit/DL4CV/releases) for versioning.
 
 * **Tags** are used to mark significant updates or stable milestones of the book.
 * Check the tags to download specific historical versions of the PDF/text.
@@ -189,7 +189,7 @@ I actively seek and value your feedback. Whether you are a student, researcher, 
 Please do not hesitate to reach out:
 
 1. **Email**: For private communication, you can reach me at [eecs498summary@gmail.com](mailto:eecs498summary@gmail.com).
-2. **Open an Issue**: For specific problems, suggestions, or public discussion. [Click here to open an issue](https://github.com/RonsGit/CVBook/issues).
+2. **Open an Issue**: For specific problems, suggestions, or public discussion. [Click here to open an issue](https://github.com/RonsGit/DL4CV/issues).
 3. **Pull Requests**: Direct fixes are always welcome.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -200,8 +200,8 @@ Please do not hesitate to reach out:
 
 A huge thank you to everyone who has contributed to this project!
 
-<a href="https://github.com/RonsGit/CVBook/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=RonsGit/CVBook" alt="contrib.rocks infinite contributors list" />
+<a href="https://github.com/RonsGit/DL4CV/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=RonsGit/DL4CV" alt="contrib.rocks infinite contributors list" />
 </a>
 
 *Partial list of contributors. For specific credits regarding content, figures, and research, please see the **Preface** of the book/website.*
@@ -229,13 +229,13 @@ The goal of this project is not to claim ownership of these ideas, but to cover 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/RonsGit/CVBook.svg?style=for-the-badge
-[contributors-url]: https://github.com/RonsGit/CVBook/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/RonsGit/CVBook.svg?style=for-the-badge
-[forks-url]: https://github.com/RonsGit/CVBook/network/members
-[stars-shield]: https://img.shields.io/github/stars/RonsGit/CVBook.svg?style=for-the-badge
-[stars-url]: https://github.com/RonsGit/CVBook/stargazers
-[issues-shield]: https://img.shields.io/github/issues/RonsGit/CVBook.svg?style=for-the-badge
-[issues-url]: https://github.com/RonsGit/CVBook/issues
-[license-shield]: https://img.shields.io/github/license/RonsGit/CVBook.svg?style=for-the-badge
-[license-url]: https://github.com/RonsGit/CVBook/blob/master/LICENSES498---Summary
+[contributors-shield]: https://img.shields.io/github/contributors/RonsGit/DL4CV.svg?style=for-the-badge
+[contributors-url]: https://github.com/RonsGit/DL4CV/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/RonsGit/DL4CV.svg?style=for-the-badge
+[forks-url]: https://github.com/RonsGit/DL4CV/network/members
+[stars-shield]: https://img.shields.io/github/stars/RonsGit/DL4CV.svg?style=for-the-badge
+[stars-url]: https://github.com/RonsGit/DL4CV/stargazers
+[issues-shield]: https://img.shields.io/github/issues/RonsGit/DL4CV.svg?style=for-the-badge
+[issues-url]: https://github.com/RonsGit/DL4CV/issues
+[license-shield]: https://img.shields.io/github/license/RonsGit/DL4CV.svg?style=for-the-badge
+[license-url]: https://github.com/RonsGit/DL4CV/blob/main/LICENSE
