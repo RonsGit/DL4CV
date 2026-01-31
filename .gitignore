@@ -1,0 +1,59 @@
+# Build Outputs
+html_output/
+pdf_output/
+temp_work/
+staging/
+staging_area/
+temp_chapters/
+temp_build_*/
+temp_build/
+.staging/
+downloads/
+pagefind/
+
+# Python Caches
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+nul
+
+# LaTeX Artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.gz
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# TeX4ht Artifacts
+*.4ct
+*.4tc
+*.idv
+*.lg
+*.tmp
+*.xref
+*_wrapper.tex
+*_wrapper.html
+*_wrapper.css
+*_wrapper.bbl
+
+# Cache
+_minted*/
+
+# Generated Files
+main.pdf
+main_html.pdf
+main_html.bbl
+*test_*.py
+
+# Keep Scripts and Configs
+!scripts/
+!.github/

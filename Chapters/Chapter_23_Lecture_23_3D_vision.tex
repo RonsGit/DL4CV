@@ -4053,7 +4053,7 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
         \;+\;
         \big\|\mathbf{C}^\ast(\mathbf{r}) - \mathbf{C}(\mathbf{r};\Theta, t^{f})\big\|_2^2
         \Big).
-        \tag{17}\label{eq:chapter23_mipnerf_objective}
+        \label{eq:chapter23_mipnerf_objective}
     \end{equation}
     In the paper, the authors set $\lambda=0.1$ in experiments.
     
@@ -4115,7 +4115,7 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
         = \frac{1}{2}\!\left(\max(w_{k-1}, w_k) + \max(w_k, w_{k+1})\right) + \alpha,
         \quad
         \text{renormalize }\{w'_k\} \text{ to sum to } 1.
-        \tag{18}\label{eq:chapter23_mipnerf_blurpool_pdf}
+        \label{eq:chapter23_mipnerf_blurpool_pdf}
     \end{equation}
     
     \medskip
@@ -4681,7 +4681,6 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
         and approximate the pixel color of the ray as
         \begin{equation}
             \hat{C} = \sum_{i=1}^{n} T_i \,\alpha_i \, c_i, 
-            \tag{11}
         \end{equation}
         where \(T_i\) denotes the discrete accumulated transmittance, defined by
         \[
@@ -4690,14 +4689,12 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
         and \(\alpha_i\) represents the discrete opacity given by
         \begin{equation}
             \alpha_i = 1 - \exp\!\left( - \int_{t_i}^{t_{i+1}} \rho(t) \, dt \right). 
-            \tag{12}
         \end{equation}
         Using the NeuS definition of the $s$-density \(\rho(t)\), this integral can be shown to yield
         \begin{equation}
             \alpha_i = \max\!\left( 
             \frac{\Phi_s(f(p_i)) - \Phi_s(f(p_{i+1}))}{\Phi_s(f(p_i))}, \, 0
             \right), 
-            \tag{13}
         \end{equation}
         
         where \(\Phi_s\) is the cumulative distribution induced by the sigmoid with sharpness parameter \(s\).
@@ -4738,7 +4735,6 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
             \mathcal{L} = \mathcal{L}_{\text{color}} 
             + \lambda \, \mathcal{L}_{\text{reg}}
             + \beta \, \mathcal{L}_{\text{mask}}, 
-            \tag{14}
         \end{equation}
         where each term enforces a different supervision signal.
         
@@ -4749,7 +4745,6 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
             \mathcal{L}_{\text{color}} = 
             \frac{1}{m} \sum_{k=1}^m 
             \mathcal{R}(\hat{C}_k, C_k),
-            \tag{15}
         \end{equation}
         where \(\mathcal{R}\) is an \(\ell_1\) loss, chosen for robustness to outliers. This term encourages the rendered radiance field to reproduce the ground-truth images.
         
@@ -4760,7 +4755,6 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
             \mathcal{L}_{\text{reg}} =
             \frac{1}{nm} \sum_{k,i}
             \bigl(\|\nabla f(\hat{p}_{k,i})\|_2 - 1\bigr)^2, 
-            \tag{16}
         \end{equation}
         forcing the gradient norm to remain close to 1 almost everywhere.
         
@@ -4772,7 +4766,6 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
             \text{BCE}(M_k, \hat{O}_k),
             \qquad 
             \hat{O}_k = \sum_{i=1}^n T_{k,i}\alpha_{k,i},
-            \tag{17}
         \end{equation}
         where \(\hat{O}_k \in [0,1]\) is the predicted probability that ray \(k\) intersects the object. If \(M_k=0\) (background pixel), the network is penalized for predicting any opacity along that ray. If \(M_k=1\) (foreground), the network must explain the pixel with some nonzero occupancy. This mask loss thus provides strong geometric supervision in cases where silhouettes are known.
         

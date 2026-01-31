@@ -1,0 +1,342 @@
+name: Build Book & Website
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+
+permissions:
+  contents: write
+  packages: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Free Disk Space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo apt-get clean
+        df -h
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install Python Dependencies
+      run: |
+        pip install pymupdf pypdf beautifulsoup4 pygments regex autopep8
+        echo "Verifying installations:"
+        python3 -c "import pymupdf; print(f'PyMuPDF version: {pymupdf.__version__}')" || echo "WARNING: PyMuPDF not available, falling back to pypdf"
+        python3 -c "import autopep8; print(f'autopep8 version: {autopep8.__version__}')" || echo "ERROR: autopep8 not available"
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Pagefind
+      run: npm install -g pagefind
+
+    - name: Install LaTeX & Tex4ht
+      run: |
+        sudo apt-get update
+        # Install texlive-full for complete LaTeX support
+        # Install ghostscript for PDF compression (<100MB limit)
+        sudo apt-get install -y texlive-full biber python3-pygments ghostscript
+        # Verify installations
+        pdflatex --version || echo "pdflatex check"
+        biber --version || echo "biber check"
+        pygmentize -V || echo "pygments check"
+
+    #=========================================================================
+    # STEP 1: Build Manager (HTML + Main PDF)
+    #=========================================================================
+    - name: "Step 1: Run Build Manager (HTML + PDF)"
+      run: |
+        chmod +x scripts/*.py
+        # Run build_manager to generate HTML chapters AND Main PDF (uses -shell-escape internally)
+        # We skip navigation here to run it later after split/bib steps
+        python3 scripts/build_manager.py --skip-nav
+
+    #=========================================================================
+    # STEP 2-3: Split PDF + Build Bibliography (in parallel)
+    #=========================================================================
+    - name: "Step 2-3: Split PDF & Build Bibliography (Parallel)"
+      continue-on-error: true
+      run: |
+        # Run PDF splitting and bibliography build in parallel
+        # split_pdf.py also uses multiprocessing internally for chapter extraction
+        if [ -f "html_output/downloads/main.pdf" ] && [ -f "html_output/main.toc" ]; then
+          echo "=== Starting PDF split + Bibliography build in parallel ==="
+          python3 scripts/split_pdf.py --main-pdf html_output/downloads/main.pdf \
+            --toc html_output/main.toc --out-dir html_output/downloads &
+          PID_SPLIT=$!
+
+          python3 scripts/build_bib_pdf.py --out html_output/downloads/Bibliography.pdf &
+          PID_BIB=$!
+
+          # Wait for both and report
+          wait $PID_SPLIT && echo "=== PDF split completed ===" || echo "=== PDF split failed (non-fatal) ==="
+          wait $PID_BIB && echo "=== Bibliography build completed ===" || echo "=== Bibliography build failed (non-fatal) ==="
+        else
+          echo "Skipping PDF split (main.pdf or main.toc missing)"
+          python3 scripts/build_bib_pdf.py --out html_output/downloads/Bibliography.pdf || echo "Bibliography PDF build failed (non-fatal)"
+        fi
+
+    #=========================================================================
+    # STEP 4: Run Post-Processor (Navigation & Styling)
+    #=========================================================================
+    - name: "Step 4: Generate Navigation & Style Pages"
+      run: |
+        echo "=== Running HTML Post-Processor ==="
+        # Transforms raw TeX4ht HTML into styled, navigable web pages
+        # Uses html_output/main.toc and main_html.bbl from Steps 1 & 3
+        python3 scripts/run_post_processor.py
+
+    #=========================================================================
+    # STEP 5: Build Pagefind Search Index
+    #=========================================================================
+    - name: "Step 5: Build Search Index"
+      run: |
+        cd html_output
+        pagefind --site . --output-subdir pagefind
+        echo "Pagefind index built"
+
+    #=========================================================================
+    # STEP 6: Final Verification
+    #=========================================================================
+    - name: "Step 6: Verify Build Output"
+      run: |
+        echo "=== Checking build output ==="
+        
+        if [ ! -f "html_output/index.html" ]; then 
+          echo "ERROR: Missing index.html"
+          exit 1
+        fi
+        
+        echo "HTML files: $(ls -1 html_output/*.html 2>/dev/null | wc -l)"
+        echo "Figures: $(find html_output/Figures -type f 2>/dev/null | wc -l || echo '0')"
+        echo "Pictures: $(find html_output/Pictures -type f 2>/dev/null | wc -l || echo '0')"
+        echo "Search index: $(find html_output/pagefind -type f 2>/dev/null | wc -l || echo '0')"
+        echo "PDFs: $(ls -1 html_output/downloads/*.pdf 2>/dev/null | wc -l || echo '0')"
+        
+        # Check navigation critical files
+        if [ -f "html_output/bibliography.html" ]; then
+           echo "✓ bibliography.html exists"
+        else
+           echo "⚠ bibliography.html missing"
+        fi
+
+        # Create .nojekyll
+        touch html_output/.nojekyll
+
+    #=========================================================================
+    # STEP 7: Optimize Artifact Size (Compress Images, Remove Temp Files)
+    #=========================================================================
+    - name: "Step 7: Optimize Artifact Size"
+      run: |
+        echo "=== Optimizing artifact size ==="
+        echo "Initial size:"
+        du -sh html_output/
+        echo "=== Initial size breakdown ==="
+        du -sh html_output/*/ 2>/dev/null || true
+
+        # Remove temporary LaTeX build files
+        echo "Removing temporary files..."
+        find html_output/ -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.4ct" -o -name "*.4tc" -o -name "*.idv" -o -name "*.lg" -o -name "*.tmp" -o -name "*.xref" -o -name "*.dvi" -o -name "*.bbl" -o -name "*.blg" -o -name "*.fls" -o -name "*.fdb_latexmk" \) -delete
+        find html_output/ -type f \( -name ".DS_Store" -o -name "Thumbs.db" -o -name "desktop.ini" \) -delete
+
+        # Install optimization tools (parallel is pre-installed on ubuntu-latest)
+        echo "Installing image optimization tools..."
+        sudo apt-get update
+        sudo apt-get install -y ghostscript webp imagemagick parallel
+
+        NPROC=$(nproc)
+        echo "Available CPU cores: $NPROC"
+
+        # =====================================================================
+        # PDF Compression: Compress PDFs >50MB in parallel
+        # =====================================================================
+        echo ""
+        echo "=== Compressing large PDFs (>50MB) with ghostscript ==="
+        threshold=$((50 * 1024 * 1024))
+
+        compress_pdf() {
+          pdf="$1"
+          if [ ! -f "$pdf" ]; then return; fi
+          original_size=$(stat -c%s "$pdf" 2>/dev/null || echo "0")
+          if [ "$original_size" -gt "$threshold" ]; then
+            echo "  Compressing: $pdf ($(numfmt --to=iec $original_size))"
+            gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
+               -dNOPAUSE -dQUIET -dBATCH \
+               -sOutputFile="${pdf}.compressed" "$pdf" 2>/dev/null || true
+            if [ -f "${pdf}.compressed" ]; then
+              compressed_size=$(stat -c%s "${pdf}.compressed" 2>/dev/null || echo "0")
+              if [ "$compressed_size" -lt "$original_size" ] && [ "$compressed_size" -gt 0 ]; then
+                mv "${pdf}.compressed" "$pdf"
+                echo "    -> $(numfmt --to=iec $compressed_size) (saved $(numfmt --to=iec $((original_size - compressed_size))))"
+              else
+                rm -f "${pdf}.compressed"
+                echo "    -> kept original (compression didn't help)"
+              fi
+            fi
+          else
+            echo "  Skipping: $pdf ($(numfmt --to=iec $original_size)) - under 50MB"
+          fi
+        }
+        export -f compress_pdf
+        export threshold
+        find html_output/downloads/ -name "*.pdf" -print0 2>/dev/null | xargs -0 -P "$NPROC" -I{} bash -c 'compress_pdf "{}"'
+
+        # =====================================================================
+        # Image Optimization for Web (parallelized with xargs)
+        # Strategy: Resize oversized images, then convert to WebP (replacing originals)
+        # =====================================================================
+
+        # Step 1: Resize oversized images (>1920px wide) - parallel
+        echo ""
+        echo "=== Resizing oversized images (>1920px width) ==="
+        resize_img() {
+          img="$1"
+          width=$(identify -format "%w" "$img" 2>/dev/null || echo "0")
+          if [ "$width" -gt 1920 ]; then
+            echo "  Resizing: $img (${width}px -> max 1920px)"
+            convert "$img" -resize '1920x>' -quality 95 "$img" 2>/dev/null || true
+          fi
+        }
+        export -f resize_img
+        find html_output/ -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) \
+          -not -path "*/downloads/*" -not -path "*/pagefind/*" -print0 2>/dev/null \
+          | xargs -0 -P "$NPROC" -I{} bash -c 'resize_img "{}"'
+
+        # Step 2: Convert to WebP (replacing originals) - parallel
+        echo ""
+        echo "=== Converting images to WebP (replacing originals) ==="
+        convert_webp() {
+          img="$1"
+          webp_path="${img%.*}.webp"
+          if cwebp -q 85 -m 6 "$img" -o "$webp_path" 2>/dev/null; then
+            if [ -f "$webp_path" ]; then
+              rm -f "$img"
+            fi
+          fi
+        }
+        export -f convert_webp
+        find html_output/ -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) \
+          -not -path "*/downloads/*" -not -path "*/pagefind/*" -print0 2>/dev/null \
+          | xargs -0 -P "$NPROC" -I{} bash -c 'convert_webp "{}"'
+        echo "Converted $(find html_output/ -name '*.webp' 2>/dev/null | wc -l) images to WebP"
+
+        # Step 3: Rewrite HTML img src paths from .jpg/.png to .webp - parallel
+        echo ""
+        echo "=== Rewriting HTML image references to .webp ==="
+        find html_output/ -name "*.html" -print0 2>/dev/null \
+          | xargs -0 -P "$NPROC" sed -i \
+              -e 's/\(src="[^"]*\)\.png"/\1.webp"/g' \
+              -e 's/\(src="[^"]*\)\.jpg"/\1.webp"/g' \
+              -e 's/\(src="[^"]*\)\.jpeg"/\1.webp"/g' \
+              -e 's/\(src="[^"]*\)\.PNG"/\1.webp"/g' \
+              -e 's/\(src="[^"]*\)\.JPG"/\1.webp"/g' \
+              -e "s/\(src='[^']*\)\.png'/\1.webp'/g" \
+              -e "s/\(src='[^']*\)\.jpg'/\1.webp'/g" \
+              -e "s/\(src='[^']*\)\.jpeg'/\1.webp'/g"
+        echo "HTML image references updated"
+
+        # Report final sizes
+        echo ""
+        echo "=== Final artifact size ==="
+        du -sh html_output/
+        echo "=== Size breakdown ==="
+        du -sh html_output/*/ 2>/dev/null || true
+        echo "=== File counts ==="
+        echo "HTML files: $(find html_output/ -name '*.html' | wc -l)"
+        echo "PNG files:  $(find html_output/ -name '*.png' | wc -l)"
+        echo "JPG files:  $(find html_output/ -name '*.jpg' -o -name '*.jpeg' | wc -l)"
+        echo "WebP files: $(find html_output/ -name '*.webp' | wc -l)"
+        echo "PDF files:  $(find html_output/ -name '*.pdf' | wc -l)"
+
+    - name: Debug File Structure
+      run: ls -R html_output/
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: book-website
+        path: html_output/
+        retention-days: 30
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    # Required for actions/deploy-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: book-website
+        path: deploy_ready/
+
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: deploy_ready/
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+    # Checkout repo to update README with deployed URL
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update README with Page URL
+      continue-on-error: true  # Don't fail deployment if README update fails
+      run: |
+        # 1. Configure git
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # 2. Get the deployed URL
+        PAGE_URL="${{ steps.deployment.outputs.page_url }}"
+        echo "Deployed URL: $PAGE_URL"
+        
+        if [ -z "$PAGE_URL" ]; then
+          echo "No page URL available, skipping README update"
+          exit 0
+        fi
+
+        # 3. Update README.md using regex
+        # Pattern matches: <a href="..."><strong>Explore the book! »</strong></a>
+        # We replace the href value with the new PAGE_URL
+        sed -i -E "s|(<a href=\")[^\"]*(\"><strong>Explore the book! »</strong></a>)|\1$PAGE_URL\2|g" README.md
+
+        # 4. Check for changes and commit
+        if [[ -n $(git status -s README.md) ]]; then
+          echo "Updating README link..."
+          git add README.md
+          git commit -m "docs: auto-update docs link to $PAGE_URL [skip ci]"
+          git push origin main
+        else
+          echo "No changes to README.md needed."
+        fi

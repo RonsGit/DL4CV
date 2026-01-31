@@ -2418,11 +2418,6 @@ where:
 		\subsubsection{From Mask2Former to Mask DINO}
 		\label{subsubsec:chapter15_mask2former_to_maskdino}
 		
-		The detection-oriented lineage culminating in DAB-DETR and DINO-DETR is built around \emph{box-savvy queries}: each decoder query carries a dynamic 4D anchor box, and multi-scale deformable cross-attention lets it pull just enough context from the feature pyramid to localize objects with high-quality bounding boxes. However, segmentation requires more than tight boxes; it needs pixel-level shapes and boundaries. Mask2Former~\cite{cheng2022_mask2former} attacks this problem from the opposite direction: it reinterprets queries as \emph{semantic projectors} that ``paint'' dense masks over a high-resolution pixel embedding map via simple dot-products. Mask DINO is explicitly inspired by this idea and can be viewed as a fusion of DINO-DETR's geometric machinery with Mask2Former's unified, mask-centric segmentation pipeline.
-		
-		\subsubsection{From Mask2Former to Mask DINO}
-		\label{subsubsec:chapter15_mask2former_to_maskdino}
-		
 		The detection-oriented lineage culminating in DAB-DETR and DINO is built around \emph{box-savvy queries}: each decoder query carries a dynamic 4D anchor box, and multi-scale deformable cross-attention lets it pull just enough context from a feature pyramid to localize objects with high-quality bounding boxes. However, segmentation requires more than tight boxes; it needs pixel-level shapes and boundaries. Mask2Former~\cite{cheng2022_mask2former} attacks this problem from the opposite direction: it reinterprets queries as \emph{semantic projectors} that ``paint'' dense masks over a high-resolution pixel embedding map via simple dot-products. Mask DINO is explicitly inspired by this idea and can be viewed as a fusion of DINO-DETR's geometric machinery with Mask2Former's unified, mask-centric segmentation pipeline.
 		
 		\paragraph{Mask2Former: queries as semantic projectors for unified segmentation}

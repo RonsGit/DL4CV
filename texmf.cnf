@@ -1,0 +1,30 @@
+% Custom TeX configuration for large documents
+% Increase memory limits for tex4ht HTML generation
+
+% Main memory size (words) - increased from 5000000
+main_memory = 12000000
+
+% Extra memory for large documents
+extra_mem_bot = 10000000
+extra_mem_top = 10000000
+
+% Pool size for string storage
+pool_size = 6250000
+string_vacancies = 90000
+pool_free = 47500
+max_strings = 500000
+
+% Font memory
+font_mem_size = 8000000
+font_max = 9000
+
+% Save stack for nested structures
+save_size = 80000
+stack_size = 10000
+
+% Hash table for control sequences
+hash_extra = 200000
+
+% Buffer for reading input
+buf_size = 2000000
+

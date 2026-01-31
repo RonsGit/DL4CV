@@ -479,7 +479,7 @@ While the Nearest Neighbor classifier is typically discussed in the context of i
 
 \subsubsection{Using Nearest Neighbor for Non-Image Data}
 
-One compelling example of Nearest Neighbor applied to non-image data involves the analysis of academic papers. In this context, similarity between documents is measured using \textbf{TF-IDF similarity} (Term Frequency–Inverse Document Frequency). This metric captures the importance of words in a document relative to a collection of documents, emphasizing unique and meaningful terms while downplaying common ones like "the" or "and."
+One compelling example of Nearest Neighbor applied to non-image data involves the analysis of academic papers. In this context, similarity between documents is measured using \textbf{TF-IDF similarity} (Term Frequency--Inverse Document Frequency). This metric captures the importance of words in a document relative to a collection of documents, emphasizing unique and meaningful terms while downplaying common ones like ``the'' or ``and.''
 
 \begin{itemize}
 	\item \textbf{Term Frequency (TF):} Measures how often a term appears in a document, providing a sense of relevance within that document.
@@ -496,9 +496,13 @@ One compelling example of Nearest Neighbor applied to non-image data involves th
 	\label{fig:chapter2_nn_tfidf}
 \end{figure}
 
-Using TF-IDF scores, we can represent each academic paper as a feature vector. Nearest Neighbor can then be employed to find similar papers by comparing these feature vectors. As illustrated in Slide \ref{fig:chapter2_nn_tfidf}, querying for a specific paper returns its most similar counterparts based on their semantic content.
+Using TF-IDF scores, we can represent each academic paper as a feature vector. Nearest Neighbor can then be employed to find similar papers by comparing these vectors in feature space. As illustrated in Figure~\ref{fig:chapter2_nn_tfidf}, querying for a specific paper returns its closest neighbors based on semantic similarity.
 
-This example highlights the flexibility of Nearest Neighbor and related algorithms, such as K-means clustering, in handling diverse data types. By tailoring the distance metric to the nature of the data, we can unlock meaningful insights across domains.
+\newpage
+
+In practice, we often retrieve not just the single nearest document, but the top $k$ most similar papers. Here, $k$ denotes the number of neighbors returned (for example, $k=5$ yields the five most similar papers). This approach is commonly referred to as \textit{$k$-Nearest Neighbors}.
+
+This example highlights the flexibility of Nearest Neighbor for non-image data. By choosing an appropriate similarity metric such as TF-IDF, we can uncover meaningful relationships between documents and build effective recommendation systems.
 
 \subsubsection{Key Insights}
 
@@ -521,7 +525,7 @@ The performance of the Nearest Neighbor classifier depends on two hyperparameter
 \end{itemize}
 
 Selecting the best hyperparameters is challenging because they cannot be directly learned from training data.
-\newpage
+
 Some strategies we can think of to select model hyperparameters include:
 \begin{enumerate}
 	\item \textbf{Using the Entire Dataset:} Selecting hyperparameters that optimize performance on the training set is misleading. For example, \(k=1\) will perform good in this case, and may lead to overfitting and poor generalization.
