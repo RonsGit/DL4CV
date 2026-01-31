@@ -10,7 +10,11 @@
   <p align="center">
     An open-source, comprehensive guide and companion reference for the world of Computer Vision.
     <br />
-    <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>Explore the book! »</strong></a>
+    <br />
+    <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>📖 READ THE BOOK HERE »</strong></a>
+    <br />
+    <br />
+    <em>The website above is the primary way to read the content. This repository is for tracking issues, suggesting changes, and technical contributions.</em>
     <br />
     <br />
     <a href="https://github.com/RonsGit/DL4CV/issues">Report Bug</a>
@@ -59,14 +63,16 @@
 
 ## About The Project
 
-**Deep Learning for Computer Vision** is a community-driven open-source initiative designed to create an accessible, structured, and deep resource for students, researchers, and practitioners entering the field.
+**Deep Learning for Computer Vision** is a community-driven open-source initiative designed to create an accessible, structured, and **comprehensive resource** for students, researchers, and practitioners entering the **Computer Vision field**.
 
-While the field of Deep Learning evolves rapidly, foundational ideas remain central. This book aims to bridge the gap between lecture concepts, seminal papers, and practical implementation, creating a resource you can learn from and revisit as a reference.
+The field of Deep Learning evolves at a breakneck pace. To ensure this resource remains relevant and accurate, it is built as an **open-source project**. By leveraging the collective knowledge of the CV community, we can ensure the content stays up-to-date with new advancements and community feedback.
 
-This project originated as a structured companion to the University of Michigan’s EECS498 curriculum by **Ron Korine**, but has since evolved into a standalone, community-supported resource. The idea is to cover seminal papers and works from the Computer Vision community and make them accessible to a wider audience, organizing knowledge in a coherent, navigable format.
+The core goal of this book is to bridge the gap between abstract lecture concepts, seminal research papers, and practical implementation. It organizes knowledge in a coherent, navigable format, creating a resource that you can learn from effectively and revisit as a long-term reference.
+
+This project originated as a structured companion to the University of Michigan’s EECS498 curriculum by **Ron Korine**, but has since evolved into a standalone, community-supported resource.
 
 ### Disclaimer
-> **Note:** I (Ron Korine) am **not** part of the official course staff for the university courses mentioned in this text (such as EECS498). This is an independent project created to help people get into the field.
+> **Note:** I (Ron Korine) am **not** part of the official course staff for the university courses mentioned in this text (such as EECS498).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -74,18 +80,20 @@ This project originated as a structured companion to the University of Michigan�
 
 ## Getting Started
 
-To get a local copy up and running for reading or development, follow these steps.
+> **🛑 For Readers:** You do **not** need to install anything to read the book! Simply visit the [**Live Website**](https://fuzzy-succotash-wrp8yol.pages.github.io/).
+>
+> **For Contributors:** Follow the steps below **only** if you intend to run the build pipeline locally to contribute code, fix typos, or add new chapters.
 
 ### Prerequisites
 * **LaTeX Distribution**: Ensure you have a full TeX distribution installed (TeX Live recommended).
-* **Python**: Version 3.9+ is recommended for the build scripts.
+* **Python**: Version 3.9+ is required.
 * **Editor**: We recommend **TeXStudio** for editing the `.tex` files to ensure they render correctly before building the full website.
 
 ### Installation
 
 1.  **Clone the repository**
     ```sh
-    git clone https://github.com/RonsGit/DL4CV.git
+    git clone [https://github.com/RonsGit/DL4CV.git](https://github.com/RonsGit/DL4CV.git)
     cd DL4CV
     ```
 2.  **Install Python dependencies**
@@ -102,6 +110,12 @@ To get a local copy up and running for reading or development, follow these step
 
 This project is Open Source. Readers are highly encouraged to suggest changes, create pull requests to update content, add new sections, or fix mistakes.
 
+### Architecture & Security Note
+This project relies on a custom **Static Site Generation (SSG)** pipeline.
+* **No Server:** The build process does **not** launch a local web server, open network ports, or run background daemons.
+* **Static Output:** The Python scripts simply read your source `.tex` files and write static `.html` and `.pdf` files to the `html_output/` directory.
+* **Safe Execution:** The build is a strictly local file-transformation process. You can inspect the output files directly in your browser without needing a running backend.
+
 ### Editing Content
 The core content of the book is located in the `Chapters/` directory.
 1.  Open the relevant chapter `.tex` file in **TeXStudio**.
@@ -109,12 +123,12 @@ The core content of the book is located in the `Chapters/` directory.
 3.  Compile locally within TeXStudio to verify that the LaTeX renders correctly (equations, figures, references).
 
 ### Building Locally
-To generate the full PDF and the website HTML locally, we use a custom Python build pipeline. It is crucial to verify that the website build does not break after your changes.
+To generate the full website and PDFs, run the build pipeline below. This will populate the `html_output/` folder with the static site.
 
 > **Platform Note:** The full build pipeline (particularly `pagefind` for search and `ghostscript` for compression) is optimized for **Linux** environments (or WSL on Windows). While the Python scripts are cross-platform, some external tools may require specific configurations on Windows.
 
 **The Build Pipeline:**
-Our CI/CD (controlled by `build.yml`) orchestrates the following sequence to produce the final output. To replicate the full build locally, you should run:
+Our CI/CD (controlled by `build.yml`) orchestrates the following sequence to produce the final artifacts. To replicate the full build locally:
 
 1.  **Build Manager** (Compiles Content):
     ```sh
@@ -133,7 +147,7 @@ Our CI/CD (controlled by `build.yml`) orchestrates the following sequence to pro
     python scripts/run_post_processor.py
     ```
 
-Ensure the output in the `html_output/` directory looks correct before pushing.
+Once finished, simply open `html_output/index.html` in your web browser to view the changes.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -156,11 +170,14 @@ Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Proposing New Features
+If you want to add a new chapter, section, or significant functionality, please follow this flow:
+
+1. **Fork the Project**
+2. **Create a Feature Branch**
+   (Use a descriptive name for your new addition)
+   ```sh
+   git checkout -b feature/NewChapterName```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -204,7 +221,7 @@ A huge thank you to everyone who has contributed to this project!
   <img src="https://contrib.rocks/image?repo=RonsGit/DL4CV" alt="contrib.rocks infinite contributors list" />
 </a>
 
-*Partial list of contributors. For specific credits regarding content, figures, and research, please see the **Preface** of the book/website.*
+*Partial list of contributors. For specific credits regarding content, specially made figures, please see the **Preface** of the book/website.*
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -227,8 +244,6 @@ The goal of this project is not to claim ownership of these ideas, but to cover 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/RonsGit/DL4CV.svg?style=for-the-badge
 [contributors-url]: https://github.com/RonsGit/DL4CV/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/RonsGit/DL4CV.svg?style=for-the-badge

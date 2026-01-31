@@ -15622,31 +15622,6 @@
       \verb https://arxiv.org/abs/2204.10850
       \endverb
     \endentry
-    \entry{lebanoff2018_pixelrnn}{misc}{}{}
-      \name{author}{1}{}{%
-        {{hash=242839f39a92f27877935dccf4e31134}{%
-           family={Lebanoff},
-           familyi={L\bibinitperiod},
-           given={Logan},
-           giveni={L\bibinitperiod}}}%
-      }
-      \strng{namehash}{242839f39a92f27877935dccf4e31134}
-      \strng{fullhash}{242839f39a92f27877935dccf4e31134}
-      \strng{fullhashraw}{242839f39a92f27877935dccf4e31134}
-      \strng{bibnamehash}{242839f39a92f27877935dccf4e31134}
-      \strng{authorbibnamehash}{242839f39a92f27877935dccf4e31134}
-      \strng{authornamehash}{242839f39a92f27877935dccf4e31134}
-      \strng{authorfullhash}{242839f39a92f27877935dccf4e31134}
-      \strng{authorfullhashraw}{242839f39a92f27877935dccf4e31134}
-      \field{sortinit}{L}
-      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://www.youtube.com/watch?v=-FFveGrG46w&t=333s&ab_channel=UCFCRCV}}
-      \field{note}{Lecture, University of Central Florida}
-      \field{title}{PixelRNN and PixelCNN Explained}
-      \field{year}{2018}
-    \endentry
     \entry{lecun1998_lenet}{article}{}{}
       \name{author}{4}{}{%
         {{hash=6a1aa6b7eab12b931ca7c7e3f927231d}{%
@@ -23012,53 +22987,6 @@
       \verb https://arxiv.org/abs/1807.03748
       \endverb
     \endentry
-    \entry{oord2018_neural_discrete}{misc}{}{}
-      \name{author}{3}{}{%
-        {{hash=705a5ed355c190be3a39e0a5134d2ae5}{%
-           family={Oord},
-           familyi={O\bibinitperiod},
-           given={Aaron},
-           giveni={A\bibinitperiod},
-           prefix={van\bibnamedelima den},
-           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
-        {{hash=494b568c5dc85ba8f3f409635f9c5f25}{%
-           family={Vinyals},
-           familyi={V\bibinitperiod},
-           given={Oriol},
-           giveni={O\bibinitperiod}}}%
-        {{hash=481308b301166b521c74fde6566e97e6}{%
-           family={Kavukcuoglu},
-           familyi={K\bibinitperiod},
-           given={Koray},
-           giveni={K\bibinitperiod}}}%
-      }
-      \strng{namehash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{fullhash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{fullhashraw}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{bibnamehash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{authorbibnamehash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{authornamehash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{authorfullhash}{1f8f233c911e6ffbd85ce894897a4da5}
-      \strng{authorfullhashraw}{1f8f233c911e6ffbd85ce894897a4da5}
-      \field{extraname}{1}
-      \field{sortinit}{O}
-      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{eprintclass}{cs.LG}
-      \field{eprinttype}{arXiv}
-      \field{title}{Neural Discrete Representation Learning}
-      \field{year}{2018}
-      \verb{eprint}
-      \verb 1711.00937
-      \endverb
-      \verb{urlraw}
-      \verb https://arxiv.org/abs/1711.00937
-      \endverb
-      \verb{url}
-      \verb https://arxiv.org/abs/1711.00937
-      \endverb
-    \endentry
     \entry{oord2018_vqvae}{misc}{}{}
       \name{author}{3}{}{%
         {{hash=705a5ed355c190be3a39e0a5134d2ae5}{%
@@ -23087,7 +23015,6 @@
       \strng{authornamehash}{1f8f233c911e6ffbd85ce894897a4da5}
       \strng{authorfullhash}{1f8f233c911e6ffbd85ce894897a4da5}
       \strng{authorfullhashraw}{1f8f233c911e6ffbd85ce894897a4da5}
-      \field{extraname}{2}
       \field{sortinit}{O}
       \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
       \field{labelnamesource}{author}
@@ -24010,48 +23937,6 @@
       \field{year}{2013}
       \verb{doi}
       \verb 10.1007/978-1-4419-7254-8
-      \endverb
-    \endentry
-    \entry{pinaya2021_pixelcnn_blindspot}{misc}{}{}
-      \name{author}{3}{}{%
-        {{hash=5cd4d21ec1456109c3c22b542b3249b9}{%
-           family={Pinaya},
-           familyi={P\bibinitperiod},
-           given={Walter\bibnamedelimb Hugo\bibnamedelima Lopez},
-           giveni={W\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
-        {{hash=92ca5d33e91a8499125d384db6cb65d6}{%
-           family={Costa},
-           familyi={C\bibinitperiod},
-           given={Pedro\bibnamedelima F.},
-           giveni={P\bibinitperiod\bibinitdelim F\bibinitperiod},
-           prefix={da},
-           prefixi={d\bibinitperiod}}}%
-        {{hash=7a0f1c3c017dea2513e2f64b57d33d69}{%
-           family={Dafflon},
-           familyi={D\bibinitperiod},
-           given={Jessica},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{fullhash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{fullhashraw}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{bibnamehash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{authorbibnamehash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{authornamehash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{authorfullhash}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \strng{authorfullhashraw}{82be8a3aac7deb92d4f66314cae4b7dd}
-      \field{sortinit}{P}
-      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{Available on Towards Data Science}
-      \field{title}{PixelCNN’s Blind Spot and How to Fix It}
-      \field{year}{2021}
-      \verb{urlraw}
-      \verb https://towardsdatascience.com/pixelcnns-blind-spot-84e19a3797b9/
-      \endverb
-      \verb{url}
-      \verb https://towardsdatascience.com/pixelcnns-blind-spot-84e19a3797b9/
       \endverb
     \endentry
     \entry{pizzi2022_sscd}{misc}{}{}
