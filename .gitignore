@@ -57,3 +57,11 @@ main_html.bbl
 # Keep Scripts and Configs
 !scripts/
 !.github/
+
+texput.log
+missfont.log
+*.run.xml
+*.ptc
+*.listing
+*.blg
+custom_filter.py
