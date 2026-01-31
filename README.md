@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/RonsGit/DL4CV">
-    <img src="Pictures/cv_logo.png" alt="Logo" width="804" height="286">
+    <img src="Pictures/transperent_logo.png" alt="Logo" width="800" height="266">
   </a>
 
   <h3 align="center">Deep Learning for Computer Vision</h3>
@@ -93,7 +93,7 @@ This project originated as a structured companion to the University of Michiganâ
 
 1.  **Clone the repository**
     ```sh
-    git clone [https://github.com/RonsGit/DL4CV.git](https://github.com/RonsGit/DL4CV.git)
+    git clone https://github.com/RonsGit/DL4CV.git
     cd DL4CV
     ```
 2.  **Install Python dependencies**
@@ -173,11 +173,11 @@ If you have a suggestion that would make this better, please fork the repo and c
 ### Proposing New Features
 If you want to add a new chapter, section, or significant functionality, please follow this flow:
 
-1. **Fork the Project**
-2. **Create a Feature Branch**
-   (Use a descriptive name for your new addition)
-   ```sh
-   git checkout -b feature/NewChapterName```
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
