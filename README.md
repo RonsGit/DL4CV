@@ -10,7 +10,11 @@
   <p align="center">
     An open-source, comprehensive guide and companion reference for the world of Computer Vision.
     <br />
-    <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>Explore the book! »</strong></a>
+    <br />
+    <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>📖 READ THE BOOK HERE »</strong></a>
+    <br />
+    <br />
+    <em>The website above is the primary way to read the content. This repository is for tracking issues, suggesting changes, and technical contributions.</em>
     <br />
     <br />
     <a href="https://github.com/RonsGit/DL4CV/issues">Report Bug</a>
@@ -59,14 +63,16 @@
 
 ## About The Project
 
-**Deep Learning for Computer Vision** is a community-driven open-source initiative designed to create an accessible, structured, and deep resource for students, researchers, and practitioners entering the field.
+**Deep Learning for Computer Vision** is a community-driven open-source initiative designed to create an accessible, structured, and **comprehensive resource** for students, researchers, and practitioners entering the **Computer Vision field**.
 
-While the field of Deep Learning evolves rapidly, foundational ideas remain central. This book aims to bridge the gap between lecture concepts, seminal papers, and practical implementation, creating a resource you can learn from and revisit as a reference.
+The field of Deep Learning evolves at a breakneck pace. To ensure this resource remains relevant and accurate, it is built as an **open-source project**. By leveraging the collective knowledge of the CV community, we can ensure the content stays up-to-date with new advancements and community feedback.
 
-This project originated as a structured companion to the University of Michigan’s EECS498 curriculum by **Ron Korine**, but has since evolved into a standalone, community-supported resource. The idea is to cover seminal papers and works from the Computer Vision community and make them accessible to a wider audience, organizing knowledge in a coherent, navigable format.
+The core goal of this book is to bridge the gap between abstract lecture concepts, seminal research papers, and practical implementation. It organizes knowledge in a coherent, navigable format, creating a resource that you can learn from effectively and revisit as a long-term reference.
+
+This project originated as a structured companion to the University of Michigan’s EECS498 curriculum by **Ron Korine**, but has since evolved into a standalone, community-supported resource.
 
 ### Disclaimer
-> **Note:** I (Ron Korine) am **not** part of the official course staff for the university courses mentioned in this text (such as EECS498). This is an independent project created to help people get into the field.
+> **Note:** I (Ron Korine) am **not** part of the official course staff for the university courses mentioned in this text (such as EECS498).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -74,7 +80,9 @@ This project originated as a structured companion to the University of Michigan�
 
 ## Getting Started
 
-To get a local copy up and running for reading or development, follow these steps.
+> **🛑 For Readers:** You do **not** need to install anything to read the book! Simply visit the [**Live Website**](https://fuzzy-succotash-wrp8yol.pages.github.io/).
+>
+> **For Contributors:** Follow the steps below **only** if you intend to run the build pipeline locally to contribute code, fix typos, or add new chapters.
 
 ### Prerequisites
 * **LaTeX Distribution**: Ensure you have a full TeX distribution installed (TeX Live recommended).
@@ -85,7 +93,7 @@ To get a local copy up and running for reading or development, follow these step
 
 1.  **Clone the repository**
     ```sh
-    git clone https://github.com/RonsGit/DL4CV.git
+    git clone [https://github.com/RonsGit/DL4CV.git](https://github.com/RonsGit/DL4CV.git)
     cd DL4CV
     ```
 2.  **Install Python dependencies**
@@ -227,8 +235,6 @@ The goal of this project is not to claim ownership of these ideas, but to cover 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/RonsGit/DL4CV.svg?style=for-the-badge
 [contributors-url]: https://github.com/RonsGit/DL4CV/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/RonsGit/DL4CV.svg?style=for-the-badge
