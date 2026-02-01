@@ -1745,13 +1745,22 @@ def get_common_head(title, is_aux=False):
             mjx-frac, mjx-mfrac {{
                 overflow: visible !important;
             }}
-            /* Mobile: fix underbraces and overbraces */
+            /* Mobile: fix underbraces and overbraces - container needs visible */
             mjx-munder, mjx-mover, mjx-munderover {{
                 overflow: visible !important;
             }}
-            /* Mobile: fix stretchy delimiters */
-            mjx-stretchy-v, mjx-stretchy-h {{
-                overflow: visible !important;
+            /* Mobile: vertical stretchy delimiters (brackets) need hidden to prevent long lines */
+            mjx-stretchy-v {{
+                overflow: hidden !important;
+            }}
+            /* Mobile: horizontal stretchy (underbraces) need clip to prevent bar through middle */
+            /* CRITICAL: Do NOT use overflow:visible on mjx-stretchy-h - it causes the bar bug! */
+            mjx-stretchy-h {{
+                overflow: clip !important;
+            }}
+            /* The extension piece inside horizontal braces must be hidden */
+            mjx-stretchy-h > mjx-ext {{
+                overflow: hidden !important;
             }}
         }}
 
@@ -2452,7 +2461,10 @@ def get_js_footer():
             }
 
             try {
-                const pagefind = await import('/pagefind/pagefind.js');
+                // Use relative path for GitHub Pages subpath compatibility (e.g., /DL4CV/)
+                const base = document.querySelector('base')?.href || window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/') + '/';
+                const pagefindUrl = new URL('pagefind/pagefind.js', base).href;
+                const pagefind = await import(pagefindUrl);
                 await pagefind.init();
                 
                 // --- ONLINE MODE ---
@@ -2787,8 +2799,8 @@ def build_sidebar(active_mk, is_aux=False, local_toc_content=""):
     preface_url = get_asset_url("Auxiliary/Preface.html", is_aux)
     dep_url = get_asset_url("dependency_graph.html", is_aux)
     bib_url = get_asset_url("bibliography.html", is_aux)
-    repo_url = "https://github.com/DLCVBook/CVBook"
-    star_url = "https://github.com/DLCVBook/CVBook/stargazers"
+    repo_url = "https://github.com/RonsGit/DL4CV"
+    star_url = "https://github.com/RonsGit/DL4CV/stargazers"
     
     html = f'''
     <div class="sidebar-header">
@@ -5047,7 +5059,7 @@ def build_index():
     <div class="grid">{cards}</div>
     
     <footer class="footer-text" style="text-align:center; padding:2rem; font-size:0.9rem;">
-        Feedback? <a href="https://github.com/DLCVBook/CVBook/issues" style="color:var(--primary); font-weight:700;">Open Issue</a> or <a href="mailto:eecs498summary@gmail.com" style="color:var(--primary); font-weight:700;">Email Us</a>
+        Feedback? <a href="https://github.com/RonsGit/DL4CV/issues" style="color:var(--primary); font-weight:700;">Open Issue</a> or <a href="mailto:eecs498summary@gmail.com" style="color:var(--primary); font-weight:700;">Email Us</a>
     </footer>
     
     {get_js_footer()}

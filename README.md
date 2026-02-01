@@ -11,7 +11,7 @@
     An open-source, comprehensive guide and companion reference for the world of Computer Vision.
     <br />
     <br />
-    <a href="https://fuzzy-succotash-wrp8yol.pages.github.io/"><strong>📖 READ THE BOOK HERE »</strong></a>
+    <a href="https://ronsgit.github.io/DL4CV/"><strong>📖 READ THE BOOK HERE »</strong></a>
     <br />
     <br />
     <em>The website above is the primary way to read the content. This repository is for tracking issues, suggesting changes, and technical contributions.</em>
@@ -80,7 +80,7 @@ This project originated as a structured companion to the University of Michigan�
 
 ## Getting Started
 
-> **🛑 For Readers:** You do **not** need to install anything to read the book! Simply visit the [**Live Website**](https://fuzzy-succotash-wrp8yol.pages.github.io/).
+> **🛑 For Readers:** You do **not** need to install anything to read the book! Simply visit the [**Live Website**](https://ronsgit.github.io/DL4CV/).
 >
 > **For Contributors:** Follow the steps below **only** if you intend to run the build pipeline locally to contribute code, fix typos, or add new chapters.
 

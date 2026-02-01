@@ -327,9 +327,9 @@ jobs:
         fi
 
         # 3. Update README.md using regex
-        # Pattern matches: <a href="..."><strong>Explore the book! »</strong></a>
+        # Pattern matches: <a href="..."><strong>📖 READ THE BOOK HERE »</strong></a>
         # We replace the href value with the new PAGE_URL
-        sed -i -E "s|(<a href=\")[^\"]*(\"><strong>Explore the book! »</strong></a>)|\1$PAGE_URL\2|g" README.md
+        sed -i -E "s|(<a href=\")[^\"]*(\"><strong>📖 READ THE BOOK HERE »</strong></a>)|\1$PAGE_URL\2|g" README.md
 
         # 4. Check for changes and commit
         if [[ -n $(git status -s README.md) ]]; then
