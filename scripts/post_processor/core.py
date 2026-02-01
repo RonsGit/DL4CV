@@ -1615,7 +1615,7 @@ def get_common_head(title, is_aux=False):
             }}
             
             /* Reduce header height & fix title - ensure it stays visible */
-            .top-bar {{ padding: 0 0.5rem; gap: 0.5rem; z-index: 2100 !important; position: sticky !important; }} 
+            .top-bar {{ padding: 0 0.5rem; gap: 0.5rem; z-index: 2100 !important; position: sticky !important; top: 0 !important; }} 
             .page-title {{ 
                 font-size: 0.9rem; 
                 flex: 1; 
@@ -2385,37 +2385,33 @@ def get_js_footer():
                 if (contentScroll) {
                     // Function to reset viewport and scroll correct container
                     const fixMobileScroll = (scrollToTarget = true) => {
-                        const viewportScrolled = window.scrollY > 0 ||
-                            document.documentElement.scrollTop > 0 ||
-                            document.body.scrollTop > 0;
+                        // Always reset viewport scroll on mobile - it should NEVER scroll
+                        window.scrollTo(0, 0);
+                        document.documentElement.scrollTop = 0;
+                        document.body.scrollTop = 0;
 
-                        if (viewportScrolled) {
-                            // Reset viewport scroll
-                            window.scrollTo(0, 0);
-                            document.documentElement.scrollTop = 0;
-                            document.body.scrollTop = 0;
-
-                            // Scroll to hash in correct container
-                            if (scrollToTarget && window.location.hash) {
-                                scrollToHash(true);
-                            }
+                        // Scroll to hash in correct container
+                        if (scrollToTarget && window.location.hash) {
+                            scrollToHash(true);
                         }
                     };
 
-                    // Immediate check on load
+                    // Immediate reset on load - don't wait for scroll detection
                     fixMobileScroll(true);
 
-                    // Check again after browser might have scrolled
-                    [50, 100, 200, 300, 500].forEach(delay => {
-                        setTimeout(() => fixMobileScroll(true), delay);
+                    // Check repeatedly to catch any browser scroll behavior
+                    [0, 10, 20, 50, 100, 200, 300, 500, 1000].forEach(delay => {
+                        setTimeout(() => fixMobileScroll(delay < 100), delay);
                     });
 
-                    // Scroll listener as ongoing guard
+                    // Scroll listener as ongoing guard - immediately reset any viewport scroll
                     window.addEventListener('scroll', () => {
                         if (window.scrollY > 0) {
-                            fixMobileScroll(!initialScrollDone);
+                            window.scrollTo(0, 0);
+                            document.documentElement.scrollTop = 0;
+                            document.body.scrollTop = 0;
                         }
-                    }, { passive: true });
+                    }, { passive: false });
                 }
             }
         });
