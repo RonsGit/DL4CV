@@ -1453,7 +1453,12 @@ def get_common_head(title, is_aux=False):
                 margin-top: 0.25rem !important;
             }}
 
-            /* Fix enumerate/itemize grid overflow on mobile - use inline-grid for proper bullet alignment */
+            /* ================================================================= */
+            /* MOBILE LIST FIX - Ensure bullets/numbers show properly          */
+            /* TeX4ht generates dl.enumerate-enumitem with dt + dd pairs       */
+            /* dt contains "1.", "2.", etc. - they are NOT empty!              */
+            /* Keep using grid on mobile but ensure dt column is visible.      */
+            /* ================================================================= */
             dl.enumerate, dl.itemize, dl.enumerate-enumitem, dl.compactdesc {{
                 display: grid !important;
                 grid-template-columns: auto 1fr !important;
@@ -1461,40 +1466,47 @@ def get_common_head(title, is_aux=False):
                 row-gap: 0.5rem !important;
                 max-width: 100% !important;
                 overflow: visible !important;
-                margin: 0.5rem 0 !important;
+                margin: 0.75rem 0 !important;
                 padding-left: 0.5rem !important;
             }}
+            /* dt contains bullet/number - left column */
             dl.enumerate > dt, dl.itemize > dt, dl.enumerate-enumitem > dt, dl.compactdesc > dt {{
                 grid-column: 1 !important;
-                font-weight: 600 !important;
-                min-width: 1.25rem !important;
-                text-align: right !important;
+                display: block !important;
+                font-weight: 700 !important;
                 color: var(--text) !important;
+                text-align: right !important;
+                min-width: 1.5em !important;
+                visibility: visible !important;
             }}
-            /* For itemize (bullets), show the bullet character prominently */
-            dl.itemize > dt {{
-                font-size: 1.2em !important;
-                line-height: 1.2 !important;
-            }}
+            /* dd contains the content - right column */
             dl.enumerate > dd, dl.itemize > dd, dl.enumerate-enumitem > dd, dl.compactdesc > dd {{
                 grid-column: 2 !important;
+                display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 max-width: 100% !important;
+                word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
-                word-break: break-word !important;
             }}
             /* Standard UL/OL lists on mobile - ensure bullets show */
             #doc_content ul, #doc_content ol {{
                 list-style-position: outside !important;
-                padding-left: 1.5rem !important;
-                margin: 0.5rem 0 !important;
+                padding-left: 1.75rem !important;
+                margin: 0.75rem 0 !important;
             }}
             #doc_content ul {{ list-style-type: disc !important; }}
             #doc_content ol {{ list-style-type: decimal !important; }}
+            #doc_content ul ul {{ list-style-type: circle !important; }}
+            #doc_content ul ul ul {{ list-style-type: square !important; }}
             #doc_content li {{
                 display: list-item !important;
-                margin-bottom: 0.4rem !important;
+                margin-bottom: 0.5rem !important;
+                padding-left: 0.25rem !important;
+            }}
+            /* Nested lists */
+            #doc_content li > ul, #doc_content li > ol {{
+                margin: 0.5rem 0 0.5rem 0 !important;
             }}
             /* Math inside list items - allow horizontal scroll without gray artifacts */
             dd mjx-container[display="true"], dd .MathJax_Display,
@@ -1777,29 +1789,35 @@ def get_common_head(title, is_aux=False):
             }}
             /* ================================================================= */
             /* MOBILE UNDERBRACE/OVERBRACE FIX - CRITICAL                        */
-            /* MathJax stretchy-h structure: <mjx-stretchy-h>                     */
-            /*   <mjx-beg> (left curl of brace)                                   */
-            /*   <mjx-ext> (middle extension line - THIS causes the bar!)        */
-            /*   <mjx-end> (right curl of brace)                                  */
-            /* Solution: COMPLETELY HIDE mjx-ext, show only beg/end curls        */
+            /* The bar through underbraces is caused by mjx-ext having width:0   */
+            /* but with :after/:before pseudo-elements that stretch infinitely.  */
+            /* Solution: Target mjx-ext ONLY and limit its pseudo-elements.      */
+            /* mjx-beg and mjx-end are the brace endpoints - leave untouched!    */
             /* ================================================================= */
+            /* Only clip the extension piece, not the whole brace structure */
+            mjx-stretchy-h > mjx-ext {{
+                max-width: 100% !important;
+                overflow: hidden !important;
+            }}
+            /* The stretchy container needs visible overflow for brace ends */
             mjx-stretchy-h {{
                 overflow: visible !important;
             }}
-            /* COMPLETELY HIDE the extension line on mobile - it causes the bar */
-            mjx-stretchy-h > mjx-ext {{
-                display: none !important;
-            }}
-            /* Brace ends (curls) must remain visible */
+            /* mjx-beg and mjx-end must remain visible (brace ends) */
             mjx-stretchy-h > mjx-beg,
             mjx-stretchy-h > mjx-end {{
-                display: inline-block !important;
                 overflow: visible !important;
             }}
-            /* Ensure the underbrace label text is visible */
-            mjx-munder mjx-row:last-child,
-            mjx-munderover mjx-row:last-child {{
+            /* Ensure munder/mover containers allow proper display */
+            mjx-munder, mjx-mover, mjx-munderover {{
                 overflow: visible !important;
+            }}
+            /* Ensure equation containers remain scrollable */
+            mjx-container[display="true"] {{
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+                -webkit-overflow-scrolling: touch !important;
+                max-width: 100vw !important;
             }}
         }}
 
@@ -2217,30 +2235,23 @@ def get_js_footer():
             }
         }
 
-        // Fix underbrace/overbrace rendering - HIDE extension lines on mobile to prevent bar
+        // Fix underbrace/overbrace rendering - clip only the mjx-ext element
+        // The mjx-ext element stretches infinitely; mjx-beg and mjx-end are brace endpoints
         function fixUnderbraces() {
-            const isMobile = window.innerWidth <= 768;
+            // Target only the extension piece inside stretchy-h, not the whole structure
+            document.querySelectorAll('mjx-stretchy-h > mjx-ext').forEach(ext => {
+                ext.style.maxWidth = '100%';
+                ext.style.overflow = 'hidden';
+            });
+            // The stretchy-h container itself needs visible overflow for brace ends
             document.querySelectorAll('mjx-stretchy-h').forEach(stretchyH => {
                 stretchyH.style.overflow = 'visible';
-
-                // The mjx-ext element draws the connecting line - HIDE IT on mobile
-                const ext = stretchyH.querySelector('mjx-ext');
-                if (ext) {
-                    if (isMobile) {
-                        // Completely hide the extension bar on mobile - it causes the line through braces
-                        ext.style.display = 'none';
-                    } else {
-                        ext.style.overflow = 'hidden';
-                    }
-                }
-
-                // Ensure brace ends (curls) are always visible
-                const beg = stretchyH.querySelector('mjx-beg');
-                const end = stretchyH.querySelector('mjx-end');
-                if (beg) beg.style.display = 'inline-block';
-                if (end) end.style.display = 'inline-block';
             });
-            // Ensure munder/mover containers have visible overflow
+            // mjx-beg and mjx-end (brace endpoints) must stay visible
+            document.querySelectorAll('mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end').forEach(el => {
+                el.style.overflow = 'visible';
+            });
+            // Ensure munder/mover containers have visible overflow for proper display
             document.querySelectorAll('mjx-munder, mjx-mover, mjx-munderover').forEach(el => {
                 el.style.overflow = 'visible';
             });
@@ -3849,16 +3860,19 @@ def process_chapter(html_file: Path, chapter_data: dict):
 
     def clean_text_for_slug(text):
         """Clean text for generating URL-friendly slugs"""
-        # Remove HTML tags
+        # Remove HTML tags first
         text = re.sub(r'<[^>]+>', '', text).strip()
         # Remove section numbers like "14.3.1" at the start
         text = re.sub(r'^\d+(\.\d+)*\s*', '', text).strip()
-        # Remove math-related tokens and placeholders
-        text = re.sub(r'math-token-\d+', '', text)
-        text = re.sub(r'MATHPROTECT_\d+', '', text)
-        text = re.sub(r'\$[^$]*\$', '', text)  # Remove inline LaTeX
-        text = re.sub(r'\\[a-zA-Z]+\{[^}]*\}', '', text)  # Remove LaTeX commands
-        # Clean up resulting text
+        # Remove ALL math-related tokens and placeholders (various formats)
+        text = re.sub(r'MATH_TOKEN_\d+__', '', text, flags=re.IGNORECASE)  # protect_math format
+        text = re.sub(r'MATHPROTECT_\d+', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'math-token-\d+', '', text, flags=re.IGNORECASE)  # slug format
+        text = re.sub(r'math_token_\d+', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'\$[^$]*\$', '', text)  # Remove inline LaTeX $...$
+        text = re.sub(r'\\[a-zA-Z]+\{[^}]*\}', '', text)  # Remove LaTeX commands like \textbf{...}
+        text = re.sub(r'\\[a-zA-Z]+', '', text)  # Remove standalone LaTeX commands like \alpha
+        # Clean up resulting text - collapse multiple spaces
         text = re.sub(r'\s+', ' ', text).strip()
         return text
 
