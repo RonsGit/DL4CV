@@ -1,0 +1,28 @@
+# Pagefind configuration for DL4CV
+# This file configures the search indexer to properly handle anchors
+
+# Index content from elements with data-pagefind-body
+source: html_output
+
+# Root selector - all content comes from doc_content
+root_selector: "[data-pagefind-body]"
+
+# Exclude elements from search
+exclude_selectors:
+  - ".sidebar"
+  - ".top-bar"
+  - ".nav-btns"
+  - ".toc-list"
+  - ".float-nav"
+  - "nav"
+  - "footer"
+  - ".search-container"
+  - ".lightbox"
+  - "script"
+  - "style"
+
+# Force language
+force_language: en
+
+# Keep index size reasonable
+keep_index_url: true

@@ -110,8 +110,10 @@ jobs:
     - name: "Step 5: Build Search Index"
       run: |
         cd html_output
-        pagefind --site . --output-subdir pagefind
+        # Use pagefind with verbose output to verify indexing
+        pagefind --site . --output-subdir pagefind --verbose 2>&1 | head -50
         echo "Pagefind index built"
+        echo "Index files: $(find pagefind -type f | wc -l)"
 
     #=========================================================================
     # STEP 6: Final Verification

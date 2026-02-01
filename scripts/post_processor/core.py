@@ -1753,14 +1753,29 @@ def get_common_head(title, is_aux=False):
             mjx-stretchy-v {{
                 overflow: hidden !important;
             }}
-            /* Mobile: horizontal stretchy (underbraces) need clip to prevent bar through middle */
-            /* CRITICAL: Do NOT use overflow:visible on mjx-stretchy-h - it causes the bar bug! */
+            /* ================================================================= */
+            /* MOBILE UNDERBRACE/OVERBRACE FIX - CRITICAL                        */
+            /* The bar through the middle is caused by mjx-ext (extension line)  */
+            /* extending beyond its container. We must clip it aggressively.     */
+            /* ================================================================= */
             mjx-stretchy-h {{
                 overflow: clip !important;
+                contain: paint !important;
             }}
-            /* The extension piece inside horizontal braces must be hidden */
             mjx-stretchy-h > mjx-ext {{
                 overflow: hidden !important;
+                max-width: 0 !important;
+                visibility: hidden !important;
+            }}
+            /* Hide the extension line completely on mobile - the brace ends are enough */
+            mjx-stretchy-h > mjx-beg,
+            mjx-stretchy-h > mjx-end {{
+                overflow: visible !important;
+            }}
+            /* Ensure the underbrace label text is visible */
+            mjx-munder mjx-row:last-child,
+            mjx-munderover mjx-row:last-child {{
+                overflow: visible !important;
             }}
         }}
 
@@ -1951,7 +1966,10 @@ def get_js_footer():
         // 4. Scroll Spy & Floating Part Nav (Fix 4B & 5)
         const scrollEl = document.getElementById('content_area');
         // Expanded selectors for subs - include h1 for Preface
-        const targets = Array.from(document.querySelectorAll('#doc_content h1, #doc_content h2, #doc_content h3, #doc_content h4, #doc_content .subsectionHead, #doc_content .sectionHead'));
+        // Also include elements with id attribute for better anchor coverage
+        const targets = Array.from(document.querySelectorAll('#doc_content h1[id], #doc_content h2[id], #doc_content h3[id], #doc_content h4[id], #doc_content .subsectionHead[id], #doc_content .sectionHead[id], #doc_content [id^="x1-"], #doc_content [id^="section-"]'));
+        // Debug: log targets for troubleshooting
+        console.log('Scroll spy targets:', targets.length, 'elements with IDs');
         
         const btnPrev = document.getElementById('btn_prev_part');
         const btnNext = document.getElementById('btn_next_part');
@@ -2178,13 +2196,20 @@ def get_js_footer():
         // Fix underbrace/overbrace rendering - clip extension lines to prevent bars
         // IMPORTANT: Don't change display or vertical-align as it breaks MathJax alignment
         function fixUnderbraces() {
+            const isMobile = window.innerWidth <= 768;
             document.querySelectorAll('mjx-stretchy-h').forEach(stretchyH => {
                 // Use clip to prevent the extension line from overflowing
                 stretchyH.style.overflow = 'clip';
-                // The mjx-ext element draws the connecting line - must be clipped
+                stretchyH.style.contain = 'paint';
+                // The mjx-ext element draws the connecting line - must be hidden on mobile
                 const ext = stretchyH.querySelector('mjx-ext');
                 if (ext) {
                     ext.style.overflow = 'hidden';
+                    if (isMobile) {
+                        // On mobile, completely hide the extension bar to prevent the line bug
+                        ext.style.maxWidth = '0';
+                        ext.style.visibility = 'hidden';
+                    }
                 }
             });
             // Only set overflow on munder/mover, don't touch other properties
@@ -3555,7 +3580,7 @@ def render_page_html(title: str, body_content: str, sidebar_html: str, nav_butto
         <main class="content-scroll" id="content_area">
             <div class="container">
                 <div class="card">
-                    <div class="card-body" id="doc_content">
+                    <div class="card-body" id="doc_content" data-pagefind-body>
                         <!-- content-start -->
                         {body_content}
                         <!-- content-end -->
@@ -3787,7 +3812,30 @@ def process_chapter(html_file: Path, chapter_data: dict):
     
     # 0. Protect Math
     doc_content = protect_math(doc_content)
-    
+
+    # 0.5. Ensure all headings have IDs for anchor navigation and search
+    # TeX4ht should provide IDs, but we add them to any headings that don't have them
+    heading_counter = [0]
+    def ensure_heading_id(m):
+        tag = m.group(1)  # h1, h2, h3, etc.
+        attrs = m.group(2)
+        content = m.group(3)
+        # Check if already has id
+        if 'id=' in attrs:
+            return m.group(0)
+        # Generate ID from content
+        text = re.sub(r'<[^>]+>', '', content).strip()
+        id_val = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()[:50]
+        if not id_val:
+            heading_counter[0] += 1
+            id_val = f"section-{heading_counter[0]}"
+        # Avoid duplicate IDs by adding counter
+        heading_counter[0] += 1
+        id_val = f"{id_val}-{heading_counter[0]}"
+        return f'<{tag} id="{id_val}"{attrs}>{content}</{tag}>'
+
+    doc_content = re.sub(r'<(h[1-6])([^>]*)>(.*?)</\1>', ensure_heading_id, doc_content, flags=re.DOTALL)
+
     # 6. Fix Images (Size, Attrs, Lazy)
     def img_repl(m):
         raw = m.group(0)
