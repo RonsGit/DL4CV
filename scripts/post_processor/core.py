@@ -1755,22 +1755,36 @@ def get_common_head(title, is_aux=False):
             }}
             /* ================================================================= */
             /* MOBILE UNDERBRACE/OVERBRACE FIX - CRITICAL                        */
-            /* The bar through the middle is caused by mjx-ext (extension line)  */
-            /* extending beyond its container. We must clip it aggressively.     */
+            /* MathJax stretchy-h structure: <mjx-stretchy-h>                     */
+            /*   <mjx-beg> (left curl of brace)                                   */
+            /*   <mjx-ext> (middle extension line - THIS causes the bar!)        */
+            /*   <mjx-end> (right curl of brace)                                  */
+            /* We need to: show beg/end, constrain ext to not overflow           */
             /* ================================================================= */
             mjx-stretchy-h {{
-                overflow: clip !important;
-                contain: paint !important;
+                overflow: visible !important;
+                display: inline-flex !important;
+                align-items: center !important;
             }}
+            /* The extension line - constrain it but don't hide completely */
             mjx-stretchy-h > mjx-ext {{
                 overflow: hidden !important;
-                max-width: 0 !important;
-                visibility: hidden !important;
+                /* Limit the extension to prevent infinite bars, but keep some for visual continuity */
+                max-width: 20px !important;
+                flex-shrink: 1 !important;
             }}
-            /* Hide the extension line completely on mobile - the brace ends are enough */
+            /* Brace ends must be visible */
             mjx-stretchy-h > mjx-beg,
             mjx-stretchy-h > mjx-end {{
                 overflow: visible !important;
+                flex-shrink: 0 !important;
+            }}
+            /* The stretchy-h inside munder/mover needs special handling */
+            mjx-munder mjx-stretchy-h,
+            mjx-mover mjx-stretchy-h,
+            mjx-munderover mjx-stretchy-h {{
+                width: auto !important;
+                min-width: 0 !important;
             }}
             /* Ensure the underbrace label text is visible */
             mjx-munder mjx-row:last-child,
@@ -1967,9 +1981,9 @@ def get_js_footer():
         const scrollEl = document.getElementById('content_area');
         // Expanded selectors for subs - include h1 for Preface
         // Also include elements with id attribute for better anchor coverage
-        const targets = Array.from(document.querySelectorAll('#doc_content h1[id], #doc_content h2[id], #doc_content h3[id], #doc_content h4[id], #doc_content .subsectionHead[id], #doc_content .sectionHead[id], #doc_content [id^="x1-"], #doc_content [id^="section-"]'));
-        // Debug: log targets for troubleshooting
-        console.log('Scroll spy targets:', targets.length, 'elements with IDs');
+        // Select all headings and section elements with IDs for scroll spy
+        const targets = Array.from(document.querySelectorAll('#doc_content h1[id], #doc_content h2[id], #doc_content h3[id], #doc_content h4[id], #doc_content h5[id], #doc_content .subsectionHead[id], #doc_content .sectionHead[id], #doc_content .subsubsectionHead[id]'));
+        console.log('Scroll spy targets:', targets.length, 'headings with IDs');
         
         const btnPrev = document.getElementById('btn_prev_part');
         const btnNext = document.getElementById('btn_next_part');
@@ -2193,23 +2207,41 @@ def get_js_footer():
             }
         }
 
-        // Fix underbrace/overbrace rendering - clip extension lines to prevent bars
+        // Fix underbrace/overbrace rendering - constrain extension lines to prevent infinite bars
         // IMPORTANT: Don't change display or vertical-align as it breaks MathJax alignment
         function fixUnderbraces() {
             const isMobile = window.innerWidth <= 768;
             document.querySelectorAll('mjx-stretchy-h').forEach(stretchyH => {
-                // Use clip to prevent the extension line from overflowing
-                stretchyH.style.overflow = 'clip';
-                stretchyH.style.contain = 'paint';
-                // The mjx-ext element draws the connecting line - must be hidden on mobile
+                // On mobile, use flexbox to properly contain the brace parts
+                if (isMobile) {
+                    stretchyH.style.overflow = 'visible';
+                    stretchyH.style.display = 'inline-flex';
+                    stretchyH.style.alignItems = 'center';
+                } else {
+                    stretchyH.style.overflow = 'clip';
+                }
+
+                // The mjx-ext element draws the connecting line - constrain but don't hide
                 const ext = stretchyH.querySelector('mjx-ext');
                 if (ext) {
                     ext.style.overflow = 'hidden';
                     if (isMobile) {
-                        // On mobile, completely hide the extension bar to prevent the line bug
-                        ext.style.maxWidth = '0';
-                        ext.style.visibility = 'hidden';
+                        // Limit extension width to prevent infinite bar, but keep some for continuity
+                        ext.style.maxWidth = '20px';
+                        ext.style.flexShrink = '1';
                     }
+                }
+
+                // Ensure brace ends (curls) are visible
+                const beg = stretchyH.querySelector('mjx-beg');
+                const end = stretchyH.querySelector('mjx-end');
+                if (beg) {
+                    beg.style.overflow = 'visible';
+                    beg.style.flexShrink = '0';
+                }
+                if (end) {
+                    end.style.overflow = 'visible';
+                    end.style.flexShrink = '0';
                 }
             });
             // Only set overflow on munder/mover, don't touch other properties
@@ -3813,28 +3845,99 @@ def process_chapter(html_file: Path, chapter_data: dict):
     # 0. Protect Math
     doc_content = protect_math(doc_content)
 
-    # 0.5. Ensure all headings have IDs for anchor navigation and search
-    # TeX4ht should provide IDs, but we add them to any headings that don't have them
-    heading_counter = [0]
-    def ensure_heading_id(m):
+    # 0.5. Generate READABLE anchor IDs for all headings
+    # Replace cryptic TeX4ht IDs like "x1-36000" with meaningful slugs like "training-rpns"
+    # This improves SEO and makes URLs shareable/understandable
+    used_ids = set()
+    old_to_new_id_map = {}  # Track ID changes for updating internal links
+
+    def generate_readable_id(m):
         tag = m.group(1)  # h1, h2, h3, etc.
         attrs = m.group(2)
         content = m.group(3)
-        # Check if already has id
-        if 'id=' in attrs:
-            return m.group(0)
-        # Generate ID from content
-        text = re.sub(r'<[^>]+>', '', content).strip()
-        id_val = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()[:50]
-        if not id_val:
-            heading_counter[0] += 1
-            id_val = f"section-{heading_counter[0]}"
-        # Avoid duplicate IDs by adding counter
-        heading_counter[0] += 1
-        id_val = f"{id_val}-{heading_counter[0]}"
-        return f'<{tag} id="{id_val}"{attrs}>{content}</{tag}>'
 
-    doc_content = re.sub(r'<(h[1-6])([^>]*)>(.*?)</\1>', ensure_heading_id, doc_content, flags=re.DOTALL)
+        # Extract text content for slug generation
+        text = re.sub(r'<[^>]+>', '', content).strip()
+        # Remove section numbers like "14.3.1" at the start
+        text = re.sub(r'^\d+(\.\d+)*\s*', '', text).strip()
+        # Generate slug from text
+        slug = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()
+        # Limit length but try to keep it meaningful
+        if len(slug) > 60:
+            # Cut at word boundary
+            slug = slug[:60].rsplit('-', 1)[0]
+
+        if not slug:
+            slug = f"section"
+
+        # Ensure uniqueness
+        base_slug = slug
+        counter = 1
+        while slug in used_ids:
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        used_ids.add(slug)
+
+        # Check if there's an existing ID to map
+        old_id_match = re.search(r'id=["\']([^"\']+)["\']', attrs)
+        if old_id_match:
+            old_id = old_id_match.group(1)
+            old_to_new_id_map[old_id] = slug
+            # Replace the old ID with the new readable one
+            attrs = re.sub(r'id=["\'][^"\']+["\']', f'id="{slug}"', attrs)
+            return f'<{tag}{attrs}>{content}</{tag}>'
+        else:
+            # No existing ID, add one
+            return f'<{tag} id="{slug}"{attrs}>{content}</{tag}>'
+
+    doc_content = re.sub(r'<(h[1-6])([^>]*)>(.*?)</\1>', generate_readable_id, doc_content, flags=re.DOTALL)
+
+    # Also process sectionHead, subsectionHead etc. classes (TeX4ht generates these)
+    def generate_readable_id_span(m):
+        tag = m.group(1)
+        attrs = m.group(2)
+        content = m.group(3)
+
+        text = re.sub(r'<[^>]+>', '', content).strip()
+        text = re.sub(r'^\d+(\.\d+)*\s*', '', text).strip()
+        slug = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()
+        if len(slug) > 60:
+            slug = slug[:60].rsplit('-', 1)[0]
+        if not slug:
+            slug = "section"
+
+        base_slug = slug
+        counter = 1
+        while slug in used_ids:
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        used_ids.add(slug)
+
+        old_id_match = re.search(r'id=["\']([^"\']+)["\']', attrs)
+        if old_id_match:
+            old_id = old_id_match.group(1)
+            old_to_new_id_map[old_id] = slug
+            attrs = re.sub(r'id=["\'][^"\']+["\']', f'id="{slug}"', attrs)
+            return f'<{tag}{attrs}>{content}</{tag}>'
+        else:
+            return f'<{tag} id="{slug}"{attrs}>{content}</{tag}>'
+
+    # Process span/div elements with section-like classes
+    doc_content = re.sub(
+        r'<(span|div)([^>]*class="[^"]*(?:sectionHead|subsectionHead|subsubsectionHead|paragraphHead)[^"]*"[^>]*)>(.*?)</\1>',
+        generate_readable_id_span, doc_content, flags=re.DOTALL
+    )
+
+    # Update internal links to use new IDs
+    def update_internal_link(m):
+        href = m.group(1)
+        if href.startswith('#'):
+            old_id = href[1:]
+            if old_id in old_to_new_id_map:
+                return f'href="#{old_to_new_id_map[old_id]}"'
+        return m.group(0)
+
+    doc_content = re.sub(r'href="(#[^"]+)"', update_internal_link, doc_content)
 
     # 6. Fix Images (Size, Attrs, Lazy)
     def img_repl(m):
