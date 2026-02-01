@@ -29,19 +29,41 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Verify Environment
+    - name: Setup Environment
       run: |
         echo "=== Container Environment Check ==="
         echo "LaTeX: $(pdflatex --version | head -1)"
         echo "Biber: $(biber --version | head -1)"
         echo "Python: $(python3 --version)"
         echo "Node: $(node --version)"
+
+        # Install pymupdf if missing (not in old container image)
+        if ! python3 -c "import pymupdf" 2>/dev/null; then
+          echo "Installing pymupdf..."
+          pip install --break-system-packages pymupdf || pip install pymupdf
+        fi
+        python3 -c "import pymupdf; print(f'PyMuPDF: {pymupdf.__version__}')"
+
+        # Install regex if missing
+        if ! python3 -c "import regex" 2>/dev/null; then
+          echo "Installing regex..."
+          pip install --break-system-packages regex || pip install regex
+        fi
+
+        # Verify other Python packages
+        python3 -c "import bs4; print('BeautifulSoup: OK')"
+        python3 -c "import pygments; print('Pygments: OK')"
+
+        # Install pagefind if missing
+        if ! command -v pagefind &> /dev/null; then
+          echo "Installing pagefind..."
+          npm install -g pagefind
+        fi
         echo "Pagefind: $(pagefind --version)"
+
         echo "Ghostscript: $(gs --version | head -1)"
         echo "WebP: $(cwebp -version 2>&1 | head -1)"
         echo "ImageMagick: $(convert --version | head -1)"
-        python3 -c "import pymupdf; print(f'PyMuPDF: {pymupdf.__version__}')"
-        python3 -c "import bs4; print('BeautifulSoup: OK')"
         echo "=== All tools ready ==="
 
     #=========================================================================
