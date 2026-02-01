@@ -28,8 +28,8 @@ def build_sidebar(active_mk, is_aux=False, local_toc_content=""):
     preface_url = get_asset_url("Auxiliary/Preface.html", is_aux)
     dep_url = get_asset_url("dependency_graph.html", is_aux)
     bib_url = get_asset_url("bibliography.html", is_aux)
-    repo_url = "https://github.com/DLCVBook/CVBook"
-    star_url = "https://github.com/DLCVBook/CVBook/stargazers"
+    repo_url = "https://github.com/RonsGit/DL4CV"
+    star_url = "https://github.com/RonsGit/DL4CV/stargazers"
     
     html = f'''
     <div class="sidebar-header">
@@ -41,7 +41,7 @@ def build_sidebar(active_mk, is_aux=False, local_toc_content=""):
              <!-- Repo -->
              <a href="{repo_url}" target="_blank" style="color: #333; font-size: 1.6rem; text-decoration: none;"><i class="fab fa-github"></i></a>
              <!-- Star -->
-             <a href="{star_url}" target="_blank" onclick="event.preventDefault(); window.open('https://github.com/login?return_to=%2FDLCVBook%2FCVBook', '_blank');" style="text-decoration: none; color: #24292e; background-color: #eff3f6; border: 1px solid rgba(27,31,35,0.2); border-radius: 4px; padding: 2px 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+             <a href="{star_url}" target="_blank" onclick="event.preventDefault(); window.open('https://github.com/login?return_to=%2FRonsGit%2FDL4CV', '_blank');" style="text-decoration: none; color: #24292e; background-color: #eff3f6; border: 1px solid rgba(27,31,35,0.2); border-radius: 4px; padding: 2px 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
                  <i class="far fa-star"></i> Star
              </a>
         </div>
