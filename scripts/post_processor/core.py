@@ -1453,26 +1453,48 @@ def get_common_head(title, is_aux=False):
                 margin-top: 0.25rem !important;
             }}
 
-            /* Fix enumerate/itemize grid overflow on mobile - use flex instead of grid */
+            /* Fix enumerate/itemize grid overflow on mobile - use inline-grid for proper bullet alignment */
             dl.enumerate, dl.itemize, dl.enumerate-enumitem, dl.compactdesc {{
-                display: flex !important;
-                flex-direction: column !important;
+                display: grid !important;
+                grid-template-columns: auto 1fr !important;
+                column-gap: 0.5rem !important;
+                row-gap: 0.5rem !important;
                 max-width: 100% !important;
                 overflow: visible !important;
+                margin: 0.5rem 0 !important;
+                padding-left: 0.5rem !important;
             }}
             dl.enumerate > dt, dl.itemize > dt, dl.enumerate-enumitem > dt, dl.compactdesc > dt {{
-                flex-shrink: 0 !important;
-                min-width: auto !important;
-                margin-bottom: -1.4em !important; /* Pull content up next to number */
-                text-align: left !important;
+                grid-column: 1 !important;
+                font-weight: 600 !important;
+                min-width: 1.25rem !important;
+                text-align: right !important;
+                color: var(--text) !important;
+            }}
+            /* For itemize (bullets), show the bullet character prominently */
+            dl.itemize > dt {{
+                font-size: 1.2em !important;
+                line-height: 1.2 !important;
             }}
             dl.enumerate > dd, dl.itemize > dd, dl.enumerate-enumitem > dd, dl.compactdesc > dd {{
-                margin-left: 1.75rem !important;
-                margin-bottom: 0.75rem !important;
-                max-width: calc(100% - 1.75rem) !important;
+                grid-column: 2 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
                 overflow-wrap: break-word !important;
                 word-break: break-word !important;
-                overflow-x: auto !important;
+            }}
+            /* Standard UL/OL lists on mobile - ensure bullets show */
+            #doc_content ul, #doc_content ol {{
+                list-style-position: outside !important;
+                padding-left: 1.5rem !important;
+                margin: 0.5rem 0 !important;
+            }}
+            #doc_content ul {{ list-style-type: disc !important; }}
+            #doc_content ol {{ list-style-type: decimal !important; }}
+            #doc_content li {{
+                display: list-item !important;
+                margin-bottom: 0.4rem !important;
             }}
             /* Math inside list items - allow horizontal scroll without gray artifacts */
             dd mjx-container[display="true"], dd .MathJax_Display,
@@ -1759,32 +1781,20 @@ def get_common_head(title, is_aux=False):
             /*   <mjx-beg> (left curl of brace)                                   */
             /*   <mjx-ext> (middle extension line - THIS causes the bar!)        */
             /*   <mjx-end> (right curl of brace)                                  */
-            /* We need to: show beg/end, constrain ext to not overflow           */
+            /* Solution: COMPLETELY HIDE mjx-ext, show only beg/end curls        */
             /* ================================================================= */
             mjx-stretchy-h {{
                 overflow: visible !important;
-                display: inline-flex !important;
-                align-items: center !important;
             }}
-            /* The extension line - constrain it but don't hide completely */
+            /* COMPLETELY HIDE the extension line on mobile - it causes the bar */
             mjx-stretchy-h > mjx-ext {{
-                overflow: hidden !important;
-                /* Limit the extension to prevent infinite bars, but keep some for visual continuity */
-                max-width: 20px !important;
-                flex-shrink: 1 !important;
+                display: none !important;
             }}
-            /* Brace ends must be visible */
+            /* Brace ends (curls) must remain visible */
             mjx-stretchy-h > mjx-beg,
             mjx-stretchy-h > mjx-end {{
+                display: inline-block !important;
                 overflow: visible !important;
-                flex-shrink: 0 !important;
-            }}
-            /* The stretchy-h inside munder/mover needs special handling */
-            mjx-munder mjx-stretchy-h,
-            mjx-mover mjx-stretchy-h,
-            mjx-munderover mjx-stretchy-h {{
-                width: auto !important;
-                min-width: 0 !important;
             }}
             /* Ensure the underbrace label text is visible */
             mjx-munder mjx-row:last-child,
@@ -2207,44 +2217,30 @@ def get_js_footer():
             }
         }
 
-        // Fix underbrace/overbrace rendering - constrain extension lines to prevent infinite bars
-        // IMPORTANT: Don't change display or vertical-align as it breaks MathJax alignment
+        // Fix underbrace/overbrace rendering - HIDE extension lines on mobile to prevent bar
         function fixUnderbraces() {
             const isMobile = window.innerWidth <= 768;
             document.querySelectorAll('mjx-stretchy-h').forEach(stretchyH => {
-                // On mobile, use flexbox to properly contain the brace parts
-                if (isMobile) {
-                    stretchyH.style.overflow = 'visible';
-                    stretchyH.style.display = 'inline-flex';
-                    stretchyH.style.alignItems = 'center';
-                } else {
-                    stretchyH.style.overflow = 'clip';
-                }
+                stretchyH.style.overflow = 'visible';
 
-                // The mjx-ext element draws the connecting line - constrain but don't hide
+                // The mjx-ext element draws the connecting line - HIDE IT on mobile
                 const ext = stretchyH.querySelector('mjx-ext');
                 if (ext) {
-                    ext.style.overflow = 'hidden';
                     if (isMobile) {
-                        // Limit extension width to prevent infinite bar, but keep some for continuity
-                        ext.style.maxWidth = '20px';
-                        ext.style.flexShrink = '1';
+                        // Completely hide the extension bar on mobile - it causes the line through braces
+                        ext.style.display = 'none';
+                    } else {
+                        ext.style.overflow = 'hidden';
                     }
                 }
 
-                // Ensure brace ends (curls) are visible
+                // Ensure brace ends (curls) are always visible
                 const beg = stretchyH.querySelector('mjx-beg');
                 const end = stretchyH.querySelector('mjx-end');
-                if (beg) {
-                    beg.style.overflow = 'visible';
-                    beg.style.flexShrink = '0';
-                }
-                if (end) {
-                    end.style.overflow = 'visible';
-                    end.style.flexShrink = '0';
-                }
+                if (beg) beg.style.display = 'inline-block';
+                if (end) end.style.display = 'inline-block';
             });
-            // Only set overflow on munder/mover, don't touch other properties
+            // Ensure munder/mover containers have visible overflow
             document.querySelectorAll('mjx-munder, mjx-mover, mjx-munderover').forEach(el => {
                 el.style.overflow = 'visible';
             });
@@ -3851,32 +3847,51 @@ def process_chapter(html_file: Path, chapter_data: dict):
     used_ids = set()
     old_to_new_id_map = {}  # Track ID changes for updating internal links
 
-    def generate_readable_id(m):
-        tag = m.group(1)  # h1, h2, h3, etc.
-        attrs = m.group(2)
-        content = m.group(3)
-
-        # Extract text content for slug generation
-        text = re.sub(r'<[^>]+>', '', content).strip()
+    def clean_text_for_slug(text):
+        """Clean text for generating URL-friendly slugs"""
+        # Remove HTML tags
+        text = re.sub(r'<[^>]+>', '', text).strip()
         # Remove section numbers like "14.3.1" at the start
         text = re.sub(r'^\d+(\.\d+)*\s*', '', text).strip()
-        # Generate slug from text
+        # Remove math-related tokens and placeholders
+        text = re.sub(r'math-token-\d+', '', text)
+        text = re.sub(r'MATHPROTECT_\d+', '', text)
+        text = re.sub(r'\$[^$]*\$', '', text)  # Remove inline LaTeX
+        text = re.sub(r'\\[a-zA-Z]+\{[^}]*\}', '', text)  # Remove LaTeX commands
+        # Clean up resulting text
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
+
+    def generate_slug(text, used_ids_set):
+        """Generate a unique, readable slug from text"""
+        text = clean_text_for_slug(text)
+        # Generate slug from cleaned text
         slug = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()
+        # Remove any remaining empty dashes
+        slug = re.sub(r'-+', '-', slug)
         # Limit length but try to keep it meaningful
         if len(slug) > 60:
             # Cut at word boundary
             slug = slug[:60].rsplit('-', 1)[0]
 
-        if not slug:
-            slug = f"section"
+        if not slug or slug == '-':
+            slug = "section"
 
-        # Ensure uniqueness
+        # Ensure uniqueness by appending counter for duplicates
         base_slug = slug
-        counter = 1
-        while slug in used_ids:
+        counter = 2  # Start at 2 so first duplicate becomes "slug-2"
+        while slug in used_ids_set:
             slug = f"{base_slug}-{counter}"
             counter += 1
-        used_ids.add(slug)
+        used_ids_set.add(slug)
+        return slug
+
+    def generate_readable_id(m):
+        tag = m.group(1)  # h1, h2, h3, etc.
+        attrs = m.group(2)
+        content = m.group(3)
+
+        slug = generate_slug(content, used_ids)
 
         # Check if there's an existing ID to map
         old_id_match = re.search(r'id=["\']([^"\']+)["\']', attrs)
@@ -3898,20 +3913,7 @@ def process_chapter(html_file: Path, chapter_data: dict):
         attrs = m.group(2)
         content = m.group(3)
 
-        text = re.sub(r'<[^>]+>', '', content).strip()
-        text = re.sub(r'^\d+(\.\d+)*\s*', '', text).strip()
-        slug = re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()
-        if len(slug) > 60:
-            slug = slug[:60].rsplit('-', 1)[0]
-        if not slug:
-            slug = "section"
-
-        base_slug = slug
-        counter = 1
-        while slug in used_ids:
-            slug = f"{base_slug}-{counter}"
-            counter += 1
-        used_ids.add(slug)
+        slug = generate_slug(content, used_ids)
 
         old_id_match = re.search(r'id=["\']([^"\']+)["\']', attrs)
         if old_id_match:
