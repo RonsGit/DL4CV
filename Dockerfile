@@ -35,7 +35,10 @@ RUN apt-get update && \
     latexmk \
     ghostscript \
     nodejs \
-    npm && \
+    npm \
+    webp \
+    imagemagick \
+    parallel && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

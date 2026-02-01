@@ -5403,10 +5403,15 @@ def main():
                  body = re.sub(r'<h1.*?>.*?</h1>', '', body, count=1, flags=re.DOTALL | re.IGNORECASE)
                  body = protect_math(body)
                  body = restore_math(body)
+                 # Fix image paths - dependency_graph.html is in root, not subdirectory
+                 # So Pictures/ is direct child, not ../Pictures/
+                 body = re.sub(r'src="\.\./Pictures/', 'src="Pictures/', body)
+                 body = re.sub(r"src='\.\./Pictures/", "src='Pictures/", body)
              else:
                  # Generate from image if HTML missing
-                 body = f'<img src="../Pictures/book_dependencies.png" alt="Dependency Tree" class="depgraph-img" style="max-width:100%; height:auto;">'
-                 
+                 # Note: dependency_graph.html is in html_output/ root, so Pictures is a sibling
+                 body = f'<img src="Pictures/book_dependencies.png" alt="Dependency Tree" class="depgraph-img" style="max-width:100%; height:auto;">'
+
              generate_aux_page("Dependency Graph", body, "dependency_graph.html")
     
     print(">>> Done.")

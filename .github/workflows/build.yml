@@ -16,48 +16,40 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
+    # Use pre-built Docker image with LaTeX, Python, Node already installed
+    # This saves ~10-15 minutes of apt-get install texlive-full
+    container:
+      image: ghcr.io/ronsgit/dl4cv/latex-builder:latest
+      options: --user root  # Ensure write permissions
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Free Disk Space
+    - name: Install Additional Python Dependencies
       run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /usr/local/lib/android
-        sudo rm -rf /opt/ghc
-        sudo apt-get clean
-        df -h
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-
-    - name: Install Python Dependencies
-      run: |
-        pip install pymupdf pypdf beautifulsoup4 pygments regex autopep8
+        # Container has python3-pypdf, python3-bs4, python3-pygments, python3-autopep8
+        # Install pymupdf and regex which may not be in container
+        pip install --break-system-packages pymupdf regex || pip install pymupdf regex
         echo "Verifying installations:"
         python3 -c "import pymupdf; print(f'PyMuPDF version: {pymupdf.__version__}')" || echo "WARNING: PyMuPDF not available, falling back to pypdf"
         python3 -c "import autopep8; print(f'autopep8 version: {autopep8.__version__}')" || echo "ERROR: autopep8 not available"
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-
     - name: Install Pagefind
       run: npm install -g pagefind
 
-    - name: Install LaTeX & Tex4ht
+    - name: Verify Container Tools
       run: |
-        sudo apt-get update
-        # Install texlive-full for complete LaTeX support
-        # Install ghostscript for PDF compression (<100MB limit)
-        sudo apt-get install -y texlive-full biber python3-pygments ghostscript
-        # Verify installations
-        pdflatex --version || echo "pdflatex check"
-        biber --version || echo "biber check"
-        pygmentize -V || echo "pygments check"
+        echo "=== Verifying pre-installed tools ==="
+        pdflatex --version | head -1
+        biber --version | head -1
+        pygmentize -V
+        gs --version | head -1
+        node --version
+        npm --version
 
     #=========================================================================
     # STEP 1: Build Manager (HTML + Main PDF)
@@ -119,18 +111,18 @@ jobs:
     - name: "Step 6: Verify Build Output"
       run: |
         echo "=== Checking build output ==="
-        
-        if [ ! -f "html_output/index.html" ]; then 
+
+        if [ ! -f "html_output/index.html" ]; then
           echo "ERROR: Missing index.html"
           exit 1
         fi
-        
+
         echo "HTML files: $(ls -1 html_output/*.html 2>/dev/null | wc -l)"
         echo "Figures: $(find html_output/Figures -type f 2>/dev/null | wc -l || echo '0')"
         echo "Pictures: $(find html_output/Pictures -type f 2>/dev/null | wc -l || echo '0')"
         echo "Search index: $(find html_output/pagefind -type f 2>/dev/null | wc -l || echo '0')"
         echo "PDFs: $(ls -1 html_output/downloads/*.pdf 2>/dev/null | wc -l || echo '0')"
-        
+
         # Check navigation critical files
         if [ -f "html_output/bibliography.html" ]; then
            echo "✓ bibliography.html exists"
@@ -157,10 +149,14 @@ jobs:
         find html_output/ -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.4ct" -o -name "*.4tc" -o -name "*.idv" -o -name "*.lg" -o -name "*.tmp" -o -name "*.xref" -o -name "*.dvi" -o -name "*.bbl" -o -name "*.blg" -o -name "*.fls" -o -name "*.fdb_latexmk" \) -delete
         find html_output/ -type f \( -name ".DS_Store" -o -name "Thumbs.db" -o -name "desktop.ini" \) -delete
 
-        # Install optimization tools (parallel is pre-installed on ubuntu-latest)
-        echo "Installing image optimization tools..."
-        sudo apt-get update
-        sudo apt-get install -y ghostscript webp imagemagick parallel
+        # Install optimization tools if not already in container
+        # Container should have webp, imagemagick, parallel pre-installed
+        if ! command -v cwebp &> /dev/null || ! command -v convert &> /dev/null; then
+          echo "Installing missing image optimization tools..."
+          apt-get update && apt-get install -y --no-install-recommends webp imagemagick parallel
+        else
+          echo "Image optimization tools already installed in container"
+        fi
 
         NPROC=$(nproc)
         echo "Available CPU cores: $NPROC"
@@ -316,11 +312,11 @@ jobs:
         # 1. Configure git
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
+
         # 2. Get the deployed URL
         PAGE_URL="${{ steps.deployment.outputs.page_url }}"
         echo "Deployed URL: $PAGE_URL"
-        
+
         if [ -z "$PAGE_URL" ]; then
           echo "No page URL available, skipping README update"
           exit 0
