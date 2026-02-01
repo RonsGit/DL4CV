@@ -271,9 +271,10 @@ def get_common_head(title, is_aux=False):
         mjx-merror {{ display: none !important; }}
         
         /* Bug 4: MathJax equation containers - NO scrollbars or gray artifacts */
+        /* NOTE: overflow is NOT set to !important here to allow mobile override */
         mjx-container, mjx-math,
         .MathJax, .MathJax_Display {{
-            overflow: visible !important;
+            overflow: visible;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
             outline: none !important;
@@ -336,14 +337,15 @@ def get_common_head(title, is_aux=False):
             overflow: visible !important;
         }}
 
-        /* The stretchy-h container itself - use clip to prevent bar overflow */
+        /* The stretchy-h container - clip the infinite extension bar */
+        /* Use clip-path: inset(0) for reliable mobile clipping */
         mjx-stretchy-h {{
-            overflow: clip !important;
+            clip-path: inset(0) !important;
         }}
 
-        /* The extension piece (mjx-ext) draws the connecting line - MUST clip */
+        /* The extension piece (mjx-ext) draws the infinite bar - must be clipped */
         mjx-stretchy-h > mjx-ext {{
-            overflow: hidden !important;
+            clip-path: inset(0) !important;
         }}
 
         /* Underbrace labels need visibility */
@@ -1423,34 +1425,50 @@ def get_common_head(title, is_aux=False):
                 height: 0 !important;
             }}
 
-            /* Lists - ensure they don't overflow */
-            ul, ol {{ max-width: 100%; overflow-x: hidden; padding-right: 0.5rem; }}
+            /* Lists - ensure they don't overflow but DON'T clip bullets */
+            /* overflow-x: hidden clips bullets positioned outside - use visible! */
+            ul, ol {{ max-width: 100%; overflow-x: visible !important; overflow-y: visible !important; padding-right: 0.5rem; }}
             li {{ max-width: 100%; overflow-wrap: break-word; word-break: break-word; }}
 
-            /* UL itemize lists on mobile - explicit bullet styling */
-            ul.itemize1, ul.itemize2, ul.itemize3, ul.itemize4 {{
-                list-style-type: disc !important;
-                list-style-position: outside !important;
-                padding-left: 2rem !important;
+            /* ================================================================= */
+            /* MOBILE UL ITEMIZE LISTS - BULLET FIX                              */
+            /* TeX4ht generates ul.itemize1/2/3 with li.itemize children         */
+            /* Use #doc_content prefix for higher specificity                    */
+            /* ================================================================= */
+            #doc_content ul.itemize1, #doc_content ul.itemize2,
+            #doc_content ul.itemize3, #doc_content ul.itemize4 {{
+                list-style: disc inside !important;
+                padding-left: 0.75rem !important;
                 margin: 0.5rem 0 !important;
             }}
-            ul.itemize2 {{ list-style-type: circle !important; padding-left: 2.5rem !important; }}
-            ul.itemize3 {{ list-style-type: square !important; padding-left: 3rem !important; }}
-            li.itemize {{
+            #doc_content ul.itemize2 {{ list-style-type: circle !important; margin-left: 1rem !important; }}
+            #doc_content ul.itemize3 {{ list-style-type: square !important; margin-left: 1.5rem !important; }}
+            #doc_content li.itemize {{
                 display: list-item !important;
-                margin-bottom: 0.4rem !important;
+                list-style: inherit !important;
+                margin-bottom: 0.5rem !important;
                 padding-left: 0.25rem !important;
             }}
-            li.itemize::marker {{
-                color: var(--primary) !important;
-                font-size: 1.2em !important;
+            /* When li.itemize contains a p, the p should display inline */
+            #doc_content li.itemize > p {{
+                display: inline !important;
+                margin: 0 !important;
             }}
-            /* Ensure nested lists inside li also show bullets */
-            li.itemize ul {{
-                list-style-type: circle !important;
-                list-style-position: outside !important;
-                padding-left: 1.5rem !important;
-                margin-top: 0.25rem !important;
+            #doc_content li.itemize > p:first-child {{
+                display: inline !important;
+            }}
+            #doc_content li.itemize::marker {{
+                color: var(--primary) !important;
+                font-size: 1.1em !important;
+            }}
+            /* Nested lists inside li */
+            #doc_content li.itemize > ul {{
+                list-style: circle inside !important;
+                padding-left: 0.5rem !important;
+                margin: 0.25rem 0 0.25rem 1rem !important;
+            }}
+            #doc_content li.itemize > ul > li.itemize {{
+                display: list-item !important;
             }}
 
             /* ================================================================= */
@@ -1489,17 +1507,17 @@ def get_common_head(title, is_aux=False):
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
             }}
-            /* Standard UL/OL lists on mobile - ensure bullets show */
-            #doc_content ul, #doc_content ol {{
+            /* Standard UL/OL lists on mobile (NOT itemize - those use inside position) */
+            #doc_content ul:not(.itemize1):not(.itemize2):not(.itemize3):not(.itemize4),
+            #doc_content ol {{
                 list-style-position: outside !important;
                 padding-left: 1.75rem !important;
                 margin: 0.75rem 0 !important;
             }}
-            #doc_content ul {{ list-style-type: disc !important; }}
+            #doc_content ul:not(.itemize1):not(.itemize2):not(.itemize3):not(.itemize4) {{ list-style-type: disc !important; }}
             #doc_content ol {{ list-style-type: decimal !important; }}
-            #doc_content ul ul {{ list-style-type: circle !important; }}
-            #doc_content ul ul ul {{ list-style-type: square !important; }}
-            #doc_content li {{
+            #doc_content ul:not(.itemize1):not(.itemize2):not(.itemize3):not(.itemize4) ul {{ list-style-type: circle !important; }}
+            #doc_content li:not(.itemize) {{
                 display: list-item !important;
                 margin-bottom: 0.5rem !important;
                 padding-left: 0.25rem !important;
@@ -1607,9 +1625,9 @@ def get_common_head(title, is_aux=False):
                 text-overflow: ellipsis; 
             }}
             
-            /* Reduce content padding */
-            .container {{ padding: 1rem 0.5rem; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }}
-            .card {{ padding: 1rem 0.75rem; border-radius: 6px; margin: 0.5rem 0; width: 100%; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }}
+            /* Reduce content padding - NO overflow-x: hidden as it clips equations */
+            .container {{ padding: 1rem 0.5rem; max-width: 100%; box-sizing: border-box; }}
+            .card {{ padding: 1rem 0.75rem; border-radius: 6px; margin: 0.5rem 0; width: 100%; max-width: 100%; box-sizing: border-box; }}
             
             /* Hide desktop search, show mobile toggle */
             .search-container {{ display: none !important; }}
@@ -1789,39 +1807,48 @@ def get_common_head(title, is_aux=False):
             }}
             /* ================================================================= */
             /* MOBILE UNDERBRACE/OVERBRACE FIX - CRITICAL                        */
-            /* The bar through underbraces is caused by mjx-ext having width:0   */
-            /* but with :after/:before pseudo-elements that stretch infinitely.  */
-            /* Solution: Target mjx-ext ONLY and limit its pseudo-elements.      */
-            /* mjx-beg and mjx-end are the brace endpoints - leave untouched!    */
+            /* The bar through equations is caused by mjx-ext stretching.        */
+            /* Solution: Use clip-path: inset(0) which clips to element bounds   */
+            /* This has better mobile browser support than overflow: clip        */
             /* ================================================================= */
-            /* Only clip the extension piece, not the whole brace structure */
-            mjx-stretchy-h > mjx-ext {{
-                max-width: 100% !important;
-                overflow: hidden !important;
-            }}
-            /* The stretchy container needs visible overflow for brace ends */
             mjx-stretchy-h {{
-                overflow: visible !important;
+                clip-path: inset(0) !important;
             }}
-            /* mjx-beg and mjx-end must remain visible (brace ends) */
-            mjx-stretchy-h > mjx-beg,
-            mjx-stretchy-h > mjx-end {{
-                overflow: visible !important;
+            mjx-stretchy-h > mjx-ext {{
+                clip-path: inset(0) !important;
             }}
             /* Ensure munder/mover containers allow proper display */
             mjx-munder, mjx-mover, mjx-munderover {{
                 overflow: visible !important;
             }}
-            /* Ensure equation containers remain scrollable */
+            /* ================================================================= */
+            /* MOBILE EQUATION SCROLLING - CRITICAL                              */
+            /* Equations MUST be scrollable on mobile. The mjx-container needs   */
+            /* overflow-x: auto. Inner mjx-math needs width: max-content.        */
+            /* ================================================================= */
+            mjx-container {{
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+                -webkit-overflow-scrolling: touch !important;
+                max-width: 100% !important;
+            }}
             mjx-container[display="true"] {{
                 overflow-x: auto !important;
                 overflow-y: visible !important;
                 -webkit-overflow-scrolling: touch !important;
-                max-width: 100vw !important;
+                max-width: 100% !important;
+                display: block !important;
+            }}
+            mjx-container > mjx-math {{
+                width: max-content !important;
+                max-width: none !important;
             }}
         }}
 
-        body, #doc_content {{ max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }}
+        /* Body overflow control - prevent horizontal page scroll but allow inner scrolling */
+        body {{ max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }}
+        /* doc_content should NOT have overflow-x: hidden as it clips equations and list bullets */
+        #doc_content {{ max-width: 100% !important; box-sizing: border-box !important; }}
         
         /* Buttons - Prevent overflow */
         .btn, button, .nav-btn, .chapter-item a {{ 
@@ -2238,19 +2265,15 @@ def get_js_footer():
         // Fix underbrace/overbrace rendering - clip only the mjx-ext element
         // The mjx-ext element stretches infinitely; mjx-beg and mjx-end are brace endpoints
         function fixUnderbraces() {
-            // Target only the extension piece inside stretchy-h, not the whole structure
-            document.querySelectorAll('mjx-stretchy-h > mjx-ext').forEach(ext => {
-                ext.style.maxWidth = '100%';
-                ext.style.overflow = 'hidden';
-            });
-            // The stretchy-h container itself needs visible overflow for brace ends
-            document.querySelectorAll('mjx-stretchy-h').forEach(stretchyH => {
-                stretchyH.style.overflow = 'visible';
-            });
-            // mjx-beg and mjx-end (brace endpoints) must stay visible
-            document.querySelectorAll('mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end').forEach(el => {
-                el.style.overflow = 'visible';
-            });
+            // On mobile, ensure equations are scrollable (don't hide brace parts)
+            if (window.innerWidth <= 768) {
+                // Make all equation containers scrollable
+                document.querySelectorAll('mjx-container').forEach(container => {
+                    container.style.overflowX = 'auto';
+                    container.style.maxWidth = '100%';
+                    container.style.webkitOverflowScrolling = 'touch';
+                });
+            }
             // Ensure munder/mover containers have visible overflow for proper display
             document.querySelectorAll('mjx-munder, mjx-mover, mjx-munderover').forEach(el => {
                 el.style.overflow = 'visible';
