@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this resource, please cite it as below."
+authors:
+  - family-names: "Korine"
+    given-names: "Ron"
+title: "Deep Learning for Computer Vision: A Comprehensive Guide"
+date-released: 2026-02-01
+url: "https://github.com/RonsGit/DL4CV"

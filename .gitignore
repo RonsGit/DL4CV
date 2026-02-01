@@ -65,3 +65,7 @@ missfont.log
 *.listing
 *.blg
 custom_filter.py
+
+git.ignore
+StyleInd.ist
+Auxiliary/
