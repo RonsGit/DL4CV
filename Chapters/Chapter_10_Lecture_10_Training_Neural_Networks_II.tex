@@ -844,7 +844,7 @@ Despite this, pretraining followed by fine-tuning remains superior when datasets
 	\paragraph{2. Regularizing Small Trainable Heads: Caution With Dropout}
 	When fine-tuning adds only a shallow classification head (e.g., a 1–2 layer MLP or linear probe), strong regularization like dropout may be too aggressive:
 	\begin{itemize}
-		\item \textbf{For shallow heads (1–2 layers):} Dropout is rarely used unless the dataset is very small or prone to label noise. Lighter \(\ell_2\) weight decay is typically preferred \cite{li2022_understanding}.
+		\item \textbf{For shallow heads (1–2 layers):} Dropout is rarely used unless the dataset is very small or prone to label noise. Lighter \(\ell_2\) weight decay is typically preferred.
 		\item \textbf{For deeper heads (3+ layers):} Moderate dropout (e.g., 0.3–0.5) becomes more effective, especially in low-data settings where overfitting risk increases.
 	\end{itemize}
 	

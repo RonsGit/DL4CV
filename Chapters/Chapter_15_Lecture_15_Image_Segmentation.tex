@@ -1477,7 +1477,7 @@ where:
 		\end{figure}
 		
 		\medskip
-		\noindent\textbf{SAM’s choice: random Fourier features (RFF).} SAM treats prompt coordinates as continuous and uses a joint 2D Fourier mapping~\cite{tancik2020_fourier}:
+		\noindent\textbf{SAM’s choice: random Fourier features (RFF).} SAM treats prompt coordinates as continuous and uses a joint 2D Fourier mapping~\cite{tancik2020_fourierfeatures}:
 		\[
 		\gamma(x,y) \;=\;
 		\begin{bmatrix}
@@ -1498,7 +1498,7 @@ where:
 		\medskip
 		\noindent\textbf{Why RFF helps—two lenses.}
 		\begin{itemize}
-			\item \emph{Spectral-bias lens (representation).} Coordinate-fed networks learn low frequencies first (“blurry” fits). Prepending \(\gamma(\cdot)\) injects high-frequency basis functions, letting shallow decoders express sharp edges with few updates~\cite{tancik2020_fourier}. Empirically, replacing raw \((x,y)\) or separable 1D PE with RFF improves fine boundary fidelity with fewer corrective clicks.
+			\item \emph{Spectral-bias lens (representation).} Coordinate-fed networks learn low frequencies first (“blurry” fits). Prepending \(\gamma(\cdot)\) injects high-frequency basis functions, letting shallow decoders express sharp edges with few updates~\cite{tancik2020_fourierfeatures}. Empirically, replacing raw \((x,y)\) or separable 1D PE with RFF improves fine boundary fidelity with fewer corrective clicks.
 			\item \emph{Kernel/NTK lens (geometry).} Wide networks trained by gradient descent behave like kernel machines with the Neural Tangent Kernel (NTK)~\cite{jacot2018_ntk}. With \(B\sim\mathcal{N}(0,\sigma^2 I)\), the expected inner product of two encodings depends only on the offset \(\Delta=p-q\):
 			\[
 			\mathbb{E}_{B}\!\left[\gamma(p)\!\cdot\!\gamma(q)\right]
@@ -1524,7 +1524,7 @@ where:
 		\medskip
 		\noindent\textbf{From derivation to practice.} The RFF mapping arises from Bochner’s theorem: any shift-invariant positive-definite kernel has a nonnegative Fourier transform \(\hat{k}(\omega)\) with
 		\(k(\Delta)=\mathbb{E}_{\omega\sim\hat{k}}[\cos(2\pi\,\omega^\top\Delta)]\).
-		Sampling \(\omega\) from a Gaussian \(\mathcal{N}(0,\sigma^2 I)\) gives a Gaussian RBF kernel; Monte Carlo features \(\gamma(\cdot)\) approximate it~\cite{tancik2020_fourier}. Normalizing coordinates to \([-1,1]^2\) avoids phase wrapping and makes the code resolution-agnostic.
+		Sampling \(\omega\) from a Gaussian \(\mathcal{N}(0,\sigma^2 I)\) gives a Gaussian RBF kernel; Monte Carlo features \(\gamma(\cdot)\) approximate it~\cite{tancik2020_fourierfeatures}. Normalizing coordinates to \([-1,1]^2\) avoids phase wrapping and makes the code resolution-agnostic.
 		
 		\begin{figure}[H]
 			\centering
@@ -1553,7 +1553,7 @@ where:
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{Figures/Chapter_15/SAM_fourier_features.jpg}
-			\caption{\textbf{Fourier features mitigate spectral bias.} A coordinate MLP remains blurry at equal iterations, whereas the same MLP with RFF recovers high-frequency detail much earlier. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}; see also~\cite{tancik2020_fourier}.}
+			\caption{\textbf{Fourier features mitigate spectral bias.} A coordinate MLP remains blurry at equal iterations, whereas the same MLP with RFF recovers high-frequency detail much earlier. Credit: explanatory \href{https://www.youtube.com/watch?v=iKyIJ_EtSkw}{video}; see also~\cite{tancik2020_fourierfeatures}.}
 			\label{fig:chapter15_sam_ff_blur_vs_sharp}
 		\end{figure}
 	
@@ -1817,7 +1817,7 @@ where:
 		\begin{itemize}
 			\item \textbf{Multi-mask hypotheses + min-over training.} Predicting multiple masks per prompt and supervising with a \emph{min-over-masks} loss lets the model represent whole/part/subpart alternatives without averaging incompatible solutions; it is a core ingredient in SAM’s ambiguity handling and one-click strength~\cite{kirillov2023_sam}.
 			\item \textbf{Two-way attention in the decoder.} Letting tokens \emph{query} image features and image features \emph{query back} the tokens (prompt-aware feature refinement) improves mask quality versus token$\rightarrow$image only; the authors report this bidirectional variant as particularly helpful for ambiguous, sparse prompts~\cite{kirillov2023_sam}.
-			\item \textbf{Prompt encodings with Fourier features.} Using random Fourier feature (RFF) positional encodings for sparse prompts yields near-isotropic geometry and better alignment than separable 1D encodings or raw coordinates, reducing axis-bias in point/box conditioning~\cite{kirillov2023_sam,tancik2020_fourier}.  
+			\item \textbf{Prompt encodings with Fourier features.} Using random Fourier feature (RFF) positional encodings for sparse prompts yields near-isotropic geometry and better alignment than separable 1D encodings or raw coordinates, reducing axis-bias in point/box conditioning~\cite{kirillov2023_sam,tancik2020_fourierfeatures}.  
 			\item \textbf{IoU prediction head for ranking.} A small head trained to predict the mask IoU enables reliable automatic selection among the three hypotheses; in aggregate plots, SAM’s auto-selected mask tracks the oracle closely, validating the calibration~\cite{kirillov2023_sam}.
 			\item \textbf{Interactive curriculum.} The evaluation and training are aligned: simulated clicks are placed on the largest current error, improvement slows after \textasciitilde8 clicks, and SAM is trained with sequences up to 11 interactions to learn the refine–correct loop~\cite{kirillov2023_sam}. 
 		\end{itemize}
@@ -1972,7 +1972,7 @@ where:
 		\noindent In summary, SAM~2 augments SAM’s promptable segmentation with a carefully designed streaming memory that enables efficient propagation, interactive recovery, and stable identities across time, all while preserving the same user-facing interface (points, boxes, masks) that made SAM broadly usable on images.
 		
 		\paragraph{Prompt encoder}
-		We preserve SAM’s prompt vocabulary but make shapes explicit. For sparse prompts, a 2D point $p\!=\!(x,y)$ in pixel coordinates is normalized to $[-1,1]^2$, then mapped by random Fourier features $\gamma(p)\!=\![\sin(2\pi Bp),\cos(2\pi Bp)]\in\mathbb{R}^{2m}$ with $B\in\mathbb{R}^{m\times 2}$ sampled once~\cite{tancik2020_fourier}. The final point token is
+		We preserve SAM’s prompt vocabulary but make shapes explicit. For sparse prompts, a 2D point $p\!=\!(x,y)$ in pixel coordinates is normalized to $[-1,1]^2$, then mapped by random Fourier features $\gamma(p)\!=\![\sin(2\pi Bp),\cos(2\pi Bp)]\in\mathbb{R}^{2m}$ with $B\in\mathbb{R}^{m\times 2}$ sampled once~\cite{tancik2020_fourierfeatures}. The final point token is
 		\[
 		e_{\text{pt}}(p,\tau)=W_{\text{pt}}\,[\gamma(p)\,\|\,e_{\text{type}}(\tau)]\in\mathbb{R}^{d_p},
 		\]

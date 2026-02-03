@@ -1949,7 +1949,7 @@ S = (Q')^\top K' \in \mathbb{R}^{N \times N},
 S = \frac{(Q')^\top K'}{\sqrt{C'}}.
 \]
 
-\noindent Each spatial location is represented by a feature vector of length \( C' \), and the dot product between two such vectors grows with \( C' \). Scaling by \( \sqrt{C'} \) ensures that the variance of the similarity scores remains stable, thereby preventing softmax saturation and enabling smoother gradient flows during training, as suggested by Zhang et al. \cite{zhang2019_self_attention_gan}.
+\noindent Each spatial location is represented by a feature vector of length \( C' \), and the dot product between two such vectors grows with \( C' \). Scaling by \( \sqrt{C'} \) ensures that the variance of the similarity scores remains stable, thereby preventing softmax saturation and enabling smoother gradient flows during training, as suggested by Zhang et al. \cite{zhang2019_sagan}.
 
 \paragraph{Normalizing Attention Weights}
 

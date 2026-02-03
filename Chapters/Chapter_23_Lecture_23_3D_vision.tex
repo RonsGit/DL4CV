@@ -1814,7 +1814,7 @@ In practice, these systems frequently fail due to several structural limitations
 \begin{itemize}
     \item \textbf{Limited view coverage.} Geometry is only recovered where multiple views overlap. Occluded or unobserved regions remain incomplete or hallucinated~\cite{seitz2006_multiview}.
     
-    \item \textbf{Photometric assumptions.} Most SfM–MVS methods assume Lambertian surfaces and brightness constancy. Real-world effects such as specularities, translucency, and variable illumination violate these assumptions, corrupting correspondence and depth estimates~\cite{zhang2015_mvs_illum}.
+    \item \textbf{Photometric assumptions.} Most SfM–MVS methods assume Lambertian surfaces and brightness constancy. Real-world effects such as specularities, translucency, and variable illumination violate these assumptions, corrupting correspondence and depth estimates~.
     
     \item \textbf{Sparse inputs and wide baselines.} With few input images or large viewpoint shifts, feature correspondences become unreliable, degrading both pose and geometry~\cite{aanaes2016_mvs}.
     
@@ -6040,9 +6040,9 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
         \paragraph{Future work}
         Recent, highly cited follow-ups suggest concrete avenues beyond the original formulation:
         \begin{itemize}
-            \item \textbf{Dynamics and tracking.} Extending splats to time (4D) enables real-time dynamic rendering~\cite{Wu_2023_4DGS}, while dense SLAM systems fuse mapping and tracking directly with Gaussians for online reconstruction~\cite{Rosinol_2024_SplaTAM}.
+            \item \textbf{Dynamics and tracking.} Extending splats to time (4D) enables real-time dynamic rendering~\cite{wu2024_4dgs}, while dense SLAM systems fuse mapping and tracking directly with Gaussians for online reconstruction~\cite{Rosinol_2024_SplaTAM}.
             \item \textbf{Richer appearance / inverse rendering.} Jointly estimating reflectance and lighting with Gaussian splats (inverse rendering) improves specularities and relighting fidelity~\cite{Wang_2024_GSIR}; surfel-style anisotropic primitives further tighten shading–geometry coupling~\cite{Kerbl_2024_GaussianSurfels}.
-            \item \textbf{Initialization and scalability.} Removing reliance on external SfM (e.g., COLMAP-free pipelines) widens applicability and can reduce failure cases tied to sparse/biased points~\cite{Fu_2024_COLMAPFreeGS}; generative priors with Gaussians help regularize learning and scale content creation~\cite{Tang_2023_DreamGaussian}.
+            \item \textbf{Initialization and scalability.} Removing reliance on external SfM (e.g., COLMAP-free pipelines) widens applicability and can reduce failure cases tied to sparse/biased points~\cite{Fu_2024_COLMAPFreeGS}; generative priors with Gaussians help regularize learning and scale content creation~\cite{tang2023_dreamgaussian}.
             \item \textbf{Surfaces and hybrids.} Surface-aligned or surface-extractable Gaussian formulations bridge to mesh-like structure for editing and compression~\cite{Zhang_2024_SuGaR}, complementing the original unstructured point representation.
         \end{itemize}
         
@@ -9702,7 +9702,7 @@ The limitations of the original NeRF—its slowness, data hungriness, fragility,
     
     \begin{itemize}
         \item \textbf{DreamFusion}~\cite{poole2022_dreamfusion}: Distills a 2D text-to-image diffusion model into a NeRF for text-to-3D synthesis via score distillation.
-        \item \textbf{Latent-NeRF / DreamFields}~\cite{metzer2022_latentnerf,tang2023_dreamfields}: Trains radiance fields in latent spaces or with strong 2D guidance to boost fidelity and efficiency.
+        \item \textbf{Latent-NeRF / DreamFields}~\cite{metzer2022_latentnerf,jain2022_dreamfields}: Trains radiance fields in latent spaces or with strong 2D guidance to boost fidelity and efficiency.
     \end{itemize}
     
     \noindent\textit{Further influential works (not expanded):} \textbf{Magic3D}~\cite{lin2023_magic3d}, \textbf{Fantasia3D}~\cite{chen2023_fantasia3d} (two-stage, high-res pipelines). Mentioned for context; emphasis remains on NeRF-centric generation and cross-modal supervision.
