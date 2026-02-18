@@ -2068,11 +2068,29 @@ def get_js_footer():
                 const id = targets[activeIdx].id;
                 // FIX: Do NOT use CSS.escape in href selector - iterate and match instead
                 const tocLinks = document.querySelectorAll('.local-toc a');
+                const tocHrefs = new Set(Array.from(tocLinks).map(l => l.getAttribute('href')));
                 let matchedLink = null;
                 for(let link of tocLinks) {
                     if(link.getAttribute('href') === '#' + id) {
                         matchedLink = link;
                         break;
+                    }
+                }
+                // Fallback: if the active heading (e.g. h5 subsubsection) is not in
+                // the TOC, walk backwards through scroll-spy targets to find the
+                // nearest preceding heading that IS in the TOC and highlight that.
+                if(!matchedLink) {
+                    for(let k = activeIdx - 1; k >= 0; k--) {
+                        const fallbackId = targets[k].id;
+                        if(fallbackId && tocHrefs.has('#' + fallbackId)) {
+                            for(let link of tocLinks) {
+                                if(link.getAttribute('href') === '#' + fallbackId) {
+                                    matchedLink = link;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                     }
                 }
                 
