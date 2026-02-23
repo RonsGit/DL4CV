@@ -66,6 +66,9 @@ missfont.log
 *.blg
 custom_filter.py
 
+# AI Assistant Context
+CLAUDE.md
+
 git.ignore
 StyleInd.ist
 Auxiliary/

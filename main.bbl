@@ -924,6 +924,61 @@
       \verb https://doi.org/10.1109/WACV56688.2023.00172
       \endverb
     \endentry
+    \entry{austin2021_d3pm}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=9b0426325e91e9da0e91dbf27a7379f6}{%
+           family={Austin},
+           familyi={A\bibinitperiod},
+           given={Jacob},
+           giveni={J\bibinitperiod}}}%
+        {{hash=7d3150a7425b72da41b2fe9fb454a4c5}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Daniel\bibnamedelima D.},
+           giveni={D\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=2ac2ca10b22e4d13af1767e87495412f}{%
+           family={Ho},
+           familyi={H\bibinitperiod},
+           given={Jonathan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=f322f16653f77dad93e3079aeb208b57}{%
+           family={Tarlow},
+           familyi={T\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2e539e2ef093fd4fb83f6961292d598a}{%
+           family={Berg},
+           familyi={B\bibinitperiod},
+           given={Rianne},
+           giveni={R\bibinitperiod},
+           prefix={van\bibnamedelima den},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+      }
+      \strng{namehash}{dff77349ec9691661e8152730c5183c2}
+      \strng{fullhash}{b9217cf9387536b9a59780ddf3ae5424}
+      \strng{fullhashraw}{b9217cf9387536b9a59780ddf3ae5424}
+      \strng{bibnamehash}{dff77349ec9691661e8152730c5183c2}
+      \strng{authorbibnamehash}{dff77349ec9691661e8152730c5183c2}
+      \strng{authornamehash}{dff77349ec9691661e8152730c5183c2}
+      \strng{authorfullhash}{b9217cf9387536b9a59780ddf3ae5424}
+      \strng{authorfullhashraw}{b9217cf9387536b9a59780ddf3ae5424}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2107.03006}
+      \field{title}{Structured Denoising Diffusion Models in Discrete State-Spaces}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.48550/arXiv.2107.03006
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2107.03006
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2107.03006
+      \endverb
+    \endentry
     \entry{awadalla2023_openflamingo}{misc}{}{}
       \name{author}{16}{}{%
         {{hash=97177611fb8f0e32ff61e53255a598be}{%
@@ -9194,6 +9249,7 @@
       \strng{authornamehash}{c008d10e203b2bbbd7b231308a583de0}
       \strng{authorfullhash}{932e352452cf49e907daaf3c993ba79c}
       \strng{authorfullhashraw}{932e352452cf49e907daaf3c993ba79c}
+      \field{extraname}{1}
       \field{sortinit}{G}
       \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
       \field{labelnamesource}{author}
@@ -9204,6 +9260,75 @@
       \field{year}{2024}
       \verb{eprint}
       \verb 2407.15595
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2407.15595
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2407.15595
+      \endverb
+    \endentry
+    \entry{gat2024_dfm}{article}{}{}
+      \name{author}{8}{}{%
+        {{hash=392591856940aee2897c65ba822d427b}{%
+           family={Gat},
+           familyi={G\bibinitperiod},
+           given={Itai},
+           giveni={I\bibinitperiod}}}%
+        {{hash=cc980e5dc4f117cc7b9dc8e79b4e538d}{%
+           family={Remez},
+           familyi={R\bibinitperiod},
+           given={Tal},
+           giveni={T\bibinitperiod}}}%
+        {{hash=cdf71337defa1240cc5637f729de5157}{%
+           family={Shaul},
+           familyi={S\bibinitperiod},
+           given={Neta},
+           giveni={N\bibinitperiod}}}%
+        {{hash=7b9f656a709e39ab921a2319da205e6b}{%
+           family={Kreuk},
+           familyi={K\bibinitperiod},
+           given={Felix},
+           giveni={F\bibinitperiod}}}%
+        {{hash=9db211fe28b9db15bc04d29bedf2e03f}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Ricky\bibnamedelimb T.\bibnamedelimi Q.},
+           giveni={R\bibinitperiod\bibinitdelim T\bibinitperiod\bibinitdelim Q\bibinitperiod}}}%
+        {{hash=a345e20a460089c920bb74098ed450db}{%
+           family={Synnaeve},
+           familyi={S\bibinitperiod},
+           given={Gabriel},
+           giveni={G\bibinitperiod}}}%
+        {{hash=b524686c039bdbe0e8cca661fca6b56c}{%
+           family={Adi},
+           familyi={A\bibinitperiod},
+           given={Yossi},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=007e1ec9be65793d22967618e750f5a2}{%
+           family={Lipman},
+           familyi={L\bibinitperiod},
+           given={Yaron},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{c008d10e203b2bbbd7b231308a583de0}
+      \strng{fullhash}{932e352452cf49e907daaf3c993ba79c}
+      \strng{fullhashraw}{932e352452cf49e907daaf3c993ba79c}
+      \strng{bibnamehash}{c008d10e203b2bbbd7b231308a583de0}
+      \strng{authorbibnamehash}{c008d10e203b2bbbd7b231308a583de0}
+      \strng{authornamehash}{c008d10e203b2bbbd7b231308a583de0}
+      \strng{authorfullhash}{932e352452cf49e907daaf3c993ba79c}
+      \strng{authorfullhashraw}{932e352452cf49e907daaf3c993ba79c}
+      \field{extraname}{2}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2407.15595}
+      \field{title}{Discrete Flow Matching}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.48550/arXiv.2407.15595
       \endverb
       \verb{urlraw}
       \verb https://arxiv.org/abs/2407.15595
@@ -12437,6 +12562,7 @@
       \strng{authornamehash}{efe1844e7db06d01d887d3bec5d7ead9}
       \strng{authorfullhash}{5b72c5333a1ddf7f87d9c07fa6dfa492}
       \strng{authorfullhashraw}{5b72c5333a1ddf7f87d9c07fa6dfa492}
+      \field{extraname}{1}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{labelnamesource}{author}
@@ -12444,6 +12570,80 @@
       \field{journaltitle}{arXiv preprint arXiv:2410.20587}
       \field{title}{Generator Matching: Generative Modeling with Arbitrary Markov Processes}
       \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2410.20587
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2410.20587
+      \endverb
+    \endentry
+    \entry{holderrieth2025generator}{article}{}{}
+      \name{author}{9}{}{%
+        {{hash=303c0e663d9eb9c3002e162593a4c2e9}{%
+           family={Holderrieth},
+           familyi={H\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=b9598b97071e2bdb357b151524c4d194}{%
+           family={Havasi},
+           familyi={H\bibinitperiod},
+           given={Marton},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bb19e7824a2f1b2056776fcf18b800f6}{%
+           family={Yim},
+           familyi={Y\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+        {{hash=cdf71337defa1240cc5637f729de5157}{%
+           family={Shaul},
+           familyi={S\bibinitperiod},
+           given={Neta},
+           giveni={N\bibinitperiod}}}%
+        {{hash=392591856940aee2897c65ba822d427b}{%
+           family={Gat},
+           familyi={G\bibinitperiod},
+           given={Itai},
+           giveni={I\bibinitperiod}}}%
+        {{hash=521085652a07e67bdff5323e2febc138}{%
+           family={Jaakkola},
+           familyi={J\bibinitperiod},
+           given={Tommi},
+           giveni={T\bibinitperiod}}}%
+        {{hash=8b4f260513035df036170e50abb8a1a2}{%
+           family={Karrer},
+           familyi={K\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=9db211fe28b9db15bc04d29bedf2e03f}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Ricky\bibnamedelimb T.\bibnamedelimi Q.},
+           giveni={R\bibinitperiod\bibinitdelim T\bibinitperiod\bibinitdelim Q\bibinitperiod}}}%
+        {{hash=007e1ec9be65793d22967618e750f5a2}{%
+           family={Lipman},
+           familyi={L\bibinitperiod},
+           given={Yaron},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{efe1844e7db06d01d887d3bec5d7ead9}
+      \strng{fullhash}{d7a921d26d47dba02f637186ab52e184}
+      \strng{fullhashraw}{d7a921d26d47dba02f637186ab52e184}
+      \strng{bibnamehash}{efe1844e7db06d01d887d3bec5d7ead9}
+      \strng{authorbibnamehash}{efe1844e7db06d01d887d3bec5d7ead9}
+      \strng{authornamehash}{efe1844e7db06d01d887d3bec5d7ead9}
+      \strng{authorfullhash}{d7a921d26d47dba02f637186ab52e184}
+      \strng{authorfullhashraw}{d7a921d26d47dba02f637186ab52e184}
+      \field{extraname}{2}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2410.20587}
+      \field{title}{Generator Matching: Generative modeling with arbitrary Markov processes}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.48550/arXiv.2410.20587
+      \endverb
       \verb{urlraw}
       \verb https://arxiv.org/abs/2410.20587
       \endverb
@@ -19197,6 +19397,50 @@
       \endverb
       \verb{url}
       \verb https://arxiv.org/abs/2303.16160
+      \endverb
+    \endentry
+    \entry{lin2024_sdxllightning}{misc}{}{}
+      \name{author}{3}{}{%
+        {{hash=6c744cb89bce5600e026cc29009758a9}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={Shanchuan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c5fca93905583085a6c2a7a4693c88bc}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Anran},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9d362588e629aea5809440133ff290d7}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Xiao},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{fullhash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{fullhashraw}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{bibnamehash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{authorbibnamehash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{authornamehash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{authorfullhash}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \strng{authorfullhashraw}{f47e3f6acfbfe7bb47b0b97832bff447}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{SDXL-Lightning: Progressive Adversarial Diffusion Distillation}
+      \field{year}{2024}
+      \verb{eprint}
+      \verb 2402.13929
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2402.13929
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2402.13929
       \endverb
     \endentry
     \entry{lin2019_bmn}{inproceedings}{}{}
@@ -29300,6 +29544,76 @@
       \verb https://arxiv.org/abs/2405.10300
       \endverb
     \endentry
+    \entry{ren2024_hypersd}{misc}{}{}
+      \name{author}{8}{}{%
+        {{hash=54ed0e26acfe801804354f50a04af76b}{%
+           family={Ren},
+           familyi={R\bibinitperiod},
+           given={Yuxi},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=389bc525f2088642cfd16749beb3312e}{%
+           family={Xia},
+           familyi={X\bibinitperiod},
+           given={Xin},
+           giveni={X\bibinitperiod}}}%
+        {{hash=f351a5c9ad2511f36d6caea985001d71}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Yanzuo},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=a08bd86912c236721251181fb0676bf7}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Jiacheng},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d14d813400632d1540675e5edb94d60a}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Jie},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0d1f80f5ca7ca27b4722cc92c77412eb}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={Pan},
+           giveni={P\bibinitperiod}}}%
+        {{hash=1d4f225c71d236c9bd47cf828063e0b6}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xing},
+           giveni={X\bibinitperiod}}}%
+        {{hash=3dbb7fdbbe5f83d4990efb7a602fb91f}{%
+           family={Xiao},
+           familyi={X\bibinitperiod},
+           given={Xuefeng},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{5ef06147a1c1cc431fc7493266ac4e33}
+      \strng{fullhash}{354208244a1a550000d7952b53da8ef1}
+      \strng{fullhashraw}{354208244a1a550000d7952b53da8ef1}
+      \strng{bibnamehash}{5ef06147a1c1cc431fc7493266ac4e33}
+      \strng{authorbibnamehash}{5ef06147a1c1cc431fc7493266ac4e33}
+      \strng{authornamehash}{5ef06147a1c1cc431fc7493266ac4e33}
+      \strng{authorfullhash}{354208244a1a550000d7952b53da8ef1}
+      \strng{authorfullhashraw}{354208244a1a550000d7952b53da8ef1}
+      \field{extraname}{5}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Hyper-SD: Trajectory Segmented Consistency Model for Efficient Image Synthesis}
+      \field{year}{2024}
+      \verb{eprint}
+      \verb 2404.13686
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2404.13686
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2404.13686
+      \endverb
+    \endentry
     \entry{revaud2019_aploss}{inproceedings}{}{}
       \name{author}{4}{}{%
         {{hash=136603d7485bdd32f40774759d2e4a2d}{%
@@ -31235,6 +31549,54 @@
       \endverb
       \verb{url}
       \verb https://doi.org/10.1109/CVPR52729.2023.01438
+      \endverb
+    \endentry
+    \entry{shaul2025_tm}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=cdf71337defa1240cc5637f729de5157}{%
+           family={Shaul},
+           familyi={S\bibinitperiod},
+           given={Neta},
+           giveni={N\bibinitperiod}}}%
+        {{hash=490b1b9a870cc899f1e279cac96865ef}{%
+           family={Singer},
+           familyi={S\bibinitperiod},
+           given={Uriel},
+           giveni={U\bibinitperiod}}}%
+        {{hash=392591856940aee2897c65ba822d427b}{%
+           family={Gat},
+           familyi={G\bibinitperiod},
+           given={Itai},
+           giveni={I\bibinitperiod}}}%
+        {{hash=007e1ec9be65793d22967618e750f5a2}{%
+           family={Lipman},
+           familyi={L\bibinitperiod},
+           given={Yaron},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{7c9c45a29f5d5ecdafc6ee31f39cee1d}
+      \strng{fullhash}{ecc3c04b6b1b86bd5ad8594cc06ccb64}
+      \strng{fullhashraw}{ecc3c04b6b1b86bd5ad8594cc06ccb64}
+      \strng{bibnamehash}{7c9c45a29f5d5ecdafc6ee31f39cee1d}
+      \strng{authorbibnamehash}{7c9c45a29f5d5ecdafc6ee31f39cee1d}
+      \strng{authornamehash}{7c9c45a29f5d5ecdafc6ee31f39cee1d}
+      \strng{authorfullhash}{ecc3c04b6b1b86bd5ad8594cc06ccb64}
+      \strng{authorfullhashraw}{ecc3c04b6b1b86bd5ad8594cc06ccb64}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2506.23589}
+      \field{title}{Transition Matching: Scalable and Flexible Generative Modeling}
+      \field{year}{2025}
+      \verb{doi}
+      \verb 10.48550/arXiv.2506.23589
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2506.23589
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2506.23589
       \endverb
     \endentry
     \entry{shaw2018selfrelative_pos}{inproceedings}{}{}

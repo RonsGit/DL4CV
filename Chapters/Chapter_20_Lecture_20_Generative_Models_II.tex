@@ -10106,7 +10106,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
         	The core issue lies in the relationship between sampling density and optimization priority. While we sample more often at high-SNR to polish textures, the standard reconstruction loss implicitly weights these steps by the SNR itself: $w(\lambda_t) = \text{SNR}(t)$. At the low-noise limit ($t \to 0$), the SNR blows up to infinity. This creates a "gradient tyranny" where the model over-prioritizes microscopic residual patterns while assigning near-zero importance to the high-noise steps that define global composition. 
         	
         	\noindent
-        	To restore this balance, we introduce the \textbf{Min-SNR-$\gamma$} weighting strategy~\cite{hang2024_minsnr} next.
+        	To restore this balance, we introduce the \textbf{Min-SNR-$\gamma$} weighting strategy~\cite{hang2023_minsnr} next.
         	Importantly, the precise weight depends on the chosen parameterization.
         	For a $v$-parameterized objective, a convenient form is
         	\begin{equation}
@@ -17241,54 +17241,86 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\label{enr:chapter20_add}
     		
     		\paragraph{Motivation: The 1-Step Barrier and the Need for an Adversary}
-    		As generative modeling has matured, the field has developed powerful techniques to accelerate sampling, such as \textbf{Consistency Models (CMs/LCMs)} and flow-based methods like \textbf{Rectified Flow} and \textbf{Scalable Interpolant Transformers (SiTs)}. However, achieving true, high-fidelity \emph{one-step} generation reveals a fundamental limitation shared by all purely regression-based distillation methods.
+    		As generative modeling has matured, the field has developed powerful paradigms to accelerate sampling. Broadly, these fall into two categories: simplifying the generative trajectory (e.g., \textbf{Flow Matching} and \textbf{Rectified Flow}) or bypassing the step-by-step solver entirely to learn a direct mapping to the endpoint (e.g., \textbf{Consistency Models}). However, achieving true, high-fidelity \emph{one-step} generation reveals a fundamental limitation shared by purely regression-based or purely ODE-based methods.
     		
-    		To understand why an adversary is necessary, we must look at where these existing methods fall short in the extreme 1-step regime:
+    		To understand why an adversarial objective becomes important at $N=1$, we must look at where these existing paradigms fall short:
     		\begin{itemize}
-    			\item \textbf{The Integration Tax (SiTs \& Flow):} Modern architectures like SiTs and flow-matching objectives successfully straighten probability trajectories, making them incredibly efficient to traverse. However, they are not natively one-step models. Traversing even an approximately straight path from pure noise to a complex image in a single massive jump incurs discretization error. They still require an ODE solver and multiple steps (NFE $> 1$) to fully resolve high-frequency details.
-    			\item \textbf{The Regression Trap (CMs \& LCMs):} Consistency Models bypass the ODE solver entirely by learning to "teleport" directly to the trajectory endpoint. However, they are trained using regression-based distance metrics (like $\ell_2$ or LPIPS). Under the massive uncertainty of predicting a final image from pure noise in a single step, the mathematically optimal solution for a regression loss is the \emph{conditional expected value}. Because a single initial noise vector could validly map to many different sharp images (a multimodal distribution), the model minimizes its error by averaging them together. This ``regression to the mean'' washes out high-frequency textures, resulting in the characteristic ``waxy,'' blurry, or plastic-looking surfaces often seen in 1-step CMs and LCMs. [Image illustrating regression to the mean in multimodal distributions]
+    			\item \textbf{The Integration Tax (Flow-Based Methods):}
+    			Objectives like Rectified Flow aim to \emph{straighten} the probability path between noise and data so that solving the induced ODE becomes easier.
+    			Architectures such as \textbf{Scalable Interpolant Transformers (SiT)} provide a flexible Transformer family for learning \emph{interpolant-based} generative dynamics (including flow-matching-style objectives), but the paradigm still produces a \emph{continuous-time} vector field that must be \emph{integrated} at sampling time.
+    			In the strict $N=1$ regime, taking a single, giant Euler step generally incurs discretization drift: any residual curvature or stiffness of the learned trajectory gets converted into missing or distorted high-frequency detail.
+    			Thus, while these methods can be extremely fast, \emph{faithful} synthesis typically still benefits from $N\ge 2$ function evaluations.
+    			
+    			\item \textbf{The Regression Trap (Consistency Models):}
+    			Consistency Models learn a direct mapping that \emph{bypasses explicit ODE solvers} by enforcing that predictions at different noise levels agree under a chosen \emph{metric} (often perceptual, e.g., LPIPS).
+    			In the extreme $N=1$ setting, the model must map an almost uninformative input (near pure noise) to a detailed image.
+    			Under any regression-style metric, the learner is incentivized to produce a \emph{safe} output that reduces expected error across many plausible completions; this manifests as \emph{mode averaging} in fine-scale structure, washing out micro-texture into ``waxy'' / blurry surfaces.
+    			Despite this limitation at one step, CMs remain highly attractive in the few-step regime because they provide a \emph{deterministic, solver-free} sampling interface with strong stability and excellent quality at $N\approx 2$--$8$.
+    			 
     		\end{itemize}
     		
     		\textbf{Adversarial Diffusion Distillation (ADD)}~\cite{sauer2023_adversarialdistillation} was explicitly designed to break this regression limit by \emph{hybridizing} diffusion distillation with a GAN-style discriminator. 
     		
-    		Instead of relying solely on regression to find the endpoint, ADD employs a division of labor: a frozen diffusion teacher provides \emph{semantic and compositional grounding} (ensuring the model respects the prompt and the trajectory structure), while the adversarial signal mathematically penalizes the blurry average. Because a waxy, averaged image is easily detected as ``fake,'' the discriminator forces the student model to abandon the safe conditional mean and confidently collapse into a single \emph{sharp, photorealistic} mode. [Image comparing regression loss outputs vs adversarial loss outputs in generative models]
+    		Instead of relying solely on regression to find the endpoint, ADD employs a division of labor: a frozen diffusion teacher provides \emph{semantic and compositional grounding} (ensuring the model respects the prompt and the trajectory structure), while the adversarial signal mathematically penalizes the blurry average. Because a waxy, averaged image is easily detected as ``fake'', the discriminator forces the student model to abandon the safe conditional mean and confidently collapse into a single \emph{sharp, photorealistic} mode.
     		
     		\emph{Competitors or Allies?} 
     		Initially, CMs and ADD emerged as competing philosophies for few-step generation. ADD is the clear perceptual winner for strict 1-step synthesis, forming the core training paradigm behind extremely fast variants like \emph{SDXL-Turbo}. However, because adversarial objectives are notoriously unstable to optimize, CMs remain highly competitive at 4--8 steps, where the generation uncertainty drops and the regression blur naturally diminishes. 
     		
-    		Today, the community recognizes these approaches as highly complementary. State-of-the-art fast checkpoints (such as \emph{SDXL-Lightning} and \emph{Hyper-SD}) actively \emph{combine} both paradigms: they use consistency or flow-matching objectives to guarantee robust structural geometry, and an adversarial loss to inject the final high-frequency crispness.
+    		\newpage
     		
-    		\paragraph{Setup: teacher vs.\ student schedules}
-    		Let a pretrained diffusion model (the \emph{teacher}) be defined on a dense time grid $t\in\mathcal{T}_{\text{teacher}}=\{1,\dots,1000\}$.
-    		ADD trains a \emph{student denoiser} on a reduced set of steps $\mathcal{T}_{\text{student}}=\{\tau_1,\dots,\tau_n\}$ (often $n\in\{1,2,4\}$ at inference).
-    		Using standard diffusion notation, we form noisy inputs
+    		Today, the community recognizes these approaches as complementary and often combines \emph{step-compression} objectives with adversarial refinement.
+    		For example, \emph{SDXL-Lightning} combines progressive distillation with an adversarial objective to balance quality and mode coverage, while \emph{Hyper-SD} builds on consistency-style distillation (trajectory segmentation) and incorporates adversarial weighting to improve low-step realism~\cite{lin2024_sdxllightning,ren2024_hypersd}.
+    		
+    		\paragraph{Setup: Teacher vs.\ Student schedules (Baby steps vs.\ Giant leaps)}
+    		Let a pretrained diffusion model (the \emph{teacher}) be defined on a dense time grid
+    		$t\in\mathcal{T}_{\text{teacher}}=\{0,1,\dots,T\}$ with $T=1000$,
+    		where $t=T$ corresponds to (approximately) pure noise and $t=0$ corresponds to clean data.
+    		ADD trains a \emph{student denoiser} on a drastically reduced set of steps
+    		$\mathcal{T}_{\text{student}}=\{\tau_1,\dots,\tau_n\}$ with $\tau_n = T$ and typically $n\in\{1,2,4\}$.
+
+    		Using standard diffusion notation, we form the student's noisy input at step $s$:
     		\begin{equation}
     			\label{eq:chapter20_add_forward}
     			\mathbf{x}_s
     			=
-    			\alpha_s \mathbf{x}_0 + \sigma_s \boldsymbol{\epsilon},
+    			\underbrace{\alpha_s \mathbf{x}_0}_{\text{Signal}} + \underbrace{\sigma_s \boldsymbol{\epsilon}}_{\text{Noise}},
     			\qquad
     			\boldsymbol{\epsilon}\sim\mathcal{N}(\mathbf{0},\mathbf{I}),
     			\qquad
-    			s\in\mathcal{T}_{\text{student}},
+    			s\in\mathcal{T}_{\text{student}}.
     		\end{equation}
-    		and the student produces a one-step (or few-step) denoised estimate $\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s)$.
+    		\emph{Intuition:} The coefficients $\alpha_s$ and $\sigma_s$ control the Signal-to-Noise Ratio (SNR). At the start of generation ($s=\tau_n$), the signal is completely destroyed ($\alpha_s \approx 0, \sigma_s \approx 1$). The student is tasked with producing a fully denoised estimate $\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s)$ from this pure noise in a single massive jump, effectively skipping hundreds of the teacher's intermediate waypoints.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Latent diffusion instantiation (The SDXL Architecture).}
+    		Although ADD is often written in ``image space'' ($\mathbf{x}$) for notational simplicity, modern foundation models like Stable Diffusion and SDXL operate in a compressed \emph{latent space}. 
+    		Concretely, a high-resolution RGB image $\mathbf{x}_0\in\mathbb{R}^{3\times 1024\times 1024}$ is first compressed by a Variational Autoencoder (VAE) into a denser, lower-dimensional latent representation $\mathbf{z}_0\in\mathbb{R}^{4\times 128\times 128}$. The noise addition (Eq.~\ref{eq:chapter20_add_forward}) and the student's denoising prediction both occur entirely within this mathematically smoother latent space, predicting $\hat{\mathbf{z}}_\theta(\mathbf{z}_s,s)$.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{The Backpropagation Bottleneck:} 
+    		This latent architecture creates a severe engineering friction point for ADD. The student predicts latents ($\hat{\mathbf{z}}_\theta$), but the ADD discriminator (powered by DINOv2) is designed to evaluate raw RGB pixels ($\hat{\mathbf{x}}_\theta$). 
+    		To compute the adversarial loss during training, the student's predicted latents must be actively decoded through the VAE decoder network at every single training step ($\hat{\mathbf{x}}_\theta = \mathcal{D}(\hat{\mathbf{z}}_\theta)$). 
+    		
+    		More problematically, to actually update the student's weights, the gradient calculated by the discriminator must backpropagate \emph{all the way through the massive convolutional layers of the VAE decoder} before it finally reaches the student. 
+    		This forces the training loop to store enormous high-resolution activation tensors in GPU memory for every image in the batch. This drastically throttles training speed, limits feasible batch sizes, and creates the central compute bottleneck that directly motivated the development of latent-space variants like \textbf{LADD}.
     		
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/ADD_paper_idea.jpg}
     			\caption{\textbf{Adversarial Diffusion Distillation (ADD) overview (ADD, Fig.~2)}~\cite{sauer2023_adversarialdistillation}
-    				The ADD student is trained with two coupled objectives: an adversarial loss against a discriminator (real/fake on pixels) and a diffusion distillation loss against a frozen diffusion teacher (teacher-generated denoising targets with stop-gradient).}
+    				The schematic is drawn in pixel space for clarity; when instantiated with latent diffusion (e.g., SDXL), the student and teacher operate on latents and the adversarial branch requires VAE decoding back to RGB.
+    				Note that $\mathbf{x}_0$ denotes a real dataset image even if the illustration is stylized.}
     			\label{fig:chapter20_add_overview}
     		\end{figure}
     		
     		\paragraph{The two objectives: distill the teacher, sharpen with a discriminator}
     		ADD optimizes a \emph{distillation loss} and an \emph{adversarial loss} simultaneously.
-    		The key design choice is that the teacher contributes a \emph{trajectory-consistent target} (preventing semantic drift), while the discriminator provides a \emph{high-frequency realism prior} that regression losses struggle to supply at one step.
+    		The teacher supplies a trajectory-consistent target (preventing semantic drift and structural hallucinations), while the discriminator supplies the high-frequency realism prior that regression struggles to provide at one step.
     		
     		\paragraph{Distillation loss: teacher denoising targets with stop-gradient}
-    		ADD defines a teacher-generated target by first \emph{re-noising} the student's current prediction to a teacher time $t\in\mathcal{T}_{\text{teacher}}$:
-    		
+    		A naive approach to distillation might be to simply ask the teacher to critique the student's generated image $\hat{\mathbf{x}}_\theta$ directly. However, ADD defines the teacher-generated target by first \emph{re-noising} the student's current prediction to a randomly selected teacher time $t\in\mathcal{T}_{\text{teacher}}$:
     		\begin{equation}
     			\label{eq:chapter20_add_renoise}
     			\hat{\mathbf{x}}_{\theta,t}
@@ -17298,8 +17330,19 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     			\boldsymbol{\epsilon}'\sim\mathcal{N}(\mathbf{0},\mathbf{I}).
     		\end{equation}
     		
-    		The frozen teacher denoiser $\hat{\mathbf{x}}_\psi(\cdot,t)$ then produces a denoised target $\hat{\mathbf{x}}_\psi(\hat{\mathbf{x}}_{\theta,t},t)$, and the student is trained to match it:
+    		\medskip
+    		\noindent
+    		\textbf{Why re-noise? (The Out-of-Distribution Problem).}
+    		The teacher is trained to denoise \emph{diffused} inputs across a noise schedule.
+    		Feeding a non-diffused student output directly to the teacher is out-of-distribution, so the resulting correction signal can be unreliable~\cite{sauer2023_adversarialdistillation}.
+    		The teacher is trained to denoise \emph{diffused} inputs; applying it directly to a non-diffused student output is out-of-distribution for the teacher, so the resulting correction signal is unreliable~\cite{sauer2023_adversarialdistillation}.
     		
+    		\newpage
+    		
+    		By actively injecting noise $\sigma_t \boldsymbol{\epsilon}'$, we submerge the student's flawed prediction back into the noisy probability flow where the teacher is an expert. The teacher looks at this newly noisy state $\hat{\mathbf{x}}_{\theta,t}$ and asks: \emph{``If I were at this exact coordinate, what clean image would I predict?''}. 
+    		Because the teacher is highly robust to noise, its denoised prediction naturally ``projects'' the weird, five-legged dog back onto the nearest valid point on the true data manifold (a normal, four-legged dog).
+    		
+    		The frozen teacher denoiser $\hat{\mathbf{x}}_\psi(\cdot,t)$ then produces this ideal denoised target $\hat{\mathbf{x}}_\psi(\hat{\mathbf{x}}_{\theta,t},t)$, and the student is trained to match it using a weighted $\ell_2$ distance:
     		\begin{equation}
     			\label{eq:chapter20_add_distill}
     			\mathcal{L}_{\text{distill}}
@@ -17310,29 +17353,75 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     			\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s),
     			\operatorname{stopgrad}\big(\hat{\mathbf{x}}_\psi(\hat{\mathbf{x}}_{\theta,t},t)\big)
     			\Big)
-    			\Big].
+    			\Big],
+    			\qquad
+    			d(\mathbf{x},\mathbf{y}) \equiv \|\mathbf{x}-\mathbf{y}\|_2^2.
     		\end{equation}
     		
-    		\emph{Stop-gradient intuition:} the teacher acts strictly as a \emph{frozen critic}; we do not backpropagate through the large teacher network, and only treat its output as a fixed target for the student's current prediction.
+    		\smallskip
+    		\noindent
+    		\emph{Stop-gradient intuition:} The teacher acts strictly as a frozen, immovable critic.
+    		We never backpropagate through the parameters in the teacher network to make it compromise with the student. We only use its output as a fixed coordinate in image space, generating a direct error signal that updates solely the student's weights.
     		
-    		\paragraph{Adversarial loss: a projection discriminator on frozen semantic features}
-    		To push sharpness and realism, ADD trains a discriminator $D_\phi$ to distinguish real images $\mathbf{x}_0$ from generated samples $\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s)$, using a hinge-style GAN objective~\cite{sauer2023_adversarialdistillation}.
-    		A crucial stabilization trick is to build $D_\phi$ on top of a \emph{frozen pretrained visual feature backbone} $\Phi(\cdot)$ (a ViT trained self-supervised, typically \textbf{DINOv2}~\cite{oquab2023_dinov2}), with lightweight trainable heads $D_{\phi,k}$ attached to intermediate feature maps:
+    		\smallskip
+    		\noindent
+    		\emph{Why is $\ell_2$ not ``too strict'' here?}
+    		Because the teacher's target might slightly shift pixels (e.g., moving a strand of hair to a more "natural" position), using a pixel-perfect $\ell_2$ metric might intuitively seem like it would punish the student unfairly, forcing it to hedge its bets and blur the image. 
+    		If $\ell_2$ were the \emph{only} objective, this regression to the mean would absolutely occur. 
+    		
+    		However, in the ADD hybrid framework, $\mathcal{L}_{\text{distill}}$ is not responsible for teaching textures. It acts purely as a \emph{structural leash}. The $\ell_2$ distance forms a directional vector pointing directly from the student's GAN-hallucinated structure toward the nearest structurally sound, prompt-aligned layout known by the teacher. 
+    		The adversarial loss simultaneously pushes back against the texture-smoothing tendency of this $\ell_2$ penalty. This yields a precise equilibrium: the global geometry and prompt adherence follow the teacher's structural leash, while the crisp, high-frequency realism is strictly enforced by the discriminator.
+    		
+    		\paragraph{Adversarial loss: a projected discriminator on frozen semantic features (DINOv2)}
+    		To push sharpness and realism, ADD trains a discriminator $D_\phi$ to distinguish real images $\mathbf{x}_0$ from generated samples $\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s)$ with a hinge-style GAN objective~\cite{sauer2023_adversarialdistillation}.
+    		
+    		A crucial stabilization trick is that $D_\phi$ is \emph{not} a standard convolutional network trained from scratch on raw pixels. Standard GANs are notoriously unstable and easily fooled by high-frequency artifacts (like checkerboard patterns) because the discriminator and generator are learning simultaneously. 
+    		Instead, ADD uses a \emph{projected GAN discriminator}: it is built on top of a massive, frozen, pretrained visual backbone $\Phi(\cdot)$ (a Vision Transformer trained self-supervised, typically \textbf{DINOv2}~\cite{oquab2023_dinov2}). Because DINOv2 provides strong pretrained semantic features, the projected discriminator becomes harder to exploit via trivial pixel-level artifacts and yields a substantially more stable and informative training signal in the low-step regime~\cite{sauer2023_adversarialdistillation,oquab2023_dinov2}.
+    		 Lightweight trainable heads $D_{\phi,k}$ are attached to the intermediate features of this frozen backbone:
     		\[
     		D_\phi(\mathbf{x},\mathbf{c})
-    		\;=\;
+    		=
     		\sum_k D_{\phi,k}\big(\Phi_k(\mathbf{x}),\mathbf{c}\big),
     		\]
-    		where $\mathbf{c}$ denotes text conditioning (projection discriminator).
+    		where $\mathbf{c}$ denotes conditioning (e.g., a text embedding; making this a \emph{projection discriminator}). 
     		
     		\medskip
     		\noindent
-    		\emph{Conditioning on the noisy input.}
-    		Since $\mathbf{x}_s$ contains partial information about $\mathbf{x}_0$ whenever $s<1000$, ADD can additionally condition the discriminator on the \emph{noisy input} $\mathbf{x}_s$ (instead of the clean target), encouraging the student to respect the spatial/layout information implied by the current noise realization rather than hallucinating an unaligned image~\cite{sauer2023_adversarialdistillation}.
+    		\textbf{The $\ell_2$ vs.\ LPIPS Debate: Why ADD reduces the need for a separate perceptual regression loss.}
+    		In standard distillation frameworks (like Consistency Models), using a pure $\ell_2$ (Mean Squared Error) pixel loss is disastrous; it averages modes and creates waxy, blurry images.
     		
-    		\paragraph{Overall training objective and the pixel--latent split (why the VAE becomes a bottleneck)}
-    		The full objective is a weighted su
-    		m
+    		\newpage
+    		
+    		To combat this, standard CMs heavily rely on \textbf{LPIPS} (Learned Perceptual Image Patch Similarity) for their distance metric, which calculates errors in the feature space of a pretrained VGG network to preserve perceptual sharpness. 
+    		
+    		So why does ADD's distillation loss ($\mathcal{L}_{\text{distill}}$) revert to using basic, computationally cheap $\ell_2$ distance? 
+    		The answer lies in the DINOv2 discriminator. The projected discriminator effectively acts as an immensely powerful, dynamically trained perceptual loss. 
+    		\begin{itemize}
+    			\item \textbf{Redundancy:} LPIPS uses a VGG network to judge high-level features. The ADD discriminator uses DINOv2 to do the exact same thing, but with a vastly superior, modern semantic understanding. 
+    			\item \textbf{Strict Division of Labor:} Adding LPIPS on top of the distillation loss would be computationally wasteful and mathematically redundant. The cheap $\ell_2$ loss serves primarily as a structural leash, while the adversarial loss supplies the perceptual pressure that would otherwise motivate LPIPS in purely regression-based distillation~\cite{sauer2023_adversarialdistillation}.
+    		\end{itemize}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{What goes in, what comes out, and how the student learns.}
+    		The discriminator evaluates two streams---real images ($\mathbf{x}_0$) and fake generated images ($\hat{\mathbf{x}}_\theta$)---passing both through the frozen DINOv2 backbone.
+    		The feature maps are extracted at multiple depths:
+    		\begin{itemize}
+    			\item \emph{Shallow features} capture edges, lighting, and high-frequency textures (e.g., fur, skin pores).
+    			\item \emph{Deep features} capture global anatomy and object-level semantics (e.g., does this dog have the correct number of legs?).
+    		\end{itemize}
+    		Each small head outputs a realness score for its specific depth. The hinge loss combines these scores and calculates the gradient. 
+    		Crucially, the discriminator does not just output a binary ``fake'' label. It supplies a dense, feature-aware \emph{vector field} via backpropagation. It tells the student exactly which pixels to push, and in what direction, to reconstruct the specific textures and anatomical structures that DINOv2 recognizes as photorealistic.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Image conditioning (Encouraging use of the input signal).}
+    		For intermediate student steps $\tau<1000$, the ADD-student input $\mathbf{x}_s=\alpha_s\mathbf{x}_0+\sigma_s\boldsymbol{\epsilon}$ still contains information about the originating clean image $\mathbf{x}_0$.
+    		ADD exploits this by conditioning the discriminator not only on text (projection), but also on an \emph{image embedding} $c_{\text{img}}$ extracted from $\mathbf{x}_0$.
+    		Intuitively, this encourages the student to utilize the input signal effectively (rather than ignoring it and only optimizing unconditional realism), and empirically the combination of text and image conditioning yields the best results~\cite{sauer2023_adversarialdistillation}.
+    		
+    		\paragraph{Overall training objective and the pixel--latent split (The VAE Bottleneck)}
+    		The full training objective combines these two forces into a single weighted sum:
     		\begin{equation}
     			\label{eq:chapter20_add_total}
     			\mathcal{L}_{\text{ADD}}
@@ -17343,20 +17432,53 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     			\text{(regularization, e.g., R1)}.
     		\end{equation}
     		
-    		When applying ADD to \emph{latent diffusion} models (e.g., Stable Diffusion / SDXL), the student and teacher naturally operate on latents $\mathbf{z}$.
-    		In principle, one can define $d(\cdot,\cdot)$ either in latent space or after decoding to pixels.
-    		In practice, Sauer et al.\ report that (for their latent-diffusion instantiation) computing the \emph{distillation} loss in \emph{pixel space} yields more stable gradients, while the \emph{adversarial} loss is intrinsically pixel-based~\cite{sauer2023_adversarialdistillation}.
-    		Consequently, training repeatedly invokes the VAE decoder to convert predicted latents into images for discriminator feedback (and often also for distillation), creating a major throughput bottleneck that directly motivates latent-space extensions (LADD).
+    		The hyperparameter $\lambda_{\text{adv}}$ is the critical dial that balances the equilibrium: too low, and the model collapses back to the waxy regression mean; too high, and the GAN discriminator overpowers the structural leash, causing geometric hallucinations.
     		
-    		\paragraph{Fast sampling and refinement: one step vs.\ a few steps}
-    		Although ADD is marketed as a one-step generator, it remains compatible with \emph{multi-step} sampling on a reduced schedule $\mathcal{T}_{\text{student}}$.
-    		Empirically, going from 1 step to 2--4 steps often improves fine details and prompt consistency while largely preserving the global layout established by the first step.
+    		\medskip
+    		\noindent
+    		\textbf{The Pixel--Latent Split and the Memory Crisis.}
+    		When instantiating ADD with a latent diffusion model (e.g., SDXL), the teacher and student denoisers operate natively in latent space.
+    		However, ADD \emph{formulates the training losses in pixel space}: for LDMs with a shared latent space, the distillation loss \emph{could} be computed in latent or pixel space, and ADD reports using \emph{pixel-space} distillation because it yields more stable gradients~\cite{sauer2023_adversarialdistillation}.
+    		Since the adversarial objective is also pixel-based, training repeatedly decodes predicted latents to RGB, $\hat{\mathbf{x}}_\theta=\mathcal{D}(\hat{\mathbf{z}}_\theta)$, making VAE decoding (and backpropagation through it) the dominant compute and VRAM bottleneck.
+    		
+    		\newpage
+    		
+    		To update the student's weights, feature-aware gradients must backpropagate all the way through the massive, heavily parameterized convolutional layers of the VAE decoder just to reach the student's U-Net. Because modern autograd engines must store intermediate activation tensors for the entire high-resolution pixel grid (e.g., $3 \times 1024 \times 1024$), VRAM consumption explodes. This forces engineers to use tiny batch sizes or restrict training resolutions entirely.
+    		
+    		This exact throughput bottleneck is the direct motivation for the next generation of adversarial distillation: latent-space variants (such as \textbf{LADD}) that evaluate the adversarial game strictly within the compressed boundary of the latents.
+    		
+    	\paragraph{Choice of Teacher and Student: Why Multistep is Mandatory}
+    	A natural question arises regarding the prerequisites for the networks involved in this distillation process. What kind of model qualifies to be the teacher, and where does the student start?
+    	
+    	\begin{itemize}
+    		\item \textbf{The Teacher (Dense-time denoiser):}
+    		The teacher must provide reliable denoising predictions at \emph{arbitrary} timesteps $t\in\mathcal{T}_{\text{teacher}}$ so that the student prediction can be re-noised to $t$ and ``critiqued'' via the teacher target.
+    		In practice, this is naturally satisfied by a standard pretrained diffusion model (e.g., SDXL), which is trained to denoise across a dense noise schedule and thus can serve as a dependable ``compass'' throughout the trajectory~\cite{sauer2023_adversarialdistillation}.
+    		
+    		\item \textbf{The Student (The Pretrained Clone):} The student model utilizes the exact same architecture as the teacher (e.g., a massive U-Net or DiT). Crucially, the student is \emph{initialized} with the teacher's pretrained weights rather than starting from random initialization. Training a GAN from scratch to generate photorealistic megapixel images in one step is notoriously unstable and almost guarantees catastrophic mode collapse. By inheriting the teacher's weights, the student begins the distillation process with a profound, preexisting semantic understanding of the data manifold. It already knows how to render complex textures and anatomy; the adversarial training simply acts as an aggressive curriculum, forcing the student to compress that iterative knowledge into a single, confident jump.
+    	\end{itemize}
+    		
+    	\paragraph{Fast sampling and refinement: one step vs.\ a few steps}
+    	Although ADD is heavily marketed as a 1-step generator (and achieves state-of-the-art results doing so), it natively remains a conditional diffusion denoiser $\hat{\mathbf{x}}_\theta(\mathbf{x}_s,s)$. This means it is entirely compatible with \emph{multi-step} sampling by chaining predictions along its reduced schedule $\mathcal{T}_{\text{student}}$.
+    	
+    	\medskip
+    	\noindent
+    	\textbf{The Intuition: ``Drafting and Polishing''.}
+    	Think of the generation process as a sculptor blocking out a statue before chiseling the fine details.
+    	\begin{itemize}
+    		\item \textbf{Step 1 (The Draft):} When evaluating from near-pure noise ($s=\tau_n$), the model faces maximum mathematical uncertainty. It must perform the heavy lifting of resolving the \emph{global} semantics---hallucinating the composition, spatial layout, and major objects out of pure static. While the adversarial loss ensures this ``first draft'' is sharp rather than blurry, the sheer difficulty of the 1-step jump means that highly complex prompt constraints or micro-details (like perfect facial symmetry or rendering text) might be slightly brittle.
+    		\item \textbf{Steps 2--4 (The Polish):} If we want higher quality, we perform \emph{iterative refinement} by running the same student denoiser on its reduced schedule across 2--4 discrete noise levels. We take the 1-step output, add a small, calibrated amount of noise back to it, and feed it through the model again at a lower noise level ($\tau_{n-1}$). Because the injected noise is small, the global layout remains locked in place, and the model can focus on local corrections and texture refinement.
+    	\end{itemize}
+    	
+    	\newpage
+    	
+    	Thus, moving from 1 step to 2--4 steps enables a fast ``explore-then-refine'' workflow: users can rapidly generate 1-step seeds at zero latency to find a composition they like, and then allocate 4 steps to polish that specific layout into a final, high-fidelity image without the composition drastically changing.
     		
     		\begin{figure}[H]
     			\centering
-    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/ADD_sota_samplers_comparison.jpg}
+    			\includegraphics[width=0.8\textwidth]{Figures/Chapter_20/ADD_sota_samplers_comparison.jpg}
     			\caption{\textbf{Qualitative comparison to state-of-the-art fast samplers (ADD, Fig.~3)}~\cite{sauer2023_adversarialdistillation}
-    				ADD-XL produces sharper one-step samples than other few-step samplers, while remaining compatible with multi-step refinement.}
+    				ADD-XL produces sharper 1-step samples than other fast samplers, while remaining compatible with multi-step refinement.}
     			\label{fig:chapter20_add_sota_comparison}
     		\end{figure}
     		
@@ -17369,21 +17491,18 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\end{figure}
     		
     		\paragraph{Key experiments and ablations: what actually matters?}
-    		ADD validates its design via controlled ablations that isolate the contributions of (i) the frozen-feature discriminator, (ii) conditioning choices, and (iii) the balance between distillation and adversarial losses~\cite{sauer2023_adversarialdistillation}.
-    		The core empirical takeaways are:
+    		ADD validates its design via controlled ablations that isolate discriminator design, conditioning, and the balance between distillation and adversarial losses~\cite{sauer2023_adversarialdistillation}.
+    		The most important takeaways are:
     		\begin{itemize}
-    			\item \textbf{A strong frozen feature backbone is essential.}
-    			Using DINOv2 features in the discriminator yields substantially better fidelity than weaker or mismatched backbones; random initialization collapses quality, indicating that the discriminator must provide \emph{semantic} gradients rather than purely local texture cues.
-    			\item \textbf{Conditioning helps, especially jointly.}
-    			Conditioning the discriminator on text improves prompt alignment; conditioning on the noisy input $\mathbf{x}_s$ helps preserve spatial layout; combining both provides the best trade-off in fidelity/alignment.
-    			\item \textbf{You need \emph{both} losses.}
-    			Distillation alone produces oversmoothed samples; adversarial loss alone is unstable and fails to preserve the teacher's compositional priors.
-    			The best results come from carefully balanced schedules/weightings that let the teacher anchor global structure while the discriminator restores high-frequency realism.
+    			\item \textbf{Both losses are necessary.} $\mathcal{L}_{\text{adv}}$ alone degrades quality, while $\mathcal{L}_{\text{distill}}$ alone fails catastrophically; the hybrid objective is essential for stable, high-fidelity 1-step synthesis.
+    			\item \textbf{A strong frozen feature backbone matters.} DINOv2 features in the discriminator outperform alternative feature networks; random initialization collapses, indicating the discriminator must provide \emph{semantic} gradients, not only local texture cues.
+    			\item \textbf{Conditioning helps, especially jointly.} Text conditioning improves prompt alignment; adding image conditioning improves fidelity; combining both yields the best overall trade-off.
+    			\item \textbf{Initialization is critical.} Initializing the student from a pretrained diffusion model is necessary; training from scratch fails, consistent with the hardness of 1-step generation.
     		\end{itemize}
     		
     		\paragraph{Can the student beat the teacher? (texture vs.\ diversity)}
-    		A striking qualitative result is that, in multi-step sampling, ADD-XL can appear \emph{more realistic} than its SDXL teacher on certain texture-heavy regions (fur, fabric, skin), consistent with the discriminator penalizing diffusion-style oversmoothing.
-    		The trade-off is a tendency toward \emph{reduced diversity} compared to the teacher.
+    		A striking qualitative result is that ADD-XL can appear \emph{more realistic} than its SDXL teacher on texture-heavy regions (fur, fabric, skin), consistent with the discriminator penalizing diffusion-style oversmoothing.
+    		The trade-off is a tendency toward \emph{reduced diversity} compared to the teacher, a common side effect of GAN training.
     		
     		\begin{figure}[H]
     			\centering
@@ -17393,19 +17512,1523 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     			\label{fig:chapter20_add_teacher_comparison}
     		\end{figure}
     		
-    		\paragraph{From ADD to LADD and DMD: removing the two bottlenecks}
-    		ADD demonstrates that GAN-style realism can be distilled into a diffusion student, enabling high-quality 1-step generation.
-    		However, it exposes two scaling bottlenecks:
-    		(i) \textbf{the pixel/VAE bottleneck}---adversarial training (and often distillation) requires decoding latents to pixels at every iteration, and
-    		(ii) \textbf{the GAN tightrope}---adversarial optimization depends sensitively on discriminator design and stability (including reliance on a strong frozen backbone).
-    		These limitations motivate two complementary extensions covered next:
-    		\textbf{LADD} moves adversarial supervision into latent space to remove the repeated VAE decode bottleneck~\cite{sauer2024_ladd},
-    		while \textbf{DMD} eliminates the discriminator entirely by replacing the GAN game with a discriminator-free \emph{distribution matching} objective for one-step distillation~\cite{yin2024_dmd}.
+    		\newpage
+    		
+    		\paragraph{From ADD to LADD and DMD: Removing the Two Bottlenecks}
+    		ADD was a monumental proof-of-concept: it demonstrated that adversarial realism can be successfully distilled into a diffusion student, effectively breaking the 1-step blurriness barrier. However, treating ADD as a production-ready paradigm for next-generation foundation models (like Stable Diffusion 3) exposes two distinct scaling bottlenecks:
+    		
+    		\begin{itemize}
+    			\item \textbf{The Pixel/VAE Bottleneck (The Memory Crisis):} Because the DINOv2-based discriminator operates exclusively on raw RGB pixels, the training loop is forced to decode the student's predicted latents into high-resolution images at every single iteration ($\mathcal{D}(\hat{\mathbf{z}}_\theta) \to \hat{\mathbf{x}}_\theta$). Crucially, the adversarial gradients must then backpropagate entirely through the massive convolutional layers of this VAE decoder to reach the student. This consumes an enormous amount of VRAM, strictly limiting training to lower resolutions (e.g., 512px) and making scaling to megapixel or multi-aspect generation computationally prohibitive. 
+    			
+    			\item \textbf{The GAN Tightrope (The Stability Crisis):} Adversarial optimization is not standard loss minimization; it is a delicate, two-player Min-Max game. It depends sensitively on empirical tuning, architecture choices, and precise loss balancing to ensure the discriminator does not overpower the student too quickly (which kills the gradients) or too slowly (which allows artifacts). This reliance on a rigid, external judge makes scaling the distillation process to broader, more complex datasets a mathematically fragile endeavor.
+    		\end{itemize}
+    		
+    		These two severe limitations forced the research community to branch into two complementary directions, each engineered to surgically remove one of these exact bottlenecks:
+    		
+    		\begin{itemize}
+    			\item \textbf{LADD (Latent Adversarial Diffusion Distillation)}~\cite{sauer2024_ladd} tackles the memory crisis. It removes the VAE decode bottleneck entirely by shifting the adversarial supervision directly into the compressed latent space, utilizing features extracted from the teacher model itself.
+    			\item \textbf{DMD (Distribution Matching Distillation)}~\cite{yin2024_dmd} tackles the stability crisis. It eliminates the discriminator entirely, replacing the volatile GAN game with a mathematically pure, discriminator-free distribution matching objective for 1-step distillation.
+    		\end{itemize}
+    		
+    		To understand how the industry achieved megapixel, 4-step generation on consumer hardware (as seen in SD3-Turbo), we first turn our attention to the architectural bypass of \textbf{LADD}.
     		
     	\end{enrichment}
     	
     	\newpage
     	
+    	\begin{enrichment}[Latent Adversarial Diffusion Distillation (LADD)][subsection]
+    		\label{enr:chapter20_ladd}
+    		
+    		\paragraph{Motivation: Fixing ADD's Pixel Bottleneck Without Giving Up Adversarial Sharpness}
+    		Adversarial Diffusion Distillation (ADD) demonstrates that a GAN-style discriminator can break the one-step ``regression-to-the-mean'' barrier by explicitly penalizing oversmoothed, low-texture outputs~\cite{sauer2023_adversarialdistillation}.
+    		However, when ADD is instantiated on latent diffusion models, its adversarial branch remains \emph{pixel-bound}: the discriminator consumes RGB images, so the student must decode latents through the VAE at every training step.
+    		This repeated decoding (and backpropagation through it) becomes a dominant throughput and VRAM bottleneck, effectively hard-capping scalable high-resolution and multi-aspect ratio training.
+    		
+    		\textbf{Latent Adversarial Diffusion Distillation (LADD)}~\cite{sauer2024_ladd} removes this bottleneck by moving the \emph{entire} adversarial game into latent space.
+    		The key unification is conceptual: instead of using an \emph{external} discriminative feature backbone (e.g., DINOv2) on pixels, LADD uses the \emph{frozen generative teacher itself} as the feature extractor for a projected GAN loss, so no pixel decoding is required.
+    		In addition, because the teacher features depend on the noise level, LADD can \emph{explicitly control} whether the discriminator emphasizes global coherence (high noise) or fine texture (low noise), and can naturally support multi-aspect ratio (MAR) training by reshaping token features back into 2D grids~\cite{sauer2024_ladd}.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/LADD_comparison_to_ADD.jpg}
+    			\caption{\textbf{Comparing ADD and LADD (LADD, Fig.~3)}~\cite{sauer2024_ladd}.
+    				ADD computes an adversarial loss on pixel-space features (e.g., DINOv2), requiring expensive VAE decoding; LADD replaces pixel features with frozen teacher features, enabling purely latent-space adversarial training.}
+    			\label{fig:chapter20_ladd_overview}
+    		\end{figure}
+    		
+    		\paragraph{Setup: Synthetic Ground Truth and When Distillation Becomes Unnecessary}
+    		A central practical challenge for adversarial distillation is \emph{prompt alignment}.
+    		Natural image--text datasets can exhibit weak or noisy alignment, so an adversarially trained student can drift toward sharp but poorly conditioned samples unless anchored by an auxiliary distillation objective (as in ADD).
+    		
+    		\newpage
+    		
+    		LADD takes a different route: it \emph{manufactures} highly aligned supervision by generating the training data using the frozen teacher itself at a fixed classifier-free guidance (CFG) value~\cite{sauer2024_ladd}.
+    		Concretely, for a prompt (and its text embedding) $\mathbf{c}$, the teacher produces a clean latent
+    		\[
+    		\mathbf{z}_{\text{real}} \in \mathbb{R}^{C \times h \times w}.
+    		\]
+    		Since the training pairs are now teacher-generated, image--text alignment is substantially improved and comparatively uniform.
+    		Empirically, LADD finds that while an auxiliary distillation loss can help when training on \emph{real} data, it offers no advantage when training on \emph{synthetic} teacher-generated data; thus, synthetic-data training can be performed using only an adversarial loss~\cite{sauer2024_ladd}.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/LADD_syn_data.jpg}
+    			\caption{\textbf{Synthetic data improves image--text alignment and obviates distillation (LADD, Fig.~5)}~\cite{sauer2024_ladd}.
+    				On real data, adding $\mathcal{L}_{\text{distill}}$ can improve details and alignment; on synthetic teacher-generated data, $\mathcal{L}_{\text{distill}}$ provides no benefit, so adversarial-only training suffices.}
+    			\label{fig:chapter20_ladd_synthetic_data}
+    		\end{figure}
+    		
+    		\paragraph{Method: The LADD Training Scheme and Latent Rectified Flow}
+    		LADD migrates the ADD adversarial game fully into \emph{latent space} by unifying the teacher and the discriminator pipeline: the teacher not only generates aligned synthetic training latents, but also provides the \emph{internal generative features} on which adversarial realism is judged~\cite{sauer2024_ladd}.
+    		This removes the pixel-space VAE decode bottleneck and (when training on synthetic data) makes an explicit ADD-style distillation loss unnecessary.
+    		
+    		\medskip
+    		\noindent
+    		\emph{High-Level Overview (Three Actors).}
+    		LADD’s training loop has a strict frozen/trainable split:
+    		\begin{enumerate}
+    			\item \textbf{Teacher model \(T\):} \emph{Frozen.} A pretrained latent diffusion / rectified-flow teacher (e.g., SD3). It (i) generates synthetic, prompt-aligned latents \(\mathbf{z}_{\text{real}}\) and (ii) acts as a fixed feature extractor whose intermediate representations define the adversarial signal.
+    			\item \textbf{Student model \(D_\theta\):} \emph{Trainable.} A fast denoiser that maps noisy latents to a clean latent in \(1\)–\(4\) steps.
+    			\item \textbf{Discriminator heads \(\{h_{\phi,k}\}\):} \emph{Trainable.} Lightweight 2D convolutional heads attached to features extracted from teacher blocks \(k\), trained to classify teacher features from \(\mathbf{z}_{\text{real}}\) as \emph{real} and features induced by the student as \emph{fake}.
+    		\end{enumerate}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Step 1: Forward corruption (rectified-flow parameterization).}
+    		Rather than a discrete DDPM variance schedule, LADD uses a continuous-time interpolation \(t\in[0,1]\), where \(t=1\) denotes pure Gaussian noise and \(t=0\) denotes clean data.
+    		Given a teacher-generated clean latent \(\mathbf{z}_{\text{real}}\) and a sampled \(t\), the corruption path is the straight line
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_forward}
+    			\mathbf{z}_t
+    			=
+    			(1-t)\,\mathbf{z}_{\text{real}} + t\,\boldsymbol{\epsilon},
+    			\qquad
+    			\boldsymbol{\epsilon}\sim\mathcal{N}(\mathbf{0},\mathbf{I}).
+    		\end{equation}
+    		\emph{Intuition:} the model is trained on a \emph{geometrically simple} path (a chord) between \(\mathbf{z}_{\text{real}}\) and pure noise, so “denoising” becomes learning how to move back along this line.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Step 2: Student prediction (velocity field).}
+    		The student receives \((\mathbf{z}_t,t)\) and predicts the clean endpoint. LADD parameterizes this via a learned velocity field \(F_\theta\):
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_student}
+    			D_\theta(\mathbf{z}_t,t)
+    			\;=\;
+    			\hat{\mathbf{z}}_0
+    			\;=\;
+    			\mathbf{z}_t - t\,F_\theta(\mathbf{z}_t,t).
+    		\end{equation}
+    		\emph{Intuition (velocity):} \(F_\theta\) is a learned “push” that points from the current noisy state back toward the clean manifold; multiplying by \(t\) naturally shrinks the correction near \(t\!\approx\!0\) and enlarges it near \(t\!\approx\!1\).
+    		At inference, one can apply \(D_\theta\) once (one-step) or compose it over a small discrete grid (few-step refinement); the paper trains on a small set of discrete timesteps for stability at high resolution~\cite{sauer2024_ladd}.
+    		
+    		\medskip
+    		\noindent
+    		\emph{Notation.}
+    		We use \(t\in[0,1]\) for the \textbf{student} corruption level in Eq.~\eqref{eq:chapter20_ladd_forward}, and \(\hat{t}\in[0,1]\) for a separate \textbf{teacher-noise level} used only to \emph{grade} realism in the adversarial loss (Step~3).
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Step 3: Renoising for Frequency-Controlled Grading.}
+    		
+    		After the student predicts a clean latent $\hat{\mathbf{z}}_0$, LADD does \emph{not} grade realism only at the clean endpoint ($\hat{t}\!=\!0$).
+    		Instead, it evaluates teacher features at a \emph{chosen noise level} $\hat{t}$, so the adversarial signal can be steered toward either global structure (high $\hat{t}$) or fine detail (low $\hat{t}$) without ever decoding to pixels~\cite{sauer2024_ladd}.
+    		
+    		Hence, LADD \emph{renoises} both the true synthetic latent and the student's predicted latent at a newly sampled, independent noise level \(\hat{t}\), and evaluates these corrupted versions through the teacher's features. Concretely, we sample \(\hat{t} \sim \pi(\hat{t}; m, s)\) and form the renoised latents:
+    		
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_renoise}
+    			\tilde{\mathbf{z}}_{\text{real}}
+    			=
+    			(1-\hat{t})\,\mathbf{z}_{\text{real}} + \hat{t}\,\boldsymbol{\eta},
+    			\qquad
+    			\tilde{\mathbf{z}}_{\text{fake}}
+    			=
+    			(1-\hat{t})\,\hat{\mathbf{z}}_0 + \hat{t}\,\boldsymbol{\eta}',
+    			\qquad
+    			\boldsymbol{\eta},\boldsymbol{\eta}'\sim \mathcal{N}(\mathbf{0},\mathbf{I}).
+    		\end{equation}
+    		
+    		To ensure \(\hat{t}\) is smoothly bounded between \(0\) (clean data) and \(1\) (pure noise), we parameterize \(\pi\) as a \textbf{logit-normal} distribution by sampling
+    		\(u\sim\mathcal{N}(m,s^2)\) and mapping it through a sigmoid:
+    		
+    		\begin{equation}
+    			u \sim \mathcal{N}(m, s^2)
+    			\quad \Longrightarrow \quad
+    			\hat{t} = \operatorname{sigmoid}(u) = \frac{1}{1+e^{-u}} \in (0,1).
+    		\end{equation}
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Demystifying the \(m\) and \(s\) Parameters.}
+    		The variables \(m\) (location) and \(s\) (scale) represent the mean and standard deviation of the underlying Gaussian distribution \emph{before} the sigmoid transformation is applied. They serve as direct control dials for the frequency spectrum the discriminator will process:
+    		\begin{itemize}
+    			\item \textbf{Location (\(m\)):} This shifts the center of the distribution. If \(m = 0\), the median of \(u\) is \(0\), and thus the median noise level is \(\operatorname{sigmoid}(0) = 0.5\). If we set \(m > 0\), the distribution skews heavily toward pure noise. For instance, setting \(m = 1\) shifts the median noise level up to \(\operatorname{sigmoid}(1) \approx 0.73\).
+    			\item \textbf{Scale (\(s\)):} This controls the spread. A smaller \(s\) concentrates the sampled timesteps tightly around the median, while a larger \(s\) flattens the distribution, pushing more samples toward the extreme boundaries of \(0\) and \(1\) due to the asymptotic tails of the sigmoid function.
+    		\end{itemize}
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Intuition: The Frequency Filter.}
+    		Renoising turns \(\hat{t}\) into an explicit frequency filter, dictating exactly what structural information survives for the discriminator to ``see''.
+    		
+    		\begin{itemize}
+    			\item \textbf{High Noise (\(\hat{t} \to 1\)):} Micro-textures, sharp edges, and fine details are completely destroyed by the Gaussian noise. The discriminator is forced to look past the static and evaluate only the surviving low-frequency structural skeleton, penalizing errors in global coherence, object proportions, and layout.
+    			\item \textbf{Low Noise (\(\hat{t} \to 0\)):} The global structure is obvious and uncorrupted. The discriminator becomes highly sensitive to high-frequency local realism, penalizing waxy textures, blurry edges, and artificial-looking surfaces.
+    		\end{itemize}
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Choosing $\pi(\hat{t};m,s)$ (coherence--detail trade-off).}
+    		The teacher-noise distribution directly trades off \emph{global coherence} against \emph{fine detail}.
+    		If $\pi(\hat{t};m,s)$ concentrates too much mass near $\hat{t}\approx 0$, the adversarial signal strongly emphasizes local texture realism, but the model can neglect long-range structure (e.g., inconsistent geometry).
+    		Biasing $\pi$ toward larger $\hat{t}$ suppresses high-frequency detail in $\tilde{\mathbf{z}}$ and forces the adversarial heads (through teacher features) to judge what remains: overall layout, proportions, and object-level consistency.
+    		However, pushing $\hat{t}$ too close to $1$ starves the discriminator of fine-scale information and reduces sharpness.
+    		Following the paper, a logit-normal schedule with $(m{=}1,s{=}1)$ provides a robust default, while more extreme biasing (e.g., $(m{=}2,s{=}2)$) measurably degrades fine detail (see the below figure).
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/LADD_controling_noise.jpg}
+    			\caption{\textbf{Controlling the teacher noise distribution (LADD, Fig.~4)}~\cite{sauer2024_ladd}.
+    				Biasing \(\pi(\hat{t};m,s)\) toward higher noise improves global coherence, while excessively high noise removes fine detail.}
+    			\label{fig:chapter20_ladd_noise_control}
+    		\end{figure}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Step 4: Latent Projected GAN on teacher features (alternating updates).}
+    		After the renoising step, the corrupted latents \(\tilde{\mathbf{z}}_{\text{real}}\) and \(\tilde{\mathbf{z}}_{\text{fake}}\) are passed forward through the frozen teacher network \(T\). Following the LADD framework, we \emph{tap into} the frozen teacher and extract intermediate token features after attention blocks; these token sequences are then folded back to a 2D grid before applying the 2D convolutional heads (see the MAR discussion below)~\cite{sauer2024_ladd}.
+    		We then attach independent discriminator heads to these extracted features. These heads are additionally conditioned on the teacher-noise level \(\hat{t}\) and pooled CLIP embeddings \(\mathbf{e}\)~\cite{sauer2024_ladd}.
+    		
+    		Let \(\tilde{\mathbf{F}}^{(k)}_{\text{real}}\) and \(\tilde{\mathbf{F}}^{(k)}_{\text{fake}}\) denote the teacher features at block \(k\) induced by \(\tilde{\mathbf{z}}_{\text{real}}\) and \(\tilde{\mathbf{z}}_{\text{fake}}\), respectively.
+    		
+    		\emph{Note:} These features are produced natively as 1D token sequences by the transformer but are reshaped into a 2D spatial grid before applying the 2D convolutional heads; see Eq.~\eqref{eq:chapter20_ladd_reshape} and the MAR discussion that follows.
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Alternating updates.}
+    		LADD follows standard GAN training practice by alternating between (i) updating the discriminator heads while freezing the student, and (ii) updating the student while freezing the heads.
+    		This prevents the critic and generator from drifting simultaneously and yields a stable training signal in the projected (teacher-feature) space~\cite{sauer2024_ladd}.
+    		 
+    		\newpage
+    		
+    		To solve this, LADD uses an \textbf{alternating optimization loop}. During every single training iteration (i.e., for every batch of data), the system freezes one part of the network while training the other, and then immediately swaps their roles. This creates a two-phase "cat-and-mouse" game: Phase A teaches the critic how to judge, and Phase B teaches the student how to fool the newly updated critic.
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Hinge losses.}
+    		To formalize this game, LADD employs the hinge loss formulation. Define:
+    		
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_hinge}
+    			\ell_{\text{D}}(a_{\text{real}},a_{\text{fake}})
+    			=
+    			\max(0,\,1-a_{\text{real}})
+    			+
+    			\max(0,\,1+a_{\text{fake}}),
+    			\qquad
+    			\ell_{\text{G}}(a_{\text{fake}})=-a_{\text{fake}}.
+    		\end{equation}
+    		Intuitively, \(\ell_{\text{D}}\) forces the discriminator to push the scores of real features (\(a_{\text{real}}\)) above $+1$ and fake features (\(a_{\text{fake}}\)) below $-1$. The generator's loss \(\ell_{\text{G}}\) simply tries to push the fake scores as high as possible.
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Phase A: The Critic's Turn (Update discriminator heads \(\phi\)).}
+    		
+    		\begin{itemize}
+    			\item \textbf{When:} The first half of the training iteration.
+    			\item \textbf{How:} The weights of the student model \(\theta\) and the teacher \(T\) are \emph{strictly frozen}. We feed both the real features \(\tilde{\mathbf{F}}^{(k)}_{\text{real}}\) and the fake features \(\tilde{\mathbf{F}}^{(k)}_{\text{fake}}\) into the discriminator heads \(\phi\). The heads calculate their scores, and the gradients are backpropagated \emph{only} into the discriminator's parameters.
+    		\end{itemize}
+    		
+    		Mathematically, we update \(\phi\) to minimize the discriminator loss:
+    		
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_train_D}
+    			\min_{\phi}\;
+    			\mathbb{E}\Bigg[
+    			\sum_k
+    			\ell_{\text{D}}\Big(
+    			h_{\phi,k}(\tilde{\mathbf{F}}^{(k)}_{\text{real}},\hat{t},\mathbf{e}),
+    			h_{\phi,k}(\tilde{\mathbf{F}}^{(k)}_{\text{fake}},\hat{t},\mathbf{e})
+    			\Big)
+    			\Bigg].
+    		\end{equation}
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Phase B: The Student's Turn (Update student \(\theta\)).}
+    		
+    		\begin{itemize}
+    			\item \textbf{When:} The second half of the training iteration, immediately after the critic has been updated.
+    			\item \textbf{How:} The roles reverse. The discriminator heads \(\phi\) and the teacher \(T\) are now \emph{strictly frozen}. Because the student only cares about making its own outputs look real, we discard the real data path and only pass the fake features \(\tilde{\mathbf{F}}^{(k)}_{\text{fake}}\) into the heads. 
+    		\end{itemize}
+    		We update the student parameters \(\theta\) to minimize the generator loss:
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_train_G}
+    			\min_{\theta}\;
+    			\mathbb{E}\Bigg[
+    			\sum_k
+    			\ell_{\text{G}}\Big(
+    			h_{\phi,k}(\tilde{\mathbf{F}}^{(k)}_{\text{fake}},\hat{t},\mathbf{e})
+    			\Big)
+    			\Bigg].
+    		\end{equation}
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Intuition (The Semantic Lens and Gradient Flow).}
+    		Phase B contains the mechanical brilliance of the LADD architecture. How does a simple scalar score from the discriminator head tell the student how to draw a better image? 
+    		
+    		Although the teacher's weights are frozen, the teacher acts as a fixed computation graph. During the Phase B backward pass, the gradients calculated by the discriminator heads flow backward, \emph{through} the frozen teacher's attention blocks, backward \emph{through} the renoising operation, and finally arrive at the student model \(D_\theta\). 
+    		
+    		This is the profound benefit of using generative teacher features: the teacher acts as a "semantic lens". It translates a blunt, low-dimensional real/fake objective into a highly structured, composition-aware, high-dimensional learning signal. The gradients specifically tell the student how to adjust its initial pure-noise-to-latent prediction so that, when the output is inevitably corrupted by noise and viewed through the teacher's deep structural understanding, it perfectly mimics the teacher's own native feature distribution~\cite{sauer2024_ladd}.
+    		
+    		\paragraph{Solving Multi-Aspect Ratio: Folding Tokens Back to 2D}
+    		Modern diffusion models, particularly those based on Diffusion Transformers (DiTs) or the MMDiT architecture used in Stable Diffusion 3, process spatial latents by dividing them into patches and flattening them into a 1D sequence of tokens. Consequently, the features extracted from the teacher at block $k$ naturally take the form of a 1D sequence $\mathbf{F}^{(k)} \in \mathbb{R}^{N\times D}$, where $N = h \times w$ is the total number of spatial patches and $D$ is the embedding dimension.
+    		
+    		\emph{The 1D Locality Breakdown:}
+    		A critical architectural pitfall arises if one attempts to apply 1D convolutional discriminator heads directly to these $\mathbb{R}^{N\times D}$ sequences, particularly when training on Multi-Aspect Ratio (MAR) datasets. A 1D convolutional filter learns to detect patterns by looking at a fixed mathematical window of adjacent tokens in the sequence. 
+    		
+    		Consider how 2D spatial adjacency translates to 1D sequence indexing. In a flattened row-major sequence, the token representing the spatial patch directly \emph{below} the current patch at index $i$ is located at index $i + w$. 
+    		\begin{itemize}
+    			\item If the model processes a narrow portrait image (e.g., width $w=64$), the vertical neighbor is exactly $64$ steps away in the 1D sequence.
+    			\item If the model processes a wide landscape image (e.g., width $w=128$), the vertical neighbor is $128$ steps away.
+    		\end{itemize}
+    		Because the implied spatial ``stride'' required to reach a vertical neighbor changes dynamically with the aspect ratio's width $w$, a 1D convolutional filter becomes hopelessly confused. It cannot learn consistent spatial features because the physical meaning of the sequence distance is constantly shifting. This destroys spatial locality, causing the adversarial discriminator to fail at evaluating multi-aspect structural coherence.
+    		
+    		\emph{The 2D Reshape Solution:}
+    		LADD resolves this fundamental incompatibility by completely avoiding 1D convolutions for spatial evaluation. Before the discriminator heads process the features, the 1D token sequence is explicitly reshaped back into its original 2D spatial layout:
+    		\begin{equation}
+    			\label{eq:chapter20_ladd_reshape}
+    			\mathbf{F}^{(k)} \in \mathbb{R}^{N\times D}
+    			\;\xrightarrow{\text{reshape}}\;
+    			\tilde{\mathbf{F}}^{(k)} \in \mathbb{R}^{h\times w\times D},
+    			\qquad
+    			D_{\phi,k}:\mathbb{R}^{h\times w\times D}\rightarrow \mathbb{R}.
+    		\end{equation}
+    		
+    		By mathematically folding the sequence back into $\mathbb{R}^{h\times w\times D}$, the discriminator can employ standard 2D convolutions. A 2D convolution slides a filter over the height and width independently, explicitly leveraging the grid structure. It does not matter if the input is a tall rectangle or a wide rectangle; the patch directly below another patch is always structurally located at coordinate $(y+1, x)$. This simple but crucial geometric transformation restores consistent 2D locality and makes the adversarial heads fully compatible with robust MAR training~\cite{sauer2024_ladd}.
+    		
+    		\paragraph{Experiments and Ablations: What Actually Matters}
+    		LADD's ablations are designed to justify each major design decision~\cite{sauer2024_ladd}.
+    		Key findings include:
+    		\begin{itemize}
+    			\item \textbf{LADD vs.\ LCM at one step.}
+    			When distilling the same MMDiT teacher (depth $=24$), LADD consistently outperforms latent consistency distillation in the strict single-step regime, highlighting the benefit of adversarial supervision in latent space.
+    			\item \textbf{Student scaling dominates.}
+    			Ablating the depth of the student, teacher, and data generator while holding the other two fixed (default depth $=24$) shows that increasing \emph{student} capacity yields the largest gains; scaling the teacher or data generator exhibits diminishing returns beyond a threshold.
+
+				\newpage
+
+    			\item \textbf{Noise distribution matters.}
+    			The teacher noise sampler $\pi(\hat{t};m,s)$ provides a direct handle on the coherence--detail trade-off, with $\pi(t;m{=}1,s{=}1)$ providing a robust default across settings.
+    			\item \textbf{Synthetic data removes auxiliary complexity.}
+    			Teacher-generated synthetic data substantially improves image--text alignment and eliminates the need for an auxiliary distillation loss in the text-to-image setting.
+    		\end{itemize}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/LADD_dist_approaches.jpg}
+    			\caption{\textbf{LADD vs.\ latent consistency distillation (LADD, Fig.~6)}~\cite{sauer2024_ladd}.
+    				Distilling the same MMDiT (depth $=24$), LADD yields stronger single-step samples than LCM, indicating that latent adversarial supervision is particularly effective in the $N=1$ regime.}
+    			\label{fig:chapter20_ladd_lcm_comparison}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/LADD_scaling_behaviour.jpg}
+    			\caption{\textbf{Scaling behavior (LADD, Fig.~7)}~\cite{sauer2024_ladd}.
+    				Varying one dimension at a time (student, teacher, or data generator depth) reveals that student depth has the largest impact on CLIP score and qualitative fidelity; teacher and data generator scaling show diminishing returns.}
+    			\label{fig:chapter20_ladd_scaling}
+    		\end{figure}
+    		
+    		\paragraph{From LADD to SD3-Turbo: Achieving Quality in 1--4 Steps}
+    		With the pixel-space VAE bottleneck removed, LADD scales naturally to high-resolution, Multi-Aspect Ratio (MAR) training and inference.
+    		Sauer et al.\ instantiate LADD to train \emph{SD3-Turbo} by distilling Stable Diffusion~3, using an 8B-parameter teacher and a student designed for extremely small step counts~\cite{sauer2024_ladd}.
+    		A key practical detail is that SD3-Turbo is trained to produce high-quality samples in \emph{unguided} sampling, i.e., \emph{without classifier-free guidance (CFG)}~\cite{sauer2024_ladd}.
+    		Empirically, one-step generation is already strong for rapid exploration, but allocating a tiny budget of four unguided steps is sufficient to reach the teacher’s visual quality while improving prompt alignment relative to the one-step setting~\cite{sauer2024_ladd}.
+    		
+    		\newpage
+    		
+    		\paragraph{Aligning with Human Preference: Diffusion DPO and SD3-Turbo}
+    		While LADD dramatically accelerates generation and maintains high-frequency realism, adversarial training inherently struggles with structural hallucinations. Because the discriminator heavily evaluates local realism, it can occasionally be fooled by images that possess hyper-realistic textures but absurd global compositions (e.g., a car with three wheels, or an animal with duplicated limbs). To evolve the distilled LADD student into the production-ready \textbf{SD3-Turbo} model, the authors employ a final stage of human preference alignment using \textbf{Diffusion Direct Preference Optimization (DPO)} and \textbf{Low-Rank Adaptation (LoRA)}.
+    		
+    		\emph{What is Diffusion DPO?}
+    		Diffusion DPO adapts a preference-learning technique originally designed for Large Language Models. Instead of relying purely on a generic text-to-image dataset, DPO trains the model on curated pairs of generated images. Human annotators evaluate outputs for the same prompt, ranking one image as a ``win'' (structurally sound, aesthetically pleasing, and highly prompt-aligned) and the other as a ``loss'' (containing adversarial artifacts or hallucinations). The DPO objective mathematically updates the model's parameters to increase the likelihood of the winning trajectory while penalizing the trajectory of the losing image.
+    		
+    		\emph{The LoRA Implementation and Transfer Pipeline:}
+    		Performing DPO on an 8-billion parameter model like Stable Diffusion 3 is computationally prohibitive. Therefore, the authors implement DPO using LoRA. LoRA freezes the massive base model and injects small, trainable low-rank matrices into the transformer's attention layers. This allows the network to learn a lightweight, modular weight update ($\Delta W$) that corrects the artifacts.
+    		
+    		The mechanical elegance of the SD3-Turbo pipeline lies in how this single set of preference weights is leveraged across the entire LADD ecosystem. The alignment process unfolds in three strict phases:
+    		\begin{enumerate}
+    			\item \textbf{Teacher Preference Training:} First, DPO is applied to the slow, full-step SD3 teacher. The teacher learns a specific DPO-LoRA ($\Delta W_{\text{DPO}}$) that successfully suppresses its own characteristic artifacts.
+    			\item \textbf{Generating Superior Targets:} This DPO-enhanced teacher is then used to generate the synthetic ground truth latents (\(\mathbf{z}_{\text{real}}\)) for the LADD training loop. By doing so, the baseline LADD student is trained on a fundamentally cleaner, artifact-free synthetic dataset. 
+    			\item \textbf{The LoRA Grafting (SD3-Turbo):} Once the LADD student has learned the fast 1-to-4 step generation process, it may still exhibit minor adversarial artifacts introduced by the discriminator heads. However, because the student denoiser $D_\theta$ shares the exact same MMDiT architectural backbone as the teacher, the authors can simply take the $\Delta W_{\text{DPO}}$ learned by the teacher in Step 1 and physically graft it onto the distilled student. 
+    		\end{enumerate}
+    	
+    		This modular weight transfer is remarkably effective. By reapplying the teacher's preference LoRA directly to the student, the resulting SD3-Turbo model instantly inherits the human preference alignment. This dramatically reduces adversarial artifacts and improves fine perceptual details without requiring a separate, unstable DPO training phase for the student, and crucially, without altering the student's ultra-fast 1-to-4 step inference speed~\cite{sauer2024_ladd}.
+    		
+    		\newpage
+    		
+    		\paragraph{Limitations: The adversarial tightrope remains}
+    		While LADD resolves the dominant \emph{computational} bottleneck of pixel-space ADD, it still relies on an adversarial min--max game.
+    		In practice, this means training quality depends on careful discriminator-head design, balancing, and stabilization so that the adversarial signal improves realism without destabilizing generation~\cite{sauer2024_ladd}.
+    		Moreover, compressing an iterative generative process into 1--4 steps trades away some of the teacher’s controllability: relative to the full teacher, the distilled model shows a modest drop in prompt alignment at very low step counts and offers less flexible control for editing scenarios such as image-to-image or instruction-based editing~\cite{sauer2024_ladd}.
+    		
+    		Furthermore, the extreme compression of a multi-step stochastic diffusion process into a single forward pass inherently sacrifices some degree of controllability. The distilled student lacks the iterative refinement capacity of its 50-step teacher, resulting in slightly reduced fine-grained prompt adherence and less flexibility in complex compositional reasoning tasks or precise image-to-image editing~\cite{sauer2024_ladd}.
+    		
+    		\paragraph{Transition: Moving beyond the discriminator}
+    		LADD answers the engineering question: \emph{How can adversarial distillation be made scalable?}---by keeping the entire game in latent space and using the teacher as a generative feature lens.
+    		This naturally raises a methodological question: \emph{Can we remove the min--max discriminator game entirely, while still matching the teacher at the \textbf{distribution level}?}
+    		
+    		\textbf{Distribution Matching Distillation (DMD)}~\cite{yin2024_dmd} takes this step.
+    		Instead of training a discriminator, DMD formulates one-step distillation as minimizing an approximate KL divergence whose gradient can be written as the difference of two score functions---one for the target (teacher) distribution and one for the current student-induced distribution~\cite{yin2024_dmd}.
+    		This replaces adversarial classification with a \emph{discriminator-free} distribution-matching signal, aiming for one-step (or few-step) generators without the GAN tightrope.	
+    		
+    	\end{enrichment}
+    	
+    	\newpage
+    	
+    	\begin{enrichment}[Distribution Matching Distillation (DMD)][subsection]
+    		\label{enr:chapter20_dmd}
+    		
+    		\paragraph{Motivation: Bypassing the GAN Bottleneck}
+    		ADD and LADD demonstrate that adversarial supervision can compress diffusion sampling into 1--4 steps, but they inherit the classical \emph{min--max} difficulties of GAN training: stability depends on the capacity and calibration of a discriminator (and careful balancing against the generator), with well-known failure modes such as mode collapse.
+    		\textbf{Distribution Matching Distillation (DMD)}~\cite{yin2024_dmd} removes the discriminator entirely.
+    		Instead of learning a real/fake classifier, DMD trains a one-step generator by minimizing a \emph{distribution-level} divergence between its output distribution and the teacher’s target distribution, using diffusion models themselves as \emph{score estimators}.
+    		This reframes “make it look real” from an adversarial game into a score-based gradient that points toward higher \emph{realism} and lower \emph{fakeness}.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DMD_vs_SD.jpg}
+    			\caption{\textbf{One-step quality close to Stable Diffusion (DMD, Fig.~1)}~\cite{yin2024_dmd}
+    				DMD produces one-step text-to-image samples with quality comparable to a multi-step diffusion baseline, but at orders-of-magnitude lower latency.}
+    			\label{fig:chapter20_dmd_vs_sd}
+    		\end{figure}
+    		
+    		\paragraph{Setup: Three Networks, Two Score Fields, One Generator}
+    		DMD's training loop replaces the standard GAN generator-discriminator pair with a triad of neural networks, leveraging score-based gradients to direct optimization:
+    		
+    		\begin{itemize}
+    			\item \textbf{Pretrained base diffusion model \(\mu_{\text{base}}\) (real-score estimator):} \emph{Frozen.} This is the original multi-step diffusion denoiser (e.g., Stable Diffusion), rigorously pre-trained on a massive dataset of real images. 
+    			
+    			\emph{Why a multi-step model?}
+    			Because \(\mu_{\text{base}}\) is trained across a dense range of noise levels, it can provide reliable denoising predictions for \emph{perturbed} inputs \((\mathbf{x}_t,t)\).
+    			In diffusion / score-based modeling, such a denoiser can be converted into an estimate of the \emph{perturbed real score}
+    			\(\nabla_{\mathbf{x}_t}\log p_{\text{real},t}(\mathbf{x}_t)\),
+    			i.e., a vector field defined on the diffused distribution rather than directly on the clean data density.
+    			
+    			\emph{Intuition:}
+    			\(\mu_{\text{base}}\) acts as a frozen ``reality compass'' \emph{after perturbation}:
+    			given a noisy image \(\mathbf{x}_t\), it outputs a denoised prediction whose induced score points toward higher-density regions of the \(\mathbf{x}_t\)-space real manifold.
+    			
+    			\newpage
+    			
+    			\item \textbf{One-step generator \(G_\theta\):} \emph{Trainable.}
+    			This is the distilled student tasked with mapping a single Gaussian noise draw \(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\) directly to an output image \(\mathbf{x}=G_\theta(\mathbf{z})\) in one forward pass.
+    			
+    			\emph{Architecture \& initialization.}
+    			Following \cite{yin2024_dmd}, the one-step generator uses the exact \emph{denoiser backbone} of the pretrained base diffusion model, but operates \emph{without dynamic time-conditioning}.
+    			To preserve tensor shapes and fully reuse the pretrained feature representations without introducing dimension mismatches, the generator's parameters are initialized directly from the base model (\(\theta \leftarrow \theta_{\text{base}}\)).
+    			Crucially, ``removing time-conditioning'' is not achieved by deleting network layers, which would invalidate the pretrained weights. Instead, the timestep input path is permanently locked to the constant maximum-noise embedding (\(T-1\)). 
+    			
+    			Why specifically \(T-1\) rather than \(T\)? In standard discrete diffusion implementations, the \(T\) total timesteps are zero-indexed from \(0\) (clean data) to \(T-1\) (pure noise). Thus, \(T-1\) is the programmatic ceiling representing a signal-to-noise ratio that is effectively zero; passing an index of \(T\) would result in an out-of-bounds matrix dimension error. 
+    			Because the generator's input is pure Gaussian noise \(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\), evaluating the base weights at \(T-1\) perfectly aligns the network's expected input distribution with its actual input. The resulting mapping \(G_\theta:\mathbf{z}\mapsto\mathbf{x}\) becomes a static, single-pass generator that begins training already acting exactly as the teacher would at the very first step of the reverse diffusion process.
+    			
+    			\emph{Intuition.}
+    			Even with this powerful initialization, condensing a sequential, fine-grained denoising trajectory into a single massive leap from pure noise to a detailed image is an immensely underconstrained problem.
+    			If optimized solely with a perceptual or regression metric (such as LPIPS or \(\ell_2\)), the extreme uncertainty forces the network toward the safest mathematical solution: the conditional expected value. This manifests as severe mode averaging, washing out high-frequency textures and resulting in blurry, oversmoothed images.
+    			DMD avoids this regression trap by supervising \(G_\theta\) with a \emph{distribution-matching score-field difference}. This dual-score gradient explicitly pulls samples toward ``more real'' regions (injecting high-frequency photorealism) while actively repelling them from the generator's own collapsing modes (via the fake score model described next), forcing the network to commit to sharp, distinct, and diverse trajectories.
+    			
+    			\item \textbf{Fake diffusion model \(\mu^{\phi}_{\text{fake}}\) (fake-score estimator):} \emph{Trainable.} This is a fully time-conditioned diffusion denoiser, architecturally identical to the base teacher model and initialized with its pre-trained weights. However, instead of being frozen, its parameters \(\phi\) are trained \emph{online} using a standard diffusion denoising objective applied exclusively to the generator's continuously evolving fake outputs. 
+    			
+    			\emph{Why a dynamic fake model?} The target data manifold is static, meaning the real-score estimator can be permanently frozen. Conversely, the generator's output distribution (\(p_{\text{fake}}\)) is a moving target that shifts at every iteration. To accurately estimate the gradient between the distributions, DMD requires a dynamic critic that constantly maps the shifting topography of what the generator is \emph{currently} producing.
+    			
+    			\emph{Intuition (The Repulsive Force):} To understand its role, imagine the one-step generator begins to suffer from mode collapse---for instance, mapping many different input noise vectors to the exact same generic, poorly-detailed face. Because the fake denoiser is trained solely on these current outputs, it quickly learns to treat this specific face as a high-density ``peak'' in the fake distribution.
+    			
+    			\newpage
+    			
+    			When a perturbed generated image is passed through this fake denoiser, it calculates the score of the fake distribution: a gradient vector pointing directly uphill toward the center of that concentrated mass. Crucially, the DMD objective updates the generator using the difference \((s_{\text{real}} - s_{\text{fake}})\). By \emph{subtracting} the fake score, the gradient mathematically acts as a \emph{repulsive force}. It actively pushes the generator's outputs \emph{away} from their current clumps, aggressively penalizing redundancy.  This forces the generator to spread its samples out, preventing mode collapse and ensuring it explores the broader, diverse landscape defined by the real score.
+    		\end{itemize}
+    		
+    		Conceptually, \(\mu_{\text{base}}\) defines where the data manifold wants the sample to move (``more real''), while \(\mu^{\phi}_{\text{fake}}\) maps where the generator is currently concentrating its mass (``more fake''). The generator \(G_\theta\) is updated using the \emph{difference} between these two score directions: it is mathematically pulled toward the modes of reality while being actively repelled from its own centers of mass, simultaneously enforcing photorealism and preventing mode collapse.
+    		
+    		\paragraph{Initialization: Reusing the Base Model Without Breaking Shapes}
+    		A practical concern is how to construct a one-step generator from a time-conditioned denoiser \(\mu_{\text{base}}(\mathbf{x}_t,t)\) without invalidating pretrained weights.
+    		DMD’s solution is to \emph{keep the denoiser backbone} but remove the need for a dynamic timestep input at inference.
+    		
+    		Concretely, we cannot simply delete the time-embedding layers, as this would cause catastrophic matrix dimension mismatches and destroy the learned pathways. Instead, the one-step generator is initialized from the base model parameters (so it inherits its feature extractors and priors), and its internal timestep path is permanently locked to the maximum-noise embedding (\(T-1\)). 
+    		Because the generator's input is pure Gaussian noise \(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\), evaluating the base weights at \(T-1\) perfectly aligns the network's expected input distribution with its actual input. The model is then finetuned as a single-pass map \(G_\theta(\mathbf{z})\) under the distribution matching and regression objectives~\cite{yin2024_dmd}.
+    		
+    		\emph{Intuition.}
+    		This is not ``training from scratch'': the generator begins with the base model’s rich internal representations, acting exactly as the teacher would at the very first step of the reverse diffusion process. DMD’s score-field gradients provide the missing guidance needed to compress the rest of the iterative denoising trajectory into a single forward pass.
+    		
+    		\paragraph{Distribution Matching Objective: Bypassing Intractable Densities via Score Differences}
+    		Let \(p_{\text{fake}}\) be the distribution induced by \(\mathbf{x}=G_\theta(\mathbf{z})\), \(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\), and let \(p_{\text{real}}\) be the real data distribution (or the teacher's target distribution).
+    		DMD aims to minimize the Kullback-Leibler (KL) divergence between these two distributions:
+    		\begin{equation}
+    			D_{\mathrm{KL}}\!\big(p_{\text{fake}}\;\|\;p_{\text{real}}\big)
+    			=
+    			\mathbb{E}_{\mathbf{x}\sim p_{\text{fake}}}
+    			\!\left[
+    			\log \frac{p_{\text{fake}}(\mathbf{x})}{p_{\text{real}}(\mathbf{x})}
+    			\right].
+    			\label{eq:chapter20_dmd_kl}
+    		\end{equation}
+    		
+    		\emph{The Intractability Problem.} In the high-dimensional space of natural images, explicitly evaluating the probability densities \(p_{\text{fake}}(\mathbf{x})\) and \(p_{\text{real}}(\mathbf{x})\) is computationally intractable. Doing so requires calculating a complex normalization constant (the partition function) by integrating across all possible images. Therefore, directly optimizing Equation~\ref{eq:chapter20_dmd_kl} using density outputs is impossible.
+    		
+    		\emph{The Score-Based Solution.} To bypass this roadblock, we take the gradient of the objective. The gradient of a log-probability yields the \emph{score function}, \(\nabla_{\mathbf{x}}\log p(\mathbf{x})\). Because the intractable normalization constant is uniform across all \(\mathbf{x}\), its derivative is zero, effectively dropping out of the equation entirely.
+    		
+    		\newpage 
+    		
+    		Thus, the gradient of the KL divergence with respect to the generator's parameters \(\theta\) can be elegantly rewritten strictly using score fields:
+    		\(s_{\text{real}}(\mathbf{x})=\nabla_{\mathbf{x}}\log p_{\text{real}}(\mathbf{x})\) and
+    		\(s_{\text{fake}}(\mathbf{x})=\nabla_{\mathbf{x}}\log p_{\text{fake}}(\mathbf{x})\):
+    		\begin{equation}
+    			\nabla_\theta D_{\mathrm{KL}}
+    			=
+    			\mathbb{E}_{\mathbf{z}}
+    			\!\left[
+    			-\big(s_{\text{real}}(\mathbf{x})-s_{\text{fake}}(\mathbf{x})\big)\,
+    			\frac{dG_\theta(\mathbf{z})}{d\theta}
+    			\right],
+    			\qquad \mathbf{x}=G_\theta(\mathbf{z}).
+    			\label{eq:chapter20_dmd_grad_clean}
+    		\end{equation}
+    		
+    		\emph{Intuition:} This formulation brilliantly reframes density matching as a vector-field matching problem. The term \(s_{\text{real}}(\mathbf{x})\) acts as an attractive force, pulling the generated samples uphill toward the high-density peaks of reality. Conversely, \(-s_{\text{fake}}(\mathbf{x})\) acts as a repulsive force, spreading samples away from the generator is currently collapsing its mass, preventing mode collapse and explicitly enforcing output diversity.
+    		
+    		\paragraph{Why Perturbation is Necessary: Making the Objective Well-Defined}
+    		Evaluating the score-difference form of Eq.~\eqref{eq:chapter20_dmd_grad_clean} directly on clean samples \(\mathbf{x}=G_\theta(\mathbf{z})\) is generally ill-posed in high dimensions: the supports of \(p_{\text{real}}\) and \(p_{\text{fake}}\) can be effectively disjoint, so a meaningful ``direction from fake to real'' may not exist everywhere.
+    		DMD resolves this by applying a forward diffusion perturbation, which smooths both distributions and makes them overlap in \(\mathbf{x}_t\)-space, so the distribution-matching objective becomes well-defined.
+    		
+    		A second (practical) reason is numerical: as the noise level becomes extremely small (\(\sigma_t\to 0\)), score estimates and their induced gradients become unstable.
+    		Accordingly, DMD samples timesteps from a bounded interval \([T_{\min},T_{\max}]\) (implemented as a restricted timestep range) rather than using arbitrarily tiny noise levels:
+    		
+    		\begin{equation}
+    			q_t(\mathbf{x}_t\mid \mathbf{x}) = \mathcal{N}\!\big(\alpha_t \mathbf{x},\,\sigma_t^2\mathbf{I}\big),
+    			\qquad \mathbf{x}_t\sim q_t(\mathbf{x}_t\mid \mathbf{x}).
+    			\label{eq:chapter20_dmd_perturbation}
+    		\end{equation}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DMD_unpertrubed_comparison.jpg}
+    			\caption{\textbf{Why diffusion perturbation is required (DMD, Fig.~4)}~\cite{yin2024_dmd}
+    				Without perturbation, real and fake distributions may not overlap, causing gradients to vanish or explode. After diffusion noise is applied, the objective becomes well-defined across the ambient space.}
+    			\label{fig:chapter20_dmd_perturbation}
+    		\end{figure}
+    		
+    		\paragraph{Estimating the Real and Fake Scores with Two Diffusion Models}
+    		After perturbation, DMD estimates score functions on the \emph{diffused} distributions using diffusion denoisers.
+    		For clarity, we present the common \emph{mean-prediction} form used in \cite{yin2024_dmd}: if a denoiser \(\mu(\mathbf{x}_t,t)\) predicts the conditional mean / denoised estimate, then the induced score on the Gaussian corruption kernel admits the closed form
+    		\begin{equation}
+    			s(\mathbf{x}_t,t)
+    			=
+    			\nabla_{\mathbf{x}_t}\log p(\mathbf{x}_t)
+    			=
+    			-
+    			\frac{\mathbf{x}_t-\alpha_t\,\mu(\mathbf{x}_t,t)}{\sigma_t^2}.
+    			\label{eq:chapter20_dmd_score_from_mu}
+    		\end{equation}
+    		\emph{Note:} Other parameterizations such as \(\epsilon\)-prediction can be converted to an equivalent denoised estimate and plugged into the same template; \cite{yin2024_dmd} uses mean prediction for simplicity.
+    		
+    		Using Eq.~\eqref{eq:chapter20_dmd_score_from_mu}, DMD defines:
+    		\begin{align}
+    			s_{\text{real}}(\mathbf{x}_t,t)
+    			&=
+    			-
+    			\frac{\mathbf{x}_t-\alpha_t\,\mu_{\text{base}}(\mathbf{x}_t,t)}{\sigma_t^2},
+    			\label{eq:chapter20_dmd_s_real} \\
+    			s_{\text{fake}}(\mathbf{x}_t,t)
+    			&=
+    			-
+    			\frac{\mathbf{x}_t-\alpha_t\,\mu^{\phi}_{\text{fake}}(\mathbf{x}_t,t)}{\sigma_t^2}.
+    			\label{eq:chapter20_dmd_s_fake}
+    		\end{align}
+    		
+    		\paragraph{Training the Fake Score Estimator (The Online Critic)}
+    		To ensure \(s_{\text{fake}}\) accurately maps the generator's shifting topography, the fake denoiser \(\mu^{\phi}_{\text{fake}}\) must be trained simultaneously. It is updated using the standard diffusion denoising objective, explicitly restricted to \emph{only} see the generator's outputs. To prevent the critic from altering the generator during its own update, gradients are stopped at the generator's boundary:
+    		
+    		\begin{equation}
+    			\mathcal{L}^{\phi}_{\text{denoise}}
+    			=
+    			\big\|
+    			\mu^{\phi}_{\text{fake}}(\mathbf{x}_t,t)
+    			-
+    			\operatorname{stopgrad}(\mathbf{x})
+    			\big\|_2^2,
+    			\label{eq:chapter20_dmd_fake_loss}
+    		\end{equation}
+    		
+    		where \(\mathbf{x}=G_\theta(\mathbf{z})\) and \(\mathbf{x}_t\sim q_t(\mathbf{x}_t\mid \operatorname{stopgrad}(\mathbf{x}))\).
+    		
+    		\paragraph{The Distribution Matching Gradient and Sample Weighting}
+    		Replacing the intractable clean-image scores in Eq.~\eqref{eq:chapter20_dmd_grad_clean} with the \emph{perturbed} score estimators yields the practical DMD update direction. However, directly applying this raw difference introduces a severe optimization hazard: the \emph{scale imbalance} across noise levels. 
+    		
+    		In diffusion models, the raw numerical magnitude of the score difference \(\big(s_{\text{fake}}(\mathbf{x}_t,t)-s_{\text{real}}(\mathbf{x}_t,t)\big)\) fluctuates drastically depending on the timestep \(t\). If these unscaled gradients are backpropagated directly, timesteps with naturally larger numerical scales will violently dominate the optimization process, causing training instability and preventing the generator from learning fine details. 
+    		
+    		To counteract this, DMD introduces an adaptive, time-dependent weight \(w(t)\) to dynamically normalize the gradient magnitude. Following \cite{yin2024_dmd}, \(w(t)\) is computed as the inverse of the mean absolute deviation (L1 distance) between the generator's clean output \(\mathbf{x}\) and the base model’s denoised prediction \(\mu_{\text{base}}\) at that specific noise level:
+    		
+    		\begin{equation}
+    			w(t)
+    			=
+    			\frac{1}{\mathrm{mean}\!\left(\left|\mathbf{x}-\mu_{\text{base}}(\mathbf{x}_t,t)\right|\right)},
+    			\qquad \mathbf{x}=G_\theta(\mathbf{z}).
+    			\label{eq:chapter20_dmd_wt}
+    		\end{equation}
+    		
+    		\newpage
+    		
+    		\emph{The Idea and Stabilization Intuition:} What does this weight actually do? By multiplying the update by \(w(t)\), we are effectively dividing the gradient by its expected spatial magnitude at that exact timestep. This auto-normalizes the training signal so that the gradient step size is roughly uniform across all \(t\). It guarantees that the generator pays equal attention to high-noise timesteps (which correct global, macroscopic structure) and low-noise timesteps (which refine high-frequency, local textures), rather than letting one noise regime arbitrarily overpower the other.
+    		
+    		Putting this together, the generator receives the scale-normalized approximate KL gradient (up to standard Jacobian factors) in the form:
+    		
+    		\begin{equation}
+    			\nabla_\theta D_{\mathrm{KL}}
+    			\simeq
+    			\mathbb{E}_{\mathbf{z},t,\mathbf{x}_t}
+    			\!\left[
+    			w(t)\,
+    			\big(s_{\text{fake}}(\mathbf{x}_t,t)-s_{\text{real}}(\mathbf{x}_t,t)\big)\,
+    			\frac{dG_\theta(\mathbf{z})}{d\theta}
+    			\right].
+    			\label{eq:chapter20_dmd_final_grad}
+    		\end{equation}
+    		
+    		\smallskip
+    		\noindent
+    		\emph{Implementation note:} To further avoid boundary instabilities (where the score functions become mathematically undefined at exactly \(t=0\) or \(t=T\)), the timestep \(t\) is sampled over a strictly bounded interval \([T_{\min},T_{\max}]\) (e.g., \(0.02T\) to \(0.98T\)) as prescribed in \cite{yin2024_dmd}. The mean absolute deviation in Equation~\ref{eq:chapter20_dmd_wt} is averaged over all spatial and channel dimensions of the sample, yielding a highly stable, scalar-normalized gradient signal ready for the optimizer.
+    		
+    		\paragraph{Regression Loss: A Structural Anchor that Prevents Mode Dropping}
+    		While the KL gradient successfully forces the generated images to look photorealistic, relying \emph{solely} on distribution matching leaves the generator highly susceptible to catastrophic mode dropping. To understand why, we must look at the mathematical asymmetry of the reverse-KL divergence objective:
+    		
+    		\begin{equation}
+    			D_{\mathrm{KL}}\!\big(p_{\text{fake}}\;\|\;p_{\text{real}}\big)
+    			=
+    			\mathbb{E}_{\mathbf{x}\sim p_{\text{fake}}}
+    			\!\left[
+    			\log \frac{p_{\text{fake}}(\mathbf{x})}{p_{\text{real}}(\mathbf{x})}
+    			\right].
+    		\end{equation}
+    		
+    		Because the expectation is evaluated over the \emph{generator's} distribution (\(p_{\text{fake}}\)), the penalty is heavily one-sided. If the generator produces an unrealistic image (placing mass where \(p_{\text{real}}\) is near zero), the ratio explodes, incurring a massive penalty. Thus, the generator is fiercely penalized for generating "fake-looking" images. However, if the generator simply ignores an entire valid mode of the real data manifold (i.e., \(p_{\text{real}}\) is high, but \(p_{\text{fake}}\) is zero), that region contributes exactly zero to the expected loss. 
+    		
+    		Consequently, reverse-KL is inherently \emph{mode-seeking}. The safest optimization path for the generator is to find a small handful of highly realistic modes and collapse all its random noise inputs into them, completely ignoring the rich diversity of the full data manifold. 
+    		
+    		To firmly anchor the one-step generator's large-scale structure and explicitly enforce diversity, DMD integrates an offline regression loss. The authors pre-compute a modest dataset \(\mathcal{D}=\{(\mathbf{z},\mathbf{y})\}\) by running the slow, multi-step teacher ODE solver from initial noise \(\mathbf{z}\) to a final high-quality image \(\mathbf{y}\). DMD enforces a Learned Perceptual Image Patch Similarity (LPIPS) penalty between the one-step output and this multi-step target:
+    		
+    		\begin{equation}
+    			\mathcal{L}_{\text{reg}}
+    			=
+    			\mathbb{E}_{(\mathbf{z},\mathbf{y})\sim\mathcal{D}}
+    			\Big[ \text{LPIPS}\!\big(G_\theta(\mathbf{z}),\,\mathbf{y}\big) \Big].
+    			\label{eq:chapter20_dmd_reg_loss}
+    		\end{equation}
+    		
+    		\newpage
+    		
+    		The total objective optimized by the one-step generator \(G_\theta\) is the combination of the distribution matching step and the regression step:
+    		
+    		\begin{equation}
+    			\begin{split}
+    				\min_\theta\;\; & D_{\mathrm{KL}} \;+\; \lambda_{\text{reg}}\mathcal{L}_{\text{reg}}, \\
+    				\text{where} \quad \lambda_{\text{reg}} &= 
+    				\begin{cases}
+    					0.25 & \text{(class-conditional and SDv1.5 default)}, \\
+    					0.5 & \text{(unconditional setting)}.
+    				\end{cases}
+    			\end{split}
+    			\label{eq:chapter20_dmd_total_loss}
+    		\end{equation}
+    		
+    		\emph{Intuition:} Why does regression solve mode collapse? The offline dataset \(\mathcal{D}\) represents the full, diverse span of the teacher's capabilities. It explicitly pairs every unique noise vector \(\mathbf{z}\) to a distinctly different target image \(\mathbf{y}\). If the generator attempts to collapse multiple \(\mathbf{z}\) inputs into a single "safe" mode to satisfy the KL loss, the LPIPS distance penalty for most of those pairs will skyrocket. 
+    		
+    		Thus, the regression loss acts as a ``compositional leash''. It physically forces the one-step generator's mapping to maintain the topological spread and global layout of the teacher's manifold. It guarantees diversity, while the distribution-matching gradient operates on top of this anchored structure to inject the high-frequency photorealism that a pure regression loss would blur away.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DMD_method.jpg}
+    			\caption{\textbf{DMD pipeline (DMD, Fig.~2)}~\cite{yin2024_dmd}
+    				DMD combines (i) a KL-gradient computed from the difference of a real-score diffusion model and an online fake-score diffusion model, with (ii) an LPIPS regression anchor from an offline paired noise--image dataset.}
+    			\label{fig:chapter20_dmd_method}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DMD_various_objectives.jpg}
+    			\caption{\textbf{Why both terms are needed (DMD, Fig.~3)}~\cite{yin2024_dmd}
+    				Real-score-only optimization collapses to a nearby mode; distribution matching alone improves coverage but can still miss modes; adding the regression anchor successfully recovers all modes by preserving large-scale structure.}
+    			\label{fig:chapter20_dmd_objectives}
+    		\end{figure}
+    		
+    		\paragraph{Training Loop: Two Tracks, No Multi-Step Sampling}
+    		With the total objective fully defined, each training iteration simply alternates between two parallel updates:
+    		\begin{itemize}
+    			\item \textbf{Update the Generator (\(G_\theta\)):} Sample fresh noise \(\mathbf{z}\) to compute the distribution matching gradient \(\nabla_\theta D_{\mathrm{KL}}\) (using the score difference on perturbed samples), and sample a paired \((\mathbf{z},\mathbf{y})\) from the offline dataset to compute the regression gradient \(\nabla_\theta \mathcal{L}_{\text{reg}}\). Apply the combined gradient \(\nabla_\theta (D_{\mathrm{KL}} + \lambda_{\text{reg}}\mathcal{L}_{\text{reg}})\) to update \(\theta\).
+    			\item \textbf{Update the Fake Score Estimator (\(\mu^{\phi}_{\text{fake}}\)):} Sample fake images \(\mathbf{x}=G_\theta(\mathbf{z})\), apply a stop-gradient, perturb them to \(\mathbf{x}_t\), and update the critic's parameters \(\phi\) using the standard diffusion denoising loss.
+    		\end{itemize}
+    		
+    		\emph{Crucially}, the computationally expensive multi-step teacher sampler is \emph{never} run iteratively inside the online training loop. The massive frozen base model is used strictly as a single-forward-pass score estimator on \((\mathbf{x}_t,t)\). All multi-step sequential sampling is entirely relegated to the offline dataset construction.
+    		
+    		\paragraph{Experiments and Ablations: What Matters in Practice}
+    		DMD demonstrates remarkable one-step generation capabilities across both class-conditional benchmarks (e.g., achieving an FID of 2.62 on ImageNet \(64\times 64\)) and complex text-to-image distillation tasks (e.g., Stable Diffusion on MS-COCO). It closes the vast majority of the fidelity gap to its multi-step teachers while slashing inference latency by factors of 30\(\times\) to 100\(\times\) (e.g., reducing generation time from 2590ms to 90ms)~\cite{yin2024_dmd}.
+    		
+    		Ablations explicitly confirm the necessity of the tri-network design (as visualized previously in Figure~\ref{fig:chapter20_dmd_objectives}):
+    		\begin{itemize}
+    			\item \textbf{Distribution matching} is strictly required for photorealism. Relying on regression alone causes the model to regress to blurry, expected-value textures, entirely missing the sharp target distributions.
+    			\item \textbf{Regression anchoring} is strictly required to prevent mode dropping. Without it, the model achieves local realism but suffers catastrophic mode collapse, failing to preserve the teacher's compositional diversity.
+    			\item \textbf{Timestep weighting (\(w_t\))} is essential to stabilize training across the extreme variance in gradient magnitudes between low-noise and high-noise timesteps.
+    		\end{itemize}
+    		
+    		\paragraph{Transition: From Adversarial Games to Score-Field Games}
+    		LADD demonstrated how to make adversarial distillation computationally viable by moving the discriminator into latent space. DMD pushes this philosophy to its logical extreme by removing the discriminator entirely. By replacing binary real/fake classification with a continuous score-field difference, DMD directly optimizes a theoretically grounded distribution-level objective.
+    		
+    		This establishes a unifying perspective for modern fast samplers: ultra-fast generators can be successfully supervised either by learned adversarial discriminators (ADD/LADD) or by \emph{learned score fields} that mathematically define the exact vector flows between distributions (DMD). This elegant reframing sets the stage for exploring flow-based formulations and continuous trajectory matching in subsequent chapters.
+    		
+    	\end{enrichment}
+    	
+    	\newpage
+    	
+    	\begin{enrichment}[D3PM: Structured Diffusion in Discrete Spaces][subsection]
+    		\label{enr:chapter20_d3pm}
+    		
+    		\paragraph{Motivation: The Discrete Data Bottleneck}
+    		Standard Denoising Diffusion Probabilistic Models (DDPMs) rely on additive Gaussian noise, a formulation uniquely suited for continuous, real-valued manifolds. However, this assumption is fundamentally incompatible with inherently discrete or categorical data, such as text tokens, semantic segmentation labels, or heavily quantized image pixels. 
+    		Early attempts to adapt diffusion to discrete spaces applied a naïve uniform corruption—where a token transitions to a uniformly random vocabulary item (including possibly staying the same) with equal probability. This unstructured approach destroys critical domain knowledge; for example, it ignores the ordinal relationship of pixel intensities or the semantic proximity of words. \textbf{Discrete Denoising Diffusion Probabilistic Models (D3PM)}~\cite{austin2021_d3pm} resolve this limitation by generalizing the forward corruption process, replacing additive Gaussian noise with a \emph{structured Markov chain} governed by domain-specific transition matrices.
+    		
+    		\paragraph{Intuition: Corruption as a Structural Prior}
+    		In continuous diffusion, adding Gaussian noise acts like a gradual, structured blur. However, applying continuous math to discrete structures introduces fundamental mismatches—such as relaxing categorical/quantized states to continuous values for corruption and then quantizing at the end, which imposes an arbitrary continuous geometry on a discrete space. D3PM replaces additive noise with Markov transition probabilities, strictly maintaining the discrete nature of the data throughout the entire process. 
+    		
+    		By custom-designing the transition matrix \(Q_t\), we dictate exactly how the data degrades, creating a powerful structural prior for the reverse generative process. The authors propose four distinct matrix families to address different data modalities~\cite{austin2021_d3pm}:
+    		
+    		\begin{itemize}
+    			\item \textbf{Absorbing State (Masking for Text):}
+    			Instead of corrupting a valid token into an arbitrary incorrect token, the transition matrix moves it into a dedicated absorbing \texttt{[MASK]} state from which it cannot escape.
+    			The forward chain therefore converges to a point mass on \texttt{[MASK]}, and generation becomes iterative ``unmasking'' in reverse---a discrete diffusion view that cleanly connects to masked modeling objectives~\cite{austin2021_d3pm}.
+    			
+    			\item \textbf{Discretized Gaussian (Ordinality for Quantized Images):}
+    			For ordinal discrete values (e.g., per-channel 8-bit pixel intensities), D3PM uses a \emph{discretized, truncated Gaussian-like} kernel:
+    			states closer in index receive higher transition probability, and large jumps become exponentially unlikely (but are generally \emph{not} forbidden).
+    			Concretely, for \(i\neq j\) the off-diagonal mass is proportional to
+    			\(
+    			\exp\!\big(-4|i-j|^2/((K-1)^2\beta_t)\big)
+    			\)
+    			and is normalized over a truncated index range; the diagonal entry is then set to the remaining probability mass so that each row sums to one.
+    			With this normalization, the resulting \(Q_t\) is \emph{irreducible} and \emph{doubly stochastic}, hence it has a \emph{uniform stationary distribution} while still injecting an \emph{ordinal locality} bias in intermediate corruption steps.
+    			
+    			\item \textbf{Token embedding distance (semantic locality):}
+    			D3PM can define “local” corruption in text via a \(k\)-nearest-neighbor graph in a pretrained embedding space.
+    			The construction symmetrizes the graph, builds a (row-sum-zero) \emph{rate matrix} \(R\), and defines
+    			\(Q_t = \exp(\alpha_t R)\).
+    			
+    			Since \(R\) is symmetric and sums to zero along each row, \(Q_t=\exp(\alpha_t R)\) is doubly stochastic.
+    			This ensures a uniform stationary distribution (in particular, when the underlying \(k\)-NN graph is connected, the chain mixes to that uniform limit),
+    			while biasing intermediate transitions toward embedding-near substitutions.
+    			
+    			\newpage
+    			
+    			Empirically, however, this “nearest-neighbor diffusion” can be a cautionary negative result on LM1B:
+    			embedding similarity is not necessarily the right notion of locality for a diffusion process in language.
+    			
+    			\item \textbf{Uniform (Uninformative baseline for unordered categories):}
+    			For genuinely unordered labels (e.g., categorical semantic segmentation classes like ``Car,'' ``Tree,'' or ``Sky''), there is no meaningful notion of ``small'' vs.\ ``large'' perturbations.
+    			
+    			In such cases, imposing an ordinal metric or semantic distance is semantically unjustified.
+    			A standard ``no structure assumed'' corruption is \emph{uniform diffusion}:
+    			with probability \(1-\beta_t\) we keep the token unchanged, and with probability \(\beta_t\) we resample uniformly from the \(K\) categories.
+    			Equivalently,
+    			\(
+    			Q_t = (1-\beta_t)I + \frac{\beta_t}{K}\mathbf{1}\mathbf{1}^\top,
+    			\)
+    			which is doubly stochastic and has a uniform stationary distribution.
+    			
+    			D3PM's uniform matrix therefore serves as the principled ``no structure assumed'' baseline, preserving a well-defined Markov forward process and a uniform stationary distribution~\cite{austin2021_d3pm}.
+    			
+    		\end{itemize}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/D3PM_reverse_process.jpg}
+    			\caption{\textbf{D3PM forward and reverse processes on a quantized swiss roll (D3PM, Fig.~1)}~\cite{austin2021_d3pm}
+    				Top: samples from different forward processes (uniform, discretized Gaussian, absorbing) and their transition matrices.
+    				Bottom: samples from a learned reverse process (shown for a discretized Gaussian forward process).}
+    			\label{fig:chapter20_d3pm_swiss_roll}
+    		\end{figure}
+    		
+    		\paragraph{Setup: The Forward Process as a Discrete Markov Chain}
+    		Instead of adding continuous Gaussian noise, D3PM corrupts a discrete random variable over \(T\) timesteps using a time-inhomogeneous Markov chain. Let \(x_t\) be a scalar discrete variable with \(K\) possible categories (e.g., the size of a token vocabulary, or \(K=256\) for 8-bit pixel intensity bins). Following \cite{austin2021_d3pm}, we represent \(x_t\) as a one-hot \emph{row} vector of length \(K\).
+    		
+    		The transition probabilities from time \(t-1\) to \(t\) are defined by a state transition matrix \(Q_t \in \mathbb{R}^{K \times K}\), where each entry specifies the probability of a token corrupting from state \(i\) to state \(j\):
+    		\[
+    		[Q_t]_{ij} \;=\; q(x_t{=}j \mid x_{t-1}{=}i).
+    		\]
+    		Because \(Q_t\) is a valid transition matrix, each row must sum to one to conserve probability mass (\(\sum_{j=1}^K [Q_t]_{ij}=1\)). The forward corruption step for a single token can thus be elegantly written as a categorical distribution parameterized by a row-vector-matrix product:
+    		
+    		\begin{equation}
+    			q(x_t \mid x_{t-1})
+    			=
+    			\mathrm{Cat}\!\Big(x_t;\; p = x_{t-1} Q_t\Big).
+    			\label{eq:chapter20_d3pm_forward_step}
+    		\end{equation}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Factorization over dimensions (Scaling to Images and Text).}
+    		In practice, our actual data \(\mathbf{x}_t\) is high-dimensional. For example, a single \(32 \times 32\) RGB image contains \(N = 32 \times 32 \times 3 = 3072\) separate discrete variables (pixels). 
+    		
+    		D3PM makes a crucial simplifying assumption: the corruption process is applied to each coordinate (each pixel or text token) entirely independently. This means the full joint distribution of the image factorizes perfectly across all spatial or sequence positions:
+    		
+    		\begin{equation}
+    			q(\mathbf{x}_t \mid \mathbf{x}_{t-1}) = \prod_{n=1}^N q(x_t^{(n)} \mid x_{t-1}^{(n)}).
+    			\label{eq:chapter20_d3pm_factorization}
+    		\end{equation}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Concurrent and Batched Computation.}
+    		If the process is applied per-pixel, does this mean we must simulate the corruption using a slow, sequential \texttt{for} loop over all \(N\) pixels? Fortunately, no. 
+    		
+    		Because the corruption is conditionally independent and utilizes the exact same transition matrix \(Q_t\) for every single coordinate, we can compute the entire forward step concurrently using highly optimized tensor operations. 
+    		By reshaping our entire clean image \(\mathbf{x}_{t-1}\) into a flattened matrix \(\mathbf{X}_{t-1}\) of shape \(N \times K\) (where each row is a one-hot vector), we can find the transition probabilities for the entire image via a single dense matrix multiplication:
+    		
+    		\begin{equation}
+    			\mathbf{P} = \mathbf{X}_{t-1} Q_t.
+    			\label{eq:chapter20_d3pm_tensorized_step}
+    		\end{equation}
+    		
+    		The result, \(\mathbf{P}\), is an \(N \times K\) matrix containing the exact categorical probability distributions for every single pixel simultaneously. We then sample the entire noisy image \(\mathbf{X}_t\) concurrently across the \(N\) dimension. 
+    		
+    		This matrix formulation trivially extends to deep learning batching (yielding a \(B \times N \times K\) tensor). This perfectly leverages GPU parallelization, allowing the core mathematical framework of D3PM to be derived strictly for a single coordinate \(x_t\) while scaling computationally efficiently to high-dimensional datasets.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Closed-form marginals (The Discrete Jump).}
+    		In continuous DDPMs, a key property is the ability to sample the noisy state \(\mathbf{x}_t\) directly from the clean data \(\mathbf{x}_0\) without iteratively simulating the entire forward chain step-by-step. D3PM mathematically preserves this critical property for discrete spaces. Because Markov chains possess the property of associative matrix multiplication over time, the cumulative transition probability from the clean data \(x_0\) to any arbitrary timestep \(t\) is simply the product of the intermediate matrices:
+    		
+    		\begin{equation}
+    			\overline{Q}_t \;=\; Q_1 Q_2 \cdots Q_t.
+    			\label{eq:chapter20_d3pm_Qbar}
+    		\end{equation}
+    		
+    		Consequently, the \(t\)-step marginal distribution is given in closed form:
+    		
+    		\begin{equation}
+    			q(x_t \mid x_0)
+    			=
+    			\mathrm{Cat}\!\Big(x_t;\; p = x_0\,\overline{Q}_t\Big).
+    			\label{eq:chapter20_d3pm_forward_marginal}
+    		\end{equation}
+    		
+    		This closed-form marginal is the engine of practical deep learning training. During training, we do not need to slowly corrupt an image 1,000 times to get the target for step $t=1000$. Instead, we randomly sample a timestep \(t \sim \mathcal{U}(1, T)\), precompute \(\overline{Q}_t\), instantly jump to the corrupted state \(x_t\), and compute the loss. This entirely bypasses the need for sequential simulation loops during the forward pass.
+    		
+    		\paragraph{Designing \(Q_t\): Stationary limits as the notion of ``full corruption''}
+    		A central design choice in D3PM is the \emph{stationary distribution} of the forward Markov chain, i.e., what \(x_t\) converges to as \(t\) becomes large.
+    		For \textbf{uniform} diffusion, the paper uses the classical categorical transition
+    		\(
+    		Q_t = (1-\beta_t)I + \frac{\beta_t}{K}\mathbf{1}\mathbf{1}^\top,
+    		\)
+    		which is \emph{doubly stochastic} and therefore has a \emph{uniform} stationary distribution over the \(K\) categories.
+    		The \textbf{discretized-Gaussian} and \textbf{token-embedding} constructions are also designed to be (approximately) doubly stochastic, so they share the same uniform stationary limit, but inject different notions of locality into the intermediate corruption steps.
+    		In contrast, \textbf{absorbing-state} diffusion deliberately chooses a different stationary limit: all probability mass concentrates on the absorbing token (e.g., \texttt{[MASK]}), yielding a BERT-like ``generate by iterative unmasking'' process.
+    		
+    		\paragraph{Method: Enforcing Structure in the Reverse Process}
+    		In continuous diffusion, the neural network typically predicts the added continuous noise (from which the previous state $\mathbf{x}_{t-1}$ is derived). In discrete spaces, the most intuitive equivalent would be to have the network directly predict the categorical distribution for the previous step: $p_\theta(x_{t-1} \mid x_t)$. 
+    		
+    		However, directly predicting logits for \(p_\theta(x_{t-1}\mid x_t)\) leaves the reverse kernel unconstrained: it may ignore (or fight against)
+    		the inductive bias encoded by the chosen forward transition \(Q_t\).
+    		D3PM therefore adopts the \emph{\(x_0\)-parameterization}: the network predicts a distribution over the clean state,
+    		\(\tilde{p}_\theta(\tilde{x}_0\mid x_t)\), and the reverse transition is obtained by composing this prediction with the \emph{exact} forward-process posterior.
+    		This construction has two key effects.
+    		First, whenever the forward likelihood \(q(x_t\mid x_{t-1})\) has \emph{hard zeros} (e.g., absorbing-state diffusion, or explicitly band-limited kernels),
+    		the reverse transition can only place mass on states that are \emph{reachable} under the forward process, inheriting its support constraints.
+    		Second, even when \(Q_t\) is dense (e.g., discretized-Gaussian or matrix-exponential constructions), the reverse kernel is still forced to respect the
+    		\emph{relative transition geometry} encoded by \(Q_t\), because it is built by reweighting exact posteriors rather than being learned as an arbitrary categorical map.
+    		
+    		We can break this mechanism down into three distinct phases: the mathematical foundation of the forward process, the neural network's role, and the actual inference step.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Phase 1: The Forward Process and the Exact Posterior} \\
+    		During the forward corruption process, we systematically destroy data using our custom-designed matrices $Q_t$. Crucially, this forward pass is inherently \emph{stochastic}, not deterministic. For a given token $x_{t-1}$, the corresponding row in $Q_t$ provides a probability distribution over all possible $K$ categories for the next timestep. We do not simply select the category with the maximal probability; rather, we randomly draw the next state according to those exact probabilities: $x_t \sim \mathrm{Cat}(x_{t-1}Q_t)$. This random sampling is what injects stochastic noise into the discrete system.
+    		
+    		\medskip
+    		\noindent
+    		Because we explicitly defined the mathematical rules governing this stochastic forward chain, if we magically knew the true, clean starting data $x_0$, the distribution of the previous step $x_{t-1}$ given our current noisy state $x_t$ is not something the network needs to guess—it is an exact mathematical certainty governed by Bayes' rule. 
+    		
+    		Using the Markov property, this forward posterior is given in closed form:
+    		
+    		\begin{equation}
+    			q(x_{t-1} \mid x_t, x_0)
+    			=
+    			\frac{q(x_t \mid x_{t-1}, x_0) q(x_{t-1} \mid x_0)}{q(x_t \mid x_0)}
+    			=
+    			\frac{q(x_t \mid x_{t-1}) q(x_{t-1} \mid x_0)}{q(x_t \mid x_0)}.
+    			\label{eq:chapter20_d3pm_bayes}
+    		\end{equation}
+    		
+    		\newpage
+    		
+    		Substituting our known categorical matrix formulations into this ratio yields a computable, closed-form equation:
+    		
+    		\begin{equation}
+    			q(x_{t-1} \mid x_t, x_0)
+    			=
+    			\mathrm{Cat}\!\left(
+    			x_{t-1};\;
+    			p =
+    			\frac{
+    				\big(x_t Q_t^\top\big)\;\odot\;\big(x_0 \overline{Q}_{t-1}\big)
+    			}{
+    				x_0 \overline{Q}_t x_t^\top
+    			}
+    			\right).
+    			\label{eq:chapter20_d3pm_posterior}
+    		\end{equation}
+    		
+    		\emph{Intuition for Eq.~\ref{eq:chapter20_d3pm_posterior}:} The numerator is the element-wise product ($\odot$) of two pathways: the probability of transitioning from any candidate $x_{t-1}$ into our current known $x_t$, multiplied by the probability of reaching that candidate $x_{t-1}$ from the clean $x_0$. The denominator ($x_0 \overline{Q}_t x_t^\top \in \mathbb{R}$) is simply the scalar normalization constant representing the total probability of going directly from $x_0$ to $x_t$.
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Phase 2: The Backward Process (Predict $x_0$ and Marginalize)} \\
+    		In reality, during the reverse generation process, we do not have access to the clean data \(x_0\).
+    		If we trained a neural network to directly predict \(p_\theta(x_{t-1}\mid x_t)\), it could ignore the inductive bias encoded by \(Q_t\),
+    		and—when \(q(x_t\mid x_{t-1})\) contains hard zeros—assign nonzero mass to transitions that the forward process deems impossible.
+    		
+    		To solve this, D3PM tasks the neural network with a different goal: take the current noisy state $x_t$ and output a categorical distribution representing its best guess of the \emph{original clean data}, denoted as $\tilde{p}_\theta(\tilde{x}_0 \mid x_t)$.
+    		
+    		Once the network provides this distribution over all possible clean states, we mathematically derive the reverse step using the Law of Total Probability. We can break this derivation down step-by-step:
+    		
+    		\begin{enumerate}
+    			\item \textbf{Step 1: Factorizing the Reverse Step via the Chain Rule} \\
+    			Our ultimate goal is to model the reverse transition $p_\theta(x_{t-1} \mid x_t)$. To inject the structural rules of the forward process into this prediction, we introduce the uncorrupted clean data $x_0$ as a latent ``middleman''.
+    			
+    			\smallskip
+    			\noindent
+    			Using the Law of Total Probability and the chain rule of probability, we can expand our target distribution by summing over all $K$ possible categories for the hypothetical clean state, which we denote as $\tilde{x}_0$:
+    			
+    			\begin{align}
+    				p_\theta(x_{t-1} \mid x_t) 
+    				&= \sum_{\tilde{x}_0=1}^K p_\theta(x_{t-1}, \tilde{x}_0 \mid x_t) \nonumber \\
+    				&= \sum_{\tilde{x}_0=1}^K \underbrace{p_\theta(x_{t-1} \mid x_t, \tilde{x}_0)}_{\text{Reverse step if we knew } x_0} \;\times\; \underbrace{p_\theta(\tilde{x}_0 \mid x_t)}_{\text{Guess of } x_0}.
+    				\label{eq:chapter20_d3pm_chain_rule}
+    			\end{align}
+    			
+    			This factorization elegantly splits the problem into two distinct parts: guessing the clean data, and stepping backward conditionally.
+    			
+    			\item \textbf{Step 2: The Network's Job (Predicting the Clean State)} \\
+    			Look at the right-most term in Equation~\ref{eq:chapter20_d3pm_chain_rule}: $p_\theta(\tilde{x}_0 \mid x_t)$. This asks, ``Given the current noisy data $x_t$, what is the probability that the original clean data was $\tilde{x}_0$?'' This is exactly what our deep neural network will model.
+    			
+    			\newpage
+    			
+    			The network takes $x_t$, processes it, and outputs a $K$-dimensional softmax distribution (e.g., logits over the entire vocabulary or pixel color palette) representing its confidence in every possible original state. We denote the network's output as $\tilde{p}_\theta(\tilde{x}_0 \mid x_t)$.
+    			
+    			\item \textbf{Step 3: The Structural Bottleneck (Substitution)} \\
+    			Now look at the left term: $p_\theta(x_{t-1} \mid x_t, \tilde{x}_0)$. This asks, ``If we \emph{knew} the current state was $x_t$ and we \emph{assumed} the clean state was $\tilde{x}_0$, what is the probability of the previous state being $x_{t-1}$?'' 
+    			
+    			Here lies the brilliance of D3PM: \emph{we do not need to use machine learning for this.} If we assume a specific clean state $\tilde{x}_0$ is the absolute truth, the path backward is strictly dictated by the rules of probability we established during the forward corruption process. It is exactly the mathematical forward posterior $q(x_{t-1} \mid x_t, \tilde{x}_0)$ that we derived in Phase 1 (Equation~\ref{eq:chapter20_d3pm_posterior}). 
+    			
+    			Therefore, D3PM forcefully anchors the reverse process to reality by making a strict substitution: we replace the trainable parameter $p_\theta(x_{t-1} \mid x_t, \tilde{x}_0)$ with the exact, unchangeable mathematical ground truth $q(x_{t-1} \mid x_t, \tilde{x}_0)$.
+    			
+    			\item \textbf{Step 4: The Final Marginalization (The Weighted Average)} \\
+    			Substituting our neural network and our exact posterior back into our original factorization (Equation~\ref{eq:chapter20_d3pm_chain_rule}), we arrive at the final formulation for the reverse step:
+    			\begin{equation}
+    				p_\theta(x_{t-1} \mid x_t)
+    				=
+    				\sum_{\tilde{x}_0=1}^K
+    				\underbrace{q(x_{t-1} \mid x_t, \tilde{x}_0)}_{\text{Exact mathematical rulebook}}
+    				\;\times\;
+    				\underbrace{\tilde{p}_\theta(\tilde{x}_0 \mid x_t)}_{\text{Neural network's confidence}}.
+    				\label{eq:chapter20_d3pm_reverse_step}
+    			\end{equation}
+    		\end{enumerate}
+    		
+    		\emph{Intuition (The Weighted Vote in Categorical Space):} 
+    		Think of Equation~\ref{eq:chapter20_d3pm_reverse_step} as a weighted voting system operating on probability vectors. To understand the mechanics, let's track the shapes and operations for a single token (e.g., a single pixel with $K=256$ possible color intensities, where a specific state is represented as a $1 \times K$ one-hot vector).
+    		
+    		\begin{itemize}
+    			\item \textbf{The Network's Output ($\tilde{p}_\theta$):} 
+    			The neural network observes the corrupted state $x_t$ and outputs a dense vector of shape $1 \times K$ containing probability scores that sum to 1. This vector represents the network's confidence across all $K$ candidates for what the original pixel ($\tilde{x}_0$) was. For example, it might assign a probability of 0.8 to the ``Bright Red'' category, 0.2 to the ``Dark Red'' category, and exactly 0.0 to the other 254 colors.
+    			
+    			\item \textbf{The Mathematical Rulebook ($q$):} 
+    			For every single one of those $K$ candidates, we consult the exact forward posterior $q(x_{t-1} \mid x_t, \tilde{x}_0)$. As derived in Phase 1, this formula takes the current noisy state $x_t$ and the hypothetical clean state $\tilde{x}_0$, and evaluates the rigid rules of the forward matrix $Q_t$. For any given candidate, this rulebook outputs a $1 \times K$ probability vector specifying exactly what the previous step $x_{t-1}$ must be. 
+    			For instance, if the candidate was Bright Red, the rulebook outputs a $1 \times K$ vector (let's call it Distribution A). If the candidate was Dark Red, it outputs a different $1 \times K$ vector (Distribution B).
+    			
+    			\item \textbf{The Final Step (Marginalization):} 
+    			The final reverse step $p_\theta(x_{t-1} \mid x_t)$ is simply the weighted sum of these vectors. We multiply Distribution A by the scalar 0.8, multiply Distribution B by the scalar 0.2, and add them together. The result is our final $1 \times K$ categorical distribution for sampling the next token.
+    		\end{itemize}
+    		
+    		\emph{Key Payoff: The Reverse Kernel Inherits the Forward Geometry (and Support When Present).}
+    		Why not let the network output \(p_\theta(x_{t-1}\mid x_t)\) directly?
+    		
+    		\begin{itemize}
+    			\item \textbf{Hard Constraints (True Zeros):}
+    			According to the posterior decomposition, the optimal reverse transition from a given \(x_t\) only considers predecessors \(x_{t-1}\) for which \(q(x_t\mid x_{t-1})\) is non-zero.
+    			Thus, when \(Q_t\) encodes true zeros (e.g., absorbing-state diffusion, or explicitly band-diagonal kernels), the ideal reverse kernel is sparse in exactly the same locations.
+    			
+    			\newpage
+    			
+    			The \(x_0\)-parameterization inherits this sparsity automatically, because \(p_\theta(x_{t-1}\mid x_t)\) is built by marginalizing exact posteriors whose support is dictated by \(Q_t\).
+    			
+    			\item \textbf{If \(Q_t\) is dense (no hard zeros):}
+    			For discretized-Gaussian and matrix-exponential constructions, large moves are typically \emph{suppressed} rather than forbidden.
+    			In this common case, the advantage is not “hard validity,” but \emph{consistency}: the learned reverse kernel is tied to the exact Bayesian posterior of the chosen
+    			forward process, ensuring the model’s denoising steps reflect the same transition geometry and stationary limit designed into \(Q_t\).
+    		\end{itemize}
+    		
+    		\medskip
+    		\noindent
+    		\textbf{Phase 3: Inference (Generation)} \\
+    		Once the neural network \(\tilde{p}_\theta\) is fully trained, we can discard the forward corruption process entirely. To generate a completely new data sample from scratch, we simulate the reverse Markov chain starting from pure noise.
+    		
+    		\begin{enumerate}
+    			\item \textbf{Initialization ($t=T$):} We begin by sampling an initial state \(x_T\) from the stationary distribution of our chosen forward chain. 
+    			\begin{itemize}
+    				\item If we trained a \emph{Uniform} or \emph{Discretized Gaussian} model, the stationary distribution is uniform. We initialize a tensor (e.g., an image grid) with completely random, uniformly distributed categorical tokens.
+    				\item If we trained an \emph{Absorbing State} model, the stationary distribution is a point mass on the absorbing token. We initialize a sequence composed entirely of \texttt{[MASK]} tokens.
+    			\end{itemize}
+    			
+    			\item \textbf{Iterative Denoising ($t=T$ down to $1$):} For each timestep, we perform the following sequence:
+    			\begin{enumerate}
+    				\item \textbf{Guess the clean data:} Pass the current corrupted state \(x_t\) through the neural network to obtain \(\tilde{p}_\theta(\tilde{x}_0 \mid x_t)\), the distribution over all possible clean states.
+    				\item \textbf{Calculate the reverse step:} Plug this guess into the marginalized posterior (Equation~\ref{eq:chapter20_d3pm_reverse_step}) to analytically form the valid categorical probabilities for the previous step, \(p_\theta(x_{t-1} \mid x_t)\).
+    				\item \textbf{Stochastic Sampling:} We do \emph{not} simply pick the most likely token (argmax). Instead, we sample \(x_{t-1} \sim p_\theta(x_{t-1} \mid x_t)\). This stochasticity matters because it preserves a non-degenerate reverse kernel: sampling from \(p_\theta(x_{t-1}\mid x_t)\) maintains diversity across trajectories,
+    				whereas always taking \(\arg\max\) can bias toward overly peaked, heuristic decoding dynamics that are not implied by the probabilistic model.
+    			\end{enumerate}
+    			
+    			\item \textbf{Final Output:} After \(T\) steps, the resulting state \(x_0\) is our generated image, segmentation map, or text sequence.
+    		\end{enumerate}
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Fast Inference via \(k\)-step Jumps} \\
+    		A major bottleneck of diffusion is the need to evaluate the model at many timesteps.
+    		D3PM’s \(x_0\)-parameterization supports inference over larger strides, i.e., denoising \(k\) steps at a time, by composing the model prediction with multi-step forward transitions.
+    	
+    		Because Markov chains allow us to compute transitions over arbitrary time intervals using cumulative matrix products (recall \(\overline{Q}_t\)), there is no mathematical requirement to step exactly from \(t\) to \(t-1\).
+    		
+    		\newpage
+    		
+    		If we want to skip \(k\) steps and jump directly from \(t\) to \(t-k\), we simply replace the one-step posterior in our derivation with a \(k\)-step posterior:
+    		
+    		\begin{equation}
+    			q(x_{t-k} \mid x_t, x_0)
+    			=
+    			\mathrm{Cat}\!\left(
+    			x_{t-k};\;
+    			p =
+    			\frac{
+    				\big(x_t (Q_{t-k+1}\cdots Q_t)^\top\big)\;\odot\;\big(x_0 \overline{Q}_{t-k}\big)
+    			}{
+    				x_0 \overline{Q}_t x_t^\top
+    			}
+    			\right).
+    			\label{eq:chapter20_d3pm_k_step_posterior}
+    		\end{equation}
+    		
+    		By marginalizing the network's prediction \(\tilde{p}_\theta(\tilde{x}_0 \mid x_t)\) over this modified \(k\)-step posterior, D3PM can safely stride across multiple timesteps at once. This enables sampling on a \emph{subsampled} time grid (fewer network evaluations) while remaining consistent with the same forward-process geometry and stationary limit specified by \(Q_t\).
+    		
+    		\paragraph{Training Objective: The Hybrid Loss \(L_\lambda\)}
+    		In principle, D3PMs can be trained by minimizing the standard diffusion variational bound \(L_{\mathrm{vb}}\), which matches the learned reverse transitions \(p_\theta(x_{t-1}\mid x_t)\) to the true posteriors \(q(x_{t-1}\mid x_t,x_0)\).
+    		Empirically, however, the authors find that optimizing \(L_{\mathrm{vb}}\) alone is often insufficient for strong discrete samples, and introduce an auxiliary term that explicitly trains the network to recover the clean token \(x_0\) from \(x_t\) across noise levels.
+    		This yields the hybrid objective \(L_\lambda\) used in their strongest models:
+    		
+    		\begin{equation}
+    			L_\lambda
+    			=
+    			L_{\mathrm{vb}}
+    			+
+    			\lambda\;
+    			\mathbb{E}_{q(x_0)}\mathbb{E}_{q(x_t\mid x_0)}
+    			\Big[-\log \tilde{p}_\theta(x_0\mid x_t)\Big].
+    			\label{eq:chapter20_d3pm_Llambda}
+    		\end{equation}
+    		
+    		\emph{Intuition for the Auxiliary Term:} Recall from Equation~\ref{eq:chapter20_d3pm_reverse_step} that the entire reverse sampling step is fundamentally bottlenecked by the network's foundational guess of the clean data, \(\tilde{p}_\theta(\tilde{x}_0 \mid x_t)\). If this core prediction is inaccurate, projecting it through the forward posterior will still yield a structurally legal, but ultimately incorrect, reverse step. The auxiliary cross-entropy term directly addresses this by forcing the model to fiercely prioritize identifying the exact, uncorrupted \(x_0\) at every single timestep. In the paper’s analysis, this auxiliary term provides a more direct supervision signal on \(\tilde{p}_\theta(x_0\mid x_t)\) than ELBO-only training (which supervises \(\tilde{p}_\theta\) only through the marginalization in Eq.~\ref{eq:chapter20_d3pm_reverse_step}),
+    		and empirically improves sample quality.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/D3PM_two_sides.jpg}
+    			\caption{\textbf{Text generation and reconstruction with D3PM (D3PM, Fig.~2)}~\cite{austin2021_d3pm}
+    				Left: perplexity vs.\ sampling iterations on LM1B for different forward processes.
+    				Right: an absorbing-state model can both generate samples and reconstruct corrupted inputs by iteratively unmasking.}
+    			\label{fig:chapter20_d3pm_lm1b}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/D3PM_examples.jpg}
+    			\caption{\textbf{Progressive sampling on CIFAR-10 (D3PM, Fig.~3)}~\cite{austin2021_d3pm}
+    				Left: intermediate samples during the reverse chain for absorbing vs.\ discretized-Gaussian forward processes.
+    				Right: non-cherry-picked samples from a discretized-Gaussian variant.}
+    			\label{fig:chapter20_d3pm_cifar}
+    		\end{figure}
+    		
+    		\paragraph{Experiments and Ablations: Match the Transition Prior to the Domain}
+    		The empirical results of D3PM conclusively demonstrate that the choice of the forward transition matrix \(Q_t\) is not arbitrary; it must fundamentally align with the inherent structure of the target data domain~\cite{austin2021_d3pm}:
+    		\begin{itemize}
+    			\item \textbf{Text Generation (The Triumph of the Absorbing State):} For language modeling (evaluated on character-level text8 and word-level LM1B), the absorbing state (\texttt{[MASK]}) model drastically outperformed uniform diffusion. This confirms that iteratively revealing masked tokens is a far superior generative prior for language than attempting to correct uniformly randomized, unstructured words.
+    			\item \textbf{Image Generation (The Necessity of Ordinality):} On CIFAR-10, the Discretized Gaussian matrix was the clear winner. Because images possess strict ordinality, injecting Gaussian-like local decay into the discrete steps preserved the continuous topography of the image manifold, allowing D3PM to achieve highly competitive FID scores and log-likelihoods.
+    			\item \textbf{Loss Ablation:} Training exclusively with the VLB (\(L_{\mathrm{vb}}\)) often yielded lower-fidelity, less coherent samples. The hybrid loss \(L_\lambda\) was paramount, significantly improving generation quality and stabilizing optimization across modalities.
+    			\item \textbf{Not every ``structure'' helps:}
+    			The paper also studies a nearest-neighbor transition for text, where locality is induced from embedding similarity.
+    			Empirically, this structure is \emph{not} reliably beneficial: it only narrowly improves over uniform in some settings, and can even underperform uniform corruption on LM1B.
+    			The takeaway is that a transition prior must match the domain's \emph{true} notion of locality, not just an arbitrary similarity heuristic~\cite{austin2021_d3pm}.
+    		\end{itemize}
+    		
+    		\newpage
+    		
+    		\paragraph{Transition: Escaping the Sequential Bottleneck and Embracing Flows}
+    		D3PM brilliantly formalizes how generative masked modeling mathematically operates under the umbrella of discrete diffusion via the absorbing state. However, predicting reverse transitions step-by-step over hundreds of strict Markov iterations remains computationally burdensome. 
+    		
+    		If we isolate this absorbing state paradigm, we can rethink the decoding sequence entirely. This naturally leads us to explore how models like \textbf{MaskGIT}~\cite{chang2022_maskgit} abandon strict sequential, token-by-token unmasking in favor of massively parallel, confidence-based token generation. 
+    		
+    		Furthermore, while D3PM successfully adapted curved diffusion to discrete spaces, the broader generative landscape has recently shifted toward straight-line Ordinary Differential Equations (ODEs) via \emph{Flow Matching}. The remainder of this chapter will explore how the field ultimately bridges these two evolutionary branches. We will see how continuous vector fields are applied to categorical data (\textbf{Discrete Flow Matching}~\cite{gat2024_dfm}), how they are scaled natively by bypassing continuous proxies (\textbf{Transition Matching}~\cite{shaul2025_tm}), and finally, how every method discussed in this chapter is mathematically unified under a single, overarching framework of \textbf{Generator Matching}~\cite{holderrieth2025generator}.
+    		
+    	\end{enrichment}
+    	
+    	\newpage
+    	
+    	\begin{enrichment}[MaskGIT: Bidirectional, Non-Autoregressive Generation][subsection]
+    		\label{enr:chapter20_maskgit}
+    		
+    		\paragraph{Motivation: The Sequential Bottleneck}
+    		Before MaskGIT, most high-quality image transformers followed the NLP recipe: \emph{flatten} an image into a 1D sequence of discrete tokens and generate tokens \emph{autoregressively} in raster-scan order (left-to-right, top-to-bottom). This design imposes two intertwined bottlenecks.
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{(i) An unnatural ordering bias.}
+    		Images are not inherently sequential: global layout and long-range structure are best inferred from \emph{bidirectional} context, not a forced scanline order~\cite{chang2022_maskgit}.
+    		The raster prior is a modeling artifact, not a property of visual data.
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{(ii) Quadratic token lengths and linear-time decoding.}
+    		If a tokenizer produces an \(h\times w\) latent grid, then the sequence length is \(N = hw\) (e.g., \(N=32\times 32=1024\)).
+    		Autoregressive decoding requires \(\Theta(N)\) \emph{sequential} transformer evaluations per sample, which is not parallelizable over token positions.
+    		MaskGIT emphasizes this inefficiency with a concrete runtime comparison against an autoregressive baseline: for long token sequences (e.g., \(N=1024\)), autoregressive decoding can take on the order of tens of seconds on a single GPU, while MaskGIT keeps the number of sequential transformer passes fixed (typically \(T=8\)).
+    		
+    		\paragraph{Relation to D3PM: Absorbing-State Diffusion as Iterative Unmasking}
+    		The D3PM framework in \ref{enr:chapter20_d3pm} shows that discrete diffusion can be defined via a forward Markov chain with a \emph{mask absorbing state}, yielding a ``generate by iterative unmasking'' reverse process~\cite{austin2021_d3pm}.
+    		MaskGIT is best understood as an aggressively optimized instantiation of this \emph{masked discrete generation} paradigm:
+    		
+    		\begin{itemize}
+    			\item \textbf{Common core:} both begin from a fully corrupted canvas of \texttt{[MASK]} tokens and iteratively replace masks with data tokens.
+    			\item \textbf{Different training objective:} D3PM is derived as a Markovian diffusion model trained via an ELBO and an \(x_0\)-parameterized reverse process~\cite{austin2021_d3pm}, whereas MaskGIT trains a bidirectional transformer with a direct masked-token cross-entropy objective (MVTM), analogous to BERT-style masked modeling~\cite{chang2022_maskgit,devlin2019_bert}.
+    			\item \textbf{Different sampler:} D3PM samples according to diffusion-style reverse transitions; MaskGIT uses a \emph{scheduled parallel decoding} heuristic that predicts all tokens in parallel and only \emph{commits} the most confident subset at each iteration~\cite{chang2022_maskgit}.
+    		\end{itemize}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/MaskGIT_pipeline_overview.jpg}
+    			\caption{\textbf{MaskGIT pipeline overview (MaskGIT, Fig.~3).} A VQ tokenizer maps an image to a discrete latent grid of visual tokens; a bidirectional transformer is trained with Masked Visual Token Modeling (MVTM) to predict randomly masked tokens, and is used at inference time for iterative parallel decoding~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_pipeline}
+    		\end{figure}
+    		
+    		\paragraph{Stage 1: Tokenization into Discrete Visual Tokens}
+    		MaskGIT mitigates the computational bottlenecks of high-resolution image generation by adopting the proven two-stage ``tokenize-then-model'' paradigm~\cite{chang2022_maskgit}. Because self-attention mechanisms scale quadratically with sequence length, operating directly on raw, continuous pixels is computationally prohibitive. Instead, the first stage utilizes a pretrained Vector Quantized (VQ) autoencoder (e.g., VQGAN-style) to compress the spatial dimensions of an input image \(x\in\mathbb{R}^{H\times W\times 3}\).
+    		
+    		The encoder compresses the image by a fixed factor of 16 in the paper’s experimental setup, mapping \(x\in\mathbb{R}^{H\times W\times 3}\) to a grid of tokens with \(h=H/16\) and \(w=W/16\)~\cite{chang2022_maskgit}.
+    		Each token is an integer index into a learned codebook; MaskGIT uses a single codebook of size \(K=1024\) for its experiments.
+    		For transformer processing, this spatial grid is flattened into a 1D sequence \(Y=[y_i]_{i=1}^N\), where the total sequence length is \(N=hw\).
+    		
+    		\paragraph{Stage 2: Masked Visual Token Modeling (MVTM) in Training}
+    		With the image converted into a discrete sequence, MaskGIT trains a bidirectional transformer to play a visual ``fill-in-the-blanks'' game, a process termed Masked Visual Token Modeling (MVTM).
+    		
+    		Let \(M=[m_i]_{i=1}^N \in \{0,1\}^N\) be a binary mask, where \(m_i=1\) indicates that the original token \(y_i\) is replaced by a special \texttt{[MASK]} token. Denoting the masked sequence as \(Y_M\), the transformer uses multi-head bidirectional self-attention to infer the missing patches. 
+    		
+    		\textbf{Understanding Bidirectional Self-Attention.}
+    		In a standard autoregressive transformer (such as GPT or early image transformers like ImageGPT), the self-attention mechanism employs a lower-triangular \emph{causal mask}. This forces the computation of the attention score for token \(i\) to strictly depend only on preceding tokens \(j < i\). For images, this enforces an arbitrary raster-scan ordering (e.g., from top-left to bottom-right). 
+    		
+    		Conversely, a bidirectional transformer (like BERT or MaskGIT) removes this causal mask. The attention matrix is fully dense, meaning the contextualized representation of token \(i\) is computed as a weighted sum of \emph{all} tokens \(j \in [1, N]\) in the sequence, looking both forward and backward.
+    		
+    		\newpage
+    		
+    		\emph{Example:} Consider generating an image of a dog in the bottom-left corner looking up at a flying frisbee in the top-right corner. If the visual token corresponding to the frisbee is masked, an autoregressive model must guess what belongs in that top-right patch \emph{before} it has mathematically processed the dog in the bottom-left. It lacks the critical semantic context. A bidirectional transformer, however, processes the entire canvas simultaneously. The self-attention layers compute a high affinity between the masked token's position and the unmasked tokens of the dog looking upward, allowing the network to trivially infer that the missing top-right patch should contain the frisbee.
+    		
+    		Unlike autoregressive models that are strictly constrained to looking at past tokens in a raster-scan order, this bidirectional context allows the model to leverage unmasked tokens from \emph{all} directions across the image to make highly informed predictions.
+    		
+    		The model is optimized using a standard negative log-likelihood (cross-entropy) objective, calculating the loss exclusively on the masked locations:
+    		
+    		\begin{equation}
+    			\mathcal{L}_{\mathrm{mask}}
+    			=
+    			-\mathbb{E}_{Y\sim\mathcal{D}}
+    			\left[
+    			\sum_{i:\,m_i=1}\log p_\theta\!\left(y_i \mid Y_M\right)
+    			\right].
+    			\label{eq:chapter20_maskgit_Lmask}
+    		\end{equation}
+    		
+    		A crucial mathematical and practical element of this training stage is dynamic masking. Rather than using a fixed masking rate (like BERT's static 15\%), MaskGIT randomly samples a mask ratio \(r \in [0,1)\) at each training step via a continuous scheduling function \(\gamma(r)\). It then uniformly selects \(\lceil\gamma(r)\cdot N\rceil\) tokens to replace with masks. 
+    		
+    		This robust training strategy forces the model to learn how to recover visual information across a wide spectrum of corruption levels---ranging from inferring minor local details when the mask ratio is low, to hallucinating global structural layouts from near-scratch when the mask ratio is high.
+    		
+    		\paragraph{Iterative Parallel Decoding (Inference)}
+    		MaskGIT dismantles the autoregressive bottleneck by synthesizing an image in a constant, remarkably small number of iterations (typically \(T=8\))~\cite{chang2022_maskgit}. This non-autoregressive parallel decoding algorithm leverages the bidirectional nature of the trained transformer to refine the entire canvas simultaneously. The algorithm's mechanics are best understood by tracking the tensor shapes and probability distributions across a single iteration \(t\).
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{State Initialization and Representation.}
+    		At inference, generation begins from a completely blank canvas where all \(N\) tokens are set to the \texttt{[MASK]} token, denoted as \(Y_M^{(0)}\). At any subsequent iteration \(t\), the canvas \(Y_M^{(t)} \in (\{1,\dots,K\} \cup \{\texttt{[MASK]}\})^N\) contains a hybrid mixture of previously committed visual tokens and remaining masks.
+    		A single forward pass of the bidirectional transformer analyzes this partially filled canvas and outputs a categorical probability distribution over the entire \(K\)-dimensional codebook for \emph{every single} position simultaneously:
+    		\begin{equation}
+    			P^{(t)} = p_\theta\!\left(\cdot \mid Y_M^{(t)}\right) \in [0,1]^{N \times K}, \qquad \sum_{k=1}^K P^{(t)}_{ik} = 1.
+    			\label{eq:chapter20_maskgit_probs_shape}
+    		\end{equation}
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Sample, Score, and Re-mask (The Confidence Heuristic).}
+    		Unlike standard greedy sequential decoding, MaskGIT introduces a highly optimized heuristic based on the model's own predictive confidence. For each currently masked position \(i\), a proposed token \(\hat{y}_i^{(t)}\) is stochastically sampled from the predicted distribution: \(\hat{y}_i^{(t)} \sim \mathrm{Cat}(P^{(t)}_{i:})\)~\cite{chang2022_maskgit}.
+    		
+    		In practice, this sampling incorporates temperature annealing to encourage more diversity~\cite{chang2022_maskgit}.
+    		
+    		\newpage
+    		
+    		Once a token is sampled, its corresponding predicted probability is extracted to serve as a "confidence score":
+    		
+    		\begin{equation}
+    			c_i^{(t)} = P^{(t)}_{i,\hat{y}_i^{(t)}} \in [0,1].
+    			\label{eq:chapter20_maskgit_confidence}
+    		\end{equation}
+    		
+    		Tokens that are already committed (unmasked) in the current iteration automatically bypass this sampling and are assigned a maximum confidence of \(c_i^{(t)} = 1.0\).
+    		
+    		At this stage, the model has a proposed token and a confidence score for every single position on the grid. To decide which predictions to permanently lock in, MaskGIT consults a mask scheduling function \(\gamma:[0,1] \to [0,1]\)~\cite{chang2022_maskgit}. This function determines the exact number of tokens \(n_t\) that must remain masked at the current fractional progress \(t/T\)~\cite{chang2022_maskgit}:
+    		
+    		\begin{equation}
+    			n_t = \left\lceil \gamma\!\left(\frac{t}{T}\right) N \right\rceil.
+    			\label{eq:chapter20_maskgit_nt}
+    		\end{equation}
+    		
+    		To form the next input canvas \(Y_M^{(t+1)}\), the algorithm aggressively filters the proposals: it masks out the \(n_t\) positions holding the lowest confidence scores \(c_i^{(t)}\), and permanently commits the remaining high-confidence tokens. By locking in these reliable anchors first, the model drastically enriches the bidirectional context available for the next forward pass, allowing it to progressively and accurately resolve harder, localized details.
+    		
+    		\begin{mintedbox}{python}
+    			# MaskGIT scheduled parallel decoding (one sample).
+    			# Y is an N-length token grid; K is codebook size; gamma controls the mask ratio.
+    			
+    			Y = [MASK] * N                          # Y_M^{(0)}
+    			for t in range(T):
+    			    P = transformer_probs(Y)            # shape: (N, K)
+    			    Y_hat = sample_tokens(P, temp=tau(t))  # sample for masked positions
+    		    	c = confidence(P, Y_hat, Y)         # c_i = P[i, Y_hat[i]] if masked else 1.0
+    		    	n = ceil(gamma(t / T) * N)          # number of tokens to KEEP masked
+    			    idx = argsort(c)[:n]                #     lowest-confidence positions
+    			    Y = commit_and_remask(Y, Y_hat, idx)  # mask idx, commit others
+    			# decode tokens back to pixels via VQ decoder
+    			x = vq_decoder(Y)
+    		\end{mintedbox}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/MaskGIT_decoding_comparison.jpg}
+    			\caption{\textbf{Sequential vs.\ scheduled parallel decoding (MaskGIT, Fig.~2).} Comparison between autoregressive sequential decoding and MaskGIT's scheduled parallel decoding. Rows 1 and 3 display the input latent masks at each iteration, where lighter gray denotes unknown codes and darker gray indicates scattered predictions generated in parallel. Rows 2 and 4 show the corresponding samples generated by each model at that specific iteration. While sequential decoding strictly commits one new token per step—requiring 256 rounds in this example—MaskGIT starts with all unknown codes and finishes its entire decoding process in just 8 iterations as the number of predicted tokens increases sharply over time.~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_decoding}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/MaskGIT_time_comparisons.jpg}
+    			\caption{\textbf{Runtime scaling with token length (MaskGIT, Fig.~4).} Because autoregressive decoding requires \(\Theta(N)\) sequential transformer evaluations, wall-clock time grows rapidly with token length, while MaskGIT’s \(T\)-step refinement keeps the number of sequential passes fixed (typically \(T=8\)), yielding large speedups~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_time}
+    		\end{figure}
+    		
+    		\newpage
+    		
+    		\paragraph{The Secret Sauce: The Mask Scheduling Function \(\gamma\)}
+    		The schedule \(\gamma(\cdot)\) is used \emph{both} in training (to sample corruption levels) and in inference (to decide how aggressively to re-mask).
+    		MaskGIT analyzes basic requirements for \(\gamma(r)\): it should be continuous and bounded in \([0,1]\), monotonically decreasing in \(r\), and satisfy \(\gamma(0)\to 1\) and \(\gamma(1)\to 0\); the monotone-decrease/boundary behavior ensures convergence of the iterative decoding procedure.
+    		Empirically, concave schedules perform best; MaskGIT reports that the \textbf{cosine} schedule is the strongest across their experiments~\cite{chang2022_maskgit}.
+    		For concreteness, one simple cosine-family instantiation that satisfies the required boundary conditions is
+    		\begin{equation}
+    			\gamma(r) \;=\; \cos\!\left(\frac{\pi}{2}r\right),
+    			\qquad r\in[0,1],
+    			\label{eq:chapter20_maskgit_cosine}
+    		\end{equation}
+    		though other concave ``cosine-like'' variants are also possible.
+    		
+    		\paragraph{Inherent Flexibility: Editing by Conditional Masking}
+    		Because generation is \emph{bidirectional} and conditioning is implemented simply by which tokens are initially masked, MaskGIT natively supports a family of image manipulation tasks without architectural changes.
+    		We keep the tokens corresponding to the unedited region fixed (unmasked) and set the edited region as the initial mask, then run the same iterative decoding algorithm:
+    		\begin{itemize}
+    			\item \textbf{Class-conditional editing:} mask a bounding box and condition on a target class to replace the object inside the box while preserving outside context.
+    			\item \textbf{Inpainting and outpainting:} treat missing (or extrapolated) regions as masks and iteratively fill them using surrounding context.
+    		\end{itemize}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/MaskGIT_examples.jpg}
+    			\caption{\textbf{Class-conditional generation and manipulation (MaskGIT, Fig.~1).} MaskGIT supports high-quality class-conditional synthesis, class-conditional image manipulation, and wide image extrapolation by varying the initial mask pattern and conditioning signal~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_examples}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.7\textwidth]{Figures/Chapter_20/MaskGIT_image_editing.jpg}
+    			\caption{\textbf{Class-conditional image editing.} MaskGIT replaces the content inside a bounding box while preserving the surrounding context by treating the box as the initial mask and running scheduled parallel decoding~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_editing}
+    		\end{figure}
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.7\textwidth]{Figures/Chapter_20/MaskGIT_inpainting_outpainting.jpg}
+    			\caption{\textbf{Inpainting and outpainting.} By defining arbitrary regions as masked tokens (including regions outside the original field of view), MaskGIT can complete missing content or extrapolate images in multiple directions using the same bidirectional decoding procedure~\cite{chang2022_maskgit}.}
+    			\label{fig:chapter20_maskgit_inpainting}
+    		\end{figure}
+    		
+    		\newpage
+    		
+    		\paragraph{Transition: From Masked Discrete Diffusion to Flow-Based Discrete Generation}
+    		MaskGIT shows that the absorbing-state ``iterative unmasking'' view highlighted by D3PM can be turned into an extremely fast sampler by combining (i) bidirectional masked-token prediction and (ii) a carefully designed confidence-based mask schedule.
+    		However, MaskGIT’s decoding is still an \emph{iterative} refinement procedure, and its schedule is a heuristic that is not derived from a continuous-time generative dynamics.
+    		This sets up the next step in the chapter: \emph{flow-based} formulations for discrete data that replace diffusion-style refinement with straight-line generator dynamics (e.g., Discrete Flow Matching and its modern extensions), providing a complementary route to fast sampling and scalable training.
+    		
+    	\end{enrichment}
+    	
+    	\newpage
+    	
+    	\begin{enrichment}[Discrete Flow Matching: Continuous-Time Markov Flows for Categorical Data][subsection]
+    		\label{enr:chapter20_dfm}
+    		
+    		\paragraph{Motivation: Beyond Masked Diffusion and Heuristic Unmasking}
+    		The preceding enrichments established a fast, practical recipe for discrete generation:
+    		D3PM (\ref{enr:chapter20_d3pm}) provides a principled discrete-time Markov corruption process (including the absorbing \texttt{[MASK]} variant)~\cite{austin2021_d3pm},
+    		and MaskGIT (\ref{enr:chapter20_maskgit}) turns iterative unmasking into a highly efficient parallel sampler using a confidence-based schedule~\cite{chang2022_maskgit}.
+    		However, MaskGIT’s speed comes with a conceptual gap: the \emph{sampling rule} (commit the most confident tokens, re-mask the rest) is a heuristic decoding policy rather than a generative dynamics derived from a continuous-time law.
+    		This matters when we push to higher NFEs (more refinement steps): heuristic commitment rules can introduce bias that does not necessarily improve with additional computation.
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Discrete Flow Matching (DFM)}~\cite{gat2024_dfm} closes this gap by translating continuous Flow Matching ideas~\cite{lipman2022_flowmatching} to \emph{categorical} spaces.
+    		The key move is conceptual:
+    		instead of generating by repeatedly applying a discrete-time reverse kernel (diffusion) or a confidence-based unmasking schedule (MaskGIT),
+    		DFM defines a \emph{continuous-time} generative process on a discrete space via a \textbf{Continuous-Time Markov Chain (CTMC)}.
+    		The model learns a time-dependent \emph{probability velocity} that specifies how probability mass should flow between discrete states, yielding a principled analogue of ODE-based flows for tokens.
+    		This CTMC view also sets up the unifying perspective of \emph{generator-based} learning that culminates in \textbf{Generator Matching}~\cite{holderrieth2025generator} and \textbf{Transition Matching}~\cite{shaul2025_tm}.
+    		
+    		\paragraph{Setup: Discrete State Space, Source--Target Coupling, and Probability Paths}
+    		Let the discrete domain be
+    		\(
+    		\mathcal{D} = [d]^N
+    		\),
+    		where \(d\) is the alphabet size (vocabulary or codebook) and \(N\) is the sequence length (or \(h\times w\) tokens for images after tokenization).
+    		DFM assumes a \emph{source} distribution \(p\) (``noise'') and a \emph{target} distribution \(q\) (data),
+    		and introduces a coupling \(\pi(x_0,x_1)\) with marginals \(x_0\sim p\), \(x_1\sim q\).
+    		Unconditional generation typically uses an \emph{independent coupling} \(\pi(x_0,x_1)=p(x_0)q(x_1)\), while conditional tasks (prefix conditioning, infilling) are handled by clamping subsets of tokens during sampling~\cite{gat2024_dfm}.
+    		
+    		\smallskip
+    		\noindent
+    		Crucially, DFM does not define a discrete-time corruption chain.
+    		Instead it defines a \emph{probability path} \(\{p_t\}_{t\in[0,1]}\) that interpolates between \(p_0=p\) and \(p_1=q\).
+    		A convenient design is to define a \emph{conditional} path \(p_t(\cdot\mid x_0,x_1)\) (given paired endpoints), then marginalize:
+    		\begin{equation}
+    			p_t(x) \;=\; \sum_{x_0,x_1\in\mathcal{D}} p_t(x\mid x_0,x_1)\,\pi(x_0,x_1).
+    			\label{eq:chapter20_dfm_marginal_path}
+    		\end{equation}
+    		DFM focuses on token-wise paths that factorize across coordinates (matching the high-dimensional scalability pattern seen in D3PM and MaskGIT):
+    		\(
+    		p_t(x\mid x_0,x_1)=\prod_{i=1}^N p_t^i(x^i\mid x_0^i,x_1^i).
+    		\)
+    		
+    		\smallskip
+    		\noindent
+    		\textbf{Convex interpolant (the ``masked/unmasked'' path).}
+    		A canonical choice is the two-point convex path (one coordinate at a time):
+    		\begin{equation}
+    			p_t^i(x^i\mid x_0^i,x_1^i)
+    			\;=\;
+    			\kappa_t\,\delta_{x_1^i}(x^i) + (1-\kappa_t)\,\delta_{x_0^i}(x^i),
+    			\qquad \kappa_0=0,\;\kappa_1=1.
+    			\label{eq:chapter20_dfm_convex_path}
+    		\end{equation}
+    		Here \(\kappa_t\) is a \emph{scheduler} (the discrete analogue of a noise schedule): it controls how quickly tokens move from source-like states (\(x_0\)) toward data states (\(x_1\)) as \(t\) increases.
+    		This single design choice will later reappear as a unifying degree of freedom in both Generator Matching and Transition Matching.
+    		
+    		\paragraph{The Discrete Continuity Equation: Probability Mass Conservation on \(\mathcal{D}\)}
+    		In continuous Flow Matching, probability evolves by the continuity equation
+    		\(
+    		\dot{p}_t(x) + \mathrm{div}(p_t u_t)=0
+    		\),
+    		where \(u_t\) is a vector field~\cite{lipman2022_flowmatching}.
+    		DFM shows that the same conservation law governs discrete flows, except divergence becomes a \emph{net flux balance} over discrete states.
+    		For a flux function \(v:\mathcal{D}\times\mathcal{D}\to\mathbb{R}\), define the discrete divergence at state \(x\) as
+    		\begin{equation}
+    			\mathrm{div}_x(v)
+    			\;=\;
+    			\sum_{z\in\mathcal{D}} \big(v(z,x)-v(x,z)\big).
+    			\label{eq:chapter20_dfm_discrete_div}
+    		\end{equation}
+    		Intuitively, \(\mathrm{div}_x(v)\) is ``incoming minus outgoing'' probability flux at \(x\).
+    		The discrete continuity equation then takes the form
+    		\begin{equation}
+    			\dot{p}_t(x) \;+\; \mathrm{div}_x\!\big(p_t u_t\big) \;=\; 0,
+    			\label{eq:chapter20_dfm_discrete_continuity}
+    		\end{equation}
+    		where \(u_t\) is a \emph{probability velocity} that specifies how probability mass moves between states.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DFM_dis_flow.jpg}
+    			\caption{\textbf{Discrete vs.\ continuous flow and divergence (DFM, Fig.~2).} Discrete flow in \(\mathcal{D}=[d]^N\) with \(d=4, N=2\) (middle-left) versus continuous flow in \(\mathbb{R}^N\) (left). In the discrete case, divergence is the exact incoming-minus-outgoing flux balance over neighboring discrete states~\cite{gat2024_dfm}.}
+    			\label{fig:chapter20_dfm_dis_flow}
+    		\end{figure}
+    		
+    		\paragraph{From Vector Fields to Probability Velocities: A CTMC Update Rule}
+    		DFM generates samples by simulating a CTMC over \(\mathcal{D}\).
+    		Let \(X_t\sim p_t\) be the random state at time \(t\), and let \(u_t^i(\cdot, X_t)\) be the token-wise probability velocity for coordinate \(i\).
+    		Over a small step \(h>0\), DFM updates each token using the Euler-style CTMC rule
+    		\begin{equation}
+    			X_{t+h}^i \;\sim\; \delta_{X_t^i}(\cdot) + h\,u_t^i(\cdot, X_t),
+    			\label{eq:chapter20_dfm_ctmc_update}
+    		\end{equation}
+    		which is a valid categorical distribution when \(u_t^i\) satisfies the \emph{probability-velocity constraints}:
+    		\begin{equation}
+    			\sum_{x^i\in[d]} u_t^i(x^i,z)=0,
+    			\qquad
+    			u_t^i(x^i,z)\ge 0 \;\;\text{for all }x^i\neq z^i.
+    			\label{eq:chapter20_dfm_velocity_constraints}
+    		\end{equation}
+    		The number of function evaluations (NFE) is the number of model calls used to evaluate \(u_t\) along the trajectory, i.e., the number of discrete time steps in the CTMC simulation.
+    		
+    		\paragraph{The Core Construction: A Tractable Velocity via a Learned Denoiser}
+    		The continuity equation \eqref{eq:chapter20_dfm_discrete_continuity} becomes useful only if we can build a velocity \(u_t\) that \emph{exactly generates} the chosen path \(\{p_t\}\).
+    		DFM’s main technical result is that for broad path families, a generating velocity can be expressed in terms of \emph{endpoint posteriors} \(\,p_t(x_0,x_1\mid z)\,\) and simple token-wise components.
+    		Operationally, this yields a practical recipe:
+    		
+    		\begin{enumerate}
+    			\item Choose a conditional probability path \(p_t(\cdot\mid x_0,x_1)\) (e.g., the convex path in \eqref{eq:chapter20_dfm_convex_path}) and a scheduler \(\kappa_t\).
+    			\item Train a network to approximate the relevant posterior-derived \emph{probability denoiser} \(p_{1|t}(x^i\mid z)\) (or equivalently a noise-prediction \(p_{0|t}\)).
+    			\item Plug this denoiser into a closed-form marginal velocity \(u_t\), then simulate the CTMC via \eqref{eq:chapter20_dfm_ctmc_update}.
+    		\end{enumerate}
+    		
+    		\smallskip
+    		\noindent
+    		For the convex path \eqref{eq:chapter20_dfm_convex_path}, DFM derives a particularly simple \emph{denoiser-parameterized} marginal velocity:
+    		
+    		\begin{equation}
+    			u_t^i(x^i,z)
+    			\;=\;
+    			\frac{\dot{\kappa}_t}{1-\kappa_t}
+    			\Big(p_{1|t}(x^i\mid z)-\delta_{z^i}(x^i)\Big),
+    			\label{eq:chapter20_dfm_velocity_denoiser}
+    		\end{equation}
+    		
+    		where \(p_{1|t}(x^i\mid z)\) is the \emph{probability denoiser} (the model’s estimate of the clean token \(x_1^i\) given the current state \(z\)).
+    		A complementary \emph{noise-prediction} form is
+    		
+    		\begin{equation}
+    			u_t^i(x^i,z)
+    			\;=\;
+    			\frac{\dot{\kappa}_t}{\kappa_t}
+    			\Big(\delta_{z^i}(x^i)-p_{0|t}(x^i\mid z)\Big),
+    			\label{eq:chapter20_dfm_velocity_noisepred}
+    		\end{equation}
+    		
+    		which mirrors the denoiser/noise duality familiar from diffusion (\(\epsilon\)- vs.\ \(x_0\)-style parameterizations), but now expressed as \emph{probability velocities}~\cite{gat2024_dfm}.
+    		
+    		\paragraph{Corrector Sampling: Reintroducing Noise Without Heuristic Commitment}
+    		MaskGIT’s refinement remains stochastic only through repeated resampling and confidence-based re-masking.
+    		DFM provides a principled alternative: combine a forward-time velocity \(\hat{u}_t\) and a backward-time velocity \(\check{u}_t\) to build a new valid forward-time velocity
+    		
+    		\begin{equation}
+    			\bar{u}_t^i(x^i,z)
+    			\;=\;
+    			\alpha_t\,\hat{u}_t^i(x^i,z) - \beta_t\,\check{u}_t^i(x^i,z),
+    			\qquad \alpha_t,\beta_t>0,
+    			\label{eq:chapter20_dfm_corrector_velocity}
+    		\end{equation}
+    		
+    		which supports two useful regimes:
+    		(i) \(\alpha_t-\beta_t=1\) yields a ``forward-plus-backward'' corrector that injects controlled noise while still generating \(\{p_t\}\);
+    		(ii) \(\alpha_t-\beta_t=0\) yields a fixed-\(t\) corrector chain whose stationary distribution is \(p_t\) (useful for refinement)~\cite{gat2024_dfm}.
+    		This replaces MaskGIT’s confidence sorting with a dynamics-based mechanism for diversity.
+    		
+    		\paragraph{Training Objective: Flow Matching as Token-Wise Cross-Entropy}
+    		DFM trains the denoiser \(p_{1|t}(x^i\mid X_t)\) by sampling endpoints \((x_0,x_1)\sim \pi\), sampling time \(t\), drawing \(X_t\sim p_t(\cdot\mid x_0,x_1)\), and minimizing a Flow Matching loss that reduces to token-level cross-entropy for the relevant posterior component.
+    		A convenient form is
+    		
+    		\begin{equation}
+    			\mathcal{L}_{\mathrm{DFM}}
+    			=
+    			-\mathbb{E}_{(x_0,x_1)\sim\pi}\,\mathbb{E}_{t}\,\mathbb{E}_{X_t\sim p_t(\cdot\mid x_0,x_1)}
+    			\left[
+    			\sum_{i=1}^N \log p_\theta\!\big(x_1^i \mid X_t\big)
+    			\right],
+    			\label{eq:chapter20_dfm_loss}
+    		\end{equation}
+    		
+    		where \(p_\theta(\cdot\mid X_t)\) is the model’s categorical prediction over \([d]\) at each position.
+    		Unlike D3PM’s ELBO (which supervises reverse transitions indirectly), DFM directly trains the denoiser that parameterizes the velocity used at inference.
+    		
+    		\paragraph{Sampling Algorithm: Scheduled CTMC Simulation}
+    		Putting the pieces together yields a simple sampler: choose a scheduler \(\kappa_t\), simulate \(t:0\to 1\) in \(n\) steps (NFE \(=n\)), evaluate \(p_\theta(\cdot\mid X_t)\), compute \(u_t\) via \eqref{eq:chapter20_dfm_velocity_denoiser}, then update tokens with \eqref{eq:chapter20_dfm_ctmc_update}.
+    		Conditional generation (prefix, infilling) is handled by clamping conditioned coordinates after each update~\cite{gat2024_dfm}.
+    		
+    		\begin{mintedbox}{python}
+    			# Discrete Flow Matching sampler (conceptual).
+    			# Domain: tokens in [d]^N.  Denoiser predicts p_theta(x1^i | X_t).
+    			# Velocity uses u_t^i(x^i, X_t) = (kappa_dot/(1-kappa)) * (p_theta(x^i|X_t) - 1[x^i == X_t^i]).
+    			
+    			X = sample_source(p, N)          # e.g., all [MASK] or uniform tokens
+    			for s in range(n_steps):          # NFE = n_steps
+    			    t = s / n_steps
+    			    probs = denoiser_probs(X, t)  # shape: (N, d), outputs p_theta(. | X_t)
+    			    u = velocity_from_probs(probs, X, kappa(t), kappa_dot(t))  # u^i(. , X_t)
+    			    X = ctmc_euler_step(X, u, h=1/n_steps)   # X_{t+h}^i ~ delta_{X_t^i} + h u_t^i
+    			    X = apply_condition_mask(X, condition)   # optional: clamp known tokens for infilling/prefix
+    			return X
+    		\end{mintedbox}
+    		
+    		\paragraph{MaskGIT as a Special Case: Time-Independent Unmasking, Without Confidence Sorting}
+    		DFM also clarifies why MaskGIT can use a \emph{time-independent} predictor in the all-mask setting.
+    		If the source is the degenerate all-mask distribution \(p=\delta_{\mathfrak{m}}\), the relevant endpoint posterior becomes time-independent under the convex path, implying that the denoiser \(p_{1|t}(\cdot\mid z)\) does not need an explicit time input~\cite{gat2024_dfm}.
+    		But DFM replaces MaskGIT’s confidence-based commit/re-mask rule with the CTMC update \eqref{eq:chapter20_dfm_ctmc_update}, so increasing NFE corresponds to a principled refinement of the underlying probability flow rather than a longer heuristic schedule.
+    		
+    		\paragraph{Experiments: Quality--Compute Tradeoffs and Conditional Flexibility}
+    		DFM evaluates both unconditional generation and conditional tasks, emphasizing how quality scales with NFE.
+    		Figure~\ref{fig:chapter20_dfm_fid_inception} highlights the central empirical message on image generation: MaskGIT’s quality can degrade as NFE grows, while DFM improves more smoothly because additional steps correspond to finer CTMC integration rather than repeated heuristic commitment~\cite{gat2024_dfm}.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DFM_fid_inception.jpg}
+    			\caption{\textbf{FID/IS vs.\ NFE (DFM, Fig.~3).} DFM’s CTMC-based sampler benefits from increasing NFE (finer integration), while MaskGIT’s heuristic decoding can degrade when extended to many steps. The paper also studies how scheduler choice (e.g., linear vs.\ cubic \(\kappa_t\)) affects the quality--compute curve~\cite{gat2024_dfm}.}
+    			\label{fig:chapter20_dfm_fid_inception}
+    		\end{figure}
+    		
+    		\smallskip
+    		\noindent
+    		Beyond images, DFM emphasizes that CTMC flows are naturally compatible with \emph{non-left-to-right} conditioning patterns.
+    		Figure~\ref{fig:chapter20_dfm_code_gen} illustrates code generation where the model performs complex infilling (middle/right) rather than only prefix prompting (left), aligning with the bidirectional ``fill missing parts'' logic we exploited in MaskGIT, but now grounded in a continuous-time flow~\cite{gat2024_dfm}.
+    		
+    		\begin{figure}[H]
+    			\centering
+    			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/DFM_code_generation_example.jpg}
+    			\caption{\textbf{Code generation via discrete flows (DFM, Fig.~1).} Gray indicates a conditioning context, yellow indicates generated tokens. Left: standard left-to-right prompting; middle/right: infilling patterns that are awkward for strict autoregressive decoding but natural for CTMC-based discrete flows~\cite{gat2024_dfm}.}
+    			\label{fig:chapter20_dfm_code_gen}
+    		\end{figure}
+    		
+    		\paragraph{Ablations and Practical Lessons: Schedulers, Correctors, and ``What Actually Matters''}
+    		DFM’s ablations reinforce a pragmatic but important takeaway:
+    		\emph{in discrete flows, the probability path design (via \(\kappa_t\)) and the sampling strategy (forward-only vs.\ corrector) are not cosmetic details; they define the geometry of generation.}
+    		In the image experiments, changing \(\kappa_t\) (e.g., linear vs.\ cubic) shifts the entire FID/IS--NFE curve (Figure~\ref{fig:chapter20_dfm_fid_inception}).
+    		Corrector sampling via \eqref{eq:chapter20_dfm_corrector_velocity} provides a principled way to trade off diversity and refinement without reverting to MaskGIT-style confidence heuristics~\cite{gat2024_dfm}.
+    		
+    		\paragraph{Limitations: What DFM Does Not Solve}
+    		While DFM replaces heuristic unmasking with a principled CTMC dynamics, it does not eliminate iteration: sampling still requires multiple velocity evaluations (NFE) and careful scheduler design.
+    		Furthermore, the tractable constructions emphasized in DFM rely on token-wise path factorization (a scalability necessity), which can limit how richly the \emph{path itself} captures cross-token dependencies; in practice, dependencies are learned through the denoiser network rather than being encoded directly in the path.
+    		Finally, CTMC simulation introduces discretization choices (step size, possible adaptive stepping, corrector coefficients) that can materially affect compute and quality.
+    		
+    		\paragraph{Transition: From DFM to Generator and Transition Matching}
+    		DFM’s central conceptual upgrade is that it reframes discrete generation as learning a \emph{time-dependent generator} of a Markov process on \(\mathcal{D}\) (the CTMC).
+    		This immediately suggests the next abstraction step:
+    		\emph{why restrict ourselves to the specific velocity families induced by particular probability paths?}
+    		\textbf{Generator Matching}~\cite{holderrieth2025generator} answers by directly matching the generator of general Markov dynamics, unifying continuous vector-field flows and discrete CTMC flows in a single operator-level view.
+    		Then \textbf{Transition Matching}~\cite{shaul2025_tm} pushes the framework further, showing how to scale and supervise these dynamics in ways that connect naturally to modern large-model training and (when desired) recover autoregressive generation as another point in the unified design space.
+    		
+    	\end{enrichment}
     	
     
 \end{enrichment}
