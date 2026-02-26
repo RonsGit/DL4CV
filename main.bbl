@@ -2137,6 +2137,77 @@
       \verb https://proceedings.mlr.press/v139/bertasius21a/bertasius21a.pdf
       \endverb
     \endentry
+    \entry{betker2023_dalle3}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{hash=d1673fa89ea28b4988f56d0397f59c50}{%
+           family={Betker},
+           familyi={B\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+        {{hash=e5e3e996c0a95da7e97cae269822bbef}{%
+           family={Goh},
+           familyi={G\bibinitperiod},
+           given={Gabriel},
+           giveni={G\bibinitperiod}}}%
+        {{hash=e185e98ee3d0228730eb44d3476c64be}{%
+           family={Jing},
+           familyi={J\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+        {{hash=fc86624ab341f287c6199bcbb2ac1686}{%
+           family={Brooks},
+           familyi={B\bibinitperiod},
+           given={Tim},
+           giveni={T\bibinitperiod}}}%
+        {{hash=b41fe9c6cc1e8e9f13e889d20e626c3c}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Jianfeng},
+           giveni={J\bibinitperiod}}}%
+        {{hash=229579205f7962cf73029ed72bb3093b}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Linjie},
+           giveni={L\bibinitperiod}}}%
+        {{hash=6e3708cf33f22d79419d7e79124060a8}{%
+           family={Ouyang},
+           familyi={O\bibinitperiod},
+           given={Long},
+           giveni={L\bibinitperiod}}}%
+        {{hash=4ad42e5e5dc066db9684cae483b5d876}{%
+           family={Zhuang},
+           familyi={Z\bibinitperiod},
+           given={Juntang},
+           giveni={J\bibinitperiod}}}%
+        {{hash=4c65fe21c760bb5d7d7ee9636aeefb1e}{%
+           family={Lee},
+           familyi={L\bibinitperiod},
+           given={Joyce},
+           giveni={J\bibinitperiod}}}%
+        {{hash=7ab947d5412a3e2fb932e67fcdb67505}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{eb8ae5665d5a6423920d7bf003c9bc84}
+      \strng{fullhash}{caf1b6098de211a46622a9280ad241c9}
+      \strng{fullhashraw}{caf1b6098de211a46622a9280ad241c9}
+      \strng{bibnamehash}{eb8ae5665d5a6423920d7bf003c9bc84}
+      \strng{authorbibnamehash}{eb8ae5665d5a6423920d7bf003c9bc84}
+      \strng{authornamehash}{eb8ae5665d5a6423920d7bf003c9bc84}
+      \strng{authorfullhash}{caf1b6098de211a46622a9280ad241c9}
+      \strng{authorfullhashraw}{caf1b6098de211a46622a9280ad241c9}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computer Science. https://cdn.openai.com/papers/dall-e-3.pdf}
+      \field{title}{Improving Image Generation with Better Captions}
+      \field{year}{2023}
+    \endentry
     \entry{beyer2023_flexivit}{misc}{}{}
       \name{author}{10}{}{%
         {{hash=836254958eac09b30d45dd67a75ce4fa}{%
@@ -8210,6 +8281,7 @@
       \strng{authornamehash}{252a87b59ce27c96827166bd26ceb849}
       \strng{authorfullhash}{ea3ac61f332edec68f03467913c1bb32}
       \strng{authorfullhashraw}{ea3ac61f332edec68f03467913c1bb32}
+      \field{extraname}{1}
       \field{sortinit}{F}
       \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \field{labelnamesource}{author}
@@ -8270,6 +8342,78 @@
       \endverb
       \verb{url}
       \verb https://doi.org/10.1109/CVPR.2017.264
+      \endverb
+    \endentry
+    \entry{fan2025_fluid}{inproceedings}{}{}
+      \name{author}{9}{}{%
+        {{hash=1826eeb9b81da26c99c5d10d21ecb020}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Lijie},
+           giveni={L\bibinitperiod}}}%
+        {{hash=5c3efa72f98097c24ece8e283989f8fa}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Tianhong},
+           giveni={T\bibinitperiod}}}%
+        {{hash=b13487ee7e6cd93c81346078efe0a4cb}{%
+           family={Qin},
+           familyi={Q\bibinitperiod},
+           given={Siyang},
+           giveni={S\bibinitperiod}}}%
+        {{hash=9541f6fdf7e193e3e0ebcbe9b33340ff}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Yuanzhen},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=7437556e576c6f4e2ade58a9aa980ec5}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Chen},
+           giveni={C\bibinitperiod}}}%
+        {{hash=afbc21c0ba7555cdd6a589cc59eb3c34}{%
+           family={Rubinstein},
+           familyi={R\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=de65bb778ebb9480bdcaa6274b5aed85}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Deqing},
+           giveni={D\bibinitperiod}}}%
+        {{hash=6b4b60e909e78633945f3f9c9dc83e01}{%
+           family={He},
+           familyi={H\bibinitperiod},
+           given={Kaiming},
+           giveni={K\bibinitperiod}}}%
+        {{hash=212a623a4a045452d0eac0274782613e}{%
+           family={Tian},
+           familyi={T\bibinitperiod},
+           given={Yonglong},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{eced7f2447d02350bee133a662956b3d}
+      \strng{fullhash}{dece8a320326f6fd742030aa4d571c55}
+      \strng{fullhashraw}{dece8a320326f6fd742030aa4d571c55}
+      \strng{bibnamehash}{eced7f2447d02350bee133a662956b3d}
+      \strng{authorbibnamehash}{eced7f2447d02350bee133a662956b3d}
+      \strng{authornamehash}{eced7f2447d02350bee133a662956b3d}
+      \strng{authorfullhash}{dece8a320326f6fd742030aa4d571c55}
+      \strng{authorfullhashraw}{dece8a320326f6fd742030aa4d571c55}
+      \field{extraname}{2}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{International Conference on Learning Representations}
+      \field{note}{OpenReview: jQP5o1VAVc}
+      \field{title}{Fluid: Scaling Autoregressive Text-to-Image Generative Models with Continuous Tokens}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2410.13863
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2410.13863
       \endverb
     \endentry
     \entry{feichtenhofer2020_x3d}{inproceedings}{}{}
@@ -9579,6 +9723,49 @@
       \endverb
       \verb{url}
       \verb https://arxiv.org/abs/2012.07177
+      \endverb
+    \endentry
+    \entry{ghosh2023_geneval}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=325f8044a54d50527b4f955ebac7b234}{%
+           family={Ghosh},
+           familyi={G\bibinitperiod},
+           given={Dhruba},
+           giveni={D\bibinitperiod}}}%
+        {{hash=7f8cf6f1bda6a1f2a4655321df05e8e8}{%
+           family={Hajishirzi},
+           familyi={H\bibinitperiod},
+           given={Hanna},
+           giveni={H\bibinitperiod}}}%
+        {{hash=bca2cf46e9eed1a3bcc54f4286b4e013}{%
+           family={Schmidt},
+           familyi={S\bibinitperiod},
+           given={Ludwig},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{fullhash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{fullhashraw}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{bibnamehash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{authorbibnamehash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{authornamehash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{authorfullhash}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \strng{authorfullhashraw}{2dbcd1d8c3c7276013951b84e3f2afab}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2310.11513}
+      \field{title}{GenEval: An Object-Focused Framework for Evaluating Text-to-Image Alignment}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/arXiv.2310.11513
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2310.11513
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2310.11513
       \endverb
     \endentry
     \entry{gidaris2018_unsupervised}{inproceedings}{}{}
@@ -13557,6 +13744,65 @@
       \verb https://arxiv.org/abs/2410.09692
       \endverb
     \endentry
+    \entry{huang2023_t2icompbench}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=8c78ca65f056cd4a49fff4f7e76c50e4}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Kaiyi},
+           giveni={K\bibinitperiod}}}%
+        {{hash=fa5fec2c9aa3efd8c63a06e7ffea2019}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Kaiyue},
+           giveni={K\bibinitperiod}}}%
+        {{hash=c92e1a689fa6eae31f7ab57c517b873d}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={Enze},
+           giveni={E\bibinitperiod}}}%
+        {{hash=9c9a1debbb6c1bf503b2ca69ec34e25f}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Zhenguo},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=6c9b1bbb5e6bfa9eb298cf2adaf2fe6e}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Xihui},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{942cbc447db444066925b8122f6ec89f}
+      \strng{fullhash}{ed714900588f49d89a5f3cfff21a26d3}
+      \strng{fullhashraw}{ed714900588f49d89a5f3cfff21a26d3}
+      \strng{bibnamehash}{942cbc447db444066925b8122f6ec89f}
+      \strng{authorbibnamehash}{942cbc447db444066925b8122f6ec89f}
+      \strng{authornamehash}{942cbc447db444066925b8122f6ec89f}
+      \strng{authorfullhash}{ed714900588f49d89a5f3cfff21a26d3}
+      \strng{authorfullhashraw}{ed714900588f49d89a5f3cfff21a26d3}
+      \field{extraname}{3}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{T2I-CompBench: A Comprehensive Benchmark for Open-world Compositional Text-to-image Generation}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/arXiv.2307.06350
+      \endverb
+      \verb{eprint}
+      \verb 2307.06350
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2307.06350
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2307.06350
+      \endverb
+    \endentry
     \entry{huang2023_audiogpt}{misc}{}{}
       \name{author}{13}{}{%
         {{hash=74525ee766dfd89af6eb5c925cdcd043}{%
@@ -13633,7 +13879,7 @@
       \strng{authornamehash}{ff4ad490a72958700f09c63560801dbd}
       \strng{authorfullhash}{7e7de4432803928e27a986b67c1575d7}
       \strng{authorfullhashraw}{7e7de4432803928e27a986b67c1575d7}
-      \field{extraname}{3}
+      \field{extraname}{4}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{labelnamesource}{author}
@@ -13688,7 +13934,7 @@
       \strng{authornamehash}{3be4520ecbbc94134710475ace73ee80}
       \strng{authorfullhash}{85800b12f0103e79db484ee1df04b813}
       \strng{authorfullhashraw}{85800b12f0103e79db484ee1df04b813}
-      \field{extraname}{4}
+      \field{extraname}{5}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{labelnamesource}{author}
@@ -13757,7 +14003,7 @@
       \strng{editornamehash}{6a2c7e018f72565d1676eee4dc69f8f4}
       \strng{editorfullhash}{6a2c7e018f72565d1676eee4dc69f8f4}
       \strng{editorfullhashraw}{6a2c7e018f72565d1676eee4dc69f8f4}
-      \field{extraname}{5}
+      \field{extraname}{6}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{labelnamesource}{author}
@@ -18645,6 +18891,58 @@
       \verb https://arxiv.org/abs/2112.03857
       \endverb
     \endentry
+    \entry{li2024_autoregressive_novq}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=5c3efa72f98097c24ece8e283989f8fa}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Tianhong},
+           giveni={T\bibinitperiod}}}%
+        {{hash=212a623a4a045452d0eac0274782613e}{%
+           family={Tian},
+           familyi={T\bibinitperiod},
+           given={Yonglong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=d16cc2c2e1a04d7181c20f5970621e7c}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={He},
+           giveni={H\bibinitperiod}}}%
+        {{hash=721c1ec7c76383313f9c477e4ceb0e8d}{%
+           family={Deng},
+           familyi={D\bibinitperiod},
+           given={Mingyang},
+           giveni={M\bibinitperiod}}}%
+        {{hash=6b4b60e909e78633945f3f9c9dc83e01}{%
+           family={He},
+           familyi={H\bibinitperiod},
+           given={Kaiming},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{cd72af644211dcc3ed8a7bdfdcee45c9}
+      \strng{fullhash}{3942cbde3a1b6da630905b11ebecd6df}
+      \strng{fullhashraw}{3942cbde3a1b6da630905b11ebecd6df}
+      \strng{bibnamehash}{cd72af644211dcc3ed8a7bdfdcee45c9}
+      \strng{authorbibnamehash}{cd72af644211dcc3ed8a7bdfdcee45c9}
+      \strng{authornamehash}{cd72af644211dcc3ed8a7bdfdcee45c9}
+      \strng{authorfullhash}{3942cbde3a1b6da630905b11ebecd6df}
+      \strng{authorfullhashraw}{3942cbde3a1b6da630905b11ebecd6df}
+      \field{extraname}{16}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems}
+      \field{note}{NeurIPS 2024. DOI: 10.5555/3737916.3739713}
+      \field{title}{Autoregressive Image Generation without Vector Quantization}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2406.11838
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2406.11838
+      \endverb
+    \endentry
     \entry{li2020_oscar}{inproceedings}{}{}
       \name{author}{3}{}{%
         {{hash=d8bd5542c1d2148643093e4523ec0408}{%
@@ -18728,7 +19026,7 @@
       \strng{authornamehash}{c46f9c098cf90a57b516cc6f54d421c3}
       \strng{authorfullhash}{a4e40d910d10eb3335aa1ca36205c827}
       \strng{authorfullhashraw}{a4e40d910d10eb3335aa1ca36205c827}
-      \field{extraname}{16}
+      \field{extraname}{17}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
@@ -18784,7 +19082,7 @@
       \strng{authornamehash}{6f58cd95635bdfcb3ebf0091d0da045f}
       \strng{authorfullhash}{294c7878b271ffb4d5714d22631cf3f3}
       \strng{authorfullhashraw}{294c7878b271ffb4d5714d22631cf3f3}
-      \field{extraname}{17}
+      \field{extraname}{18}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
@@ -18835,7 +19133,7 @@
       \strng{authornamehash}{102777818c0601d4c9ae52f6e4fb2a9a}
       \strng{authorfullhash}{47c4f94c5d8ac06ea950d33f7dee838e}
       \strng{authorfullhashraw}{47c4f94c5d8ac06ea950d33f7dee838e}
-      \field{extraname}{18}
+      \field{extraname}{19}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
@@ -18891,7 +19189,7 @@
       \strng{authornamehash}{d0d45d6095a4c598aa09270099d02ed1}
       \strng{authorfullhash}{ccdbfec8a4bef98538acbe3c05c38b3b}
       \strng{authorfullhashraw}{ccdbfec8a4bef98538acbe3c05c38b3b}
-      \field{extraname}{19}
+      \field{extraname}{20}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
@@ -18984,7 +19282,7 @@
       \strng{authornamehash}{787ff6a69a3ce87eaebb4e77006c8b9a}
       \strng{authorfullhash}{66b5ec8251d207ed51395a2ee9c4d69a}
       \strng{authorfullhashraw}{66b5ec8251d207ed51395a2ee9c4d69a}
-      \field{extraname}{20}
+      \field{extraname}{21}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{labelnamesource}{author}
@@ -28026,6 +28324,69 @@
       \verb https://arxiv.org/abs/2003.13678
       \endverb
     \endentry
+    \entry{rafailov2023_dpo}{inproceedings}{}{}
+      \name{author}{6}{}{%
+        {{hash=ba3b0dbc0637707e13b68258120d22ca}{%
+           family={Rafailov},
+           familyi={R\bibinitperiod},
+           given={Rafael},
+           giveni={R\bibinitperiod}}}%
+        {{hash=d6e9caed0d49d143fa1bf05559bc7c20}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Archit},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b9441ad4287a1b5f251258a6fd6afb3a}{%
+           family={Mitchell},
+           familyi={M\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{hash=160929a7e6ceecdf3f7c9a13abd5ea35}{%
+           family={Ermon},
+           familyi={E\bibinitperiod},
+           given={Stefano},
+           giveni={S\bibinitperiod}}}%
+        {{hash=2214edb8305f7ccd7cdc310b3a8ae1b4}{%
+           family={Manning},
+           familyi={M\bibinitperiod},
+           given={Christopher\bibnamedelima D.},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=058e82495825ae376c6a96a12169e6ee}{%
+           family={Finn},
+           familyi={F\bibinitperiod},
+           given={Chelsea},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{a2b9e9f544e815dea0216e294ca2afca}
+      \strng{fullhash}{66dbe48781d53ee437c443a92555f671}
+      \strng{fullhashraw}{66dbe48781d53ee437c443a92555f671}
+      \strng{bibnamehash}{a2b9e9f544e815dea0216e294ca2afca}
+      \strng{authorbibnamehash}{a2b9e9f544e815dea0216e294ca2afca}
+      \strng{authornamehash}{a2b9e9f544e815dea0216e294ca2afca}
+      \strng{authorfullhash}{66dbe48781d53ee437c443a92555f671}
+      \strng{authorfullhashraw}{66dbe48781d53ee437c443a92555f671}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems}
+      \field{eprintclass}{cs.LG}
+      \field{eprinttype}{arXiv}
+      \field{title}{Direct Preference Optimization: Your Language Model is Secretly a Reward Model}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/arXiv.2305.18290
+      \endverb
+      \verb{eprint}
+      \verb 2305.18290
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2305.18290
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2305.18290
+      \endverb
+    \endentry
     \entry{raffel2020_t5}{article}{}{}
       \name{author}{9}{}{%
         {{hash=81a5a94e2388c149a73a86381db45e07}{%
@@ -36130,6 +36491,84 @@
       \verb https://www.vision.caltech.edu/datasets/cub_200_2011/
       \endverb
     \endentry
+    \entry{wallace2023_diffusiondpo}{article}{}{}
+      \name{author}{10}{}{%
+        {{hash=0d175d0f5e9e1da11d01b6b06f8c09a4}{%
+           family={Wallace},
+           familyi={W\bibinitperiod},
+           given={Bram},
+           giveni={B\bibinitperiod}}}%
+        {{hash=caeef8cd167d1082fac70ec532095987}{%
+           family={Dang},
+           familyi={D\bibinitperiod},
+           given={Meihua},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ba3b0dbc0637707e13b68258120d22ca}{%
+           family={Rafailov},
+           familyi={R\bibinitperiod},
+           given={Rafael},
+           giveni={R\bibinitperiod}}}%
+        {{hash=9d400e101089dadd4c136e68df10bef9}{%
+           family={Zhou},
+           familyi={Z\bibinitperiod},
+           given={Linqi},
+           giveni={L\bibinitperiod}}}%
+        {{hash=97ef91a99fa28d7b819d8a18ecb8cb1c}{%
+           family={Lou},
+           familyi={L\bibinitperiod},
+           given={Aaron},
+           giveni={A\bibinitperiod}}}%
+        {{hash=86016d0705e9fea4dea9837e232d9b91}{%
+           family={Purushwalkam},
+           familyi={P\bibinitperiod},
+           given={Senthil},
+           giveni={S\bibinitperiod}}}%
+        {{hash=160929a7e6ceecdf3f7c9a13abd5ea35}{%
+           family={Ermon},
+           familyi={E\bibinitperiod},
+           given={Stefano},
+           giveni={S\bibinitperiod}}}%
+        {{hash=1fa4dfdd5ecf049d39575fe7ba1ec9f3}{%
+           family={Xiong},
+           familyi={X\bibinitperiod},
+           given={Caiming},
+           giveni={C\bibinitperiod}}}%
+        {{hash=bc9e8da4d88a783135ef12ff3dccff70}{%
+           family={Joty},
+           familyi={J\bibinitperiod},
+           given={Shafiq},
+           giveni={S\bibinitperiod}}}%
+        {{hash=19ed5a04b675f741338b9cf26c7e32aa}{%
+           family={Naik},
+           familyi={N\bibinitperiod},
+           given={Nikhil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{af0dc674f79a95487ae45b54db42e409}
+      \strng{fullhash}{f6e805b5f1fcf70935ae1f807c158768}
+      \strng{fullhashraw}{f6e805b5f1fcf70935ae1f807c158768}
+      \strng{bibnamehash}{af0dc674f79a95487ae45b54db42e409}
+      \strng{authorbibnamehash}{af0dc674f79a95487ae45b54db42e409}
+      \strng{authornamehash}{af0dc674f79a95487ae45b54db42e409}
+      \strng{authorfullhash}{f6e805b5f1fcf70935ae1f807c158768}
+      \strng{authorfullhashraw}{f6e805b5f1fcf70935ae1f807c158768}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2311.12908}
+      \field{title}{Diffusion Model Alignment Using Direct Preference Optimization}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/arXiv.2311.12908
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2311.12908
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2311.12908
+      \endverb
+    \endentry
     \entry{wan2024_locca}{misc}{}{}
       \name{author}{10}{}{%
         {{hash=b6f8993c09fcbdefe28cd11653c74a7e}{%
@@ -42316,6 +42755,44 @@
       \verb https://arxiv.org/abs/2303.15343
       \endverb
     \endentry
+    \entry{zhang2019_rmsnorm}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=c565dbb38e730ea6dffd59c2765dbfae}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Biao},
+           giveni={B\bibinitperiod}}}%
+        {{hash=dbb9225ae208939ef2c5eec31d16922a}{%
+           family={Sennrich},
+           familyi={S\bibinitperiod},
+           given={Rico},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{fullhash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{fullhashraw}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{bibnamehash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{authorbibnamehash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{authornamehash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{authorfullhash}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \strng{authorfullhashraw}{a242aa6f8e5e757bc9293c15e0c0768b}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1910.07467}
+      \field{title}{Root Mean Square Layer Normalization}
+      \field{year}{2019}
+      \verb{doi}
+      \verb 10.48550/arXiv.1910.07467
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1910.07467
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1910.07467
+      \endverb
+    \endentry
     \entry{zhang2025_videollama3}{misc}{}{}
       \name{author}{15}{}{%
         {{hash=e0e24161ff25ad1a12bd0ccc25c0a0ed}{%
@@ -45400,7 +45877,6 @@
       \endverb
     \endentry
   \enddatalist
-  \missing{hang2024_minsnr}
 \endrefsection
 \endinput
 
