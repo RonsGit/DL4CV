@@ -20052,7 +20052,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.95\textwidth]{Figures/Chapter_20/TransitionMatching_examples.jpg}
-    			\caption{\textbf{Transition Matching methods (FHTM, DTM) compared to baselines (FM, MAR) under fixed architecture, dataset, and training hyperparameters (TM, Fig.~1).} The figure contrasts the continuous-state, discrete-time Transition Matching variants against traditional generative paradigms. \textbf{FM} (Flow Matching) serves as the standard continuous-time baseline, which struggles with discretization error in low-step regimes due to tangent approximations. \textbf{MAR} (Masked Autoregressive) represents the discrete-time, discrete-state baseline, inherently bottlenecked by VQ-VAE tokenization artifacts. In contrast, \textbf{DTM} (Difference Transition Matching) and \textbf{FHTM} (Full History Transition Matching) operate natively in continuous state but discrete time. By learning exact finite leaps, they bypass both discretization and tokenization errors, yielding noticeably sharper, higher-fidelity visuals in equivalent step counts.}
+    			\caption{\textbf{Transition Matching methods (FHTM, DTM) compared to baselines (FM, MAR) under fixed architecture, dataset, and training hyperparameters (TM, Fig.~1).} The figure contrasts the continuous-state, discrete-time Transition Matching variants against traditional generative paradigms. \textbf{FM} (Flow Matching) serves as the standard continuous-time baseline, which struggles with discretization error in low-step regimes due to tangent approximations. \textbf{MAR} (Masked Autoregressive) represents the discrete-time, discrete-state baseline, inherently bottlenecked by VQ-VAE tokenization artifacts. In contrast, \textbf{DTM} (Difference Transition Matching) and \textbf{FHTM} (Full History Transition Matching) operate natively in continuous state but discrete time. By learning exact finite leaps, they bypass both discretization and tokenization errors, yielding noticeably sharper, higher-fidelity visuals in equivalent step counts~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_examples}
     		\end{figure}
     		
@@ -20187,7 +20187,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.65\textwidth]{Figures/Chapter_20/TransitionMatching_supervising_process.jpg}
-    			\caption{\textbf{Supervising process (TM, Fig.~2).} A real data sample $X_T$ acts as the anchor, inducing a training-time process $(X_0,\dots,X_{T-1})$. From this sequence, independent consecutive pairs $(X_t,X_{t+1})$ are sampled to directly supervise the network's learned transitions.}
+    			\caption{\textbf{Supervising process (TM, Fig.~2).} A real data sample $X_T$ acts as the anchor, inducing a training-time process $(X_0,\dots,X_{T-1})$. From this sequence, independent consecutive pairs $(X_t,X_{t+1})$ are sampled to directly supervise the network's learned transitions~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_supervising}
     		\end{figure}
     		
@@ -20364,14 +20364,14 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/TransitionMatching_difference_prediction.jpg}
-    			\caption{\textbf{Difference prediction vs.\ flow velocity (TM, Fig.~3).} DTM learns a \emph{finite} secant-like target (the difference latent $Y$), which perfectly intersects the next discrete state. In contrast, FM learns an \emph{infinitesimal} tangent-like velocity field, which fundamentally diverges from the true path when scaled up for large discrete steps, leading to severe discretization error.}
+    			\caption{\textbf{Difference prediction vs.\ flow velocity (TM, Fig.~3).} DTM learns a \emph{finite} secant-like target (the difference latent $Y$), which perfectly intersects the next discrete state. In contrast, FM learns an \emph{infinitesimal} tangent-like velocity field, which fundamentally diverges from the true path when scaled up for large discrete steps, leading to severe discretization error~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_diff_pred}
     		\end{figure}
     		
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.75\textwidth]{Figures/Chapter_20/TransitionMatching_DTM_path.jpg}
-    			\caption{\textbf{DTM path induced by \eqref{eq:chapter20_tm_dtm_update} (TM, Fig.~4).} Sampling a new instruction $Y$ at each discrete step yields a stochastic path. As the step size shrinks, the expected trajectory of this stochastic process aligns perfectly with the deterministic Euler solver path of standard Flow Matching.}
+    			\caption{\textbf{DTM path induced by the update rule in Eq.~\eqref{eq:chapter20_tm_dtm_update} (TM, Fig.~4).} Sampling a new instruction $Y$ at each discrete step yields a stochastic path. As the step size shrinks, the expected trajectory of this stochastic process aligns perfectly with the deterministic Euler solver path of standard Flow Matching~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_dtm_path}
     		\end{figure}
     		
@@ -20408,7 +20408,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.85\textwidth]{Figures/Chapter_20/TransitionMatching_architectures.jpg}
-    			\caption{\textbf{TM architectures (TM, Fig.~5).} The massive backbone $f_\theta$ (orange) computes contextual representations; a small, highly efficient head $g_\theta$ (green) defines a conditional sampler for the target $Y$. Notice the attention masking differences: blue tokens use full bidirectional attention (as required by the Markovian DTM), while gray tokens utilize strict causal masking (as required by ARTM and FHTM variants).}
+    			\caption{\textbf{TM architectures (TM, Fig.~5).} The massive backbone $f_\theta$ (orange) computes contextual representations; a small, highly efficient head $g_\theta$ (green) defines a conditional sampler for the target $Y$. Notice the attention masking differences: blue tokens use full bidirectional attention (as required by the Markovian DTM), while gray tokens utilize strict causal masking (as required by ARTM and FHTM variants)~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_architectures}
     		\end{figure}
     		
@@ -20434,7 +20434,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.9\textwidth]{Figures/Chapter_20/TransitionMatching_linear_process.jpg}
-    			\caption{\textbf{Linear vs.\ independent linear supervising processes (TM, Fig.~6).} Although both induce the identical marginal cloud $q_t$, the independent process yields substantially wider support for potential $X_{t+1}$ states conditioned on a specific $X_t$, avoiding overly sharp distributions.}
+    			\caption{\textbf{Linear vs.\ independent linear supervising processes (TM, Fig.~6).} Although both induce the identical marginal cloud $q_t$, the independent process yields substantially wider support for potential $X_{t+1}$ states conditioned on a specific $X_t$, avoiding overly sharp distributions~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_linear_process}
     		\end{figure}
     		
@@ -20499,7 +20499,7 @@ WGAN-GP combines the theoretical strength of optimal transport with the practica
     		\begin{figure}[H]
     			\centering
     			\includegraphics[width=0.95\textwidth]{Figures/Chapter_20/TransitionMatching_more_examples.jpg}
-    			\caption{\textbf{Additional qualitative samples (TM, Fig.~7).} DTM and FHTM demonstrably improve visual fidelity, texture preservation, and prompt adherence relative to standard continuous FM and discrete Masked Autoregressive baselines in highly controlled comparisons.}
+    			\caption{\textbf{Additional qualitative samples (TM, Fig.~7).} DTM and FHTM demonstrably improve visual fidelity, texture preservation, and prompt adherence relative to standard continuous FM and discrete Masked Autoregressive baselines in highly controlled comparisons~\cite{shaul2025_tm}.}
     			\label{fig:chapter20_tm_more_examples}
     		\end{figure}
     		
